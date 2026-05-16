@@ -4,9 +4,17 @@ import { AppModule } from './app.module';
 import session from 'express-session';
 import passport from 'passport';
 import { Pool } from 'pg';
+import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+  });
+
+  app.useGlobalInterceptors(new ExcludePasswordInterceptor());
 
   const pgSession = require('connect-pg-simple')(session);
   const pgPool = new Pool({
