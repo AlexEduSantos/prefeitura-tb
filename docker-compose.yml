@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     container_name: pmtb-db
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
@@ -12,7 +12,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - pmtb-network
-  
+
   redis:
     image: redis:7-alpine
     container_name: pmtb-redis
@@ -44,7 +44,7 @@ services:
       - bucket_data:/app/uploads
     networks:
       - pmtb-network
-    command: pnpm run start:dev
+    command: npm run start:dev
 
   frontend:
     build:
