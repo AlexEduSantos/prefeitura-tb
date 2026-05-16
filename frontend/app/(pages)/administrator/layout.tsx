@@ -1,4 +1,3 @@
-import { PainelHeader } from "@/components/painel-header";
 import { PainelSidebar } from "@/components/painel-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";

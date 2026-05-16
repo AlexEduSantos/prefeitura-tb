@@ -25,10 +25,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { useUserViewModel } from "@/viewmodel/user.viewmodel";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function PainelSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
+
+  const { user, isLoadingUser } = useUserViewModel();
+
+  if (isLoadingUser) return <div>Loading...</div>;
 
   const painelMenu = [
     { title: "Início", icon: LayoutDashboard, href: "/administrator" },
@@ -110,6 +116,7 @@ export function PainelSidebar() {
             fill
             loading="eager"
             priority
+            sizes="(min-width: 1024px) 200px, 48px"
             className="object-contain transition-all duration-300"
           />
         </Link>
@@ -187,14 +194,14 @@ export function PainelSidebar() {
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="flex flex-col gap-4">
         <SidebarMenu className="gap-2">
           <SidebarMenuItem key="settings">
             <SidebarMenuButton
               asChild
               tooltip="Settings"
               className={cn(
-                "h-12 rounded-md transition-all duration-200 group",
+                "h-12 transition-all duration-200 group",
                 state === "expanded" ? "px-4" : "justify-center p-0",
               )}
             >
@@ -219,6 +226,29 @@ export function PainelSidebar() {
                   </span>
                 )}
               </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+        <SidebarMenu>
+          <SidebarMenuItem className="flex gap-2 items-center">
+            <SidebarMenuButton
+              className={cn(
+                "h-12 transition-all duration-200 group",
+                state === "expanded" ? "px-4" : "justify-center p-0",
+              )}
+            >
+              <Avatar>
+                <AvatarImage src={user?.avatar} />
+                <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <span className="text-sm font-medium truncate">
+                  {user?.name}
+                </span>
+                <span className="text-xs text-muted-foreground truncate">
+                  {user?.email}
+                </span>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

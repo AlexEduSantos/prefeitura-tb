@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Criado para testes de editor de texto",
 };
 
+import { Providers } from "@/providers/query-provider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,7 +24,9 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} w-screen h-screen antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
