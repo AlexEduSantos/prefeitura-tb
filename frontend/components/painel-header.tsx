@@ -4,7 +4,7 @@ import { Bell, ChevronLeft, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import Image from "next/image";
-import { IUser } from "@/type/user";
+import { IUser } from "@/app/type/user";
 
 export function PainelHeader({ title }: { title: string }) {
   const router = useRouter();

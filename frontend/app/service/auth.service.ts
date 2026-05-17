@@ -1,4 +1,4 @@
-import { IUser } from "@/type/user";
+import { IUser } from "@/app/type/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -14,14 +14,20 @@ export class AuthService {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: "Erro ao fazer login" }));
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Erro ao fazer login" }));
       throw new Error(error.message || "Erro ao fazer login");
     }
 
     return response.json();
   }
 
-  static async register(name: string, email: string, password: string): Promise<IUser> {
+  static async register(
+    name: string,
+    email: string,
+    password: string,
+  ): Promise<IUser> {
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: {
@@ -32,7 +38,9 @@ export class AuthService {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: "Erro ao registrar" }));
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Erro ao registrar" }));
       throw new Error(error.message || "Erro ao registrar");
     }
 
@@ -49,7 +57,9 @@ export class AuthService {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: "Erro ao fazer logout" }));
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Erro ao fazer logout" }));
       throw new Error(error.message || "Erro ao fazer logout");
     }
 

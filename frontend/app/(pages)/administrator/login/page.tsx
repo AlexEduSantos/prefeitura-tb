@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useAuthViewModel } from "@/viewmodel/auth.viewmodel";
+import { useAuthViewModel } from "@/app/viewmodel/auth.viewmodel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { AlertCircle } from "lucide-react";
 
 export default function LoginPage() {
@@ -22,7 +29,9 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-muted/40 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-3xl font-bold tracking-tight">Entrar</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">
+            Entrar
+          </CardTitle>
           <CardDescription className="text-muted-foreground">
             Insira suas credenciais para acessar o painel de administração.
           </CardDescription>

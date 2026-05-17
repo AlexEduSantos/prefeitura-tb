@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { UserService } from "@/service/user.service";
-import { IUser } from "@/type/user";
+import { UserService } from "@/app/service/user.service";
+import { IUser } from "@/app/type/user";
 
 export function useUserViewModel() {
   const queryClient = useQueryClient();

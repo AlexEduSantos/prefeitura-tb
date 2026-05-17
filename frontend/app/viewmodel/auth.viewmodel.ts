@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { AuthService } from "@/service/auth.service";
-import { IUser } from "@/type/user";
+import { AuthService } from "@/app/service/auth.service";
+import { IUser } from "@/app/type/user";
 import { useRouter } from "next/navigation";
 
 export function useAuthViewModel() {

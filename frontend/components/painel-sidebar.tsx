@@ -25,7 +25,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { useUserViewModel } from "@/viewmodel/user.viewmodel";
+import { useUserViewModel } from "@/app/viewmodel/user.viewmodel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function PainelSidebar() {
