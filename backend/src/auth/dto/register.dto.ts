@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsUUID } from 'class-validator';
 
 export class RegisterDto {
   @IsString()
@@ -7,6 +7,15 @@ export class RegisterDto {
 
   @IsEmail()
   email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsUUID()
+  entityId: string; // Deve ser o UUID de uma Secretaria (Entity) existente no banco
 
   @IsString()
   @IsNotEmpty()

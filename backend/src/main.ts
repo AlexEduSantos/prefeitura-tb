@@ -5,6 +5,7 @@ import session from 'express-session';
 import passport from 'passport';
 import { Pool } from 'pg';
 import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,6 +39,8 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT ?? 3001);
 }

@@ -18,13 +18,20 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto): Promise<any> {
-    const { email, name, password } = registerDto;
+    const { email, name, username, entityId, password } = registerDto;
 
-    const existingUser = await this.prisma.user.findUnique({
-      where: { email },
+    // Verifica se já existe um usuário com o mesmo e-mail ou nome de usuário (ambos são únicos no Prisma)
+    const existingUser = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { email },
+          { username },
+        ],
+      },
     });
+
     if (existingUser) {
-      throw new ConflictException('Email already exists');
+      throw new ConflictException('E-mail ou nome de usuário já está em uso.');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,8 +40,8 @@ export class AuthService {
       data: {
         email,
         name,
-        username: '',
-        entityId: '',
+        username,
+        entityId,
         password: hashedPassword,
         avatar: '',
       },

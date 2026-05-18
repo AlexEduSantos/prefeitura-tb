@@ -5,7 +5,7 @@ import {
   MongoAbility,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { User, Article, Page, Media, UserRole } from '@prisma/client';
+import { User, Article, Page, Media, UserRole, Entity } from '@prisma/client';
 import { Action } from './action.enum';
 
 // Definimos uma classe temporária para Category se ela ainda não existir no Prisma
@@ -22,11 +22,13 @@ export type Subjects =
   | 'Media'
   | 'Category'
   | 'User'
+  | 'Entity'
   | Article
   | Page
   | Media
   | User
-  | Category;
+  | Category
+  | Entity;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 
@@ -38,9 +40,10 @@ export class CaslAbilityFactory {
     // ==========================================
     // 1. Qualquer um (Público)
     // ==========================================
-    // Acesso livre no Portal para leitura de Articles e Pages
+    // Acesso livre no Portal para leitura de Articles, Pages e Entities (Secretarias)
     can(Action.Read, 'Article');
     can(Action.Read, 'Page');
+    can(Action.Read, 'Entity');
 
     // Se o usuário não estiver autenticado, retorna as regras públicas
     if (!user) {

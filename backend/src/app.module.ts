@@ -8,6 +8,7 @@ import { CaslModule } from './casl/casl.module';
 import { PagesModule } from './pages/pages.module';
 import { ArticlesModule } from './articles/articles.module';
 import { MediaModule } from './media/media.module';
+import { EntitiesModule } from './entities/entities.module';
 
 @Module({
   imports: [
@@ -17,10 +18,12 @@ import { MediaModule } from './media/media.module';
     PagesModule,
     ArticlesModule,
     MediaModule,
+    EntitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
+
 
 

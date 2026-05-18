@@ -17,7 +17,7 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
 
   // Função recursiva para encontrar e remover o campo "password" de qualquer objeto ou array retornado
   private removePassword(obj: any): any {
-    if (obj === null || typeof obj !== 'object') {
+    if (obj === null || typeof obj !== 'object' || obj instanceof Date) {
       return obj;
     }
 
