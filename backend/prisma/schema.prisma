@@ -13,12 +13,19 @@ datasource db {
 
 model User {
   id        String   @id @unique @default(uuid())
+  username  String   @unique
   name      String
   email     String   @unique
   password  String
-  avatar    String
+  avatar    String?
+  phone     String?
+  entityId  String   @db.Uuid
+  entity    Entity   @relation(fields: [entityId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  role      UserRole @default(USER)
+
+  @@map("user")
 }
 
 model Session {
@@ -28,4 +35,88 @@ model Session {
 
   @@index([expire], name: "IDX_session_expire")
   @@map("session")
+}
+
+enum UserRole {
+  ADMIN
+  PUBLISHER
+  USER
+}
+
+model Entity {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String // Ex: "Secretaria de Educação"
+  slug      String // Ex: "educacao" (usado na URL /secretarias/educacao)
+  createdAt DateTime  @default(now())
+  pages     Page[]
+  users     User[]
+  articles  Article[]
+
+  @@map("entity")
+}
+
+model Page {
+  id        String  @id @default(uuid()) @db.Uuid
+  title     String // Ex: "Inscrições Cursos Técnicos"
+  slug      String // Ex: "inscricoes-cursos" -> gerará /educacao/inscricoes-cursos
+  content   Json // Onde você salvará a estrutura de blocos do seu Page Builder
+  published Boolean @default(false)
+
+  // O elo com a Secretaria (Atributo para o ABAC)
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([entityId, slug]) // Garante que não haja duas páginas com o mesmo slug na MESMA secretaria
+}
+
+model Article {
+  id                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                    String
+  headline                 String?   @db.VarChar(500)
+  entityId                 String    @db.Uuid
+  entity                   Entity    @relation(fields: [entityId], references: [id])
+  cover                    String?   @db.Text
+  body                     String
+  slug                     String    @unique
+  type                     String    @default("simple")
+  status                   String    @default("rascunho")
+  publicationDate          DateTime?
+  expirationDate           DateTime?
+  featured                 Boolean   @default(false)
+  author                   String?
+  editor                   String?
+  createdAt                DateTime  @default(now()) @db.Timestamp
+  updatedAt                DateTime  @default(now()) @db.Timestamp
+  seoTitle                 String?
+  seoDescription           String?
+  seoKeywords              String?
+  allowComments            Boolean   @default(true)
+  tags                     String[]
+  visibility               String    @default("public") // "public", "internal", "restricted"
+  galleryImages            String[]
+  galleryAutoplay          Boolean   @default(false)
+  galleryInterval          Int       @default(5000)
+  galleryShowThumbnails    Boolean   @default(true)
+  socialPreviewTitle       String?
+  socialPreviewImage       String?
+  socialPreviewDescription String?
+}
+
+model Media {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  alt_text    String?
+  description String?  @db.VarChar(1000)
+  type        String // "image", "video", "audio", "document"
+  url         String
+  file_size   Int?
+  mime_type   String?
+  width       Int?
+  height      Int?
+  tags        String[]
+  created_at  DateTime @default(now()) @db.Timestamp
+  updated_at  DateTime @default(now()) @db.Timestamp
 }

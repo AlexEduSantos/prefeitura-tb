@@ -7,7 +7,6 @@ import {
   Request,
   HttpStatus,
   HttpCode,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
@@ -16,6 +15,7 @@ import type { Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { SessionGuard } from './session.guard';
 import { User } from '@prisma/client';
+import { PoliciesGuard } from 'src/casl/policies.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -59,7 +59,7 @@ export class AuthController {
     });
   }
 
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
     return req.user;

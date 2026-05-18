@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
@@ -36,6 +33,8 @@ export class AuthService {
       data: {
         email,
         name,
+        username: '',
+        entityId: '',
         password: hashedPassword,
         avatar: '',
       },
