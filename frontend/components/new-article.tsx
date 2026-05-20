@@ -12,403 +12,590 @@ import { Editor } from "../app/modules/text-editor/components/Editor";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { useState, useRef } from "react";
-import { X, Tag } from "lucide-react";
+import { X, Tag, Image as ImageIcon, Images, Key } from "lucide-react";
+import { useNewArticleViewModel } from "../app/viewmodel/new-article.viewmodel";
+import { MediaPickerModal } from "./media-picker-modal";
+import { useState } from "react";
+import { IMedia } from "../app/type/media";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// ---------------------------------------------------------------------------
-// Dados de exemplo (substituir por chamadas de API futuramente)
-// ---------------------------------------------------------------------------
-
+// Dados de Exemplo para Tipo
 const CATEGORIES = [
-  { id: "esportes", label: "Secretaria de Esportes" },
-  { id: "cultura", label: "Secretaria de Cultura" },
-  { id: "governo", label: "Secretaria de Governo" },
-  { id: "saude", label: "Secretaria de Saúde" },
-  { id: "educacao", label: "Secretaria de Educação" },
-  { id: "meio-ambiente", label: "Secretaria de Meio Ambiente" },
+  { id: "news", label: "Notícia" },
+  { id: "event", label: "Evento" },
+  { id: "announcement", label: "Comunicado" },
 ];
 
-const ESTADOS = [
-  { id: "rascunho", label: "Rascunho" },
-  { id: "revisao", label: "Em Revisão" },
-  { id: "publicado", label: "Publicado" },
-  { id: "arquivado", label: "Arquivado" },
-];
-
-// ---------------------------------------------------------------------------
-// Tipos
-// ---------------------------------------------------------------------------
-
-interface MateriaFormData {
-  titulo: string;
-  linhaFina: string;
-  categoria: string;
-  tags: string[];
-  estado: string;
-  destaque: boolean;
-  dataCriacao: string;
-  dataInicioPublicacao: string;
-  dataFimPublicacao: string;
-  // conteúdo do editor é lido via callback separado
-}
-
-// ---------------------------------------------------------------------------
-// Componente principal
-// ---------------------------------------------------------------------------
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export default function MateriaForm() {
-  // --- Visibilidade de campos opcionais ---
-  const [hasLinhaFina, setHasLinhaFina] = useState(false);
-  const [hasDataInicio, setHasDataInicio] = useState(false);
-  const [hasDataFim, setHasDataFim] = useState(false);
+  const {
+    form,
+    setField,
+    addTag,
+    removeTag,
+    addSeoKeyword,
+    removeSeoKeyword,
+    handleSaveDraft,
+    handlePublish,
+    editorContentRef,
+    hasHeadline,
+    setHasHeadline,
+    isCoverModalOpen,
+    setIsCoverModalOpen,
+    isGalleryModalOpen,
+    setIsGalleryModalOpen,
+    entities,
+    isLoadingEntities,
+  } = useNewArticleViewModel();
 
-  // --- Campos do formulário ---
-  const [form, setForm] = useState<MateriaFormData>({
-    titulo: "",
-    linhaFina: "",
-    categoria: "",
-    tags: [],
-    estado: "rascunho",
-    destaque: false,
-    dataCriacao: new Date().toISOString().slice(0, 16), // YYYY-MM-DDTHH:MM
-    dataInicioPublicacao: "",
-    dataFimPublicacao: "",
-  });
-
-  // --- Tag input ---
   const [tagInput, setTagInput] = useState("");
+  const [seoKeywordInput, setSeoKeywordInput] = useState("");
 
-  // --- Ref para capturar o conteúdo do editor ---
-  const editorContentRef = useRef<unknown>(null);
-
-  // ---------------------------------------------------------------------------
-  // Handlers
-  // ---------------------------------------------------------------------------
-
-  function setField<K extends keyof MateriaFormData>(
-    key: K,
-    value: MateriaFormData[K],
-  ) {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  }
-
-  function addTag() {
-    const trimmed = tagInput.trim();
-    if (!trimmed || form.tags.includes(trimmed)) return;
-    setField("tags", [...form.tags, trimmed]);
-    setTagInput("");
-  }
-
-  function removeTag(tag: string) {
-    setField(
-      "tags",
-      form.tags.filter((t) => t !== tag),
-    );
-  }
-
-  function handleTagKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      addTag();
+      addTag(tagInput);
+      setTagInput("");
     }
-  }
+  };
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const handleSeoKeywordKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addSeoKeyword(seoKeywordInput);
+      setSeoKeywordInput("");
+    }
+  };
 
-    const output = {
-      ...form,
-      linhaFina: hasLinhaFina ? form.linhaFina : null,
-      dataInicioPublicacao: hasDataInicio ? form.dataInicioPublicacao : null,
-      dataFimPublicacao: hasDataFim ? form.dataFimPublicacao : null,
-      conteudo: editorContentRef.current ?? "(editor vazio)",
-    };
+  const onAddTagClick = () => {
+    addTag(tagInput);
+    setTagInput("");
+  };
 
-    console.log("=== MATÉRIA ===", output);
-  }
+  const onAddSeoKeywordClick = () => {
+    addSeoKeyword(seoKeywordInput);
+    setSeoKeywordInput("");
+  };
 
-  // ---------------------------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------------------------
+  const getMediaUrl = (url: string) =>
+    url.startsWith("http") ? url : `${API_URL}${url}`;
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Cabeçalho */}
+      <div className="max-w-4xl sm:min-w-3xl lg:min-w-4xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Nova Matéria</h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Preencha os campos abaixo. A publicação ocorrerá somente após a
-            conclusão e aprovação.
+            Preencha os dados da matéria nas abas abaixo.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-          {/* ----------------------------------------------------------------
-              Seção: Conteúdo principal
-          ---------------------------------------------------------------- */}
-          <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
-            <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Conteúdo
-            </legend>
+        <form onSubmit={handlePublish} className="flex flex-col gap-8">
+          <Tabs defaultValue="conteudo" className="w-full ">
+            <TabsList className="flex gap-2 w-full border bg-accent">
+              <TabsTrigger value="conteudo">Conteúdo e Mídia</TabsTrigger>
+              <TabsTrigger value="publicacao">Publicação</TabsTrigger>
+              <TabsTrigger value="seo">SEO</TabsTrigger>
+            </TabsList>
 
-            {/* Título */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="titulo" className="font-medium">
-                Título <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="titulo"
-                placeholder="Informe o título da matéria"
-                value={form.titulo}
-                onChange={(e) => setField("titulo", e.target.value)}
-                required
-              />
-            </div>
+            {/* ----------------- ABA 1: CONTEÚDO ----------------- */}
+            <TabsContent value="conteudo" className="flex flex-col gap-8 mt-6">
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Dados Principais
+                </legend>
 
-            {/* Linha Fina (opcional, toggle) */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <Label htmlFor="toggle-linha-fina" className="cursor-pointer">
-                  Linha Fina
-                  <span className="text-muted-foreground font-normal">
-                    (opcional)
-                  </span>
-                </Label>
-                <Switch
-                  id="toggle-linha-fina"
-                  checked={hasLinhaFina}
-                  onCheckedChange={setHasLinhaFina}
-                />
-              </div>
-              {hasLinhaFina && (
-                <Textarea
-                  id="linha-fina"
-                  placeholder="Subtítulo ou linha de apoio da matéria"
-                  value={form.linhaFina}
-                  onChange={(e) => setField("linhaFina", e.target.value)}
-                  rows={2}
-                  className="resize-none"
-                />
-              )}
-            </div>
-
-            {/* Editor de Texto */}
-            <div className="flex flex-col gap-1.5">
-              <Label className="font-medium">
-                Conteúdo <span className="text-destructive">*</span>
-              </Label>
-              <Editor
-                onChange={(content) => (editorContentRef.current = content)}
-              />
-            </div>
-          </fieldset>
-
-          {/* ----------------------------------------------------------------
-              Seção: Classificação
-          ---------------------------------------------------------------- */}
-          <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
-            <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Classificação
-            </legend>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Categoria */}
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="categoria" className="font-medium">
-                  Categoria <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={form.categoria}
-                  onValueChange={(v) => setField("categoria", v)}
-                  required
-                >
-                  <SelectTrigger id="categoria" className="w-full">
-                    <SelectValue placeholder="Selecione uma categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.id}>
-                        {cat.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Estado */}
-              <div className="flex flex-col gap-1.5">
-                <Label htmlFor="estado" className="font-medium">
-                  Estado <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={form.estado}
-                  onValueChange={(v) => setField("estado", v)}
-                >
-                  <SelectTrigger id="estado" className="w-full">
-                    <SelectValue placeholder="Selecione o estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ESTADOS.map((est) => (
-                      <SelectItem key={est.id} value={est.id}>
-                        {est.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Tags */}
-            <div className="flex flex-col gap-2">
-              <Label className="font-medium">Tags</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="tag-input"
-                  placeholder="Digite uma tag e pressione Enter ou clique em Adicionar"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={handleTagKeyDown}
-                />
-                <Button type="button" variant="outline" onClick={addTag}>
-                  <Tag size={14} className="mr-1.5" />
-                  Adicionar
-                </Button>
-              </div>
-              {form.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {form.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium"
-                    >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="rounded-full hover:bg-muted p-0.5 transition-colors"
-                        aria-label={`Remover tag ${tag}`}
-                      >
-                        <X size={11} />
-                      </button>
-                    </span>
-                  ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="titulo" className="font-medium">
+                      Título <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                      id="titulo"
+                      placeholder="Informe o título da matéria"
+                      value={form.title}
+                      onChange={(e) => setField("title", e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="slug" className="font-medium">
+                      Apelido{" "}
+                      <span className="text-muted-foreground font-normal">
+                        (URL amigável - opcional)
+                      </span>
+                    </Label>
+                    <Input
+                      id="slug"
+                      placeholder="Deixe em branco para gerar do título"
+                      value={form.slug}
+                      onChange={(e) => setField("slug", e.target.value)}
+                    />
+                  </div>
                 </div>
-              )}
-            </div>
 
-            {/* Destaque */}
-            <div className="flex items-center gap-3">
-              <Switch
-                id="destaque"
-                checked={form.destaque}
-                onCheckedChange={(v) => setField("destaque", v)}
-              />
-              <Label htmlFor="destaque" className="cursor-pointer">
-                Destaque{" "}
-                <span className="text-muted-foreground font-normal text-sm">
-                  (exibe na área principal do portal)
-                </span>
-              </Label>
-            </div>
-          </fieldset>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="categoria" className="font-medium">
+                      Categoria (Secretaria){" "}
+                      <span className="text-destructive">*</span>
+                    </Label>
+                    <Select
+                      value={form.entityId}
+                      onValueChange={(v) => setField("entityId", v)}
+                      required
+                    >
+                      <SelectTrigger id="categoria" className="w-full">
+                        <SelectValue
+                          placeholder={
+                            isLoadingEntities
+                              ? "Carregando..."
+                              : "Selecione uma secretaria"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {entities.map((e) => (
+                          <SelectItem key={e.id} value={e.id}>
+                            {e.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
 
-          {/* ----------------------------------------------------------------
-              Seção: Datas
-          ---------------------------------------------------------------- */}
-          <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
-            <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-              Datas
-            </legend>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-3">
+                    <Label
+                      htmlFor="toggle-linha-fina"
+                      className="cursor-pointer"
+                    >
+                      Linha Fina (Subtítulo){" "}
+                      <span className="text-muted-foreground font-normal">
+                        (opcional)
+                      </span>
+                    </Label>
+                    <Switch
+                      id="toggle-linha-fina"
+                      checked={hasHeadline}
+                      onCheckedChange={setHasHeadline}
+                    />
+                  </div>
+                  {hasHeadline && (
+                    <Textarea
+                      id="linha-fina"
+                      placeholder="Subtítulo ou linha de apoio da matéria"
+                      value={form.headline}
+                      onChange={(e) => setField("headline", e.target.value)}
+                      rows={2}
+                      className="resize-none"
+                    />
+                  )}
+                </div>
 
-            {/* Data de Criação */}
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="data-criacao" className="font-medium">
-                Data de Criação <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="data-criacao"
-                type="datetime-local"
-                value={form.dataCriacao}
-                onChange={(e) => setField("dataCriacao", e.target.value)}
-                required
-                className="w-fit"
-              />
-            </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-medium">
+                    Conteúdo (Corpo) <span className="text-destructive">*</span>
+                  </Label>
+                  <Editor
+                    onChange={(content) => (editorContentRef.current = content)}
+                  />
+                </div>
+              </fieldset>
 
-            {/* Data de Início da Publicação (opcional) */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <Switch
-                  id="toggle-data-inicio"
-                  checked={hasDataInicio}
-                  onCheckedChange={setHasDataInicio}
-                />
-                <Label
-                  htmlFor="toggle-data-inicio"
-                  className="cursor-pointer font-medium"
-                >
-                  Data de Início da Publicação{" "}
-                  <span className="text-muted-foreground font-normal">
-                    (opcional)
-                  </span>
-                </Label>
-              </div>
-              {hasDataInicio && (
-                <Input
-                  id="data-inicio"
-                  type="datetime-local"
-                  value={form.dataInicioPublicacao}
-                  onChange={(e) =>
-                    setField("dataInicioPublicacao", e.target.value)
-                  }
-                  className="w-fit"
-                />
-              )}
-            </div>
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Mídias (Capa e Galeria)
+                </legend>
 
-            {/* Data de Fim da Publicação (opcional) */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <Switch
-                  id="toggle-data-fim"
-                  checked={hasDataFim}
-                  onCheckedChange={setHasDataFim}
-                />
-                <Label
-                  htmlFor="toggle-data-fim"
-                  className="cursor-pointer font-medium"
-                >
-                  Data de Fim da Publicação{" "}
-                  <span className="text-muted-foreground font-normal">
-                    (opcional)
-                  </span>
-                </Label>
-              </div>
-              {hasDataFim && (
-                <Input
-                  id="data-fim"
-                  type="datetime-local"
-                  value={form.dataFimPublicacao}
-                  onChange={(e) =>
-                    setField("dataFimPublicacao", e.target.value)
-                  }
-                  className="w-fit"
-                />
-              )}
-            </div>
-          </fieldset>
+                <div className="flex flex-col sm:flex-row gap-6">
+                  {/* Capa */}
+                  <div className="flex-1 space-y-3">
+                    <Label className="font-medium">Imagem de Capa</Label>
+                    {form.cover ? (
+                      <div className="relative aspect-video rounded-md overflow-hidden border">
+                        <img
+                          src={getMediaUrl(form.cover.url)}
+                          alt="Capa"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2 rounded-full h-8 w-8"
+                          onClick={() => setField("cover", null)}
+                        >
+                          <X size={16} />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full h-32 border-dashed flex flex-col gap-2"
+                        onClick={() => setIsCoverModalOpen(true)}
+                      >
+                        <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                        <span className="text-muted-foreground">
+                          Selecionar Capa
+                        </span>
+                      </Button>
+                    )}
+                  </div>
 
-          {/* ----------------------------------------------------------------
-              Ações
-          ---------------------------------------------------------------- */}
-          <div className="flex justify-end gap-3 pb-12">
-            <Button type="button" variant="outline">
-              Cancelar
+                  {/* Galeria */}
+                  <div className="flex-1 space-y-3">
+                    <Label className="font-medium">Galeria de Imagens</Label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {form.galleryImages.map((media, idx) => (
+                        <div
+                          key={idx}
+                          className="relative aspect-square rounded-md overflow-hidden border"
+                        >
+                          <img
+                            src={getMediaUrl(media.url)}
+                            alt="Galeria"
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 rounded-full h-5 w-5 p-0"
+                            onClick={() =>
+                              setField(
+                                "galleryImages",
+                                form.galleryImages.filter(
+                                  (m) => m.id !== media.id,
+                                ),
+                              )
+                            }
+                          >
+                            <X size={12} />
+                          </Button>
+                        </div>
+                      ))}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="aspect-square w-full h-32 border-dashed flex flex-col gap-2"
+                        onClick={() => setIsGalleryModalOpen(true)}
+                      >
+                        <Images className="h-5 w-5 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          Adicionar
+                        </span>
+                      </Button>
+                    </div>
+                    {form.galleryImages.length > 0 && (
+                      <div className="flex gap-4 pt-2">
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id="autoplay"
+                            checked={form.galleryAutoplay}
+                            onCheckedChange={(v) =>
+                              setField("galleryAutoplay", v)
+                            }
+                          />
+                          <Label htmlFor="autoplay" className="text-sm">
+                            Autoplay
+                          </Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id="thumbs"
+                            checked={form.galleryShowThumbnails}
+                            onCheckedChange={(v) =>
+                              setField("galleryShowThumbnails", v)
+                            }
+                          />
+                          <Label htmlFor="thumbs" className="text-sm">
+                            Miniaturas
+                          </Label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Tags de Classificação
+                </legend>
+                <div className="flex flex-col gap-2">
+                  <Label className="font-medium">Tags</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="tag-input"
+                      placeholder="Digite uma tag e aperte Enter"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      onKeyDown={handleTagKeyDown}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={onAddTagClick}
+                    >
+                      <Tag size={14} className="mr-1.5" /> Adicionar
+                    </Button>
+                  </div>
+                  {form.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {form.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium"
+                        >
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => removeTag(tag)}
+                            className="rounded-full hover:bg-muted p-0.5"
+                          >
+                            <X size={11} />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </fieldset>
+            </TabsContent>
+
+            {/* ----------------- ABA 2: PUBLICAÇÃO ----------------- */}
+            <TabsContent
+              value="publicacao"
+              className="flex flex-col gap-8 mt-6"
+            >
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Configurações de Publicação
+                </legend>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="type" className="font-medium">
+                      Tipo
+                    </Label>
+                    <Select
+                      value={form.type}
+                      onValueChange={(v) => setField("type", v)}
+                    >
+                      <SelectTrigger id="type">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CATEGORIES.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center gap-6 mt-4 md:mt-6">
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        id="destaque"
+                        checked={form.featured}
+                        onCheckedChange={(v) => setField("featured", v)}
+                      />
+                      <Label htmlFor="destaque" className="cursor-pointer">
+                        Destaque
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Switch
+                        id="comments"
+                        checked={form.allowComments}
+                        onCheckedChange={(v) => setField("allowComments", v)}
+                      />
+                      <Label htmlFor="comments" className="cursor-pointer">
+                        Permitir Comentários
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-2">
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="author" className="font-medium">
+                      Autor
+                    </Label>
+                    <Input
+                      id="author"
+                      value={form.author}
+                      readOnly
+                      className="bg-muted"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label htmlFor="editor" className="font-medium">
+                      Último Editor
+                    </Label>
+                    <Input
+                      id="editor"
+                      value={form.editor}
+                      readOnly
+                      className="bg-muted text-muted-foreground placeholder:text-muted-foreground"
+                      placeholder="Nenhum (Matéria Nova)"
+                    />
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Agendamento
+                </legend>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="font-medium">
+                      Data de Publicação{" "}
+                      <span className="text-muted-foreground font-normal">
+                        (opcional)
+                      </span>
+                    </Label>
+                    <Input
+                      type="datetime-local"
+                      value={form.publicationDate}
+                      onChange={(e) =>
+                        setField("publicationDate", e.target.value)
+                      }
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Deixe em branco para publicar imediatamente.
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="font-medium">
+                      Data de Expiração{" "}
+                      <span className="text-muted-foreground font-normal">
+                        (opcional)
+                      </span>
+                    </Label>
+                    <Input
+                      type="datetime-local"
+                      value={form.expirationDate}
+                      onChange={(e) =>
+                        setField("expirationDate", e.target.value)
+                      }
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Deixe em branco para não expirar.
+                    </span>
+                  </div>
+                </div>
+              </fieldset>
+            </TabsContent>
+
+            {/* ----------------- ABA 3: SEO ----------------- */}
+            <TabsContent value="seo" className="flex flex-col gap-8 mt-6">
+              <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+                <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                  Search Engine Optimization (SEO)
+                </legend>
+
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="seoTitle" className="font-medium">
+                    SEO Title
+                  </Label>
+                  <Input
+                    id="seoTitle"
+                    value={form.seoTitle}
+                    onChange={(e) => setField("seoTitle", e.target.value)}
+                    placeholder="Título otimizado para buscadores"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="seoDesc" className="font-medium">
+                    SEO Description
+                  </Label>
+                  <Textarea
+                    id="seoDesc"
+                    value={form.seoDescription}
+                    onChange={(e) => setField("seoDescription", e.target.value)}
+                    rows={3}
+                    placeholder="Breve resumo sobre a matéria para exibir nos resultados do Google"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-2">
+                  <Label className="font-medium">SEO Keywords</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="seo-keyword-input"
+                      placeholder="Digite uma palavra-chave e aperte Enter"
+                      value={seoKeywordInput}
+                      onChange={(e) => setSeoKeywordInput(e.target.value)}
+                      onKeyDown={handleSeoKeywordKeyDown}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={onAddSeoKeywordClick}
+                    >
+                      <Key size={14} className="mr-1.5" /> Adicionar
+                    </Button>
+                  </div>
+                  {form.seoKeywords.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {form.seoKeywords.map((keyword) => (
+                        <span
+                          key={keyword}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground text-sm font-medium"
+                        >
+                          {keyword}
+                          <button
+                            type="button"
+                            onClick={() => removeSeoKeyword(keyword)}
+                            className="rounded-full hover:bg-muted p-0.5"
+                          >
+                            <X size={11} />
+                          </button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </fieldset>
+            </TabsContent>
+          </Tabs>
+
+          <div className="flex justify-end gap-3 pb-12 mt-4">
+            <Button type="button" variant="outline" onClick={handleSaveDraft}>
+              Salvar Rascunho
             </Button>
-            <Button type="submit">Salvar (console.log)</Button>
+            <Button type="submit">Salvar e Publicar</Button>
           </div>
         </form>
+
+        {/* Modais de Mídia */}
+        <MediaPickerModal
+          isOpen={isCoverModalOpen}
+          onClose={() => setIsCoverModalOpen(false)}
+          onSelect={(media) => setField("cover", media as IMedia)}
+          multiple={false}
+        />
+
+        <MediaPickerModal
+          isOpen={isGalleryModalOpen}
+          onClose={() => setIsGalleryModalOpen(false)}
+          onSelect={(medias) =>
+            setField("galleryImages", [
+              ...form.galleryImages,
+              ...(medias as IMedia[]),
+            ])
+          }
+          multiple={true}
+        />
       </div>
     </main>
   );

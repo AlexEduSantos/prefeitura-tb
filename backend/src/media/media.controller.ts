@@ -7,7 +7,10 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
@@ -34,8 +37,30 @@ export class MediaController {
   }
 
   @Post()
+  @UseInterceptors(FileInterceptor('file'))
   @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
-  async create(@Body() createMediaDto: CreateMediaDto) {
+  async create(
+    @Body() createMediaDto: CreateMediaDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (file) {
+      // Configurar a URL (caminho público ou referência para o bucket) e os metadados do arquivo
+      createMediaDto.url = `/uploads/${file.filename}`;
+      createMediaDto.file_size = file.size;
+      createMediaDto.mime_type = file.mimetype;
+      // createMediaDto.type pode ser inferido pelo mimetype (ex: 'image', 'video', etc)
+      if (file.mimetype.startsWith('image/')) {
+        createMediaDto.type = 'image';
+      } else if (file.mimetype.startsWith('video/')) {
+        createMediaDto.type = 'video';
+      }
+    }
+    
+    // Se o usuário não enviou o tipo na DTO, garantimos que não está vazio
+    if (!createMediaDto.type) {
+        createMediaDto.type = 'document';
+    }
+
     return this.mediaService.create(createMediaDto);
   }
 

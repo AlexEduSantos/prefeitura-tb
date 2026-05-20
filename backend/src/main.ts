@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import session from 'express-session';
 import passport from 'passport';
@@ -8,7 +9,12 @@ import { ExcludePasswordInterceptor } from './common/interceptors/exclude-passwo
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  
+  // Servir arquivos do volume de uploads do Docker no endpoint /uploads
+  app.useStaticAssets('/app/uploads', {
+    prefix: '/uploads/',
+  });
 
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
