@@ -3,7 +3,7 @@ import { IsString, IsNotEmpty, IsOptional, IsInt, IsArray } from 'class-validato
 export class CreateMediaDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsOptional()
@@ -15,11 +15,11 @@ export class CreateMediaDto {
 
   @IsString()
   @IsNotEmpty()
-  type: string; // Ex: "image", "video", "audio", "document"
+  type!: string; // Ex: "image", "video", "audio", "document"
 
-  @IsString()
-  @IsNotEmpty()
-  url: string;
+  @IsString()  
+  @IsOptional()
+  url!: string;
 
   @IsInt()
   @IsOptional()

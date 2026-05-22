@@ -11,10 +11,10 @@ import {
 import { EntitiesService } from './entities.service';
 import { CreateEntityDto } from './dto/create-entity.dto';
 import { UpdateEntityDto } from './dto/update-entity.dto';
-import { SessionGuard } from 'src/auth/session.guard';
-import { PoliciesGuard } from 'src/casl/policies.guard';
-import { CheckPolicies } from 'src/casl/check-policies.decorator';
-import { Action } from 'src/casl/action.enum';
+import { Action } from '../casl/action.enum';
+import { PoliciesGuard } from '../casl/policies.guard';
+import { SessionGuard } from '../auth/session.guard';
+import { CheckPolicies } from '../casl/check-policies.decorator';
 
 @Controller('entities')
 export class EntitiesController {

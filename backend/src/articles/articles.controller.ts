@@ -11,10 +11,10 @@ import {
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
-import { SessionGuard } from 'src/auth/session.guard';
-import { PoliciesGuard } from 'src/casl/policies.guard';
-import { CheckPolicies } from 'src/casl/check-policies.decorator';
-import { Action } from 'src/casl/action.enum';
+import { Action } from '../casl/action.enum';
+import { SessionGuard } from '../auth/session.guard';
+import { PoliciesGuard } from '../casl/policies.guard';
+import { CheckPolicies } from '../casl/check-policies.decorator';
 
 @Controller('articles')
 export class ArticlesController {

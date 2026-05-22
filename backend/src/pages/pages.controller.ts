@@ -13,9 +13,9 @@ import {
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
-import { SessionGuard } from 'src/auth/session.guard';
-import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
-import { Action } from 'src/casl/action.enum';
+import { SessionGuard } from '../auth/session.guard';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { Action } from '../casl/action.enum';
 import { subject } from '@casl/ability';
 
 @Controller('pages')
