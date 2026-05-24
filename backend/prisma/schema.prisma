@@ -81,7 +81,7 @@ model Article {
   cover                    String?   @db.Text
   body                     String
   slug                     String    @unique
-  type                     String    @default("simple")
+  type                     String    @default("article")
   status                   String    @default("rascunho")
   publicationDate          DateTime?
   expirationDate           DateTime?

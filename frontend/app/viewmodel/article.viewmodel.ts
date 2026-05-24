@@ -38,6 +38,22 @@ export function ArticleViewModel() {
     },
   });
 
+  const changeStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      ArticleService.changeStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article"] });
+    },
+  });
+
+  const changeFeaturedMutation = useMutation({
+    mutationFn: ({ id, featured }: { id: string; featured: boolean }) =>
+      ArticleService.changeFeatured(id, featured),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article"] });
+    },
+  });
+
   return {
     article: articleQuery.data,
     isLoadingArticle: articleQuery.isLoading,
@@ -46,6 +62,8 @@ export function ArticleViewModel() {
     createArticle: createArticleMutation.mutate,
     updateArticle: updateArticleMutation.mutate,
     deleteArticle: deleteArticleMutation.mutate,
+    changeStatus: changeStatusMutation.mutate,
+    changeFeatured: changeFeaturedMutation.mutate,
   };
 }
 

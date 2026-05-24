@@ -67,6 +67,40 @@ export class ArticleService {
     return response.json();
   }
 
+  static async changeStatus(id: string, status: string): Promise<IArticle> {
+    const response = await fetch(`${API_URL}/articles/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ status }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar status do artigo");
+    }
+
+    return response.json();
+  }
+
+  static async changeFeatured(id: string, featured: boolean): Promise<IArticle> {
+    const response = await fetch(`${API_URL}/articles/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ featured }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar destaque do artigo");
+    }
+
+    return response.json();
+  }
+
   static async deleteArticle(id: string): Promise<IArticle> {
     const response = await fetch(`${API_URL}/articles/${id}`, {
       method: "DELETE",
