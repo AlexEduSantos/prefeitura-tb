@@ -21,8 +21,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Dados de Exemplo para Tipo
 const CATEGORIES = [
-  { id: "news", label: "Notícia" },
+  { id: "article", label: "Matéria" },
   { id: "event", label: "Evento" },
+  { id: "note", label: "Nota" },
   { id: "announcement", label: "Comunicado" },
 ];
 
@@ -386,7 +387,7 @@ export default function MateriaForm() {
                       value={form.type}
                       onValueChange={(v) => setField("type", v)}
                     >
-                      <SelectTrigger id="type">
+                      <SelectTrigger id="type" className="w-full">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

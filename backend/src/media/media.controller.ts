@@ -89,7 +89,7 @@ export class MediaController {
   )
   uploadDocument(
     @Body() createMediaDto: CreateMediaDto,
-    file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.mediaService.uploadDocument(createMediaDto, file);
   }
@@ -115,7 +115,10 @@ export class MediaController {
       },
     }),
   )
-  uploadVideo(@Body() createMediaDto: CreateMediaDto, file: Express.Multer.File) {
+  uploadVideo(
+    @Body() createMediaDto: CreateMediaDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return this.mediaService.uploadVideo(createMediaDto, file);
   }
 

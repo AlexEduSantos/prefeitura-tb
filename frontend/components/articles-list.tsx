@@ -196,7 +196,8 @@ export const columns: ColumnDef<IArticle>[] = [
       const typeMap: Record<string, string> = {
         article: "Matéria",
         event: "Evento",
-        note: "Nota",
+        note: "Nota",        
+        announcement: "Comunicado",
       };
       const rawType = row.getValue("type") as string;
       return <div className="capitalize">{typeMap[rawType] || rawType}</div>;
@@ -259,8 +260,8 @@ export function ArticlesList() {
     <div className="w-full space-y-4">
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2 flex-1 w-full">
-          <div className="flex items-center gap-2 w-full max-w-sm">
+        <div className="flex items-center gap-2 w-full">
+          <div className="flex items-center gap-2 w-full">
             <Input
               placeholder="Pesquisar por nome..."
               value={
@@ -269,7 +270,7 @@ export function ArticlesList() {
               onChange={(event) =>
                 table.getColumn("title")?.setFilterValue(event.target.value)
               }
-              className="pl-8"
+              className="w-full"
             />
             <Button>
               <Search className="h-4 w-4" />

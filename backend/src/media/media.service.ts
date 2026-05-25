@@ -8,6 +8,17 @@ import * as fs from 'fs/promises';
 import sharp from 'sharp';
 import { fileTypeFromBuffer } from 'file-type';
 
+function sanitizeFilename(title: string): string {
+  return title
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove accents
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9_-]/g, '-') // replace non-alphanumeric chars with hyphens
+    .replace(/-+/g, '-')          // remove duplicate hyphens
+    .replace(/^-|-$/g, '');       // trim leading/trailing hyphens
+}
+
 @Injectable()
 export class MediaService {
   private readonly uploadBasePath = '/app/uploads';
@@ -27,7 +38,8 @@ export class MediaService {
       await fs.mkdir(uploadDir, { recursive: true });
     }
 
-    const fileName = `${file.originalname}-${Date.now()}.webp`;
+    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'image';
+    const fileName = `${sanitizedTitle}-${Date.now()}.webp`;
     const filePath = join(uploadDir, fileName);
 
     let transformer = sharp(file.buffer).webp({ quality: 80 });
@@ -47,8 +59,8 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/images/${fileName}`,
-        file_size: (await fs.stat(uploadDir)).size,
+        url: `http://localhost:3001/uploads/images/${relativeDir}/${fileName}`,
+        file_size: (await fs.stat(filePath)).size,
         type: 'image',
         mime_type: 'image/webp',
         width: finalMetadata.width,
@@ -78,7 +90,8 @@ export class MediaService {
       await fs.mkdir(uploadDir, { recursive: true });
     }
 
-    const fileName = `${file.originalname}-${Date.now()}.${type.ext}`;
+    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'document';
+    const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
     const filePath = join(uploadDir, fileName);
 
     await fs.writeFile(filePath, file.buffer);
@@ -86,8 +99,8 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/documents/${fileName}`,
-        file_size: (await fs.stat(uploadDir)).size,
+        url: `http://localhost:3001/uploads/documents/${relativeDir}/${fileName}`,
+        file_size: (await fs.stat(filePath)).size,
         type: 'document',
         mime_type: type.mime,
       },
@@ -115,7 +128,8 @@ export class MediaService {
       await fs.mkdir(uploadDir, { recursive: true });
     }
 
-    const fileName = `${file.originalname}-${Date.now()}.${type.ext}`;
+    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'video';
+    const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
     const filePath = join(uploadDir, fileName);
 
     await fs.writeFile(filePath, file.buffer);
@@ -123,9 +137,9 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/videos/${fileName}`,
-        file_size: (await fs.stat(uploadDir)).size,
-        type: 'document',
+        url: `http://localhost:3001/uploads/videos/${relativeDir}/${fileName}`,
+        file_size: (await fs.stat(filePath)).size,
+        type: 'video',
         mime_type: type.mime,
       },
     });

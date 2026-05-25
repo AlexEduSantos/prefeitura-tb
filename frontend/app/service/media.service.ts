@@ -25,7 +25,16 @@ export class MediaService {
     if (metadata.alt_text) formData.append("alt_text", metadata.alt_text);
     if (metadata.description) formData.append("description", metadata.description);
 
-    const response = await fetch(`${API_URL}/media`, {
+    let endpoint = "document";
+    if (file.type.startsWith("image/")) {
+      endpoint = "image";
+    } else if (file.type.startsWith("video/")) {
+      endpoint = "video";
+    }
+
+    formData.append("type", endpoint);
+
+    const response = await fetch(`${API_URL}/media/${endpoint}`, {
       method: "POST",
       credentials: "include",
       // Não defina Content-Type para FormData, o navegador fará isso automaticamente com o boundary

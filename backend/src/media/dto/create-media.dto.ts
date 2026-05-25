@@ -14,7 +14,7 @@ export class CreateMediaDto {
   description?: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   type!: string; // Ex: "image", "video", "audio", "document"
 
   @IsString()  
