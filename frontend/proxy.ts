@@ -1,9 +1,8 @@
-// middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.get("connect.sid");
-  const protectedPaths = ["/administrator", "/administrator/*"]; 
+  const protectedPaths = ["/(protected)/administrator", "/(protected)/administrator/*"]; 
 
   const isProtectedRoute = protectedPaths.includes(request.nextUrl.pathname);
 
