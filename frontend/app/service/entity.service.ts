@@ -17,4 +17,53 @@ export class EntityService {
 
     return response.json();
   }
+  static async createEntity(data: { name: string; slug: string }): Promise<IEntity> {
+    const response = await fetch(`${API_URL}/entities`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao criar secretaria/entidade");
+    }
+
+    return response.json();
+  }
+
+  static async updateEntity(id: string, data: { name: string; slug: string }): Promise<IEntity> {
+    const response = await fetch(`${API_URL}/entities/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar secretaria/entidade");
+    }
+
+    return response.json();
+  }
+
+  static async deleteEntity(id: string): Promise<IEntity> {
+    const response = await fetch(`${API_URL}/entities/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao deletar secretaria/entidade");
+    }
+
+    return response.json();
+  }
 }

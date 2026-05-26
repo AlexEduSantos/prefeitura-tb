@@ -87,13 +87,6 @@ export default function MateriaForm() {
   return (
     <main className="min-h-screen bg-background">
       <div className="max-w-4xl sm:min-w-3xl lg:min-w-4xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Nova Matéria</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Preencha os dados da matéria nas abas abaixo.
-          </p>
-        </div>
-
         <form onSubmit={handlePublish} className="flex flex-col gap-8">
           <Tabs defaultValue="conteudo" className="w-full ">
             <TabsList className="flex gap-2 w-full border bg-accent">
