@@ -51,26 +51,12 @@ export function PainelSidebar() {
           title: "Categorias",
           href: "/administrator/articles/categories",
         },
-        {
-          title: "Tags",
-          href: "/administrator/articles/tags",
-        },
       ],
     },
     {
       title: "Mídias",
       icon: PaperclipIcon,
       href: "/administrator/medias",
-      subItems: [
-        {
-          title: "Enviar arquivos",
-          href: "/administrator/medias/upload",
-        },
-        {
-          title: "Biblioteca",
-          href: "/administrator/medias/library",
-        },
-      ],
     },
     {
       title: "Páginas e Menus",
@@ -80,7 +66,7 @@ export function PainelSidebar() {
     {
       title: "Configurações",
       icon: Settings,
-      href: "/administrator/settings",
+      href: "#",
       subItems: [
         {
           title: "Dados da Prefeitura",
@@ -99,7 +85,7 @@ export function PainelSidebar() {
     {
       title: "Relatórios",
       icon: FileText,
-      href: "/administrator/relatorios",
+      href: "/administrator/reports",
     },
   ];
 
@@ -181,8 +167,23 @@ export function PainelSidebar() {
                       const isSubActive = pathname === subItem.href;
                       return (
                         <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild isActive={isSubActive}>
-                            <Link href={subItem.href}>{subItem.title}</Link>
+                          <SidebarMenuSubButton
+                            asChild
+                            className={`${
+                              isSubActive
+                                ? "bg-transparent! text-primary!"
+                                : "hover:bg-muted rounded-sm"
+                            }`}
+                            isActive={isSubActive}
+                          >
+                            <Link href={subItem.href}>
+                              <span
+                                className={`bg-primary rounded-full transition-all duration-200 ${
+                                  isSubActive ? "h-1.5 w-1.5" : "h-0 w-0"
+                                }`}
+                              />
+                              {subItem.title}
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       );
