@@ -2,11 +2,13 @@
 import MateriaForm from "@/components/new-article";
 import { PainelHeader } from "@/components/painel-header";
 
-export default function Home() {
+export default function NewArticlePage() {
   return (
-    <div className="w-full flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center ">
       <PainelHeader title="Novo artigo" />
-      <MateriaForm />
+      <div className="w-full max-h-[90vh] overflow-y-auto p-2">
+        <MateriaForm />
+      </div>
     </div>
   );
 }

@@ -9,6 +9,13 @@ export function useMediaViewModel() {
   const mediaQuery = useQuery({
     queryKey: ["media"],
     queryFn: () => MediaService.getMediaList(),
+    refetchInterval: (query) => {
+      const list = query.state.data;
+      if (Array.isArray(list) && list.some((m: any) => m.status === "pending" || m.status === "processing")) {
+        return 2000;
+      }
+      return false;
+    },
   });
 
   const uploadMediaMutation = useMutation({

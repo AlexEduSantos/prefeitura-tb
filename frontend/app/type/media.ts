@@ -4,7 +4,8 @@ export interface IMedia {
   alt_text: string;
   description?: string;
   type: string;
-  url: string;
+  url?: string;
+  status?: string;
   file_size?: number;
   mime_type?: string;
   width?: number;
@@ -12,4 +13,5 @@ export interface IMedia {
   tags: string[];
   created_at: Date;
   updated_at: Date;
+  key: string;
 }

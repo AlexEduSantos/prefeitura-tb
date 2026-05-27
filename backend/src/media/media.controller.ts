@@ -10,10 +10,12 @@ import {
   UseInterceptors,
   UploadedFile,
   Req,
+  Res,
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
   BadRequestException,
+  HttpCode,
 } from '@nestjs/common';
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
@@ -23,13 +25,52 @@ import { SessionGuard } from '../auth/session.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 import { Action } from '../casl/action.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
+import type { Request, Response } from 'express';
 
 @Controller('media')
 export class MediaController {
-  constructor(private readonly mediaService: MediaService) {}
+  constructor(
+    private readonly mediaService: MediaService,
+    @InjectQueue('media-processing') private readonly mediaQueue: Queue,
+  ) {}
+
+  @Get('file/*path')
+  async serveFile(
+    @Param('path') path: string | string[],
+    @Res() res: Response,
+  ) {
+    const rawPath = Array.isArray(path) ? path.join('/') : path;
+    const key = decodeURIComponent(rawPath);
+    if (!key) {
+      throw new BadRequestException('Chave do arquivo não fornecida');
+    }
+
+    try {
+      const media = await this.mediaService.findByKey(key);
+      if (!media) {
+        return res
+          .status(404)
+          .json({ message: 'Arquivo não encontrado no banco', path: key });
+      }
+
+      if (media.status !== 'ready') {
+        return res
+          .status(404)
+          .json({ message: 'Arquivo ainda processando', status: media.status });
+      }
+
+      const presignedUrl = await this.mediaService.getPresignedUrl(key);
+      return res.redirect(presignedUrl);
+    } catch (err) {
+      return res.status(404).json({ message: 'Arquivo não encontrado' });
+    }
+  }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post('image')
+  @HttpCode(202)
   @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
   @UseInterceptors(
     FileInterceptor('file', {
@@ -50,7 +91,7 @@ export class MediaController {
       },
     }),
   )
-  uploadImage(
+  async uploadImage(
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile(
       new ParseFilePipe({
@@ -62,11 +103,19 @@ export class MediaController {
     )
     file: Express.Multer.File,
   ) {
-    return this.mediaService.uploadImage(createMediaDto, file);
+    const tempFilePath = await this.mediaService.saveTempFile(file.buffer);
+    const media = await this.mediaService.createPending(
+      createMediaDto,
+      'image',
+      file.mimetype,
+    );
+    await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
+    return media;
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post('document')
+  @HttpCode(202)
   @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
   @UseInterceptors(
     FileInterceptor('file', {
@@ -87,15 +136,23 @@ export class MediaController {
       },
     }),
   )
-  uploadDocument(
+  async uploadDocument(
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.mediaService.uploadDocument(createMediaDto, file);
+    const tempFilePath = await this.mediaService.saveTempFile(file.buffer);
+    const media = await this.mediaService.createPending(
+      createMediaDto,
+      'document',
+      file.mimetype,
+    );
+    await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
+    return media;
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post('video')
+  @HttpCode(202)
   @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
   @UseInterceptors(
     FileInterceptor('file', {
@@ -115,11 +172,18 @@ export class MediaController {
       },
     }),
   )
-  uploadVideo(
+  async uploadVideo(
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.mediaService.uploadVideo(createMediaDto, file);
+    const tempFilePath = await this.mediaService.saveTempFile(file.buffer);
+    const media = await this.mediaService.createPending(
+      createMediaDto,
+      'video',
+      file.mimetype,
+    );
+    await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
+    return media;
   }
 
   @Get()

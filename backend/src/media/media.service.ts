@@ -7,23 +7,69 @@ import { join } from 'path';
 import * as fs from 'fs/promises';
 import sharp from 'sharp';
 import { fileTypeFromBuffer } from 'file-type';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { ConfigService } from '@nestjs/config';
 
-function sanitizeFilename(title: string): string {
+export function sanitizeFilename(title: string): string {
   return title
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // remove accents
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9_-]/g, '-') // replace non-alphanumeric chars with hyphens
-    .replace(/-+/g, '-')          // remove duplicate hyphens
-    .replace(/^-|-$/g, '');       // trim leading/trailing hyphens
+    .replace(/-+/g, '-') // remove duplicate hyphens
+    .replace(/^-|-$/g, ''); // trim leading/trailing hyphens
 }
 
 @Injectable()
 export class MediaService {
   private readonly uploadBasePath = '/app/uploads';
+  private readonly s3Client: S3Client;
+  private readonly bucketName: string;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {
+    this.s3Client = new S3Client({
+      endpoint: this.configService.getOrThrow<string>('S3_ENDPOINT'),
+      region: this.configService.getOrThrow<string>('S3_REGION'),
+      forcePathStyle: true,
+      credentials: {
+        accessKeyId: this.configService.getOrThrow<string>('S3_ACCESS_KEY'),
+        secretAccessKey: this.configService.getOrThrow<string>('S3_SECRET_KEY'),
+      },
+    });
+
+    this.bucketName = this.configService.getOrThrow<string>('S3_BUCKET');
+  }
+
+  async uploadToS3(
+    key: string,
+    fileBuffer: Buffer,
+    mimeType: string,
+  ): Promise<any> {
+    const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      Body: fileBuffer,
+      ContentType: mimeType,
+    });
+    return this.s3Client.send(command);
+  }
+
+  async getPresignedUrl(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+    return getSignedUrl(this.s3Client, command, { expiresIn: 900 });
+  }
 
   async uploadImage(createMediaDto: CreateMediaDto, file: any) {
     const now = new Date();
@@ -179,6 +225,40 @@ export class MediaService {
   async remove(id: string): Promise<Media> {
     return this.prisma.media.delete({
       where: { id },
+    });
+  }
+
+  async findByKey(key: string): Promise<Media | null> {
+    return this.prisma.media.findFirst({
+      where: { key: key },
+    });
+  }
+
+  async saveTempFile(buffer: Buffer): Promise<string> {
+    const tempDir = join(this.uploadBasePath, 'tmp');
+    try {
+      await fs.access(tempDir);
+    } catch {
+      await fs.mkdir(tempDir, { recursive: true });
+    }
+    const tempFileName = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+    const tempFilePath = join(tempDir, tempFileName);
+    await fs.writeFile(tempFilePath, buffer);
+    return tempFilePath;
+  }
+
+  async createPending(
+    createMediaDto: CreateMediaDto,
+    type: string,
+    mimeType: string,
+  ): Promise<Media> {
+    return this.prisma.media.create({
+      data: {
+        ...createMediaDto,
+        type,
+        mime_type: mimeType,
+        status: 'pending',
+      },
     });
   }
 }
