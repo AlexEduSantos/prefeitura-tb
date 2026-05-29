@@ -18,12 +18,39 @@ export class MediaService {
     return response.json();
   }
 
-  static async uploadMedia(file: File, metadata: { title: string; alt_text?: string; description?: string }): Promise<IMedia> {
+  static async updateMedia(metadata: {
+    title: string;
+    alt_text?: string;
+    description?: string;
+    id: string;
+    tags?: string[];
+  }) {
+    const response = await fetch(`${API_URL}/media/${metadata.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(metadata),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao atualizar mídia");
+    }
+
+    return response.json();
+  }
+
+  static async uploadMedia(
+    file: File,
+    metadata: { title: string; alt_text?: string; description?: string },
+  ): Promise<IMedia> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("title", metadata.title);
     if (metadata.alt_text) formData.append("alt_text", metadata.alt_text);
-    if (metadata.description) formData.append("description", metadata.description);
+    if (metadata.description)
+      formData.append("description", metadata.description);
 
     let endpoint = "document";
     if (file.type.startsWith("image/")) {
@@ -59,6 +86,27 @@ export class MediaService {
 
     if (!response.ok) {
       throw new Error("Erro ao deletar mídia");
+    }
+
+    return response.json();
+  }
+
+  static async listMediaByPrefix(
+    prefix: string,
+    page: number,
+    sort: string,
+    limit: number,
+  ) {
+    const url = `${API_URL}/media/list/${prefix}?page=${page}&limit=${limit}&sort=${sort}`;
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar mídias");
     }
 
     return response.json();

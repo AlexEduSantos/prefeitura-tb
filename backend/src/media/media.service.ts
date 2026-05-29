@@ -261,4 +261,65 @@ export class MediaService {
       },
     });
   }
+
+  async listByPrefix(
+    prefix: string | string[],
+    page: number = 1,
+    limit: number = 20,
+    sort: 'asc' | 'desc' = 'desc',
+  ) {
+    // 1. Força a transformação de array para string única
+    const flatPrefix = Array.isArray(prefix) ? prefix.join('/') : prefix;
+
+    // 2. Limpeza do prefixo
+    const normalizedPrefix =
+      flatPrefix && flatPrefix !== 'root' ? flatPrefix.replace(/\/$/, '') : '';
+
+    // 1. Busca os itens (Paginação aplicada aqui)
+    // O uso de 'startsWith' no Prisma é eficiente para S3-like structures
+    const whereClause = normalizedPrefix
+      ? { key: { startsWith: `${normalizedPrefix}/` } }
+      : {};
+
+    const [items, total] = await Promise.all([
+      this.prisma.media.findMany({
+        where: whereClause,
+        orderBy: { created_at: sort },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.media.count({ where: whereClause }),
+    ]);
+
+    // 2. Lógica de separação (Pastas vs Arquivos)
+    const folders = new Set<string>();
+    const files: Media[] = [];
+
+    items.forEach((item) => {
+      // Remove o prefixo da chave para analisar o nível atual
+      const relativePath = normalizedPrefix
+        ? item.key!.replace(`${normalizedPrefix}/`, '')
+        : item.key!;
+
+      if (relativePath.includes('/')) {
+        // É uma subpasta: extraímos o primeiro segmento após o prefixo atual
+        const folderName = relativePath.split('/')[0];
+        folders.add(folderName);
+      } else {
+        // É um arquivo no diretório atual
+        files.push(item);
+      }
+    });
+
+    return {
+      folders: Array.from(folders).sort(), // Pastas ordenadas alfabeticamente
+      files,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
 }

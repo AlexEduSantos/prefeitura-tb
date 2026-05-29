@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsInt,
+  IsArray,
+} from 'class-validator';
 
 export class CreateMediaDto {
   @IsString()
@@ -17,7 +23,7 @@ export class CreateMediaDto {
   @IsOptional()
   type!: string; // Ex: "image", "video", "audio", "document"
 
-  @IsString()  
+  @IsString()
   @IsOptional()
   url!: string;
 

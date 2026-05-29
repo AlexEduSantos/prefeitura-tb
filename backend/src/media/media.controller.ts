@@ -16,6 +16,7 @@ import {
   FileTypeValidator,
   BadRequestException,
   HttpCode,
+  Query,
 } from '@nestjs/common';
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/create-media.dto';
@@ -66,6 +67,27 @@ export class MediaController {
     } catch (err) {
       return res.status(404).json({ message: 'Arquivo não encontrado' });
     }
+  }
+
+  @Get('list/*prefix')
+  async listFiles(
+    @Param('prefix') prefix: string = '',
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '20',
+    @Query('sort') sort: string = 'desc',
+  ) {
+    const normalizedPrefix = prefix === 'root' ? '' : prefix;
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+    const sortOrder =
+      sort.toLowerCase() === 'asc' ? ('asc' as const) : ('desc' as const);
+
+    return this.mediaService.listByPrefix(
+      normalizedPrefix,
+      pageNum,
+      limitNum,
+      sortOrder,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
