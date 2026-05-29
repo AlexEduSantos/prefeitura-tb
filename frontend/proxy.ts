@@ -2,7 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.get("connect.sid");
-  const protectedPaths = ["/(protected)/administrator", "/(protected)/administrator/*"]; 
+  const protectedPaths = [
+    "/administrator",
+    "/administrator/articles",
+    "/administrator/articles/*",
+    "/administrator/media",
+    "/administrator/media/*",
+    "/administrator/pages",
+    "/administrator/pages/*",
+    "/administrator/settings",
+    "/administrator/settings/*",
+    "/administrator/reports",
+    "/administrator/reports/*",
+  ];
 
   const isProtectedRoute = protectedPaths.includes(request.nextUrl.pathname);
 

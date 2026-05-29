@@ -19,8 +19,8 @@ export function useAuthViewModel() {
       setError(err.message || "Ocorreu um erro ao fazer login");
     } finally {
       setLoading(false);
-      router.push("/administrator"); 
     }
+    router.push("/administrator");
   };
 
   const register = async (name: string, email: string, password: string) => {
