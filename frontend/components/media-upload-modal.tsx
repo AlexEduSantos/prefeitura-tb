@@ -13,12 +13,14 @@ interface MediaUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUpload?: (media: IMedia) => void;
+  folderId?: string;
 }
 
 export function MediaUploadModal({
   isOpen,
   onClose,
   onUpload,
+  folderId,
 }: MediaUploadModalProps) {
   const { uploadMedia, refetchMedia } = useMediaViewModel();
 
@@ -39,7 +41,7 @@ export function MediaUploadModal({
     uploadMedia(
       {
         file,
-        metadata: { title, alt_text: altText, description },
+        metadata: { title, alt_text: altText, description, folderId },
       },
       {
         onSuccess: (data) => {

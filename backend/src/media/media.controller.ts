@@ -19,6 +19,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { MediaService } from './media.service';
+import { FoldersService } from './folders.service';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { PoliciesGuard } from '../casl/policies.guard';
@@ -34,6 +35,7 @@ import type { Request, Response } from 'express';
 export class MediaController {
   constructor(
     private readonly mediaService: MediaService,
+    private readonly foldersService: FoldersService,
     @InjectQueue('media-processing') private readonly mediaQueue: Queue,
   ) {}
 
@@ -62,8 +64,17 @@ export class MediaController {
           .json({ message: 'Arquivo ainda processando', status: media.status });
       }
 
-      const presignedUrl = await this.mediaService.getPresignedUrl(key);
-      return res.redirect(presignedUrl);
+      const s3Response = await this.mediaService.getS3Object(key);
+      res.setHeader('Content-Type', s3Response.ContentType || 'application/octet-stream');
+      if (s3Response.ContentLength) {
+        res.setHeader('Content-Length', s3Response.ContentLength);
+      }
+      
+      if (s3Response.Body) {
+        (s3Response.Body as any).pipe(res);
+      } else {
+        res.status(404).end();
+      }
     } catch (err) {
       return res.status(404).json({ message: 'Arquivo não encontrado' });
     }
@@ -245,5 +256,35 @@ export class MediaController {
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Media'))
   remove(@Param('id') id: string) {
     return this.mediaService.remove(id);
+  }
+
+  // --- FOLDER ENDPOINTS ---
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Post('folders')
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
+  createFolder(@Body() body: { name: string; parentId?: string }) {
+    return this.foldersService.create(body.name, body.parentId);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch('folders/:id/rename')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Media'))
+  renameFolder(@Param('id') id: string, @Body() body: { name: string }) {
+    return this.foldersService.rename(id, body.name);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch('folders/:id/move')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Media'))
+  moveFolder(@Param('id') id: string, @Body() body: { parentId: string | null }) {
+    return this.foldersService.move(id, body.parentId);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Delete('folders/:id')
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Media'))
+  removeFolder(@Param('id') id: string) {
+    return this.foldersService.remove(id);
   }
 }

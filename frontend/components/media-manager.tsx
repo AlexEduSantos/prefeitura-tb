@@ -4,6 +4,7 @@ import {
   useMediaViewModel,
 } from "@/app/viewmodel/media.viewmodel";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,8 +16,6 @@ import { FolderCard } from "./folder-card";
 import { FileItem } from "./file-item";
 import { Card } from "./ui/card";
 import {
-  BadgeQuestionMarkIcon,
-  ChevronDown,
   DownloadIcon,
   FilterIcon,
   FolderPlusIcon,
@@ -36,9 +35,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { MediaPickerModal } from "./media-picker-modal";
 import { useNewArticleViewModel } from "@/app/viewmodel/new-article.viewmodel";
-import { IMedia } from "@/app/type/media";
 import { MediaUploadModal } from "./media-upload-modal";
 
 export const FileExplorer = () => {
@@ -59,7 +56,70 @@ export const FileExplorer = () => {
     pagination.perPage,
   );
 
-  const { refetchMedia } = useMediaViewModel();
+  const { refetchMedia, createFolder, renameFolder, deleteFolder } =
+    useMediaViewModel();
+
+  const handleCreateFolder = () => {
+    const folderName = prompt("Digite o nome da nova pasta:");
+    if (!folderName) return;
+    const name = folderName.trim();
+    if (!name) return;
+
+    createFolder(
+      { name, parentId: data?.currentFolderId || undefined },
+      {
+        onSuccess: () => {
+          toast.success("Pasta criada com sucesso!");
+          refetchMedia();
+        },
+        onError: () => {
+          toast.error("Erro ao criar pasta");
+        },
+      },
+    );
+  };
+
+  const handleRenameFolder = (id: string, currentName: string) => {
+    const newName = prompt(
+      `Digite o novo nome para a pasta "${currentName}":`,
+      currentName,
+    );
+    if (!newName) return;
+    const name = newName.trim();
+    if (!name || name === currentName) return;
+
+    renameFolder(
+      { id, name },
+      {
+        onSuccess: () => {
+          toast.success("Pasta renomeada com sucesso!");
+          refetchMedia();
+        },
+        onError: () => {
+          toast.error("Erro ao renomear pasta");
+        },
+      },
+    );
+  };
+
+  const handleDeleteFolder = (id: string, name: string) => {
+    if (
+      !confirm(
+        `Tem certeza que deseja excluir a pasta "${name}" e todos os seus arquivos?`,
+      )
+    )
+      return;
+
+    deleteFolder(id, {
+      onSuccess: () => {
+        toast.success("Pasta excluída com sucesso!");
+        refetchMedia();
+      },
+      onError: () => {
+        toast.error("Erro ao excluir pasta");
+      },
+    });
+  };
 
   const { isCoverModalOpen, setIsCoverModalOpen, setField } =
     useNewArticleViewModel();
@@ -73,7 +133,7 @@ export const FileExplorer = () => {
             <PlusIcon />
             Enviar Arquivo
           </Button>
-          <Button variant="outline" className="">
+          <Button variant="outline" className="" onClick={handleCreateFolder}>
             <FolderPlusIcon /> Nova Pasta
           </Button>
           {selected.length > 0 && (
@@ -181,9 +241,11 @@ export const FileExplorer = () => {
         )}
         {data?.folders.map((folder: any) => (
           <FolderCard
-            key={folder}
-            name={folder}
-            onClick={() => setPathStack([...pathStack, folder])}
+            key={folder.id}
+            name={folder.name}
+            onClick={() => setPathStack([...pathStack, folder.name])}
+            onRename={() => handleRenameFolder(folder.id, folder.name)}
+            onDelete={() => handleDeleteFolder(folder.id, folder.name)}
           />
         ))}
         {data?.files.map((file: any) => (
@@ -205,6 +267,7 @@ export const FileExplorer = () => {
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onUpload={() => refetchMedia()}
+        folderId={data?.currentFolderId}
       />
     </main>
   );

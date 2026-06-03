@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   username  String   @unique
   name      String
   email     String   @unique
@@ -44,7 +44,7 @@ enum UserRole {
 }
 
 model Entity {
-  id        String    @id @default(uuid()) @db.Uuid
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String // Ex: "Secretaria de Educação"
   slug      String // Ex: "educacao" (usado na URL /secretarias/educacao)
   createdAt DateTime  @default(now())
@@ -56,7 +56,7 @@ model Entity {
 }
 
 model Page {
-  id        String  @id @default(uuid()) @db.Uuid
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title     String // Ex: "Inscrições Cursos Técnicos"
   slug      String // Ex: "inscricoes-cursos" -> gerará /educacao/inscricoes-cursos
   content   Json // Onde você salvará a estrutura de blocos do seu Page Builder
@@ -121,4 +121,19 @@ model Media {
   status      String   @default("pending") // "pending", "processing", "ready", "failed"
   created_at  DateTime @default(now()) @db.Timestamp
   updated_at  DateTime @default(now()) @db.Timestamp
+  folder      Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId    String?  @db.Uuid
+}
+
+model Folder {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  path      String   @unique // The full logical prefix (e.g. "documents/capas")
+  parentId  String?  @db.Uuid
+  parent    Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Folder[] @relation("FolderToFolder")
+  media     Media[]
+  createdAt DateTime @default(now()) @db.Timestamp
+
+  @@map("folder")
 }

@@ -11,6 +11,10 @@ import {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
+  CopyObjectCommand,
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigService } from '@nestjs/config';
@@ -69,6 +73,62 @@ export class MediaService {
       Key: key,
     });
     return getSignedUrl(this.s3Client, command, { expiresIn: 900 });
+  }
+
+  async getS3Object(key: string) {
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+    return this.s3Client.send(command);
+  }
+
+  async copyS3Object(oldKey: string, newKey: string) {
+    const command = new CopyObjectCommand({
+      Bucket: this.bucketName,
+      CopySource: encodeURIComponent(`${this.bucketName}/${oldKey}`),
+      Key: newKey,
+    });
+    return this.s3Client.send(command);
+  }
+
+  async deleteS3Object(key: string) {
+    const command = new DeleteObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+    return this.s3Client.send(command);
+  }
+
+  async deleteS3Objects(keys: string[]) {
+    if (keys.length === 0) return;
+    const command = new DeleteObjectsCommand({
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: keys.map(key => ({ Key: key })),
+        Quiet: true,
+      },
+    });
+    return this.s3Client.send(command);
+  }
+
+  async deleteS3Folder(prefix: string) {
+    const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
+    const listCommand = new ListObjectsV2Command({
+      Bucket: this.bucketName,
+      Prefix: normalizedPrefix,
+    });
+    const listResponse = await this.s3Client.send(listCommand);
+    const keys = (listResponse.Contents || [])
+      .map(item => item.Key)
+      .filter((key): key is string => !!key);
+
+    const keepKey = `${prefix}/.keep`;
+    if (!keys.includes(keepKey)) {
+      keys.push(keepKey);
+    }
+
+    await this.deleteS3Objects(keys);
   }
 
   async uploadImage(createMediaDto: CreateMediaDto, file: any) {
@@ -268,52 +328,54 @@ export class MediaService {
     limit: number = 20,
     sort: 'asc' | 'desc' = 'desc',
   ) {
-    // 1. Força a transformação de array para string única
     const flatPrefix = Array.isArray(prefix) ? prefix.join('/') : prefix;
-
-    // 2. Limpeza do prefixo
     const normalizedPrefix =
       flatPrefix && flatPrefix !== 'root' ? flatPrefix.replace(/\/$/, '') : '';
 
-    // 1. Busca os itens (Paginação aplicada aqui)
-    // O uso de 'startsWith' no Prisma é eficiente para S3-like structures
-    const whereClause = normalizedPrefix
-      ? { key: { startsWith: `${normalizedPrefix}/` } }
-      : {};
+    let parentFolderId: string | null = null;
+    if (normalizedPrefix) {
+      const folder = await this.prisma.folder.findUnique({
+        where: { path: normalizedPrefix },
+      });
+      if (!folder) {
+        return {
+          folders: [],
+          files: [],
+          currentFolderId: null,
+          pagination: {
+            total: 0,
+            page,
+            limit,
+            totalPages: 0,
+          },
+        };
+      }
+      parentFolderId = folder.id;
+    }
 
-    const [items, total] = await Promise.all([
+    // 1. Fetch child folders at this level
+    const subfolders = await this.prisma.folder.findMany({
+      where: { parentId: parentFolderId },
+      orderBy: { name: 'asc' },
+    });
+
+    // 2. Fetch media files at this level (paginated)
+    const [files, total] = await Promise.all([
       this.prisma.media.findMany({
-        where: whereClause,
+        where: { folderId: parentFolderId },
         orderBy: { created_at: sort },
         skip: (page - 1) * limit,
         take: limit,
       }),
-      this.prisma.media.count({ where: whereClause }),
+      this.prisma.media.count({
+        where: { folderId: parentFolderId },
+      }),
     ]);
 
-    // 2. Lógica de separação (Pastas vs Arquivos)
-    const folders = new Set<string>();
-    const files: Media[] = [];
-
-    items.forEach((item) => {
-      // Remove o prefixo da chave para analisar o nível atual
-      const relativePath = normalizedPrefix
-        ? item.key!.replace(`${normalizedPrefix}/`, '')
-        : item.key!;
-
-      if (relativePath.includes('/')) {
-        // É uma subpasta: extraímos o primeiro segmento após o prefixo atual
-        const folderName = relativePath.split('/')[0];
-        folders.add(folderName);
-      } else {
-        // É um arquivo no diretório atual
-        files.push(item);
-      }
-    });
-
     return {
-      folders: Array.from(folders).sort(), // Pastas ordenadas alfabeticamente
+      folders: subfolders.map((f) => ({ id: f.id, name: f.name, path: f.path })),
       files,
+      currentFolderId: parentFolderId,
       pagination: {
         total,
         page,

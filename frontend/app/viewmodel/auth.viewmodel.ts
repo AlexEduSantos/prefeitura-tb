@@ -15,12 +15,12 @@ export function useAuthViewModel() {
       setError(null);
       const loggedUser = await AuthService.login(email, password);
       setUser(loggedUser);
+      router.push("/administrator");
     } catch (err: any) {
       setError(err.message || "Ocorreu um erro ao fazer login");
     } finally {
       setLoading(false);
     }
-    router.push("/administrator");
   };
 
   const register = async (name: string, email: string, password: string) => {

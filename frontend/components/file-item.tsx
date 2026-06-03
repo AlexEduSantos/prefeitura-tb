@@ -5,6 +5,7 @@ import {
   Download,
   Ellipsis,
   File,
+  Loader2,
   Pencil,
   Save,
   Trash2,
@@ -407,13 +408,21 @@ export const FileItem = ({
           <File size={18} className="text-gray-500" />
         )}
         {file.type === "image" && (
-          <div className="relative w-full h-full bg-gray-400 rounded-md overflow-hidden">
-            <img
-              src={src}
-              alt={file.alt_text || file.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <>
+            {file.status !== "ready" ? (
+              <span className="w-full h-full flex items-center justify-center">
+                <Loader2 size={18} className="text-primary animate-spin" />
+              </span>
+            ) : (
+              <div className="relative w-full h-full bg-gray-400 rounded-md overflow-hidden">
+                <img
+                  src={src}
+                  alt={file.alt_text || file.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+          </>
         )}
         {file.type === "video" && <Video size={18} className="text-red-500" />}
       </div>

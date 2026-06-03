@@ -21,4 +21,8 @@ export class MediaGateway implements OnGatewayInit {
   notifyMediaFailed(mediaId: string, error: string) {
     this.server.emit('media:failed', { mediaId, error });
   }
+
+  notifyFoldersUpdated() {
+    this.server.emit('folders:updated');
+  }
 }

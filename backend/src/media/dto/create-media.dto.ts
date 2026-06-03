@@ -47,4 +47,8 @@ export class CreateMediaDto {
   @IsString({ each: true })
   @IsOptional()
   tags?: string[];
+
+  @IsString()
+  @IsOptional()
+  folderId?: string;
 }
