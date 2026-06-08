@@ -37,6 +37,9 @@ import {
 } from "./ui/select";
 import { useNewArticleViewModel } from "@/app/viewmodel/new-article.viewmodel";
 import { MediaUploadModal } from "./media-upload-modal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
+import { Label } from "./ui/label";
+import { useFolders } from "@/app/viewmodel/folders.viewmodel";
 
 export const FileExplorer = () => {
   const [pathStack, setPathStack] = useState<string[]>([]);
@@ -56,73 +59,18 @@ export const FileExplorer = () => {
     pagination.perPage,
   );
 
-  const { refetchMedia, createFolder, renameFolder, deleteFolder } =
-    useMediaViewModel();
+  const { refetchMedia } = useMediaViewModel();
 
-  const handleCreateFolder = () => {
-    const folderName = prompt("Digite o nome da nova pasta:");
-    if (!folderName) return;
-    const name = folderName.trim();
-    if (!name) return;
-
-    createFolder(
-      { name, parentId: data?.currentFolderId || undefined },
-      {
-        onSuccess: () => {
-          toast.success("Pasta criada com sucesso!");
-          refetchMedia();
-        },
-        onError: () => {
-          toast.error("Erro ao criar pasta");
-        },
-      },
-    );
-  };
-
-  const handleRenameFolder = (id: string, currentName: string) => {
-    const newName = prompt(
-      `Digite o novo nome para a pasta "${currentName}":`,
-      currentName,
-    );
-    if (!newName) return;
-    const name = newName.trim();
-    if (!name || name === currentName) return;
-
-    renameFolder(
-      { id, name },
-      {
-        onSuccess: () => {
-          toast.success("Pasta renomeada com sucesso!");
-          refetchMedia();
-        },
-        onError: () => {
-          toast.error("Erro ao renomear pasta");
-        },
-      },
-    );
-  };
-
-  const handleDeleteFolder = (id: string, name: string) => {
-    if (
-      !confirm(
-        `Tem certeza que deseja excluir a pasta "${name}" e todos os seus arquivos?`,
-      )
-    )
-      return;
-
-    deleteFolder(id, {
-      onSuccess: () => {
-        toast.success("Pasta excluída com sucesso!");
-        refetchMedia();
-      },
-      onError: () => {
-        toast.error("Erro ao excluir pasta");
-      },
-    });
-  };
-
-  const { isCoverModalOpen, setIsCoverModalOpen, setField } =
-    useNewArticleViewModel();
+  const {
+    isFolderModalOpen,
+    setIsFolderModalOpen,
+    newFolderName,
+    setNewFolderName,
+    submitCreateFolder,
+    handleRenameFolder,
+    handleDeleteFolder,
+    modalType,
+  } = useFolders();
 
   return (
     <main className="flex flex-col gap-4">
@@ -133,9 +81,52 @@ export const FileExplorer = () => {
             <PlusIcon />
             Enviar Arquivo
           </Button>
-          <Button variant="outline" className="" onClick={handleCreateFolder}>
+          <Button
+            variant="outline"
+            className=""
+            onClick={() => setIsFolderModalOpen(true)}
+          >
             <FolderPlusIcon /> Nova Pasta
           </Button>
+          <Dialog open={isFolderModalOpen} onOpenChange={setIsFolderModalOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {modalType === "create" ? "Nova Pasta" : "Renomear Pasta"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="folder-name">
+                    {modalType === "create"
+                      ? "Nome da pasta"
+                      : "Novo nome da pasta "}
+                  </Label>
+                  <Input
+                    id="folder-name"
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="Ex: Documentos 2026"
+                    autoFocus
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsFolderModalOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={submitCreateFolder}
+                  disabled={!newFolderName.trim()}
+                >
+                  {modalType === "create" ? "Criar" : "Atualizar"} Pasta
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
           {selected.length > 0 && (
             <>
               <Button

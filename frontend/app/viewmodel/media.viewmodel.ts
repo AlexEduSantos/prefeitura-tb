@@ -29,7 +29,12 @@ export function useMediaViewModel() {
       metadata,
     }: {
       file: File;
-      metadata: { title: string; alt_text?: string; description?: string; folderId?: string };
+      metadata: {
+        title: string;
+        alt_text?: string;
+        description?: string;
+        folderId?: string;
+      };
     }) => MediaService.uploadMedia(file, metadata),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
@@ -56,37 +61,6 @@ export function useMediaViewModel() {
     },
   });
 
-  const createFolderMutation = useMutation({
-    mutationFn: ({ name, parentId }: { name: string; parentId?: string }) =>
-      MediaService.createFolder(name, parentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-    },
-  });
-
-  const renameFolderMutation = useMutation({
-    mutationFn: ({ id, name }: { id: string; name: string }) =>
-      MediaService.renameFolder(id, name),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-    },
-  });
-
-  const moveFolderMutation = useMutation({
-    mutationFn: ({ id, parentId }: { id: string; parentId: string | null }) =>
-      MediaService.moveFolder(id, parentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-    },
-  });
-
-  const deleteFolderMutation = useMutation({
-    mutationFn: (id: string) => MediaService.deleteFolder(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["media"] });
-    },
-  });
-
   return {
     mediaList: mediaQuery.data ?? [],
     isLoadingMedia: mediaQuery.isLoading,
@@ -102,14 +76,6 @@ export function useMediaViewModel() {
     deleteMedia: deleteMediaMutation.mutate,
     isDeleting: deleteMediaMutation.isPending,
     errorDeleting: deleteMediaMutation.error,
-    createFolder: createFolderMutation.mutate,
-    isCreatingFolder: createFolderMutation.isPending,
-    renameFolder: renameFolderMutation.mutate,
-    isRenamingFolder: renameFolderMutation.isPending,
-    moveFolder: moveFolderMutation.mutate,
-    isMovingFolder: moveFolderMutation.isPending,
-    deleteFolder: deleteFolderMutation.mutate,
-    isDeletingFolder: deleteFolderMutation.isPending,
   };
 }
 
