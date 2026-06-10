@@ -20,6 +20,8 @@
     "@lexical/selection": "^0.44.0",
     "@lexical/table": "^0.44.0",
     "@lexical/utils": "^0.44.0",
+    "@measured/puck": "^0.20.2",
+    "@puckeditor/core": "^0.21.2",
     "@tanstack/react-query": "^5.100.10",
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
