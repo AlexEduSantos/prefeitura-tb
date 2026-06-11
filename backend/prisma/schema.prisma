@@ -51,6 +51,7 @@ model Entity {
   pages     Page[]
   users     User[]
   articles  Article[]
+  menus     Menu[]
 
   @@map("entity")
 }
@@ -66,10 +67,55 @@ model Page {
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // NOVO: Relacionamento reverso com os itens de menu
+  menuItems MenuItem[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@unique([entityId, slug]) // Garante que não haja duas páginas com o mesmo slug na MESMA secretaria
+}
+
+model Menu {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String // Ex: "Menu Principal" ou "Links Úteis"
+  location String // Identificador interno. Ex: "header", "footer", "sidebar"
+
+  // O menu também pertence a uma Secretaria
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
+
+  items MenuItem[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  // Garante que uma secretaria não tenha dois menus marcados como "header" ao mesmo tempo
+  @@unique([entityId, location])
+}
+
+model MenuItem {
+  id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  label String // O texto que aparece no botão. Ex: "Fale Conosco"
+  order Int     @default(0) // Para ordenar os links arrastando e soltando
+  url   String? // Usado APENAS se for um link externo ou âncora (ex: https://google.com)
+
+  // Relacionamento com o Menu Pai
+  menuId String @db.Uuid
+  menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  // Relacionamento OPCIONAL com uma Página interna
+  // onDelete: SetNull -> Se a página for apagada, o link não quebra o sistema, apenas perde o destino
+  pageId String? @db.Uuid
+  page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+
+  // Relacionamento recursivo (Para criar submenus / dropdowns)
+  parentId String?    @db.Uuid
+  parent   MenuItem?  @relation("MenuHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children MenuItem[] @relation("MenuHierarchy")
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 }
 
 model Article {

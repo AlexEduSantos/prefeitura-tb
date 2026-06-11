@@ -196,7 +196,7 @@ export const columns: ColumnDef<IArticle>[] = [
       const typeMap: Record<string, string> = {
         article: "Matéria",
         event: "Evento",
-        note: "Nota",        
+        note: "Nota",
         announcement: "Comunicado",
       };
       const rawType = row.getValue("type") as string;
@@ -403,7 +403,7 @@ export function ArticlesList() {
         </div>
       </div>
       {/* Table */}
-      <div className="rounded-md border">
+      <div className="rounded-lg border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -454,7 +454,7 @@ export function ArticlesList() {
         </Table>
       </div>
       {/* Pagination */}
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 px-2">
         <div className="flex items-center gap-2 min-w-[280px]">
           <Button
             variant="outline"
