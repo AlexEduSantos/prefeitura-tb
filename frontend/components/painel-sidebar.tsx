@@ -5,6 +5,7 @@ import {
   Settings,
   PaperclipIcon,
   SquareArrowOutUpLeft,
+  TestTube2,
 } from "lucide-react";
 import {
   Sidebar,
@@ -61,7 +62,17 @@ export function PainelSidebar() {
     {
       title: "Páginas e Menus",
       icon: FileText,
-      href: "/administrator/pages",
+      href: "#",
+      subItems: [
+        {
+          title: "Páginas",
+          href: "/administrator/pages",
+        },
+        {
+          title: "Menus",
+          href: "/administrator/menus",
+        },
+      ],
     },
     {
       title: "Configurações",
@@ -86,6 +97,11 @@ export function PainelSidebar() {
       title: "Relatórios",
       icon: FileText,
       href: "/administrator/reports",
+    },
+    {
+      title: "Página de Teste",
+      icon: TestTube2,
+      href: "/administrator/test",
     },
   ];
 
