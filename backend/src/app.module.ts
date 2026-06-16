@@ -9,6 +9,7 @@ import { PagesModule } from './pages/pages.module';
 import { ArticlesModule } from './articles/articles.module';
 import { MediaModule } from './media/media.module';
 import { EntitiesModule } from './entities/entities.module';
+import { MenusModule } from './menus/menus.module';
 import { BullModule } from '@nestjs/bullmq';
 
 @Module({
@@ -26,6 +27,7 @@ import { BullModule } from '@nestjs/bullmq';
     ArticlesModule,
     MediaModule,
     EntitiesModule,
+    MenusModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
