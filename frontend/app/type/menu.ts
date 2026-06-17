@@ -21,9 +21,9 @@ export interface IMenuItem {
   url?: string;
   menuId: string;
   menu: IMenu;
-  pageId?: string;
+  pageId?: string | null;
   page: IPage;
-  parentId?: string;
+  parentId?: string | null;
   parent: IMenuItem;
   children?: IMenuItem[];
   createdAt?: Date;

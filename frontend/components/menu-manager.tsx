@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
+import { MenuModal } from "./menu-modal";
+import { IMenuItem } from "@/app/type/menu";
 
 export function MenusManager() {
   const {
@@ -35,7 +37,50 @@ export function MenusManager() {
     levelOptions,
     table,
     columns,
+    selectedItem,
+    setSelectedItem,
+    isMenuModalOpen,
+    setIsMenuModalOpen,
+    selectedMode,
+    syncMenuItems,
+    subMenus,
   } = useMenusViewModel();
+
+  const handleSaveItem = (data: Partial<IMenuItem>) => {
+    // Se for edição, atualiza o item existente
+    // Se for criação, adiciona novo
+    // Como estamos usando syncMenuItems, precisamos integrar com a lista completa
+    // Exemplo: substitui o item editado na lista e chama sync
+    if (selectedItem) {
+      const updatedItems = subMenus?.map((item) =>
+        item.id === selectedItem.id ? { ...item, ...data } : item,
+      );
+      if (updatedItems && selectedItem.menuId) {
+        syncMenuItems.mutate({
+          menuId: selectedItem.menuId,
+          items: updatedItems as IMenuItem[],
+        });
+      }
+    } else {
+      // Criação: adiciona novo item com ID temporário
+      const newItem: Partial<IMenuItem> = {
+        id: crypto.randomUUID(),
+        label: data.label || "",
+        url: data.url || "",
+        pageId: data.pageId || "",
+        parentId: data.parentId || "",
+        order: data.order || 0,
+        menuId: selectedMenuId !== "all" ? selectedMenuId : "",
+      };
+      const updatedItems = [...(subMenus || []), newItem];
+      syncMenuItems.mutate({
+        menuId: newItem.menuId || "",
+        items: updatedItems as IMenuItem[],
+      });
+    }
+    setIsMenuModalOpen(false);
+    setSelectedItem(null);
+  };
 
   // Estados de loading e erro
   if (isLoadingMenu || isLoadingSubMenu) {
@@ -172,6 +217,17 @@ export function MenusManager() {
           </Button>
         </div>
       </div>
+      <MenuModal
+        menuItem={selectedItem}
+        mode={selectedItem ? "edit" : "create"}
+        isOpen={isMenuModalOpen}
+        onClose={() => {
+          setIsMenuModalOpen(false);
+          setSelectedItem(null);
+        }}
+        onSave={handleSaveItem}
+        allItems={subMenus || []}
+      />
     </div>
   );
 }
