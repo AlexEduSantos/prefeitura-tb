@@ -5,24 +5,51 @@ import { PagesService } from "../service/pages.service";
 import { IPage } from "../type/page";
 import { toast } from "sonner";
 import { useState } from "react";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
 
-export function usePagesViewModel() {
+export function usePagesViewModel(columns: ColumnDef<IPage>[]) {
+  // ── UI State ────────────────────────────────────────────────────────────────
   const [isOpenNewPageModal, setIsOpenNewPageModal] = useState(false);
+  const [isOpenViewModal, setIsOpenViewModal] = useState(false);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [id, setId] = useState("");
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
 
+  // ── Table State ─────────────────────────────────────────────────────────────
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    published: true,
+    title: true,
+    slug: true,
+    Ações: true,
+  });
+  const [rowSelection, setRowSelection] = useState({});
+
+  // ── Queries ─────────────────────────────────────────────────────────────────
   const getPagesListQuery = useQuery<IPage[]>({
     queryKey: ["pages"],
     queryFn: () => PagesService.getPagesList(),
   });
 
   const getPageByIdQuery = useQuery({
-    queryKey: ["page"],
+    queryKey: ["page", id],
     queryFn: () => PagesService.getPage(id),
+    enabled: !!id,
   });
 
-  // mutations
+  // ── Mutations ────────────────────────────────────────────────────────────────
   const savePageMutation = useMutation({
     mutationFn: (data: any) => PagesService.savePage(data),
     onSuccess: () => {
@@ -69,16 +96,95 @@ export function usePagesViewModel() {
     },
   });
 
+  // ── Handlers ──────────────────────────────────────────────────────────────────
+
+  /** Chamado pelo NewPageModal ao confirmar criação ou edição. */
+  const handleSubmitPage = (puckData: any, entityId: string) => {
+    if (modalMode === "create") {
+      savePageMutation.mutate(
+        { title, slug, content: puckData, entityId },
+        {
+          onSuccess: () => {
+            setIsOpenNewPageModal(false);
+            setTitle("");
+            setSlug("");
+          },
+        }
+      );
+    } else {
+      updatePageMutation.mutate(
+        { id, data: { title, slug, content: puckData, entityId } },
+        {
+          onSuccess: () => {
+            setIsOpenNewPageModal(false);
+            setTitle("");
+            setSlug("");
+          },
+        }
+      );
+    }
+  };
+
+  /** Abre o modal de criação. */
+  const handleOpenCreate = () => {
+    setModalMode("create");
+    setIsOpenNewPageModal(true);
+  };
+
+  /** Abre o modal de edição para a página com o id informado. */
+  const handleOpenEdit = (pageId: string) => {
+    setId(pageId);
+    setModalMode("edit");
+    setIsOpenNewPageModal(true);
+  };
+
+  /** Abre o modal de visualização para a página com o id informado. */
+  const handleOpenView = (pageId: string) => {
+    setId(pageId);
+    setIsOpenViewModal(true);
+  };
+
+  /** Fecha o modal de nova página e reseta os campos. */
+  const handleCloseNewPageModal = () => {
+    setIsOpenNewPageModal(false);
+    setTitle("");
+    setSlug("");
+  };
+
+  // ── Table ────────────────────────────────────────────────────────────────────
+  const table = useReactTable<IPage>({
+    data: getPagesListQuery.data || [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+    meta: {
+      changePublished: changePublishedPageMutation,
+      deletePage: deletePageMutation,
+      handleOpenEdit,
+      handleOpenView,
+    },
+  });
+
+  // ── Return ───────────────────────────────────────────────────────────────────
   return {
+    // Queries
     pages: getPagesListQuery.data,
     isLoadingPage: getPagesListQuery.isLoading,
     isErrorPage: getPagesListQuery.isError,
     errorPage: getPagesListQuery.error,
     refetchPages: getPagesListQuery.refetch,
-    savePage: savePageMutation,
-    updatePage: updatePageMutation,
-    deletePage: deletePageMutation,
-    changePublished: changePublishedPageMutation,
 
     page: getPageByIdQuery.data,
     isLoadingPageById: getPageByIdQuery.isLoading,
@@ -86,13 +192,34 @@ export function usePagesViewModel() {
     errorPageById: getPageByIdQuery.error,
     refetchPageById: getPageByIdQuery.refetch,
 
+    // Mutations expostos para acesso a isPending etc.
+    savePage: savePageMutation,
+    updatePage: updatePageMutation,
+    deletePage: deletePageMutation,
+    changePublished: changePublishedPageMutation,
+
+    // UI State
     isOpenNewPageModal,
     setIsOpenNewPageModal,
+    isOpenViewModal,
+    setIsOpenViewModal,
     title,
     setTitle,
     slug,
     setSlug,
     id,
     setId,
+    modalMode,
+    setModalMode,
+
+    // Table
+    table,
+
+    // Handlers
+    handleSubmitPage,
+    handleOpenCreate,
+    handleOpenEdit,
+    handleOpenView,
+    handleCloseNewPageModal,
   };
 }

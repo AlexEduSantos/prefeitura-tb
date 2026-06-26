@@ -27,18 +27,7 @@ import {
   Trash,
   XCircleIcon,
 } from "lucide-react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -50,7 +39,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useState } from "react";
 import { Input } from "./ui/input";
 import {
   Select,
@@ -71,22 +59,10 @@ export const columns: ColumnDef<IPage>[] = [
       const meta = table.options.meta as any;
 
       const handlePublishedChange = () => {
-        console.log({ id: row.original.id, published: !published });
         meta?.changePublished?.mutate({
           id: row.original.id,
           published: !published,
         });
-      };
-
-      const getStatusIcon = (status: string) => {
-        switch (status?.toLowerCase()) {
-          case "published":
-            return <CheckCircle className="h-4 w-4 text-green-500" />;
-          case "unpublished":
-            return <Trash className="h-4 w-4 text-red-500" />;
-          default:
-            return <FileText className="h-4 w-4 text-gray-500" />;
-        }
       };
 
       return (
@@ -148,10 +124,7 @@ export const columns: ColumnDef<IPage>[] = [
             size="icon"
             className="h-8 w-8 cursor-pointer"
             title="Ver"
-            onClick={() => {
-              meta?.setId(row.original.id);
-              meta?.setIsOpenViewModal(true);
-            }}
+            onClick={() => meta?.handleOpenView(row.original.id)}
           >
             <EyeIcon className="h-4 w-4" />
           </Button>
@@ -160,9 +133,7 @@ export const columns: ColumnDef<IPage>[] = [
             size="icon"
             className="h-8 w-8 cursor-pointer"
             title="Editar"
-            onClick={() => {
-              alert("Edição será implementada em breve.");
-            }}
+            onClick={() => meta?.handleOpenEdit(row.original.id)}
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -187,61 +158,24 @@ export const columns: ColumnDef<IPage>[] = [
 
 export function PageManager() {
   const {
-    pages,
-    refetchPages,
     isLoadingPage,
     isErrorPage,
     errorPage,
-    savePage,
-    updatePage,
-    deletePage,
-    changePublished,
     isOpenNewPageModal,
-    setIsOpenNewPageModal,
+    isOpenViewModal,
+    setIsOpenViewModal,
     title,
     setTitle,
     slug,
     setSlug,
-    id,
-    setId,
+    modalMode,
+    table,
     page,
-  } = usePagesViewModel();
-
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    published: true,
-    title: true,
-    slug: true,
-    Ações: true,
-  });
-  const [rowSelection, setRowSelection] = useState({});
-  const [isOpenViewModal, setIsOpenViewModal] = useState(false);
-
-  const table = useReactTable({
-    data: pages || [],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-    meta: {
-      changePublished,
-      setId,
-      setIsOpenViewModal,
-      deletePage,
-    },
-  });
+    isLoadingPageById,
+    handleSubmitPage,
+    handleOpenCreate,
+    handleCloseNewPageModal,
+  } = usePagesViewModel(columns);
 
   if (isLoadingPage) return <div>Carregando...</div>;
   if (isErrorPage)
@@ -307,7 +241,6 @@ export function PageManager() {
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
-
               <DropdownMenuItem
                 onClick={() => {
                   table.getColumn("published")?.setFilterValue(undefined);
@@ -342,7 +275,7 @@ export function PageManager() {
             variant={"default"}
             size={"icon"}
             className="cursor-pointer min-w-fit px-2"
-            onClick={() => setIsOpenNewPageModal(true)}
+            onClick={handleOpenCreate}
           >
             <PlusIcon className="h-4 w-4" />
             Criar Página
@@ -423,32 +356,29 @@ export function PageManager() {
       </div>
       <NewPageModal
         isOpen={isOpenNewPageModal}
-        onClose={() => setIsOpenNewPageModal(false)}
-        onSubmit={(puckData, entityId) => {
-          savePage.mutate(
-            {
-              title,
-              slug,
-              content: puckData,
-              entityId,
-            },
-            {
-              onSuccess: () => {
-                setIsOpenNewPageModal(false);
-                setTitle("");
-                setSlug("");
-              },
-            },
-          );
-        }}
+        onClose={handleCloseNewPageModal}
+        mode={modalMode}
+        onSubmit={handleSubmitPage}
         onChangeTitle={setTitle}
         onChangeSlug={setSlug}
-        title={title}
-        slug={slug}
+        title={page?.title || ""}
+        slug={page?.slug || ""}
+        initialData={
+          page
+            ? {
+                content: page.content,
+                entityId: page.entityId,
+                title: page.title,
+                slug: page.slug,
+              }
+            : undefined
+        }
       />
       <ViewPageModal
         isOpen={isOpenViewModal}
         onClose={() => setIsOpenViewModal(false)}
+        page={page}
+        isLoading={isLoadingPageById}
       />
     </div>
   );
