@@ -1,6 +1,12 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsInt,
+  IsUUID,
+} from 'class-validator';
 
-export class MenuItemDto {
+export class CreateMenuItemDto {
   @IsString()
   @IsOptional()
   id?: string; // Client-side or temporary ID to match parent-child relations in the payload
