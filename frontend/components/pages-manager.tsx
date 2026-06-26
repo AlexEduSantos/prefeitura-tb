@@ -59,6 +59,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { NewPageModal } from "./new-page-modal";
+import { ViewPageModal } from "./view-page-modal";
 
 export const columns: ColumnDef<IPage>[] = [
   {
@@ -136,34 +138,50 @@ export const columns: ColumnDef<IPage>[] = [
   {
     id: "Ações",
     header: "Ações",
-    cell: ({ row }) => (
-      <div className="flex items-center gap-2 w-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 cursor-pointer"
-          title="Ver"
-        >
-          <EyeIcon className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 cursor-pointer"
-          title="Editar"
-        >
-          <Pencil className="h-4 w-4" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 cursor-pointer"
-          title="Deletar"
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
-      </div>
-    ),
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as any;
+
+      return (
+        <div className="flex items-center gap-2 w-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer"
+            title="Ver"
+            onClick={() => {
+              meta?.setId(row.original.id);
+              meta?.setIsOpenViewModal(true);
+            }}
+          >
+            <EyeIcon className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer"
+            title="Editar"
+            onClick={() => {
+              alert("Edição será implementada em breve.");
+            }}
+          >
+            <Pencil className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer"
+            title="Deletar"
+            onClick={() => {
+              if (confirm("Tem certeza que deseja deletar esta página?")) {
+                meta?.deletePage?.mutate(row.original.id);
+              }
+            }}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
 
@@ -178,6 +196,15 @@ export function PageManager() {
     updatePage,
     deletePage,
     changePublished,
+    isOpenNewPageModal,
+    setIsOpenNewPageModal,
+    title,
+    setTitle,
+    slug,
+    setSlug,
+    id,
+    setId,
+    page,
   } = usePagesViewModel();
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -189,6 +216,7 @@ export function PageManager() {
     Ações: true,
   });
   const [rowSelection, setRowSelection] = useState({});
+  const [isOpenViewModal, setIsOpenViewModal] = useState(false);
 
   const table = useReactTable({
     data: pages || [],
@@ -209,6 +237,9 @@ export function PageManager() {
     },
     meta: {
       changePublished,
+      setId,
+      setIsOpenViewModal,
+      deletePage,
     },
   });
 
@@ -311,6 +342,7 @@ export function PageManager() {
             variant={"default"}
             size={"icon"}
             className="cursor-pointer min-w-fit px-2"
+            onClick={() => setIsOpenNewPageModal(true)}
           >
             <PlusIcon className="h-4 w-4" />
             Criar Página
@@ -389,6 +421,35 @@ export function PageManager() {
           </Button>
         </div>
       </div>
+      <NewPageModal
+        isOpen={isOpenNewPageModal}
+        onClose={() => setIsOpenNewPageModal(false)}
+        onSubmit={(puckData, entityId) => {
+          savePage.mutate(
+            {
+              title,
+              slug,
+              content: puckData,
+              entityId,
+            },
+            {
+              onSuccess: () => {
+                setIsOpenNewPageModal(false);
+                setTitle("");
+                setSlug("");
+              },
+            },
+          );
+        }}
+        onChangeTitle={setTitle}
+        onChangeSlug={setSlug}
+        title={title}
+        slug={slug}
+      />
+      <ViewPageModal
+        isOpen={isOpenViewModal}
+        onClose={() => setIsOpenViewModal(false)}
+      />
     </div>
   );
 }

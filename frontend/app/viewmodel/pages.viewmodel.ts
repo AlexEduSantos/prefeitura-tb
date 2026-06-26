@@ -4,11 +4,22 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { PagesService } from "../service/pages.service";
 import { IPage } from "../type/page";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export function usePagesViewModel() {
+  const [isOpenNewPageModal, setIsOpenNewPageModal] = useState(false);
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [id, setId] = useState("");
+
   const getPagesListQuery = useQuery<IPage[]>({
     queryKey: ["pages"],
     queryFn: () => PagesService.getPagesList(),
+  });
+
+  const getPageByIdQuery = useQuery({
+    queryKey: ["page"],
+    queryFn: () => PagesService.getPage(id),
   });
 
   // mutations
@@ -68,5 +79,20 @@ export function usePagesViewModel() {
     updatePage: updatePageMutation,
     deletePage: deletePageMutation,
     changePublished: changePublishedPageMutation,
+
+    page: getPageByIdQuery.data,
+    isLoadingPageById: getPageByIdQuery.isLoading,
+    isErrorPageById: getPageByIdQuery.isError,
+    errorPageById: getPageByIdQuery.error,
+    refetchPageById: getPageByIdQuery.refetch,
+
+    isOpenNewPageModal,
+    setIsOpenNewPageModal,
+    title,
+    setTitle,
+    slug,
+    setSlug,
+    id,
+    setId,
   };
 }

@@ -16,18 +16,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
 import { MenuModal } from "./menu-modal";
-import { IMenuItem } from "@/app/type/menu";
+import { IMenu, IMenuItem } from "@/app/type/menu";
 
 export function MenusManager() {
   const {
     menus,
-    isLoadingMenu,
-    isLoadingSubMenu,
-    isErrorMenu,
-    errorMenu,
+    isLoadingMenus,
+    errorMenus,
+
+    menuItems,
+    isLoadingMenuItems,
+    errorMenuItems,
+
+    createMenu: createMenuMutation,
+    updateMenu: updateMenuMutation,
+    deleteMenu: deleteMenuMutation,
+
+    createItem: createItemMutation,
+    updateItem: updateItemMutation,
+    deleteItem: deleteItemMutation,
     selectedMenuId,
     setSelectedMenuId,
     searchTerm,
@@ -42,8 +52,7 @@ export function MenusManager() {
     isMenuModalOpen,
     setIsMenuModalOpen,
     selectedMode,
-    syncMenuItems,
-    subMenus,
+    setSelectedMode,
   } = useMenusViewModel();
 
   const handleSaveItem = (data: Partial<IMenuItem>) => {
@@ -52,13 +61,14 @@ export function MenusManager() {
     // Como estamos usando syncMenuItems, precisamos integrar com a lista completa
     // Exemplo: substitui o item editado na lista e chama sync
     if (selectedItem) {
-      const updatedItems = subMenus?.map((item) =>
+      const updatedItems = menuItems?.map((item: any) =>
         item.id === selectedItem.id ? { ...item, ...data } : item,
       );
       if (updatedItems && selectedItem.menuId) {
-        syncMenuItems.mutate({
+        updateItemMutation.mutate({
           menuId: selectedItem.menuId,
-          items: updatedItems as IMenuItem[],
+          itemId: selectedItem.id,
+          data,
         });
       }
     } else {
@@ -72,10 +82,9 @@ export function MenusManager() {
         order: data.order || 0,
         menuId: selectedMenuId !== "all" ? selectedMenuId : "",
       };
-      const updatedItems = [...(subMenus || []), newItem];
-      syncMenuItems.mutate({
+      createItemMutation.mutate({
         menuId: newItem.menuId || "",
-        items: updatedItems as IMenuItem[],
+        data: newItem as IMenuItem,
       });
     }
     setIsMenuModalOpen(false);
@@ -83,69 +92,81 @@ export function MenusManager() {
   };
 
   // Estados de loading e erro
-  if (isLoadingMenu || isLoadingSubMenu) {
+  if (isLoadingMenus || isLoadingMenuItems) {
     return <div>Carregando itens...</div>;
-  }
-
-  if (isErrorMenu) {
-    return <div>Erro ao carregar menus: {errorMenu?.message}</div>;
   }
 
   return (
     <div className="w-full space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-col md:flex-row items-center gap-4">
+      <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
         {/* Seletor de Menu */}
-        <div className="w-full md:w-auto">
-          <Select
-            value={selectedMenuId}
-            onValueChange={(value) => setSelectedMenuId(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Todos os menus" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os menus</SelectItem>
-              {menus?.map((menu) => (
-                <SelectItem key={menu.id} value={menu.id}>
-                  {menu.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col md:flex-row gap-2">
+          <div className="w-full md:w-auto">
+            <Select
+              value={selectedMenuId}
+              onValueChange={(value) => setSelectedMenuId(value)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Todos os menus" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os menus</SelectItem>
+                {menus?.data?.map((menu: IMenu) => (
+                  <SelectItem key={menu.id} value={menu.id}>
+                    {menu.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          {/* Barra de pesquisa */}
+          <div className="relative w-full md:w-64">
+            <Input
+              placeholder="Pesquisar por label..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pr-8"
+            />
+            <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          </div>
+          {/* Seletor de nível */}
+          <div className="w-full md:w-auto">
+            <Select
+              value={String(selectedLevel)}
+              onValueChange={(value) =>
+                setSelectedLevel(value === "all" ? "all" : Number(value))
+              }
+            >
+              <SelectTrigger className="w-[150px]">
+                <SelectValue placeholder="Todos os níveis" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos os níveis</SelectItem>
+                {levelOptions.map((level) => (
+                  <SelectItem key={level} value={String(level)}>
+                    Nível {level}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-
-        {/* Barra de pesquisa */}
-        <div className="relative w-full md:w-64">
-          <Input
-            placeholder="Pesquisar por label..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pr-8"
-          />
-          <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        </div>
-
-        {/* Seletor de nível */}
-        <div className="w-full md:w-auto">
-          <Select
-            value={String(selectedLevel)}
-            onValueChange={(value) =>
-              setSelectedLevel(value === "all" ? "all" : Number(value))
-            }
+        <div className="flex gap-2">
+          <Button>
+            <Plus />
+            Novo Menu
+          </Button>
+          <Button
+            onClick={() => {
+              setSelectedMode("create");
+              setSelectedItem(null);
+              setIsMenuModalOpen(true);
+            }}
           >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Todos os níveis" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos os níveis</SelectItem>
-              {levelOptions.map((level) => (
-                <SelectItem key={level} value={String(level)}>
-                  Nível {level}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Plus />
+            Adicionar item
+          </Button>
         </div>
       </div>
 
@@ -226,7 +247,7 @@ export function MenusManager() {
           setSelectedItem(null);
         }}
         onSave={handleSaveItem}
-        allItems={subMenus || []}
+        allItems={menuItems || []}
       />
     </div>
   );

@@ -25,22 +25,33 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function useMenusViewModel() {
   const router = useRouter();
 
   const queryClient = useQueryClient();
 
-  // Query to fetch menu by location and entityId
-  const getMenuQuery = useQuery<IMenu>({
-    queryKey: ["menus"],
-    queryFn: () => MenusService.getAll(),
-    retry: false,
-  });
+  // NOVO: estados para paginação dos menus
+  const [menuPage, setMenuPage] = useState(1);
+  const [menuLimit, setMenuLimit] = useState(10);
+  const [menuSortBy, setMenuSortBy] = useState<string | undefined>("name");
+  const [menuOrder, setMenuOrder] = useState<"asc" | "desc">("asc");
 
-  const getSubMenuQuery = useQuery<IMenuItem[]>({
-    queryKey: ["subitems"],
-    queryFn: () => MenusService.getAllSubItems(),
+  // Query para buscar menus com paginação
+  const {
+    data: menus,
+    isLoading: isLoadingMenus,
+    error: errorMenus,
+  } = useQuery({
+    queryKey: ["menus", menuPage, menuLimit, menuSortBy, menuOrder],
+    queryFn: () =>
+      MenusService.getAll({
+        page: menuPage,
+        limit: menuLimit,
+        sortBy: menuSortBy,
+        order: menuOrder,
+      }),
     retry: false,
   });
 
@@ -58,16 +69,96 @@ export function useMenusViewModel() {
     },
   });
 
-  // Mutation to sync menu items
-  const syncMenuItemsMutation = useMutation({
-    mutationFn: ({ menuId, items }: { menuId: string; items: IMenuItem[] }) =>
-      MenusService.syncMenuItems(menuId, items),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["menu"] }); // invalidate all menu queries to fetch updated hierarchy
-      toast.success("Menu sincronizado com sucesso!");
+  const updateMenuMutation = useMutation({
+    mutationFn: ({
+      menuId,
+      data,
+    }: {
+      menuId: string;
+      data: Partial<ICreateMenu>;
+    }) => MenusService.updateMenu(menuId, data),
+    onSuccess: (updatedMenu) => {
+      queryClient.invalidateQueries({
+        queryKey: ["menu", updatedMenu.location, updatedMenu.entityId],
+      });
+      toast.success("Menu atualizado com sucesso!");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Erro ao sincronizar os itens do menu.");
+      toast.error(error.message || "Erro ao atualizar o menu.");
+    },
+  });
+
+  // Mutation para deletar um menu
+  const deleteMenuMutation = useMutation({
+    mutationFn: (menuId: string) => MenusService.deleteMenu(menuId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["menus"] });
+      toast.success("Menu deletado com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao deletar o menu.");
+    },
+  });
+
+  // Query para buscar todos os subitens (se ainda for usado) - com paginação
+  const {
+    data: menuItems,
+    isLoading: isLoadingMenuItems,
+    error: errorMenuItems,
+  } = useQuery({
+    queryKey: ["menuItems"],
+    queryFn: () => MenusService.getAllMenuItems(),
+    retry: false,
+  });
+
+  // Mutation para criar um item individual (se necessário)
+  const createItemMutation = useMutation({
+    mutationFn: ({
+      menuId,
+      data,
+    }: {
+      menuId: string;
+      data: Partial<IMenuItem>;
+    }) => MenusService.createItem(menuId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subitems"] });
+      toast.success("Item criado!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao criar item.");
+    },
+  });
+
+  // Mutation para atualizar um item
+  const updateItemMutation = useMutation({
+    mutationFn: ({
+      menuId,
+      itemId,
+      data,
+    }: {
+      menuId: string;
+      itemId: string;
+      data: Partial<IMenuItem>;
+    }) => MenusService.updateItem(menuId, itemId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["menuItems"] });
+      toast.success("Item atualizado!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar item.");
+    },
+  });
+
+  // Mutation para deletar um item
+  const deleteItemMutation = useMutation({
+    mutationFn: ({ menuId, itemId }: { menuId: string; itemId: string }) =>
+      MenusService.deleteItem(menuId, itemId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["menuItems"] });
+      toast.success("Item removido!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao remover item.");
     },
   });
 
@@ -83,16 +174,16 @@ export function useMenusViewModel() {
 
   // Mapa menuId -> nome (para exibir na coluna "Menu")
   const menuMap = useMemo(() => {
-    const data = getMenuQuery.data as IMenu[] | undefined;
+    const data = menus as IMenu[] | undefined;
     if (!data || !Array.isArray(data)) return new Map<string, string>();
     return new Map(data.map((m) => [m.id, m.name]));
-  }, [getMenuQuery.data]);
+  }, [menus]);
 
   // 1. Converte todos os subMenus em lista plana com níveis (com memo)
   const allFlatItems = useMemo(() => {
-    if (!getSubMenuQuery.data) return [] as FlatMenuItem[];
-    return flattenTreeWithLevel(getSubMenuQuery.data as any);
-  }, [getSubMenuQuery.data]);
+    if (!menuItems) return [] as FlatMenuItem[];
+    return flattenTreeWithLevel(menuItems);
+  }, [menuItems]);
 
   // 2. Aplica os filtros sobre a lista plana
   const filteredItems = useMemo(() => {
@@ -115,24 +206,11 @@ export function useMenusViewModel() {
   }, [allFlatItems, selectedMenuId, searchTerm, selectedLevel]);
 
   // 3. Handle View
-  const hasFullUrl = (item: FlatMenuItem) => {
-    if (item.url && item.url !== "#" && item.url !== "/") {
+  const hasFullUrl = (item: string) => {
+    if (item && item !== "#" && item !== "/") {
       return true;
     }
     return false;
-  };
-
-  const handleView = (slug: string) => {
-    let url: string = "";
-    if (slug !== "#" && slug !== "/") {
-      url = slug;
-    } else if (slug.startsWith("/")) {
-      url = slug;
-    } else if (slug.startsWith("http")) {
-      url = slug;
-    }
-    console.log("slug", url);
-    window.open(url, "_blank");
   };
 
   // Definição das colunas (use useMemo para evitar recriação)
@@ -217,8 +295,7 @@ export function useMenusViewModel() {
           </Button>
         ),
         cell: ({ row }) => {
-          const menuName = menuMap.get(row.original.menuId) || " ";
-          return <span>{menuName}</span>;
+          return <span>{row.original.menu.name}</span>;
         },
       },
       {
@@ -249,8 +326,8 @@ export function useMenusViewModel() {
         id: "Ações",
         header: "Ações",
         cell: ({ row }) => {
-          const item = row.original;
-          const url = row.original.page?.slug || item.url;
+          const item = row.original.page?.slug || row.original.url;
+          const url = item ? item : "#";
 
           return (
             <div className="flex items-center gap-2">
@@ -258,15 +335,16 @@ export function useMenusViewModel() {
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8"
-                disabled={!hasFullUrl(item)}
-                onClick={() => handleView(url!)}
+                disabled={!hasFullUrl(url!)}
               >
-                <EyeIcon className="h-4 w-4" />
+                <Link href={url!} target="_blank">
+                  <EyeIcon className="h-4 w-4" />
+                </Link>
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="h-8 w-8 cursor-pointer"
                 onClick={() => {
                   setSelectedMode("edit");
                   setSelectedItem(row.original); // agora row.original é acessível
@@ -275,7 +353,17 @@ export function useMenusViewModel() {
               >
                 <Pencil className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 cursor-pointer"
+                onClick={() => {
+                  deleteItemMutation.mutate({
+                    menuId: row.original.menuId,
+                    itemId: row.original.id,
+                  });
+                }}
+              >
                 <Trash className="h-4 w-4" />
               </Button>
             </div>
@@ -307,20 +395,21 @@ export function useMenusViewModel() {
   }, [allFlatItems]);
 
   return {
-    menus: getMenuQuery.data,
-    isLoadingMenu: getMenuQuery.isLoading,
-    isErrorMenu: getMenuQuery.isError,
-    errorMenu: getMenuQuery.error,
-    refetchMenu: getMenuQuery.refetch,
+    menus,
+    isLoadingMenus,
+    errorMenus,
 
-    subMenus: getSubMenuQuery.data,
-    isLoadingSubMenu: getSubMenuQuery.isLoading,
-    isErrorSubMenu: getSubMenuQuery.isError,
-    errorSubMenu: getSubMenuQuery.error,
-    refetchSubMenu: getSubMenuQuery.refetch,
+    menuItems,
+    isLoadingMenuItems,
+    errorMenuItems,
 
     createMenu: createMenuMutation,
-    syncMenuItems: syncMenuItemsMutation,
+    updateMenu: updateMenuMutation,
+    deleteMenu: deleteMenuMutation,
+
+    createItem: createItemMutation,
+    updateItem: updateItemMutation,
+    deleteItem: deleteItemMutation,
 
     selectedMenuId,
     setSelectedMenuId,
@@ -341,5 +430,6 @@ export function useMenusViewModel() {
     isMenuModalOpen,
     setIsMenuModalOpen,
     selectedMode,
+    setSelectedMode,
   };
 }

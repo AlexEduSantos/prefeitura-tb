@@ -35,3 +35,11 @@ export interface ICreateMenu {
   location: string;
   entityId: string;
 }
+
+export interface IPaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
