@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +18,13 @@ import {
 } from "@/components/ui/select";
 import { IMenuItem } from "@/app/type/menu";
 import { usePagesViewModel } from "@/app/viewmodel/pages.viewmodel";
+import { Switch } from "./ui/switch";
+import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
+import { Combobox } from "./ui/combobox";
+
+type ParentOption =
+  | IMenuItem
+  | { id: string; label: string; order: number; isRoot: true };
 
 interface MenuModalProps {
   menuItem: IMenuItem | null;
@@ -36,6 +43,7 @@ export function MenuModal({
   onSave,
   allItems = [],
 }: MenuModalProps) {
+  const { menus } = useMenusViewModel();
   const { pages } = usePagesViewModel(null);
 
   const [formData, setFormData] = useState<Partial<IMenuItem>>({
@@ -43,8 +51,10 @@ export function MenuModal({
     url: "",
     pageId: null,
     parentId: null,
+    menuId: "",
     order: 0,
   });
+  const [linkMode, setLinkMode] = useState<"page" | "url">("page");
 
   useEffect(() => {
     if (menuItem && mode === "edit") {
@@ -53,6 +63,7 @@ export function MenuModal({
         url: menuItem.url || "",
         pageId: menuItem.pageId || null,
         parentId: menuItem.parentId || null,
+        menuId: menuItem.menuId || "",
         order: menuItem.order || 0,
       });
     } else if (mode === "create") {
@@ -61,6 +72,7 @@ export function MenuModal({
         url: "",
         pageId: null,
         parentId: null,
+        menuId: "",
         order: 0,
       });
     }
@@ -72,11 +84,35 @@ export function MenuModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    // Ao salvar, se o parentId for '__root__', envia null
+    const dataToSave = {
+      ...formData,
+      parentId: formData.parentId === "__root__" ? null : formData.parentId,
+    };
+    onSave(dataToSave);
     onClose();
   };
 
-  const parentOptions = allItems.filter((item) => item.id !== menuItem?.id);
+  // Opções para o seletor de pai, incluindo a opção "Raiz"
+  const selectedMenuName = useMemo(() => {
+    if (!formData.menuId || !menus?.data) return "Menu";
+    return (
+      menus.data.find((m: any) => m.id === formData.menuId)?.name || "Menu"
+    );
+  }, [formData.menuId, menus]);
+
+  const parentOptions = useMemo<ParentOption[]>(() => {
+    const items = allItems.filter((item) => item.id !== menuItem?.id);
+    const rootOption: ParentOption = {
+      id: "__root__",
+      label: `Raiz (${selectedMenuName})`,
+      order: -1,
+      isRoot: true,
+    };
+    return [rootOption, ...items];
+  }, [allItems, menuItem, selectedMenuName]);
+
+  // Filtra os itens que podem ser pais (exclui o próprio item e seus descendentes? Para simplificar, lista todos)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -99,66 +135,96 @@ export function MenuModal({
             />
           </div>
 
-          {/* URL */}
-          <div className="space-y-2">
-            <Label htmlFor="url">URL (opcional)</Label>
-            <Input
-              id="url"
-              value={formData.url || ""}
-              onChange={(e) => handleChange("url", e.target.value)}
-              placeholder="Ex: /sobre ou https://exemplo.com"
+          <div className="flex justify-between gap-4">
+            {/* Menu */}
+            <div className="space-y-2 w-full">
+              <Label htmlFor="menu">
+                Menu <small>(obrigatório)</small>
+              </Label>
+              <Select
+                name="menu"
+                value={formData.menuId || "none"}
+                onValueChange={(value) =>
+                  handleChange("menuId", value === "none" ? null : value)
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Selecione um menu" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Nenhum</SelectItem>
+                  {menus?.data?.map((menu: any) => (
+                    <SelectItem key={menu.id} value={menu.id}>
+                      {menu.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {/* Item pai */}
+            <div className="space-y-2 w-full">
+              <Label htmlFor="parent">Item pai (opcional)</Label>
+              <Combobox
+                items={parentOptions}
+                value={formData.parentId || "__root__"}
+                onChange={(value) => handleChange("parentId", value)}
+                getLabel={(item) => item.label}
+                getSublabel={(item) => {
+                  if ("isRoot" in item && item.isRoot) {
+                    return "Item ficará na raiz do menu";
+                  }
+                  return `Ordem: ${item.order}`;
+                }}
+                getValue={(item) => item.id}
+                placeholder="Selecione um item pai"
+                searchPlaceholder="Buscar pai..."
+                emptyText="Nenhuma opção disponível"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="airplane-mode">Página</Label>
+            <Switch
+              id="airplane-mode"
+              checked={linkMode === "url"}
+              onCheckedChange={(checked) =>
+                setLinkMode(checked ? "url" : "page")
+              }
             />
-            <p className="text-xs text-muted-foreground">
-              Preencha para um link externo ou caminho personalizado. Deixe
-              vazio para usar uma página.
-            </p>
+            <Label htmlFor="airplane-mode">Link externo</Label>
           </div>
 
-          {/* Página */}
-          <div className="space-y-2">
-            <Label htmlFor="page">Página (opcional)</Label>
-            <Select
-              value={formData.pageId || "none"}
-              onValueChange={(value) =>
-                handleChange("pageId", value === "none" ? null : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione uma página" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Nenhuma</SelectItem>
-                {pages?.map((page) => (
-                  <SelectItem key={page.id} value={page.id}>
-                    {page.title || page.slug}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Item pai */}
-          <div className="space-y-2">
-            <Label htmlFor="parent">Item pai (opcional)</Label>
-            <Select
-              value={formData.parentId || "none"}
-              onValueChange={(value) =>
-                handleChange("parentId", value === "none" ? null : value)
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Nenhum (item raiz)" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">Nenhum</SelectItem>
-                {parentOptions.map((item) => (
-                  <SelectItem key={item.id} value={item.id}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {linkMode === "page" ? (
+            <div className="space-y-2">
+              <Label htmlFor="page">Página (opcional)</Label>
+              <Combobox
+                items={pages || []}
+                value={formData.pageId || null}
+                onChange={(value) => handleChange("pageId", value)}
+                getLabel={(page) => page.title || page.slug}
+                getSublabel={(page) => `/${page.slug}`}
+                getValue={(page) => page.id}
+                placeholder="Selecione uma página"
+                searchPlaceholder="Buscar página..."
+                emptyText="Nenhuma página encontrada"
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor="url">URL (opcional)</Label>
+              <Input
+                id="url"
+                value={formData.url || ""}
+                onChange={(e) => handleChange("url", e.target.value)}
+                placeholder="Ex: /sobre ou https://exemplo.com"
+              />
+              <p className="text-xs text-muted-foreground">
+                Preencha para um link externo ou caminho personalizado. Deixe
+                vazio para usar uma página.
+              </p>
+            </div>
+          )}
 
           {/* Ordem */}
           <div className="space-y-2">

@@ -394,6 +394,51 @@ export function useMenusViewModel() {
     return Array.from(levels).sort((a, b) => a - b);
   }, [allFlatItems]);
 
+  // 1. Primeiro, filtre os itens (aplicando os filtros de menu, busca e nível - mas nível será ignorado na árvore)
+  const filteredMenuItems = useMemo(() => {
+    let items = menuItems || [];
+
+    if (selectedMenuId !== "all") {
+      items = items.filter((item: IMenuItem) => item.menuId === selectedMenuId);
+    }
+
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.toLowerCase();
+      items = items.filter((item: IMenuItem) =>
+        item.label.toLowerCase().includes(term),
+      );
+    }
+
+    return items;
+  }, [menuItems, selectedMenuId, searchTerm]);
+
+  const rootItems = useMemo(() => {
+    const itemMap = new Map<string, IMenuItem & { children: IMenuItem[] }>();
+    const roots: (IMenuItem & { children: IMenuItem[] })[] = [];
+
+    filteredMenuItems.forEach((item: IMenuItem) => {
+      itemMap.set(item.id, { ...item, children: [] });
+    });
+
+    filteredMenuItems.forEach((item: IMenuItem) => {
+      const node = itemMap.get(item.id)!;
+      if (item.parentId && itemMap.has(item.parentId)) {
+        const parent = itemMap.get(item.parentId)!;
+        parent.children.push(node);
+      } else {
+        roots.push(node);
+      }
+    });
+
+    const sortChildren = (nodes: any[]) => {
+      nodes.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      nodes.forEach((node) => sortChildren(node.children));
+    };
+    sortChildren(roots);
+
+    return roots;
+  }, [filteredMenuItems]);
+
   return {
     menus,
     isLoadingMenus,
@@ -431,5 +476,9 @@ export function useMenusViewModel() {
     setIsMenuModalOpen,
     selectedMode,
     setSelectedMode,
+
+    rootItems,
+    filteredMenuItems,
+    menuMap,
   };
 }

@@ -20,6 +20,7 @@ import { Plus, Search } from "lucide-react";
 import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
 import { MenuModal } from "./menu-modal";
 import { IMenu, IMenuItem } from "@/app/type/menu";
+import { MenuItemTree } from "./menu-item-tree";
 
 export function MenusManager() {
   const {
@@ -53,38 +54,22 @@ export function MenusManager() {
     setIsMenuModalOpen,
     selectedMode,
     setSelectedMode,
+    rootItems,
+    filteredMenuItems,
+    menuMap,
   } = useMenusViewModel();
 
   const handleSaveItem = (data: Partial<IMenuItem>) => {
-    // Se for edição, atualiza o item existente
-    // Se for criação, adiciona novo
-    // Como estamos usando syncMenuItems, precisamos integrar com a lista completa
-    // Exemplo: substitui o item editado na lista e chama sync
     if (selectedItem) {
-      const updatedItems = menuItems?.map((item: any) =>
-        item.id === selectedItem.id ? { ...item, ...data } : item,
-      );
-      if (updatedItems && selectedItem.menuId) {
-        updateItemMutation.mutate({
-          menuId: selectedItem.menuId,
-          itemId: selectedItem.id,
-          data,
-        });
-      }
+      updateItemMutation.mutate({
+        menuId: data.menuId || selectedItem.menuId,
+        itemId: selectedItem.id,
+        data,
+      });
     } else {
-      // Criação: adiciona novo item com ID temporário
-      const newItem: Partial<IMenuItem> = {
-        id: crypto.randomUUID(),
-        label: data.label || "",
-        url: data.url || "",
-        pageId: data.pageId || "",
-        parentId: data.parentId || "",
-        order: data.order || 0,
-        menuId: selectedMenuId !== "all" ? selectedMenuId : "",
-      };
       createItemMutation.mutate({
-        menuId: newItem.menuId || "",
-        data: newItem as IMenuItem,
+        menuId: data.menuId || (selectedMenuId !== "all" ? selectedMenuId : ""),
+        data: data as IMenuItem,
       });
     }
     setIsMenuModalOpen(false);
@@ -130,27 +115,6 @@ export function MenusManager() {
             />
             <Search className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           </div>
-          {/* Seletor de nível */}
-          <div className="w-full md:w-auto">
-            <Select
-              value={String(selectedLevel)}
-              onValueChange={(value) =>
-                setSelectedLevel(value === "all" ? "all" : Number(value))
-              }
-            >
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Todos os níveis" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos os níveis</SelectItem>
-                {levelOptions.map((level) => (
-                  <SelectItem key={level} value={String(level)}>
-                    Nível {level}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
         <div className="flex gap-2">
           <Button>
@@ -171,7 +135,7 @@ export function MenusManager() {
       </div>
 
       {/* Tabela */}
-      <div className="rounded-lg border overflow-hidden">
+      {/* <div className="rounded-lg border overflow-hidden">
         <Table>
           <TableHeader className="bg-card">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -215,6 +179,26 @@ export function MenusManager() {
             )}
           </TableBody>
         </Table>
+      </div> */}
+
+      <div>
+        <MenuItemTree
+          items={rootItems}
+          onEdit={(item) => {
+            setSelectedItem(item);
+            setSelectedMode("edit");
+            setIsMenuModalOpen(true);
+          }}
+          onDelete={(item) => {
+            deleteItemMutation.mutate({
+              menuId: item.menuId,
+              itemId: item.id,
+            });
+          }}
+          onView={(item) => {
+            // opcional
+          }}
+        />
       </div>
 
       {/* Paginação */}
