@@ -36,7 +36,7 @@ export function MenuModal({
   onSave,
   allItems = [],
 }: MenuModalProps) {
-  const { pages } = usePagesViewModel();
+  const { pages } = usePagesViewModel(null);
 
   const [formData, setFormData] = useState<Partial<IMenuItem>>({
     label: "",

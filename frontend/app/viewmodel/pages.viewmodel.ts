@@ -17,7 +17,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-export function usePagesViewModel(columns: ColumnDef<IPage>[]) {
+export function usePagesViewModel(columns: ColumnDef<IPage>[] | null) {
   // ── UI State ────────────────────────────────────────────────────────────────
   const [isOpenNewPageModal, setIsOpenNewPageModal] = useState(false);
   const [isOpenViewModal, setIsOpenViewModal] = useState(false);
@@ -109,7 +109,7 @@ export function usePagesViewModel(columns: ColumnDef<IPage>[]) {
             setTitle("");
             setSlug("");
           },
-        }
+        },
       );
     } else {
       updatePageMutation.mutate(
@@ -120,7 +120,7 @@ export function usePagesViewModel(columns: ColumnDef<IPage>[]) {
             setTitle("");
             setSlug("");
           },
-        }
+        },
       );
     }
   };
@@ -154,7 +154,7 @@ export function usePagesViewModel(columns: ColumnDef<IPage>[]) {
   // ── Table ────────────────────────────────────────────────────────────────────
   const table = useReactTable<IPage>({
     data: getPagesListQuery.data || [],
-    columns,
+    columns: columns || [],
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),

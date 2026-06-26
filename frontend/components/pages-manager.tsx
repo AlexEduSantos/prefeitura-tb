@@ -49,6 +49,7 @@ import {
 } from "./ui/select";
 import { NewPageModal } from "./new-page-modal";
 import { ViewPageModal } from "./view-page-modal";
+import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
 
 export const columns: ColumnDef<IPage>[] = [
   {
@@ -110,6 +111,23 @@ export const columns: ColumnDef<IPage>[] = [
         {row.getValue("slug")}
       </div>
     ),
+  },
+  {
+    accessorKey: "entityId",
+    header: "Secretaria",
+    cell: ({ row }) => {
+      const { entities, isLoadingEntities } = useEntityViewModel();
+
+      const entityId = row.getValue("entityId") as string;
+      const entity = entities?.find((e) => e.id === entityId);
+
+      if (isLoadingEntities) return <span>Carregando...</span>;
+      if (!entity) return <span>Nenhuma</span>;
+
+      return (
+        <div className="font-medium text-muted-foreground">{entity.name}</div>
+      );
+    },
   },
   {
     id: "Ações",
