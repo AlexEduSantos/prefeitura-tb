@@ -6,6 +6,7 @@ import {
   PaperclipIcon,
   SquareArrowOutUpLeft,
   TestTube2,
+  ImageIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -73,6 +74,11 @@ export function PainelSidebar() {
           href: "/administrator/menus",
         },
       ],
+    },
+    {
+      title: "Banners",
+      icon: ImageIcon,
+      href: "/administrator/banners",
     },
     {
       title: "Configurações",

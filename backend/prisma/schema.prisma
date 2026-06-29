@@ -12,18 +12,20 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username  String   @unique
+  id        String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username  String    @unique
   name      String
-  email     String   @unique
+  email     String    @unique
   password  String
   avatar    String?
   phone     String?
-  entityId  String   @db.Uuid
-  entity    Entity   @relation(fields: [entityId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      UserRole @default(USER)
+  entityId  String    @db.Uuid
+  entity    Entity    @relation(fields: [entityId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  role      UserRole  @default(USER)
+  banners   Banners[]
+  popups    Popups[]
 
   @@map("user")
 }
@@ -52,6 +54,8 @@ model Entity {
   users     User[]
   articles  Article[]
   menus     Menu[]
+  popups    Popups[]
+  banners   Banners[]
 
   @@map("entity")
 }
@@ -152,23 +156,27 @@ model Article {
 }
 
 model Media {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  alt_text    String?
-  description String?  @db.VarChar(1000)
-  type        String // "image", "video", "audio", "document"
-  key         String? // Caminho/Chave no S3 (Ex: "images/2026/05/foto.webp")
-  url         String? // Opcional, ou mantido como virtual se usarmos extensions
-  file_size   Int?
-  mime_type   String?
-  width       Int?
-  height      Int?
-  tags        String[]
-  status      String   @default("pending") // "pending", "processing", "ready", "failed"
-  created_at  DateTime @default(now()) @db.Timestamp
-  updated_at  DateTime @default(now()) @db.Timestamp
-  folder      Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId    String?  @db.Uuid
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  alt_text     String?
+  description  String?       @db.VarChar(1000)
+  type         String // "image", "video", "audio", "document"
+  key          String? // Caminho/Chave no S3 (Ex: "images/2026/05/foto.webp")
+  url          String? // Opcional, ou mantido como virtual se usarmos extensions
+  file_size    Int?
+  mime_type    String?
+  width        Int?
+  height       Int?
+  tags         String[]
+  status       String        @default("pending") // "pending", "processing", "ready", "failed"
+  created_at   DateTime      @default(now()) @db.Timestamp
+  updated_at   DateTime      @default(now()) @db.Timestamp
+  folder       Folder?       @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId     String?       @db.Uuid
+  banners      Banners?      @relation(fields: [bannersId], references: [id])
+  bannersId    String?       @db.Uuid
+  popups       Popups[]
+  bannerImages BannerImage[]
 }
 
 model Folder {
@@ -182,4 +190,80 @@ model Folder {
   createdAt DateTime @default(now()) @db.Timestamp
 
   @@map("folder")
+}
+
+// ========== ENUMS ==========
+enum PopupStatus {
+  rascunho
+  publicado
+  arquivado
+  expirado
+  excluido
+}
+
+enum PopupType {
+  modal
+  barra
+  canto
+  fullscreen
+}
+
+// ========== BANNERS ==========
+model Banners {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  link      String?
+  active    Boolean       @default(true)
+  entityId  String        @db.Uuid
+  entity    Entity        @relation(fields: [entityId], references: [id])
+  userId    String        @db.Uuid
+  user      User          @relation(fields: [userId], references: [id])
+  slides    BannerImage[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  medias    Media[]
+
+  @@index([entityId, active])
+}
+
+model BannerImage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bannerId  String   @db.Uuid
+  banner    Banners  @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+  mediaId   String   @db.Uuid
+  media     Media    @relation(fields: [mediaId], references: [id])
+  order     Int      @default(0)
+  caption   String?
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([bannerId, order])
+  @@index([bannerId])
+}
+
+// ========== POPUPS ==========
+model Popups {
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  imageId         String      @db.Uuid
+  image           Media       @relation(fields: [imageId], references: [id])
+  link            String?
+  active          Boolean     @default(true)
+  displayTime     Int         @default(5)
+  status          PopupStatus @default(rascunho)
+  type            PopupType   @default(modal)
+  position        String?
+  closeButton     Boolean     @default(true)
+  priority        Int         @default(0)
+  publicationDate DateTime?
+  expirationDate  DateTime?
+  entityId        String      @db.Uuid
+  entity          Entity      @relation(fields: [entityId], references: [id])
+  userId          String      @db.Uuid
+  user            User        @relation(fields: [userId], references: [id])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([entityId, active, status, publicationDate, expirationDate])
 }

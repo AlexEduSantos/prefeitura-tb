@@ -11,6 +11,9 @@ import { MediaModule } from './media/media.module';
 import { EntitiesModule } from './entities/entities.module';
 import { MenusModule } from './menus/menus.module';
 import { BullModule } from '@nestjs/bullmq';
+import { BannersModule } from './banners/banners.module';
+import { BannerImagesModule } from './banner-images/banner-images.module';
+import { PopupsModule } from './popups/popups.module';
 
 @Module({
   imports: [
@@ -28,6 +31,9 @@ import { BullModule } from '@nestjs/bullmq';
     MediaModule,
     EntitiesModule,
     MenusModule,
+    BannersModule,
+    BannerImagesModule,
+    PopupsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
