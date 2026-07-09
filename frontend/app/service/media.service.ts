@@ -18,6 +18,21 @@ export class MediaService {
     return response.json();
   }
 
+  static async getMediaById(id: string): Promise<IMedia> {
+    const response = await fetch(`${API_URL}/media/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar mídia");
+    }
+
+    return response.json();
+  }
+
   static async updateMedia(metadata: {
     title: string;
     alt_text?: string;
