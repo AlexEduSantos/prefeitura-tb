@@ -9,8 +9,11 @@ export class BannerImagesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createBannerImageDto: CreateBannerImageDto): Promise<BannerImage> {
+    if (!createBannerImageDto.bannerId) {
+      throw new Error("bannerId is required");
+    }
     return this.prisma.bannerImage.create({
-      data: createBannerImageDto,
+      data: createBannerImageDto as any,
     });
   }
 
