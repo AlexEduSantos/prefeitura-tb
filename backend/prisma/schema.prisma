@@ -212,7 +212,6 @@ enum PopupType {
 model Banners {
   id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
-  link      String?
   active    Boolean       @default(true)
   entityId  String        @db.Uuid
   entity    Entity        @relation(fields: [entityId], references: [id])

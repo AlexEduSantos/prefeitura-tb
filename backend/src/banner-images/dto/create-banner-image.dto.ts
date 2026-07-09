@@ -1,8 +1,9 @@
 import { IsString, IsOptional, IsInt, IsUUID } from 'class-validator';
 
 export class CreateBannerImageDto {
+  @IsOptional()
   @IsUUID()
-  bannerId: string;
+  bannerId?: string;
 
   @IsUUID()
   mediaId: string;
