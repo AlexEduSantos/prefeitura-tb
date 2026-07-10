@@ -37,7 +37,7 @@ export class GalleryService {
 
   static async updateGallery(banner: IGallery): Promise<IGallery> {
     const response = await fetch(`${API_URL}/banners/${banner.id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

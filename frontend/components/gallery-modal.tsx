@@ -19,6 +19,7 @@ import { Switch } from "./ui/switch";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { Carousel } from "./carousel";
+import { MediaPickerModal } from "./media-picker-modal";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface GalleryModalProps {
   gallery?: IGallery | null;
@@ -52,6 +54,7 @@ export function GalleryModal({
     entityId: "",
     slides: [],
   });
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -61,13 +64,14 @@ export function GalleryModal({
           name: gallery.name,
           active: gallery.active,
           entityId: gallery.entityId,
-          slides: gallery.slides?.map((s) => ({
-            mediaId: s.mediaId,
-            order: s.order,
-            caption: s.caption || "",
-            link: s.link || "",
-            media: s.media,
-          })) || [],
+          slides:
+            gallery.slides?.map((s) => ({
+              mediaId: s.mediaId,
+              order: s.order,
+              caption: s.caption || "",
+              link: s.link || "",
+              media: s.media,
+            })) || [],
         });
       } else {
         setFormData({
@@ -95,18 +99,19 @@ export function GalleryModal({
     });
   };
 
-  const addSlide = (media: IMedia) => {
+  const handleMediaSelect = (selectedMedia: IMedia | IMedia[]) => {
+    const mediaArray = Array.isArray(selectedMedia) ? selectedMedia : [selectedMedia];
     setFormData((prev: any) => ({
       ...prev,
       slides: [
         ...(prev.slides || []),
-        {
+        ...mediaArray.map((media, idx) => ({
           mediaId: media.id,
-          order: (prev.slides?.length || 0) + 1,
+          order: (prev.slides?.length || 0) + idx + 1,
           caption: "",
           link: "",
           media,
-        },
+        })),
       ],
     }));
   };
@@ -176,7 +181,11 @@ export function GalleryModal({
                   : "Preencha os dados abaixo para editar a galeria selecionada"}
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form
+              id="gallery-form"
+              onSubmit={handleSubmit}
+              className="space-y-4"
+            >
               <div className="space-y-2">
                 <Label htmlFor="name">Nome da Galeria</Label>
                 <Input
@@ -219,17 +228,24 @@ export function GalleryModal({
                 </Label>
               </div>
 
-              <div className="space-y-4">
-                <Label className="text-lg font-semibold">Imagens da Galeria</Label>
-                
+              <ScrollArea className="sm:max-h-[300px] max-h-[200px] overflow-y-auto scrollbar-none  space-y-2">
+                <Label className="text-lg font-semibold">
+                  Imagens da Galeria
+                </Label>
+
                 {/* Imagens Selecionadas */}
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {(formData.slides || []).map((slide: any, index: number) => (
-                    <div key={index} className="flex gap-4 p-3 border rounded-lg bg-muted/20">
+                    <div
+                      key={index}
+                      className="flex gap-4 p-3 border rounded-lg bg-muted/20"
+                    >
                       <div className="w-24 h-24 relative rounded overflow-hidden shrink-0">
                         {slide.media && (
                           <Image
-                            loader={() => `${process.env.NEXT_PUBLIC_API_URL}/media/file/${slide.media.key}`}
+                            loader={() =>
+                              `${process.env.NEXT_PUBLIC_API_URL}/media/file/${slide.media.key}`
+                            }
                             src={slide.media.key}
                             alt="Preview"
                             fill
@@ -241,15 +257,24 @@ export function GalleryModal({
                         <Input
                           placeholder="Legenda (Caption)"
                           value={slide.caption}
-                          onChange={(e) => handleSlideChange(index, "caption", e.target.value)}
+                          onChange={(e) =>
+                            handleSlideChange(index, "caption", e.target.value)
+                          }
                         />
                         <Input
                           placeholder="Link de redirecionamento"
                           value={slide.link}
-                          onChange={(e) => handleSlideChange(index, "link", e.target.value)}
+                          onChange={(e) =>
+                            handleSlideChange(index, "link", e.target.value)
+                          }
                         />
                       </div>
-                      <Button type="button" variant="destructive" size="icon" onClick={() => removeSlide(index)}>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        onClick={() => removeSlide(index)}
+                      >
                         <TrashIcon className="h-4 w-4" />
                       </Button>
                     </div>
@@ -262,42 +287,36 @@ export function GalleryModal({
                 </div>
 
                 {/* Seleção de Novas Imagens */}
-                <div className="pt-4 border-t space-y-3">
-                  <Label>Adicionar Mídia</Label>
-                  <div className="grid grid-cols-4 md:grid-cols-5 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg bg-muted/10">
-                    {mediaList.map((media) => (
-                      <div
-                        key={media.id}
-                        className="relative w-full aspect-square border rounded cursor-pointer hover:opacity-80 hover:ring-2 hover:ring-primary transition-all overflow-hidden"
-                        onClick={() => addSlide(media)}
-                        title={media.title}
-                      >
-                        <Image
-                          loader={() => `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media.key}`}
-                          src={media.key}
-                          alt={media.alt_text || media.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    ))}
-                    {mediaList.length === 0 && (
-                      <div className="col-span-full text-sm text-muted-foreground text-center">
-                        Nenhuma mídia disponível.
-                      </div>
-                    )}
-                  </div>
-                </div>
+              </ScrollArea>
+              <div className="pt-4 border-t space-y-3">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setIsMediaPickerOpen(true)}
+                  className="w-full border-dashed"
+                >
+                  <PlusIcon className="w-4 h-4 mr-2" />
+                  Adicionar Mídias da Biblioteca
+                </Button>
               </div>
             </form>
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              <Button type="submit">Salvar</Button>
+              <Button type="submit" form="gallery-form">
+                Salvar
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        <MediaPickerModal 
+          isOpen={isMediaPickerOpen}
+          onClose={() => setIsMediaPickerOpen(false)}
+          onSelect={handleMediaSelect}
+          multiple={true}
+        />
       </>
     );
   }

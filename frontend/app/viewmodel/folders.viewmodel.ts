@@ -52,13 +52,13 @@ export function useFolders() {
   });
 
   // Funções de ação
-  const submitCreateFolder = (data: any) => {
+  const submitCreateFolder = (parentId?: string) => {
     if (modalType === "create") {
       const name = newFolderName.trim();
       if (!name) return;
 
       createFolderMutation.mutate(
-        { name, parentId: data?.currentFolderId || undefined },
+        { name, parentId: parentId || undefined },
         {
           onSuccess: () => {
             toast.success("Pasta criada com sucesso!");

@@ -20,7 +20,10 @@ export class BannersService {
         slides: slides
           ? {
               create: slides.map((slide) => ({
-                ...slide,
+                order: slide.order,
+                caption: slide.caption,
+                link: slide.link,
+                media: { connect: { id: slide.mediaId } },
               })),
             }
           : undefined,
@@ -60,7 +63,10 @@ export class BannersService {
             ...bannerData,
             slides: {
               create: slides.map((slide) => ({
-                ...slide,
+                order: slide.order,
+                caption: slide.caption,
+                link: slide.link,
+                media: { connect: { id: slide.mediaId } },
               })),
             },
           },

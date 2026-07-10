@@ -119,7 +119,7 @@ export const FileExplorer = () => {
                   Cancelar
                 </Button>
                 <Button
-                  onClick={submitCreateFolder}
+                  onClick={() => submitCreateFolder(data?.currentFolderId)}
                   disabled={!newFolderName.trim()}
                 >
                   {modalType === "create" ? "Criar" : "Atualizar"} Pasta
