@@ -31,6 +31,7 @@ import {
 } from "./ui/table";
 import { flexRender } from "@tanstack/react-table";
 import { GalleryModal } from "./gallery-modal";
+import { IGallery } from "@/app/type/gallery";
 
 export function BannersManager() {
   const {
@@ -78,13 +79,6 @@ export function BannersManager() {
             />
             <Search className="size-5 absolute z-20 right-2 text-muted-foreground cursor-pointer" />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto bg-white">
-                Filtros <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-          </DropdownMenu>
           <div className="flex items-center gap-2">
             <Select
               value={`${table.getState().pagination.pageSize}`}
@@ -117,7 +111,7 @@ export function BannersManager() {
             }}
           >
             <PlusIcon className="h-4 w-4" />
-            Criar Página
+            Criar Galeria
           </Button>
         </div>
       </div>
@@ -167,7 +161,7 @@ export function BannersManager() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Nenhuma página encontrada.
+                  Nenhuma galeria encontrada.
                 </TableCell>
               </TableRow>
             )}
