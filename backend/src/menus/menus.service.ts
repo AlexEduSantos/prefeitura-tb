@@ -83,6 +83,26 @@ export class MenusService {
     };
   }
 
+  async findOneMenuByLocation(entityId: string, location: string) {
+    const menu = await this.prisma.menu.findUnique({
+      where: {
+        entityId_location: { entityId, location },
+      },
+      include: {
+        items: {
+          include: { page: { select: { slug: true } } },
+          orderBy: { order: 'asc' },
+        },
+      },
+    });
+    if (!menu) {
+      throw new NotFoundException(
+        `Menu with location "${location}" not found for entity ${entityId}`,
+      );
+    }
+    return menu;
+  }
+
   async findOneMenu(id: string) {
     const menu = await this.prisma.menu.findUnique({
       where: { id },

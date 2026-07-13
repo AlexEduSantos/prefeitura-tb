@@ -37,12 +37,12 @@ export class MenusService {
     return response.json();
   }
 
-  // Buscar menu por localização (mantido)
+  // Buscar menu por localização
   static async getMenuByLocation(
-    location: string,
     entityId: string,
+    location: string,
   ): Promise<IMenu> {
-    const url = `${API_URL}/menus/location/${location}?entityId=${entityId}`;
+    const url = `${API_URL}/menus/by-location/${entityId}/${location}`;
     const response = await fetch(url, { credentials: "include" });
     if (!response.ok) throw new Error("Erro ao buscar menu por localização");
     return response.json();

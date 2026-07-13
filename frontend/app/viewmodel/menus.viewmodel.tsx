@@ -482,3 +482,15 @@ export function useMenusViewModel() {
     menuMap,
   };
 }
+
+export function useMenuByLocation(entityId: string, location: string) {
+  const { data: menuByLocation, isLoading: isLoadingMenuByLocation } = useQuery(
+    {
+      queryKey: ["menu", entityId, location],
+      queryFn: () => MenusService.getMenuByLocation(entityId, location),
+      retry: false,
+    },
+  );
+
+  return { menuByLocation, isLoadingMenuByLocation };
+}
