@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useUserViewModel } from "@/app/viewmodel/user.viewmodel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { title } from "process";
 
 export function PainelSidebar() {
   const pathname = usePathname();
@@ -56,9 +57,27 @@ export function PainelSidebar() {
       ],
     },
     {
-      title: "Mídias",
+      title: "Multimídia",
       icon: PaperclipIcon,
-      href: "/administrator/medias",
+      href: "#",
+      subItems: [
+        {
+          title: "Arquivos",
+          href: "/administrator/medias",
+        },
+        {
+          title: "Galerias",
+          href: "/administrator/galleries",
+        },
+        {
+          title: "Pop-ups",
+          href: "/administrator/popups",
+        },
+        {
+          title: "Stories",
+          href: "/administrator/stories",
+        },
+      ],
     },
     {
       title: "Páginas e Menus",
@@ -74,11 +93,6 @@ export function PainelSidebar() {
           href: "/administrator/menus",
         },
       ],
-    },
-    {
-      title: "Banners",
-      icon: ImageIcon,
-      href: "/administrator/banners",
     },
     {
       title: "Configurações",
