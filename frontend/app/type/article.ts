@@ -5,7 +5,8 @@ export interface IArticle {
   id: string;
   title: string;
   headline?: string;
-  cover: IMedia;
+  cover: string;
+  coverData: IMedia;
   body: string;
   slug: string;
   type: string;
@@ -27,7 +28,8 @@ export interface IArticle {
   tags: string[];
   relatedArticles: string[];
   relatedVideos: string[];
-  galleryImages: IMedia[];
+  galleryImages: string[];
+  galleryData: IMedia[];
   galleryAutoplay: boolean;
   galleryInterval: number;
   galleryShowThumbnails: boolean;

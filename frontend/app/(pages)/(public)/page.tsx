@@ -1,19 +1,15 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { ArticlesBlock } from "@/components/public/articles-block";
+import { Footer } from "@/components/public/footer";
+import Search from "@/components/public/search";
+import { ServicesBlock } from "@/components/public/services-block";
 
 export default function Home() {
-  const router = useRouter();
   return (
-    <div className="w-full flex items-center justify-center h-[calc(100vh-5rem)]">
-      <Button
-        className="px-4 py-2"
-        onClick={() => {
-          router.push("/administrator");
-        }}
-      >
-        Painel Administrativo
-      </Button>
-    </div>
+    <main className="flex flex-col gap-4">
+      <Search />
+      <ArticlesBlock />
+      <ServicesBlock />
+      <Footer />
+    </main>
   );
 }

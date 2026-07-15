@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 import { Providers } from "@/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
+import Header from "@/components/public/header";
 
 export default function RootLayout({
   children,
@@ -25,7 +26,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${inter.variable} w-screen h-screen antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="h-screen flex flex-col w-full">
         <Providers>{children}</Providers>
         <Toaster />
       </body>

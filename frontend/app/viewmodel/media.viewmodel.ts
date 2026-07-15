@@ -95,3 +95,14 @@ export const useMediaList = (
     placeholderData: (previousData) => previousData, // Mantém dados anteriores enquanto carrega (evita flickering)
   });
 };
+
+export const useMediaById = () => {
+  const { data: media, isLoading: isLoadingMedia } = useQuery({
+    queryKey: ["media", "7261dad1-7ab0-42c9-b535-c4c95c452a29"],
+    queryFn: () =>
+      MediaService.getMediaById("7261dad1-7ab0-42c9-b535-c4c95c452a29"),
+    placeholderData: (previousData) => previousData, // Mantém dados anteriores enquanto carrega (evita flickering)
+  });
+
+  return { media, isLoadingMedia };
+};
