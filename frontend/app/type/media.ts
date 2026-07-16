@@ -1,7 +1,7 @@
 export interface IMedia {
   id: string;
   title: string;
-  alt_text: string;
+  altText: string;
   description?: string;
   type: string;
   url?: string;

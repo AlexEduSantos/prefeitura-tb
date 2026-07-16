@@ -50,7 +50,7 @@ export const FileItem = ({
   const [formData, setFormData] = useState({
     title: file.title,
     description: file.description || "",
-    alt_text: file.alt_text || "",
+    altText: file.altText || "",
     tags: file.tags || [],
   });
   const [isOpen, setIsOpen] = useState(false);
@@ -62,7 +62,7 @@ export const FileItem = ({
       setFormData({
         title: file.title,
         description: file.description || "",
-        alt_text: file.alt_text || "",
+        altText: file.altText || "",
         tags: file.tags || [],
       });
     }
@@ -90,7 +90,7 @@ export const FileItem = ({
       setFormData({
         title: file.title,
         description: file.description || "",
-        alt_text: file.alt_text || "",
+        altText: file.altText || "",
         tags: file.tags || [],
       });
     }
@@ -103,7 +103,7 @@ export const FileItem = ({
         id: file.id,
         title: formData.title,
         description: formData.description,
-        alt_text: formData.alt_text,
+        altText: formData.altText,
         tags: formData.tags,
       },
       {
@@ -243,10 +243,10 @@ export const FileItem = ({
                   </div>
                   <Input
                     id="alt-text"
-                    value={formData.alt_text}
+                    value={formData.altText}
                     disabled={!editMode}
                     onChange={(e) =>
-                      setFormData({ ...formData, alt_text: e.target.value })
+                      setFormData({ ...formData, altText: e.target.value })
                     }
                     className={`${editMode && "font-normal border-primary"}`}
                   />
@@ -381,7 +381,7 @@ export const FileItem = ({
                       setFormData({
                         title: file.title,
                         description: file.description || "",
-                        alt_text: file.alt_text || "",
+                        altText: file.altText || "",
                         tags: file.tags || [],
                       });
                     }}
@@ -417,7 +417,7 @@ export const FileItem = ({
               <div className="relative w-full h-full bg-gray-400 rounded-md overflow-hidden">
                 <img
                   src={src}
-                  alt={file.alt_text || file.title}
+                  alt={file.altText || file.title}
                   className="w-full h-full object-cover"
                 />
               </div>

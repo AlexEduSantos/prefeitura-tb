@@ -31,7 +31,7 @@ export function useMediaViewModel() {
       file: File;
       metadata: {
         title: string;
-        alt_text?: string;
+        altText?: string;
         description?: string;
         folderId?: string;
       };
@@ -44,7 +44,7 @@ export function useMediaViewModel() {
   const updateMediaMutation = useMutation({
     mutationFn: (metadata: {
       title: string;
-      alt_text?: string;
+      altText?: string;
       description?: string;
       id: string;
       tags?: string[];

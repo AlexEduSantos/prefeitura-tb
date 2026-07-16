@@ -41,7 +41,7 @@ export function MediaUploadModal({
     uploadMedia(
       {
         file,
-        metadata: { title, alt_text: altText, description, folderId },
+        metadata: { title, altText, description, folderId },
       },
       {
         onSuccess: (data) => {

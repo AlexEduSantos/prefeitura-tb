@@ -97,7 +97,7 @@ export function MediaPickerModal({
     if (!file || !title) return;
 
     uploadMedia(
-      { file, metadata: { title, alt_text: altText } },
+      { file, metadata: { title, altText } },
       {
         onSuccess: (newMedia) => {
           setFile(null);

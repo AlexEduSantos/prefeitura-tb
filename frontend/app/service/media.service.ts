@@ -35,7 +35,7 @@ export class MediaService {
 
   static async updateMedia(metadata: {
     title: string;
-    alt_text?: string;
+    altText?: string;
     description?: string;
     id: string;
     tags?: string[];
@@ -60,14 +60,14 @@ export class MediaService {
     file: File,
     metadata: {
       title: string;
-      alt_text?: string;
+      altText?: string;
       description?: string;
       folderId?: string;
     },
   ): Promise<IMedia> {
     const formData = new FormData();
     formData.append("title", metadata.title);
-    if (metadata.alt_text) formData.append("alt_text", metadata.alt_text);
+    if (metadata.altText) formData.append("altText", metadata.altText);
     if (metadata.description)
       formData.append("description", metadata.description);
     if (metadata.folderId) formData.append("folderId", metadata.folderId);

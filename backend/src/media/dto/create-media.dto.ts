@@ -13,7 +13,7 @@ export class CreateMediaDto {
 
   @IsString()
   @IsOptional()
-  alt_text?: string;
+  altText?: string;
 
   @IsString()
   @IsOptional()
