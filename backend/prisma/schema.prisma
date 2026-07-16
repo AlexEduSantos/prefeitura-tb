@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,21 +6,65 @@ datasource db {
   provider = "postgresql"
 }
 
+// ========== ENUMS ==========
+enum ArticleStatus {
+  rascunho
+  publicado
+  arquivado
+  expirado
+  excluido
+}
+
+enum MediaStatus {
+  pending
+  processing
+  ready
+  failed
+}
+
+enum PopupStatus {
+  rascunho
+  publicado
+  arquivado
+  expirado
+  excluido
+}
+
+enum PopupType {
+  modal
+  bar
+  corner
+  fullscreen
+}
+
+enum UserRole {
+  ADMIN
+  PUBLISHER
+  MANAGER
+  USER
+}
+
+// ========== MODELS ==========
 model User {
-  id        String    @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username  String    @unique
+  id        String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username  String      @unique
   name      String
-  email     String    @unique
+  email     String      @unique
   password  String
   avatar    String?
   phone     String?
-  entityId  String    @db.Uuid
-  entity    Entity    @relation(fields: [entityId], references: [id])
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  role      UserRole  @default(USER)
-  banners   Banners[]
+  entityId  String      @db.Uuid
+  entity    Entity      @relation(fields: [entityId], references: [id])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  role      UserRole    @default(USER)
+  galleries Galleries[]
   popups    Popups[]
+  services  Services[]
+  pages     Page[]
+
+  articleAuthor Article[] @relation("articleAuthor")
+  articleEditor Article[] @relation("articleEditor")
 
   @@map("user")
 }
@@ -39,214 +78,211 @@ model Session {
   @@map("session")
 }
 
-enum UserRole {
-  ADMIN
-  PUBLISHER
-  USER
-}
-
 model Entity {
-  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String // Ex: "Secretaria de Educação"
-  slug      String // Ex: "educacao" (usado na URL /secretarias/educacao)
-  createdAt DateTime  @default(now())
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  slug      String
+  createdAt DateTime    @default(now())
   pages     Page[]
   users     User[]
   articles  Article[]
   menus     Menu[]
   popups    Popups[]
-  banners   Banners[]
+  galleries Galleries[]
+  menuItems MenuItem[]
 
   @@map("entity")
 }
 
 model Page {
   id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String // Ex: "Inscrições Cursos Técnicos"
-  slug      String // Ex: "inscricoes-cursos" -> gerará /educacao/inscricoes-cursos
-  content   Json // Onde você salvará a estrutura de blocos do seu Page Builder
+  title     String
+  slug      String
+  content   Json
   published Boolean @default(false)
 
-  // O elo com a Secretaria (Atributo para o ABAC)
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])
 
-  // NOVO: Relacionamento reverso com os itens de menu
   menuItems MenuItem[]
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
-  @@unique([entityId, slug]) // Garante que não haja duas páginas com o mesmo slug na MESMA secretaria
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@unique([entityId, slug])
 }
 
 model Menu {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String // Ex: "Menu Principal" ou "Links Úteis"
-  location String // Identificador interno. Ex: "header", "footer", "sidebar"
-
-  // O menu também pertence a uma Secretaria
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
-
-  items MenuItem[]
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  location String
+  items    MenuItem[]
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
-  // Garante que uma secretaria não tenha dois menus marcados como "header" ao mesmo tempo
-  @@unique([entityId, location])
+  entity   Entity? @relation(fields: [entityId], references: [id])
+  entityId String? @db.Uuid
 }
 
 model MenuItem {
   id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  label String // O texto que aparece no botão. Ex: "Fale Conosco"
-  order Int     @default(0) // Para ordenar os links arrastando e soltando
-  url   String? // Usado APENAS se for um link externo ou âncora (ex: https://google.com)
+  label String
+  order Int     @default(0)
+  url   String?
 
-  // Relacionamento com o Menu Pai
   menuId String @db.Uuid
   menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
 
-  // Relacionamento OPCIONAL com uma Página interna
-  // onDelete: SetNull -> Se a página for apagada, o link não quebra o sistema, apenas perde o destino
   pageId String? @db.Uuid
   page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
 
-  // Relacionamento recursivo (Para criar submenus / dropdowns)
   parentId String?    @db.Uuid
   parent   MenuItem?  @relation("MenuHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
   children MenuItem[] @relation("MenuHierarchy")
+
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 }
 
 model Article {
-  id                       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                       String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                    String
-  headline                 String?   @db.VarChar(500)
-  entityId                 String    @db.Uuid
-  entity                   Entity    @relation(fields: [entityId], references: [id])
-  cover                    String?   @db.Text
+  headline                 String?       @db.VarChar(500)
   body                     String
-  slug                     String    @unique
-  type                     String    @default("article")
-  status                   String    @default("rascunho")
+  slug                     String        @unique
+  type                     String        @default("article")
+  status                   ArticleStatus @default(rascunho)
   publicationDate          DateTime?
   expirationDate           DateTime?
-  featured                 Boolean   @default(false)
-  author                   String?
-  editor                   String?
-  createdAt                DateTime  @default(now()) @db.Timestamp
-  updatedAt                DateTime  @default(now()) @db.Timestamp
+  featured                 Boolean       @default(false)
+  createdAt                DateTime      @default(now()) @db.Timestamp
+  updatedAt                DateTime      @default(now()) @db.Timestamp
   seoTitle                 String?
   seoDescription           String?
   seoKeywords              String?
-  allowComments            Boolean   @default(true)
+  allowComments            Boolean       @default(true)
   tags                     String[]
-  visibility               String    @default("public") // "public", "internal", "restricted"
-  galleryImages            String[]
-  galleryAutoplay          Boolean   @default(false)
-  galleryInterval          Int       @default(5000)
-  galleryShowThumbnails    Boolean   @default(true)
+  visibility               String        @default("public")
+  galleryAutoplay          Boolean       @default(false)
+  galleryInterval          Int           @default(5000)
+  galleryShowThumbnails    Boolean       @default(true)
   socialPreviewTitle       String?
   socialPreviewImage       String?
   socialPreviewDescription String?
+
+  authorId String  @db.Uuid
+  author   User    @relation("articleAuthor", fields: [authorId], references: [id])
+  editorId String? @db.Uuid
+  editor   User?   @relation("articleEditor", fields: [editorId], references: [id])
+
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
+
+  coverId String @db.Uuid
+  cover   Media  @relation("articleCover", fields: [coverId], references: [id])
+
+  galleryImages String[]
+  galleryMedias Media[]  @relation("articleGalleryMedias")
 }
 
 model Media {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title        String
-  alt_text     String?
-  description  String?       @db.VarChar(1000)
-  type         String // "image", "video", "audio", "document"
-  key          String? // Caminho/Chave no S3 (Ex: "images/2026/05/foto.webp")
-  url          String? // Opcional, ou mantido como virtual se usarmos extensions
-  file_size    Int?
-  mime_type    String?
-  width        Int?
-  height       Int?
-  tags         String[]
-  status       String        @default("pending") // "pending", "processing", "ready", "failed"
-  created_at   DateTime      @default(now()) @db.Timestamp
-  updated_at   DateTime      @default(now()) @db.Timestamp
-  folder       Folder?       @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId     String?       @db.Uuid
-  banners      Banners?      @relation(fields: [bannersId], references: [id])
-  bannersId    String?       @db.Uuid
-  popups       Popups[]
-  bannerImages BannerImage[]
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  altText     String?
+  description String?     @db.VarChar(1000)
+  type        String
+  key         String?
+  url         String?
+  fileSize    Int?
+  mimeType    String?
+  width       Int?
+  height      Int?
+  tags        String[]
+  status      MediaStatus @default(pending)
+  createdAt   DateTime    @default(now()) @db.Timestamp
+  updatedAt   DateTime    @default(now()) @db.Timestamp
+
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId String? @db.Uuid
+
+  popups        Popups[]       @relation("popupImage")
+  galleryMedias GalleryMedia[]
+  services      Services[]     @relation("serviceImage")
+
+  // Articles relations
+  articleCover  Article[] @relation("articleCover")
+  articleMedias Article[] @relation("articleGalleryMedias") // ✅ Nome consistente
+
+  // Stories relations
+  storiesCover Stories[]     @relation("storiesCover")
+  storiesItems StoriesItem[] @relation("storiesItemMedia") // ✅ Nome adicionado
 }
 
 model Folder {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  path      String   @unique // The full logical prefix (e.g. "documents/capas")
-  parentId  String?  @db.Uuid
-  parent    Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
-  children  Folder[] @relation("FolderToFolder")
-  media     Media[]
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  path String @unique
+
+  parentId String?  @db.Uuid
+  parent   Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  children Folder[] @relation("FolderToFolder")
+
+  media Media[]
+
   createdAt DateTime @default(now()) @db.Timestamp
 
   @@map("folder")
 }
 
-// ========== ENUMS ==========
-enum PopupStatus {
-  rascunho
-  publicado
-  arquivado
-  expirado
-  excluido
-}
-
-enum PopupType {
-  modal
-  barra
-  canto
-  fullscreen
-}
-
-// ========== BANNERS ==========
-model Banners {
-  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model Galleries {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name      String
-  active    Boolean       @default(true)
-  entityId  String        @db.Uuid
-  entity    Entity        @relation(fields: [entityId], references: [id])
-  userId    String        @db.Uuid
-  user      User          @relation(fields: [userId], references: [id])
-  slides    BannerImage[]
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  medias    Media[]
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado @db.Timestamp
+
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  // ✅ Mantido apenas GalleryMedia como relação N:N explícita
+  slides GalleryMedia[]
+
+  // ❌ Removido: medias Media[] (estava inconsistente)
 
   @@index([entityId, active])
 }
 
-model BannerImage {
+model GalleryMedia {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  bannerId  String   @db.Uuid
-  banner    Banners  @relation(fields: [bannerId], references: [id], onDelete: Cascade)
-  mediaId   String   @db.Uuid
-  media     Media    @relation(fields: [mediaId], references: [id])
   order     Int      @default(0)
   caption   String?
   link      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
 
-  @@unique([bannerId, order])
-  @@index([bannerId])
+  galleryId String    @db.Uuid
+  gallery   Galleries @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+
+  mediaId String @db.Uuid
+  media   Media  @relation(fields: [mediaId], references: [id])
+
+  @@unique([galleryId, order])
+  @@index([galleryId])
 }
 
-// ========== POPUPS ==========
 model Popups {
   id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name            String
-  imageId         String      @db.Uuid
-  image           Media       @relation(fields: [imageId], references: [id])
   link            String?
   active          Boolean     @default(true)
   displayTime     Int         @default(5)
@@ -257,12 +293,66 @@ model Popups {
   priority        Int         @default(0)
   publicationDate DateTime?
   expirationDate  DateTime?
-  entityId        String      @db.Uuid
-  entity          Entity      @relation(fields: [entityId], references: [id])
-  userId          String      @db.Uuid
-  user            User        @relation(fields: [userId], references: [id])
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  createdAt       DateTime    @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt       DateTime    @updatedAt @db.Timestamp // ✅ Adicionado
+
+  // ✅ Corrigido: Relação nomeada
+  imageId String @db.Uuid
+  image   Media  @relation("popupImage", fields: [imageId], references: [id])
+
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 
   @@index([entityId, active, status, publicationDate, expirationDate])
+}
+
+model Services {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  link      String   @unique
+  altText   String?
+  icon      String?
+  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+
+  // ✅ Corrigido: Relação nomeada
+  image   Media  @relation("serviceImage", fields: [imageId], references: [id])
+  imageId String @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+}
+
+model Stories {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  description String?
+  alt         String?
+  createdAt   DateTime @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt   DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+
+  coverId String @db.Uuid
+  cover   Media  @relation("storiesCover", fields: [coverId], references: [id])
+
+  items StoriesItem[]
+}
+
+model StoriesItem {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order     Int      @default(0)
+  caption   String?
+  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+
+  storyId String  @db.Uuid
+  story   Stories @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  // ✅ Corrigido: Relação nomeada
+  mediaId String @db.Uuid
+  media   Media  @relation("storiesItemMedia", fields: [mediaId], references: [id])
+
+  @@unique([storyId, order])
 }
