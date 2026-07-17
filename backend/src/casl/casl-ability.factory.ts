@@ -5,7 +5,17 @@ import {
   MongoAbility,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import { User, Article, Page, Media, UserRole, Entity, Banners, BannerImage, Popups } from '@prisma/client';
+import {
+  User,
+  Article,
+  Page,
+  Media,
+  UserRole,
+  Entity,
+  Galleries,
+  GalleryMedia,
+  Popups,
+} from '@prisma/client';
 import { Action } from './action.enum';
 
 // Definimos uma classe temporária para Category se ela ainda não existir no Prisma
@@ -23,8 +33,8 @@ export type Subjects =
   | 'Category'
   | 'User'
   | 'Entity'
-  | 'Banners'
-  | 'BannerImage'
+  | 'Galleries'
+  | 'GalleryMedia'
   | 'Popups'
   | Article
   | Page
@@ -32,8 +42,8 @@ export type Subjects =
   | User
   | Category
   | Entity
-  | Banners
-  | BannerImage
+  | Galleries
+  | GalleryMedia
   | Popups;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
@@ -41,7 +51,9 @@ export type AppAbility = MongoAbility<[Action, Subjects]>;
 @Injectable()
 export class CaslAbilityFactory {
   createForUser(user?: Partial<User> & { role?: UserRole }) {
-    const { can, cannot, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
+    const { can, cannot, build } = new AbilityBuilder<AppAbility>(
+      createMongoAbility,
+    );
 
     // ==========================================
     // 1. Qualquer um (Público)

@@ -16,14 +16,24 @@ export class PagesService {
 
   async findAll(): Promise<Page[]> {
     return this.prisma.page.findMany({
-      include: { entity: true },
+      include: {
+        entity: true,
+        user: {
+          select: { name: true, username: true, avatar: true, email: true },
+        },
+      },
     });
   }
 
   async findOne(id: string): Promise<Page> {
     const page = await this.prisma.page.findUnique({
       where: { id },
-      include: { entity: true },
+      include: {
+        entity: true,
+        user: {
+          select: { name: true, username: true, avatar: true, email: true },
+        },
+      },
     });
     if (!page) {
       throw new NotFoundException(`Página com ID ${id} não encontrada.`);

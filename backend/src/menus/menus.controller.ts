@@ -63,14 +63,6 @@ export class MenusController {
     return this.menusService.findOneMenu(id);
   }
 
-  @Get('by-location/:entityId/:location')
-  async findOneMenuByLocation(
-    @Param('entityId', ParseUUIDPipe) entityId: string,
-    @Param('location') location: string,
-  ) {
-    return this.menusService.findOneMenuByLocation(entityId, location);
-  }
-
   @UseGuards(SessionGuard)
   @Post()
   async createMenu(@Body() createMenuDto: CreateMenuDto, @Request() req: any) {

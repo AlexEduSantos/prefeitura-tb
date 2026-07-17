@@ -7,9 +7,10 @@ import {
 } from 'class-validator';
 
 export class CreateMenuItemDto {
+  // ✅ Renomeado para evitar conflito com o ID real do banco
   @IsString()
   @IsOptional()
-  id?: string; // Client-side or temporary ID to match parent-child relations in the payload
+  tempId?: string; // Temporary client-side ID for parent-child matching
 
   @IsString()
   @IsNotEmpty()
@@ -27,7 +28,18 @@ export class CreateMenuItemDto {
   @IsOptional()
   pageId?: string;
 
-  @IsString()
+  // ✅ Corrigido: UUID validation
+  @IsUUID()
   @IsOptional()
-  parentId?: string; // References the client/temp ID of another item in the same array
+  parentId?: string; // Now expects real UUID or null (for top-level items)
+
+  // ✅ Adicionado: Obrigatório no model
+  @IsUUID()
+  @IsNotEmpty()
+  menuId: string;
+
+  // ✅ Adicionado: Obrigatório no model
+  @IsUUID()
+  @IsNotEmpty()
+  entityId: string;
 }

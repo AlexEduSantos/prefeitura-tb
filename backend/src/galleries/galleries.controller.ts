@@ -9,17 +9,17 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { BannersService } from './banners.service';
-import { CreateBannerDto } from './dto/create-banner.dto';
-import { UpdateBannerDto } from './dto/update-banner.dto';
+import { GalleriesService } from './galleries.service';
+import { CreateGalleriesDto } from './dto/create-galleries.dto';
+import { UpdateGalleriesDto } from './dto/update-galleries.dto';
 import { Action } from '../casl/action.enum';
 import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 
 @Controller('banners')
-export class BannersController {
-  constructor(private readonly bannersService: BannersService) {}
+export class GalleriesController {
+  constructor(private readonly bannersService: GalleriesService) {}
 
   @Get()
   async findAll() {
@@ -33,27 +33,28 @@ export class BannersController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.Create, 'Banners'))
-  async create(@Body() createBannerDto: CreateBannerDto, @Request() req) {
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Galleries'))
+  async create(@Body() createGalleriesDto: CreateGalleriesDto, @Request() req) {
     // req.session.passport.user is typically where the user id is stored if you use passport
     // Adjust based on how you extract userId from session
-    const userId = req.session.user?.id || req.user?.id || req.session.passport?.user;
-    return this.bannersService.create(createBannerDto, userId);
+    const userId =
+      req.session.user?.id || req.user?.id || req.session.passport?.user;
+    return this.bannersService.create(createGalleriesDto, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'Banners'))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Galleries'))
   async update(
     @Param('id') id: string,
-    @Body() updateBannerDto: UpdateBannerDto,
+    @Body() updateGalleriesDto: UpdateGalleriesDto,
   ) {
-    return this.bannersService.update(id, updateBannerDto);
+    return this.bannersService.update(id, updateGalleriesDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Banners'))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Galleries'))
   async remove(@Param('id') id: string) {
     return this.bannersService.remove(id);
   }

@@ -19,4 +19,8 @@ export class CreatePageDto {
   @IsString()
   @IsNotEmpty()
   entityId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }

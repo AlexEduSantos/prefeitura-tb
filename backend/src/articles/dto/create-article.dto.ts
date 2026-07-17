@@ -6,7 +6,18 @@ import {
   IsArray,
   IsDateString,
   IsInt,
+  IsUUID,
+  IsEnum,
 } from 'class-validator';
+
+// Sugiro criar um enum correspondente
+export enum ArticleStatusEnum {
+  rascunho = 'rascunho',
+  publicado = 'publicado',
+  arquivado = 'arquivado',
+  expirado = 'expirado',
+  excluido = 'excluido',
+}
 
 export class CreateArticleDto {
   @IsString()
@@ -17,13 +28,14 @@ export class CreateArticleDto {
   @IsOptional()
   headline?: string;
 
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   entityId: string;
 
-  @IsString()
-  @IsOptional()
-  cover?: string;
+  // ✅ Corrigido: coverId em vez de cover
+  @IsUUID()
+  @IsNotEmpty() // É obrigatório no model
+  coverId: string;
 
   @IsString()
   @IsNotEmpty()
@@ -37,9 +49,10 @@ export class CreateArticleDto {
   @IsOptional()
   type?: string;
 
-  @IsString()
+  // ✅ Opcional: Validar como enum se quiser mais segurança
+  @IsEnum(ArticleStatusEnum)
   @IsOptional()
-  status?: string;
+  status?: ArticleStatusEnum;
 
   @IsDateString()
   @IsOptional()
@@ -53,13 +66,15 @@ export class CreateArticleDto {
   @IsOptional()
   featured?: boolean;
 
-  @IsString()
-  @IsOptional()
-  author?: string;
+  // ✅ Corrigido: authorId em vez de author, e obrigatório
+  @IsUUID()
+  @IsNotEmpty()
+  authorId: string;
 
-  @IsString()
+  // ✅ Corrigido: editorId em vez de editor
+  @IsUUID()
   @IsOptional()
-  editor?: string;
+  editorId?: string;
 
   @IsString()
   @IsOptional()

@@ -26,55 +26,33 @@ export class ArticlesService {
     const articles = await this.prisma.article.findMany({
       include: {
         entity: true,
+        cover: true,
+        galleryMedias: true,
       },
     });
 
-    // Buscar todas as imagens relacionadas em uma única query
-    const coverIds = articles.map((a) => a.cover).filter(Boolean) as string[];
-    const galleryIds = articles.flatMap((a) => a.galleryImages).filter(Boolean);
-    const allMediaIds = [...new Set([...coverIds, ...galleryIds])];
+    if (!articles) {
+      throw new NotFoundException(`Artigos não encontrados.`);
+    }
 
-    const medias = await this.prisma.media.findMany({
-      where: { id: { in: allMediaIds } },
-    });
-
-    const mediaMap = new Map(medias.map((m) => [m.id, m]));
-
-    // Enriquecer os artigos com os dados das imagens
-    return articles.map((article) => ({
-      ...article,
-      coverData: article.cover ? mediaMap.get(article.cover) : null,
-      galleryData: article.galleryImages
-        .map((id) => mediaMap.get(id))
-        .filter(Boolean),
-    }));
+    return articles;
   }
 
   async findOne(id: string) {
     const article = await this.prisma.article.findUnique({
       where: { id },
-      include: { entity: true },
+      include: {
+        entity: true,
+        cover: true,
+        galleryMedias: true,
+      },
     });
 
     if (!article) {
       throw new NotFoundException(`Artigo com ID ${id} não encontrado.`);
     }
 
-    const coverId = article.cover;
-    const galleryIds = article.galleryImages;
-    const allMediaIds = [...new Set([...coverId!, ...galleryIds])];
-    const medias = await this.prisma.media.findMany({
-      where: { id: { in: allMediaIds } },
-    });
-    const mediaMap = new Map(medias.map((m) => [m.id, m]));
-
-    return {
-      ...article,
-      coverData: article.cover ? mediaMap.get(article.cover)! : null,
-      galleryData: article.galleryImages
-        .map((id) => mediaMap.get(id))
-        .filter(Boolean),
-    };
+    return article;
   }
 
   async update(

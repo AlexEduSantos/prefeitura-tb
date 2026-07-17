@@ -11,8 +11,8 @@ import { MediaModule } from './media/media.module';
 import { EntitiesModule } from './entities/entities.module';
 import { MenusModule } from './menus/menus.module';
 import { BullModule } from '@nestjs/bullmq';
-import { BannersModule } from './banners/banners.module';
-import { BannerImagesModule } from './banner-images/banner-images.module';
+import { GalleriesModule } from './galleries/galleries.module';
+import { GalleryMediaModule } from './gallery-media/gallery-media.module';
 import { PopupsModule } from './popups/popups.module';
 
 @Module({
@@ -31,14 +31,11 @@ import { PopupsModule } from './popups/popups.module';
     MediaModule,
     EntitiesModule,
     MenusModule,
-    BannersModule,
-    BannerImagesModule,
+    GalleriesModule,
+    GalleryMediaModule,
     PopupsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
 export class AppModule {}
-
-
-

@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsInt, IsUUID } from 'class-validator';
 
-export class CreateBannerImageDto {
+export class CreateGalleryMediaDto {
   @IsOptional()
   @IsUUID()
   bannerId?: string;

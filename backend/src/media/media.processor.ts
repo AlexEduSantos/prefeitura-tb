@@ -42,7 +42,8 @@ export class MediaProcessor extends WorkerHost {
         const fileBuffer = await fs.readFile(tempFilePath);
         const fileType = await fileTypeFromBuffer(fileBuffer);
         const ext = fileType?.ext || 'bin';
-        const detectedMime = fileType?.mime || media.mime_type || 'application/octet-stream';
+        const detectedMime =
+          fileType?.mime || media.mimeType || 'application/octet-stream';
 
         let finalBuffer: any = fileBuffer;
         let finalMimeType = detectedMime;
@@ -83,7 +84,7 @@ export class MediaProcessor extends WorkerHost {
           width = finalMetadata.width;
           height = finalMetadata.height;
           finalMimeType = 'image/webp';
-          
+
           if (media.folderId && folderPath) {
             key = `${folderPath}${sanitizedTitle}-${Date.now()}.webp`;
           } else {
@@ -111,9 +112,9 @@ export class MediaProcessor extends WorkerHost {
           where: { id: mediaId },
           data: {
             key,
-            file_size: finalBuffer.length,
+            fileSize: finalBuffer.length,
             status: 'ready',
-            mime_type: finalMimeType,
+            mimeType: finalMimeType,
             width,
             height,
           },
@@ -138,7 +139,10 @@ export class MediaProcessor extends WorkerHost {
           await fs.unlink(tempFilePath);
         } catch {}
 
-        this.mediaGateway.notifyMediaFailed(mediaId, error.message || 'Erro desconhecido');
+        this.mediaGateway.notifyMediaFailed(
+          mediaId,
+          error.message || 'Erro desconhecido',
+        );
         throw error;
       }
     } else if (name === 'folders-move') {
@@ -148,7 +152,10 @@ export class MediaProcessor extends WorkerHost {
           await this.mediaService.copyS3Object(op.oldKey, op.newKey);
           await this.mediaService.deleteS3Object(op.oldKey);
         } catch (err) {
-          console.error(`Erro ao mover objeto S3 de ${op.oldKey} para ${op.newKey}:`, err);
+          console.error(
+            `Erro ao mover objeto S3 de ${op.oldKey} para ${op.newKey}:`,
+            err,
+          );
         }
       }
       this.mediaGateway.notifyFoldersUpdated();
@@ -158,7 +165,10 @@ export class MediaProcessor extends WorkerHost {
       try {
         await this.mediaService.deleteS3Folder(folderPath);
       } catch (err) {
-        console.error(`Erro ao deletar pasta S3 com prefixo ${folderPath}:`, err);
+        console.error(
+          `Erro ao deletar pasta S3 com prefixo ${folderPath}:`,
+          err,
+        );
       }
       this.mediaGateway.notifyFoldersUpdated();
       return { success: true, folderPath };

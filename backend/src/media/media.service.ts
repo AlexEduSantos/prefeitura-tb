@@ -105,7 +105,7 @@ export class MediaService {
     const command = new DeleteObjectsCommand({
       Bucket: this.bucketName,
       Delete: {
-        Objects: keys.map(key => ({ Key: key })),
+        Objects: keys.map((key) => ({ Key: key })),
         Quiet: true,
       },
     });
@@ -120,7 +120,7 @@ export class MediaService {
     });
     const listResponse = await this.s3Client.send(listCommand);
     const keys = (listResponse.Contents || [])
-      .map(item => item.Key)
+      .map((item) => item.Key)
       .filter((key): key is string => !!key);
 
     const keepKey = `${prefix}/.keep`;
@@ -166,9 +166,9 @@ export class MediaService {
       data: {
         ...createMediaDto,
         url: `http://localhost:3001/uploads/images/${relativeDir}/${fileName}`,
-        file_size: (await fs.stat(filePath)).size,
+        fileSize: (await fs.stat(filePath)).size,
         type: 'image',
-        mime_type: 'image/webp',
+        mimeType: 'image/webp',
         width: finalMetadata.width,
         height: finalMetadata.height,
       },
@@ -206,9 +206,9 @@ export class MediaService {
       data: {
         ...createMediaDto,
         url: `http://localhost:3001/uploads/documents/${relativeDir}/${fileName}`,
-        file_size: (await fs.stat(filePath)).size,
+        fileSize: (await fs.stat(filePath)).size,
         type: 'document',
-        mime_type: type.mime,
+        mimeType: type.mime,
       },
     });
   }
@@ -244,9 +244,9 @@ export class MediaService {
       data: {
         ...createMediaDto,
         url: `http://localhost:3001/uploads/videos/${relativeDir}/${fileName}`,
-        file_size: (await fs.stat(filePath)).size,
+        fileSize: (await fs.stat(filePath)).size,
         type: 'video',
-        mime_type: type.mime,
+        mimeType: type.mime,
       },
     });
   }
@@ -316,7 +316,7 @@ export class MediaService {
       data: {
         ...createMediaDto,
         type,
-        mime_type: mimeType,
+        mimeType: mimeType,
         status: 'pending',
       },
     });
@@ -363,7 +363,7 @@ export class MediaService {
     const [files, total] = await Promise.all([
       this.prisma.media.findMany({
         where: { folderId: parentFolderId },
-        orderBy: { created_at: sort },
+        orderBy: { createdAt: sort },
         skip: (page - 1) * limit,
         take: limit,
       }),
@@ -373,7 +373,11 @@ export class MediaService {
     ]);
 
     return {
-      folders: subfolders.map((f) => ({ id: f.id, name: f.name, path: f.path })),
+      folders: subfolders.map((f) => ({
+        id: f.id,
+        name: f.name,
+        path: f.path,
+      })),
       files,
       currentFolderId: parentFolderId,
       pagination: {
