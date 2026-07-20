@@ -3,3 +3,5 @@ TODO: (Menus) - Corrigir estrutura da table menu. Precisa ter controle por níve
 TODO: (Menu Modal) - Criar modal para criação de Menu no dashboard. Corrigir o Modal de criação de MenuItem para a seleção de item pai carregar apenas após a seleção do menu. Ordem deve ser carregada dinâmicamente baseada nos itens já existentes no menu.
 
 TODO: (Menu Manager) - Dar refresh na lista de menus do dashboard e na lista de itens do menu pai após a criação de um novo menu ou item.
+
+FEAT: Adicionar função de deleção em massa no media-upload-modal.
