@@ -4,7 +4,6 @@ import {
   useMediaViewModel,
 } from "@/app/viewmodel/media.viewmodel";
 import { useState } from "react";
-import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,7 +23,6 @@ import {
   SearchIcon,
   Trash2Icon,
   Undo2Icon,
-  Upload,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -35,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useNewArticleViewModel } from "@/app/viewmodel/new-article.viewmodel";
 import { MediaUploadModal } from "./media-upload-modal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";

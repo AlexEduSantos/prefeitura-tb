@@ -164,7 +164,7 @@ export const FileItem = ({
             aria-description="Menu lateral com informações do arquivo"
           >
             <DialogTrigger>
-              <span className="absolute top-0 right-0 z-10 rounded-[4px] bg-card shadow-md text-muted-foreground size-5 flex items-center justify-center">
+              <span className="absolute top-0 right-0 z-10 rounded-lg bg-card shadow-md text-muted-foreground size-5 flex items-center justify-center">
                 <Ellipsis size={14} />
               </span>
             </DialogTrigger>
@@ -253,7 +253,7 @@ export const FileItem = ({
                   <Label>Data de criação</Label>
                   <Input
                     id="created_at"
-                    value={format(new Date(file.created_at), "dd/MM/yyyy")}
+                    value={format(new Date(file.createdAt), "dd/MM/yyyy")}
                     disabled
                   />
                   <Label>Tipo do arquivo</Label>
@@ -265,8 +265,8 @@ export const FileItem = ({
                   />
                   <Label>Tamanho do arquivo</Label>
                   <Input
-                    id="file_size"
-                    value={(file.file_size / 1024).toFixed(0) + " KB"}
+                    id="fileSize"
+                    value={(file.fileSize / 1024).toFixed(0) + " KB"}
                     disabled
                   />
                   {file.type.startsWith("image/") && (
@@ -285,12 +285,12 @@ export const FileItem = ({
                     value={`${file.width} x ${file.height}`}
                     disabled
                   />
-                  {file.updated_at !== file.created_at && (
+                  {file.updatedAt !== file.createdAt && (
                     <>
                       <Label>Data de atualização</Label>
                       <Input
                         id="updated_at"
-                        value={format(new Date(file.updated_at), "dd/MM/yyyy")}
+                        value={format(new Date(file.updatedAt), "dd/MM/yyyy")}
                         disabled
                       />
                     </>
@@ -432,10 +432,10 @@ export const FileItem = ({
         </h3>
         <div className="flex items-center justify-between">
           <p className="text-xs text-accent-foreground/50">
-            {format(new Date(file.created_at), "dd/MM/yyyy")}
+            {format(new Date(file.createdAt), "dd/MM/yyyy")}
           </p>
           <p className="text-xs text-accent-foreground/50">
-            {(file.file_size / 1024).toFixed(0)} KB
+            {(file.fileSize / 1024).toFixed(0)} KB
           </p>
         </div>
       </div>
