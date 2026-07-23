@@ -28,6 +28,8 @@ export class ArticlesService {
         entity: true,
         cover: true,
         galleryMedias: true,
+        author: true,
+        editor: true,
       },
     });
 
@@ -45,6 +47,8 @@ export class ArticlesService {
         entity: true,
         cover: true,
         galleryMedias: true,
+        author: true,
+        editor: true,
       },
     });
 

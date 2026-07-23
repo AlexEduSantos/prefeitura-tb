@@ -50,7 +50,10 @@ export class ArticleService {
     return response.json();
   }
 
-  static async updateArticle(id: string, data: Partial<IArticle>): Promise<IArticle> {
+  static async updateArticle(
+    id: string,
+    data: Partial<IArticle>,
+  ): Promise<IArticle> {
     const response = await fetch(`${API_URL}/articles/${id}`, {
       method: "PATCH",
       headers: {
@@ -84,7 +87,10 @@ export class ArticleService {
     return response.json();
   }
 
-  static async changeFeatured(id: string, featured: boolean): Promise<IArticle> {
+  static async changeFeatured(
+    id: string,
+    featured: boolean,
+  ): Promise<IArticle> {
     const response = await fetch(`${API_URL}/articles/${id}`, {
       method: "PATCH",
       headers: {

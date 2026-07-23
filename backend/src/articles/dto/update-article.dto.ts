@@ -24,9 +24,8 @@ export class UpdateArticleDto {
   @IsOptional()
   cover?: string;
 
-  @IsString()
   @IsOptional()
-  body?: string;
+  body?: any;
 
   @IsString()
   @IsOptional()

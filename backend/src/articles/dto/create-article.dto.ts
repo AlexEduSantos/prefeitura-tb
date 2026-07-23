@@ -8,6 +8,7 @@ import {
   IsInt,
   IsUUID,
   IsEnum,
+  IsJSON,
 } from 'class-validator';
 
 // Sugiro criar um enum correspondente
@@ -37,9 +38,8 @@ export class CreateArticleDto {
   @IsNotEmpty() // É obrigatório no model
   coverId: string;
 
-  @IsString()
   @IsNotEmpty()
-  body: string;
+  body: any;
 
   @IsString()
   @IsNotEmpty()

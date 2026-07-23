@@ -15,8 +15,7 @@ export function ArticleViewModel() {
   // mutations
 
   const createArticleMutation = useMutation({
-    mutationFn: (data: Partial<IArticle>) =>
-      ArticleService.createArticle(data),
+    mutationFn: (data: Partial<IArticle>) => ArticleService.createArticle(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
@@ -31,8 +30,7 @@ export function ArticleViewModel() {
   });
 
   const deleteArticleMutation = useMutation({
-    mutationFn: (id: string) =>
-      ArticleService.deleteArticle(id),
+    mutationFn: (id: string) => ArticleService.deleteArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
@@ -66,4 +64,3 @@ export function ArticleViewModel() {
     changeFeatured: changeFeaturedMutation.mutate,
   };
 }
-

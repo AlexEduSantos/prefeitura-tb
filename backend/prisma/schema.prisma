@@ -155,7 +155,7 @@ model Article {
   id                       String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                    String
   headline                 String?       @db.VarChar(500)
-  body                     String
+  body                     Json
   slug                     String        @unique
   type                     String        @default("article")
   status                   ArticleStatus @default(rascunho)

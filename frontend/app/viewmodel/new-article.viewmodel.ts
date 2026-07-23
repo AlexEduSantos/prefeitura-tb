@@ -5,8 +5,8 @@ import { IMedia } from "../type/media";
 import { IArticle } from "../type/article";
 import { ArticleViewModel } from "./article.viewmodel";
 import { useRouter } from "next/navigation";
-import { useAuthViewModel } from "./auth.viewmodel";
 import { useEntityViewModel } from "./entity.viewmodel";
+import { useUserViewModel } from "./user.viewmodel";
 
 export interface NewArticleFormState {
   title: string;
@@ -52,9 +52,9 @@ const generateSlug = (text: string) => {
 export function useNewArticleViewModel() {
   const router = useRouter();
   const { createArticle } = ArticleViewModel();
-  const { user } = useAuthViewModel();
+  const { user } = useUserViewModel();
   const { entities, isLoadingEntities } = useEntityViewModel();
-  
+
   // Toggles de visibilidade (UI)
   const [hasHeadline, setHasHeadline] = useState(false);
 
@@ -73,7 +73,7 @@ export function useNewArticleViewModel() {
     type: "news",
     featured: false,
     author: user?.name || "Usuário Atual",
-    editor: "", 
+    editor: "",
     seoTitle: "",
     seoDescription: "",
     seoKeywords: [],
@@ -92,7 +92,10 @@ export function useNewArticleViewModel() {
     galleryImages: [],
   });
 
-  const setField = <K extends keyof NewArticleFormState>(key: K, value: NewArticleFormState[K]) => {
+  const setField = <K extends keyof NewArticleFormState>(
+    key: K,
+    value: NewArticleFormState[K],
+  ) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -103,7 +106,10 @@ export function useNewArticleViewModel() {
   };
 
   const removeTag = (tag: string) => {
-    setField("tags", form.tags.filter((t) => t !== tag));
+    setField(
+      "tags",
+      form.tags.filter((t) => t !== tag),
+    );
   };
 
   const addSeoKeyword = (keyword: string) => {
@@ -113,7 +119,10 @@ export function useNewArticleViewModel() {
   };
 
   const removeSeoKeyword = (keyword: string) => {
-    setField("seoKeywords", form.seoKeywords.filter((t) => t !== keyword));
+    setField(
+      "seoKeywords",
+      form.seoKeywords.filter((t) => t !== keyword),
+    );
   };
 
   const saveArticle = (status: "draft" | "published") => {
@@ -139,17 +148,17 @@ export function useNewArticleViewModel() {
       slug: finalSlug,
       body: editorContentRef.current,
       type: form.type,
-      status: status,
-      entityId: form.entityId, 
-      
+      status: status === "draft" ? "rascunho" : "publicado",
+      entityId: form.entityId,
+
       featured: form.featured,
-      author: form.author,
-      editor: form.editor || undefined,
-      
+      authorId: user?.id,
+      editorId: user?.id,
+
       seoTitle: form.seoTitle || undefined,
       seoDescription: form.seoDescription || undefined,
-      seoKeywords: form.seoKeywords.length > 0 ? form.seoKeywords : undefined,
-      
+      seoKeywords: form.seoKeywords.length > 0 ? form.seoKeywords.join(', ') : undefined,
+
       allowComments: form.allowComments,
       tags: form.tags.length > 0 ? form.tags : undefined,
       visibility: "public", // Removido da UI, forçado como publico
@@ -164,22 +173,32 @@ export function useNewArticleViewModel() {
     };
 
     if (hasHeadline && form.headline) payload.headline = form.headline;
-    if (form.publicationDate) payload.publicationDate = new Date(form.publicationDate).toISOString() as any;
-    if (form.expirationDate) payload.expirationDate = new Date(form.expirationDate).toISOString() as any;
+    if (form.publicationDate)
+      payload.publicationDate = new Date(
+        form.publicationDate,
+      ).toISOString() as any;
+    if (form.expirationDate)
+      payload.expirationDate = new Date(
+        form.expirationDate,
+      ).toISOString() as any;
 
-    if (form.cover) payload.cover = form.cover.id as any;
+    if (form.cover) payload.coverId = form.cover.id as any;
     if (form.galleryImages.length > 0) {
-      payload.galleryImages = form.galleryImages.map(m => m.id) as any[];
+      payload.galleryImages = form.galleryImages.map((m) => m.id) as any[];
     }
+
+    console.log(payload);
 
     createArticle(payload, {
       onSuccess: () => {
-        alert(`Matéria salva como ${status === 'draft' ? 'rascunho' : 'publicada'} com sucesso!`);
+        alert(
+          `Matéria salva como ${status === "draft" ? "rascunho" : "publicada"} com sucesso!`,
+        );
         router.push("/administrator/articles");
       },
       onError: (err) => {
         alert("Erro ao salvar matéria: " + err.message);
-      }
+      },
     });
   };
 
@@ -203,9 +222,12 @@ export function useNewArticleViewModel() {
     handleSaveDraft,
     handlePublish,
     editorContentRef,
-    hasHeadline, setHasHeadline,
-    isCoverModalOpen, setIsCoverModalOpen,
-    isGalleryModalOpen, setIsGalleryModalOpen,
+    hasHeadline,
+    setHasHeadline,
+    isCoverModalOpen,
+    setIsCoverModalOpen,
+    isGalleryModalOpen,
+    setIsGalleryModalOpen,
     entities,
     isLoadingEntities,
   };

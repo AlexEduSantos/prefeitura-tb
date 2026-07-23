@@ -1,7 +1,7 @@
 import { IEntity } from "./entity";
 
 export interface IUser {
-  id: number;
+  id: string;
   username: string;
   name: string;
   email: string;

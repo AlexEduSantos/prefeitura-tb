@@ -1,12 +1,13 @@
 import { IEntity } from "./entity";
 import { IMedia } from "./media";
+import { IUser } from "./user";
 
 export interface IArticle {
   id: string;
   title: string;
   headline?: string;
-  cover: string;
-  coverData: IMedia;
+  coverId?: string;
+  coverData?: IMedia;
   body: string;
   slug: string;
   type: string;
@@ -14,13 +15,15 @@ export interface IArticle {
   publicationDate?: string;
   expirationDate?: string;
   featured: boolean;
-  author: string;
-  editor?: string;
+  authorId?: string;
+  editorId?: string;
+  author?: IUser;
+  editor?: IUser;
   createdAt: string;
   updatedAt: string;
   seoTitle?: string;
   seoDescription?: string;
-  seoKeywords?: string[];
+  seoKeywords?: string;
   contentType: string;
   displayAuthor: boolean;
   displayDate: boolean;
@@ -37,4 +40,6 @@ export interface IArticle {
   socialPreviewImage?: string;
   socialPreviewDescription?: string;
   entity: IEntity;
+  entityId?: string;
+  visibility?: string;
 }
