@@ -163,16 +163,15 @@ model Article {
   expirationDate           DateTime?
   featured                 Boolean       @default(false)
   createdAt                DateTime      @default(now()) @db.Timestamp
-  updatedAt                DateTime      @default(now()) @db.Timestamp
+  updatedAt                DateTime      @updatedAt @db.Timestamp
   seoTitle                 String?
   seoDescription           String?
   seoKeywords              String?
   allowComments            Boolean       @default(true)
   tags                     String[]
   visibility               String        @default("public")
-  galleryAutoplay          Boolean       @default(false)
-  galleryInterval          Int           @default(5000)
-  galleryShowThumbnails    Boolean       @default(true)
+  galleryId                String?       @db.Uuid
+  gallery                  Galleries?    @relation(fields: [galleryId], references: [id], onDelete: SetNull)
   socialPreviewTitle       String?
   socialPreviewImage       String?
   socialPreviewDescription String?
@@ -187,9 +186,6 @@ model Article {
 
   coverId String @db.Uuid
   cover   Media  @relation("articleCover", fields: [coverId], references: [id])
-
-  galleryImages String[]
-  galleryMedias Media[]  @relation("articleGalleryMedias")
 }
 
 model Media {
@@ -207,7 +203,7 @@ model Media {
   tags        String[]
   status      MediaStatus @default(pending)
   createdAt   DateTime    @default(now()) @db.Timestamp
-  updatedAt   DateTime    @default(now()) @db.Timestamp
+  updatedAt   DateTime    @updatedAt @db.Timestamp
 
   folder   Folder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
   folderId String? @db.Uuid
@@ -217,8 +213,7 @@ model Media {
   services      Services[]     @relation("serviceImage")
 
   // Articles relations
-  articleCover  Article[] @relation("articleCover")
-  articleMedias Article[] @relation("articleGalleryMedias") // ✅ Nome consistente
+  articleCover Article[] @relation("articleCover")
 
   // Stories relations
   storiesCover Stories[]     @relation("storiesCover")
@@ -237,16 +232,28 @@ model Folder {
   media Media[]
 
   createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@map("folder")
 }
 
+enum GalleryType {
+  slider
+  sliderVertical
+  grid
+  carousel
+}
+
 model Galleries {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado @db.Timestamp
+  id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  active                Boolean     @default(true)
+  createdAt             DateTime    @default(now()) @db.Timestamp // ✅ Adicionado @db.Timestamp
+  updatedAt             DateTime    @updatedAt @db.Timestamp // ✅ Adicionado @db.Timestamp
+  galleryType           GalleryType @default(slider)
+  galleryAutoplay       Boolean     @default(true)
+  galleryInterval       Int         @default(5000)
+  galleryShowThumbnails Boolean     @default(true)
 
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])
@@ -258,6 +265,7 @@ model Galleries {
   slides GalleryMedia[]
 
   // ❌ Removido: medias Media[] (estava inconsistente)
+  articles Article[]
 
   @@index([entityId, active])
 }
@@ -274,7 +282,7 @@ model GalleryMedia {
   gallery   Galleries @relation(fields: [galleryId], references: [id], onDelete: Cascade)
 
   mediaId String @db.Uuid
-  media   Media  @relation(fields: [mediaId], references: [id])
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
   @@unique([galleryId, order])
   @@index([galleryId])

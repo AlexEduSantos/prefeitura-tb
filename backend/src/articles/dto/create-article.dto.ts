@@ -101,22 +101,9 @@ export class CreateArticleDto {
   @IsOptional()
   visibility?: string;
 
-  @IsArray()
-  @IsString({ each: true })
+  @IsUUID()
   @IsOptional()
-  galleryImages?: string[];
-
-  @IsBoolean()
-  @IsOptional()
-  galleryAutoplay?: boolean;
-
-  @IsInt()
-  @IsOptional()
-  galleryInterval?: number;
-
-  @IsBoolean()
-  @IsOptional()
-  galleryShowThumbnails?: boolean;
+  galleryId?: string;
 
   @IsString()
   @IsOptional()

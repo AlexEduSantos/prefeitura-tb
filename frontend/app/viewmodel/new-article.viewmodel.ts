@@ -7,6 +7,7 @@ import { ArticleViewModel } from "./article.viewmodel";
 import { useRouter } from "next/navigation";
 import { useEntityViewModel } from "./entity.viewmodel";
 import { useUserViewModel } from "./user.viewmodel";
+import { IGallery } from "../type/gallery";
 
 export interface NewArticleFormState {
   title: string;
@@ -21,9 +22,7 @@ export interface NewArticleFormState {
   seoKeywords: string[];
   allowComments: boolean;
   tags: string[];
-  galleryAutoplay: boolean;
-  galleryInterval: number;
-  galleryShowThumbnails: boolean;
+  galleryId: string[];
   socialPreviewTitle: string;
   socialPreviewImage: string;
   socialPreviewDescription: string;
@@ -33,7 +32,7 @@ export interface NewArticleFormState {
   expirationDate: string;
   // Relations
   cover: IMedia | null;
-  galleryImages: IMedia[];
+  gallery: IGallery | null;
 }
 
 // Função utilitária para gerar slug
@@ -49,9 +48,12 @@ const generateSlug = (text: string) => {
     .replace(/--+/g, "-");
 };
 
-export function useNewArticleViewModel() {
+export function useNewArticleViewModel(
+  initialData?: IArticle,
+  onSuccessCallback?: () => void,
+) {
   const router = useRouter();
-  const { createArticle } = ArticleViewModel();
+  const { createArticle, updateArticle } = ArticleViewModel();
   const { user } = useUserViewModel();
   const { entities, isLoadingEntities } = useEntityViewModel();
 
@@ -63,33 +65,40 @@ export function useNewArticleViewModel() {
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
 
   // Referência para o editor de texto rico (Rich Text)
-  const editorContentRef = useRef<string>("");
+  const editorContentRef = useRef<string>(initialData?.body || "");
 
   // Estado Principal do Formulário
   const [form, setForm] = useState<NewArticleFormState>({
-    title: "",
-    headline: "",
-    slug: "",
-    type: "news",
-    featured: false,
-    author: user?.name || "Usuário Atual",
-    editor: "",
-    seoTitle: "",
-    seoDescription: "",
-    seoKeywords: [],
-    allowComments: true,
-    tags: [],
-    galleryAutoplay: true,
-    galleryInterval: 5000,
-    galleryShowThumbnails: true,
-    socialPreviewTitle: "",
-    socialPreviewImage: "",
-    socialPreviewDescription: "",
-    entityId: "",
-    publicationDate: "",
-    expirationDate: "",
-    cover: null,
-    galleryImages: [],
+    title: initialData?.title || "",
+    headline: initialData?.headline || "",
+    slug: initialData?.slug || "",
+    type: initialData?.type || "article",
+    featured: initialData?.featured || false,
+    author: initialData?.author?.name || user?.name || "Usuário Atual",
+    editor: initialData?.editor?.name || "",
+    seoTitle: initialData?.seoTitle || "",
+    seoDescription: initialData?.seoDescription || "",
+    seoKeywords: initialData?.seoKeywords
+      ? initialData.seoKeywords
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [],
+    allowComments: initialData?.allowComments ?? true,
+    tags: initialData?.tags || [],
+    socialPreviewTitle: initialData?.socialPreviewTitle || "",
+    socialPreviewImage: initialData?.socialPreviewImage || "",
+    socialPreviewDescription: initialData?.socialPreviewDescription || "",
+    entityId: initialData?.entityId || "",
+    publicationDate: initialData?.publicationDate
+      ? new Date(initialData.publicationDate).toISOString().slice(0, 16)
+      : "",
+    expirationDate: initialData?.expirationDate
+      ? new Date(initialData.expirationDate).toISOString().slice(0, 16)
+      : "",
+    cover: initialData?.cover || null,
+    gallery: initialData?.gallery || null,
+    galleryId: initialData?.galleryId || [],
   });
 
   const setField = <K extends keyof NewArticleFormState>(
@@ -150,6 +159,8 @@ export function useNewArticleViewModel() {
       type: form.type,
       status: status === "draft" ? "rascunho" : "publicado",
       entityId: form.entityId,
+      coverId: form.cover?.id,
+      galleryId: form.gallery?.id as any,
 
       featured: form.featured,
       authorId: user?.id,
@@ -157,15 +168,12 @@ export function useNewArticleViewModel() {
 
       seoTitle: form.seoTitle || undefined,
       seoDescription: form.seoDescription || undefined,
-      seoKeywords: form.seoKeywords.length > 0 ? form.seoKeywords.join(', ') : undefined,
+      seoKeywords:
+        form.seoKeywords.length > 0 ? form.seoKeywords.join(", ") : undefined,
 
       allowComments: form.allowComments,
       tags: form.tags.length > 0 ? form.tags : undefined,
       visibility: "public", // Removido da UI, forçado como publico
-
-      galleryAutoplay: form.galleryAutoplay,
-      galleryInterval: Number(form.galleryInterval),
-      galleryShowThumbnails: form.galleryShowThumbnails,
 
       socialPreviewTitle: form.socialPreviewTitle || undefined,
       socialPreviewImage: form.socialPreviewImage || undefined,
@@ -183,23 +191,35 @@ export function useNewArticleViewModel() {
       ).toISOString() as any;
 
     if (form.cover) payload.coverId = form.cover.id as any;
-    if (form.galleryImages.length > 0) {
-      payload.galleryImages = form.galleryImages.map((m) => m.id) as any[];
+
+    if (initialData?.id) {
+      updateArticle(
+        { id: initialData.id, data: payload },
+        {
+          onSuccess: () => {
+            alert(`Matéria atualizada com sucesso!`);
+            if (onSuccessCallback) onSuccessCallback();
+            else router.push("/administrator/articles");
+          },
+          onError: (err) => {
+            alert("Erro ao atualizar matéria: " + err.message);
+          },
+        },
+      );
+    } else {
+      createArticle(payload, {
+        onSuccess: () => {
+          alert(
+            `Matéria salva como ${status === "draft" ? "rascunho" : "publicada"} com sucesso!`,
+          );
+          if (onSuccessCallback) onSuccessCallback();
+          else router.push("/administrator/articles");
+        },
+        onError: (err) => {
+          alert("Erro ao salvar matéria: " + err.message);
+        },
+      });
     }
-
-    console.log(payload);
-
-    createArticle(payload, {
-      onSuccess: () => {
-        alert(
-          `Matéria salva como ${status === "draft" ? "rascunho" : "publicada"} com sucesso!`,
-        );
-        router.push("/administrator/articles");
-      },
-      onError: (err) => {
-        alert("Erro ao salvar matéria: " + err.message);
-      },
-    });
   };
 
   const handleSaveDraft = (e: React.MouseEvent) => {

@@ -19,6 +19,10 @@ import {
   Trash,
   Search,
   ChevronDown,
+  ClockAlertIcon,
+  ArchiveIcon,
+  Edit,
+  PlusIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ArticleViewModel } from "@/app/viewmodel/article.viewmodel";
@@ -52,6 +56,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export const columns: ColumnDef<IArticle>[] = [
   {
     accessorKey: "status",
@@ -72,12 +78,16 @@ export const columns: ColumnDef<IArticle>[] = [
 
       const getStatusIcon = (status: string) => {
         switch (status?.toLowerCase()) {
-          case "published":
+          case "publicado":
             return <CheckCircle className="h-4 w-4 text-green-500" />;
-          case "deleted":
+          case "excluido":
             return <Trash className="h-4 w-4 text-red-500" />;
-          default: // draft
+          case "rascunho":
             return <FileText className="h-4 w-4 text-gray-500" />;
+          case "arquivado":
+            return <ArchiveIcon className="h-4 w-4 text-indigo-500" />;
+          case "expirado":
+            return <ClockAlertIcon className="h-4 w-4 text-amber-600" />;
         }
       };
       return (
@@ -90,9 +100,9 @@ export const columns: ColumnDef<IArticle>[] = [
                 type="button"
                 className="h-8 w-8 cursor-pointer stroke-1"
                 title={
-                  status === "published"
+                  status === "publicado"
                     ? "Publicado"
-                    : status === "draft"
+                    : status === "rascunho"
                       ? "Rascunho"
                       : "Excluído"
                 }
@@ -107,19 +117,29 @@ export const columns: ColumnDef<IArticle>[] = [
                 value={status}
                 onValueChange={handleStatusChange}
               >
-                {status !== "published" && (
-                  <DropdownMenuRadioItem value="published">
+                {status !== "publicado" && (
+                  <DropdownMenuRadioItem value="publicado">
                     Publicar
                   </DropdownMenuRadioItem>
                 )}
-                {status !== "draft" && (
-                  <DropdownMenuRadioItem value="draft">
+                {status !== "rascunho" && (
+                  <DropdownMenuRadioItem value="rascunho">
                     Rascunho
                   </DropdownMenuRadioItem>
                 )}
-                {status !== "deleted" && (
-                  <DropdownMenuRadioItem value="deleted">
+                {status !== "excluido" && (
+                  <DropdownMenuRadioItem value="excluido">
                     Excluir
+                  </DropdownMenuRadioItem>
+                )}
+                {status !== "arquivado" && (
+                  <DropdownMenuRadioItem value="arquivado">
+                    Arquivar
+                  </DropdownMenuRadioItem>
+                )}
+                {status !== "expirado" && (
+                  <DropdownMenuRadioItem value="expirado">
+                    Expirar
                   </DropdownMenuRadioItem>
                 )}
               </DropdownMenuRadioGroup>
@@ -165,7 +185,9 @@ export const columns: ColumnDef<IArticle>[] = [
   {
     accessorKey: "author",
     header: "Autor",
-    cell: ({ row }) => <div>{row.getValue("author")}</div>,
+    cell: ({ row }) => {
+      return <div>{row.original.author?.name}</div>;
+    },
   },
   {
     accessorKey: "createdAt",
@@ -210,6 +232,41 @@ export const columns: ColumnDef<IArticle>[] = [
     cell: ({ row }) => <div>{row.getValue("categoria") as string}</div>,
   },
   {
+    accessorKey: "actions",
+    header: "Ações",
+    cell: ({ row, table }) => {
+      return (
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer stroke-1"
+            onClick={() => (table.options.meta as any)?.onEdit(row.original.id)}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 cursor-pointer stroke-1"
+            onClick={() => {
+              if (
+                window.confirm("Tem certeza que deseja excluir esta matéria?")
+              ) {
+                (table.options.meta as any)?.changeStatus({
+                  id: row.original.id,
+                  status: "excluido",
+                });
+              }
+            }}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+  },
+  {
     accessorKey: "featured",
     id: "featured",
     enableHiding: true,
@@ -225,13 +282,14 @@ export function ArticlesList() {
     changeStatus,
     changeFeatured,
   } = ArticleViewModel();
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     featured: false,
   });
   const table = useReactTable({
-    data: article || [],
+    data: article?.filter((a) => a.status !== "excluido") || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -248,6 +306,9 @@ export function ArticlesList() {
     meta: {
       changeStatus,
       changeFeatured,
+      onEdit: (id: string) => {
+        router.push(`/administrator/articles/${id}`);
+      },
     },
   });
   if (isLoadingArticle) {
@@ -276,6 +337,13 @@ export function ArticlesList() {
               <Search className="h-4 w-4" />
             </Button>
           </div>
+          <Button
+            className="whitespace-nowrap"
+            onClick={() => router.push("/administrator/articles/new")}
+          >
+            <PlusIcon />
+            Novo Artigo
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto bg-white">
@@ -284,7 +352,7 @@ export function ArticlesList() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-[200px] max-h-96 overflow-y-auto"
+              className="w-50 max-h-96 overflow-y-auto"
             >
               <DropdownMenuLabel>Destaque</DropdownMenuLabel>
               <DropdownMenuCheckboxItem
@@ -309,14 +377,20 @@ export function ArticlesList() {
                 }
               >
                 <DropdownMenuRadioItem value="">Todos</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="published">
+                <DropdownMenuRadioItem value="publicado">
                   Publicado
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="draft">
+                <DropdownMenuRadioItem value="rascunho">
                   Rascunho
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="deleted">
+                <DropdownMenuRadioItem value="excluido">
                   Excluído
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="arquivado">
+                  Arquivado
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="expirado">
+                  Expirado
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
@@ -386,7 +460,7 @@ export function ArticlesList() {
                 table.setPageSize(Number(value));
               }}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-17.5">
                 <SelectValue
                   placeholder={table.getState().pagination.pageSize}
                 />
@@ -455,7 +529,7 @@ export function ArticlesList() {
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-end space-x-2 px-2">
-        <div className="flex items-center gap-2 min-w-[280px]">
+        <div className="flex items-center gap-2 min-w-70">
           <Button
             variant="outline"
             size="sm"

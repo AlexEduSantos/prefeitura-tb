@@ -138,7 +138,7 @@ export function ArticlesBlock() {
       {/* Conteúdo */}
       <div className="w-full flex gap-4">
         {/* Artigo em destaque */}
-        {featuredArticle && featuredArticle.cover && (
+        {featuredArticle && featuredArticle.coverId && (
           <div className={hasSidebar ? "w-3/4" : "w-full"}>
             <FeaturedArticle article={featuredArticle} />
           </div>

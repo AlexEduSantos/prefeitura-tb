@@ -1,4 +1,5 @@
 import { IEntity } from "./entity";
+import { IGallery } from "./gallery";
 import { IMedia } from "./media";
 import { IUser } from "./user";
 
@@ -7,7 +8,7 @@ export interface IArticle {
   title: string;
   headline?: string;
   coverId?: string;
-  coverData?: IMedia;
+  cover?: IMedia;
   body: string;
   slug: string;
   type: string;
@@ -31,11 +32,8 @@ export interface IArticle {
   tags: string[];
   relatedArticles: string[];
   relatedVideos: string[];
-  galleryImages: string[];
-  galleryData: IMedia[];
-  galleryAutoplay: boolean;
-  galleryInterval: number;
-  galleryShowThumbnails: boolean;
+  galleryId: string[];
+  gallery: IGallery;
   socialPreviewTitle?: string;
   socialPreviewImage?: string;
   socialPreviewDescription?: string;

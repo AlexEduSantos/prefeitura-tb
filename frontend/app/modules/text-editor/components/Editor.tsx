@@ -34,6 +34,21 @@ function onError(error: Error) {
   console.error(error);
 }
 
+function InitialStatePlugin({ state }: { state?: string }) {
+  const [editor] = useLexicalComposerContext();
+  useEffect(() => {
+    if (state) {
+      try {
+        const parsedState = editor.parseEditorState(state);
+        editor.setEditorState(parsedState);
+      } catch (e) {
+        console.error("Error setting initial editor state:", e);
+      }
+    }
+  }, [editor, state]);
+  return null;
+}
+
 const theme = {
   heading: {
     h1: "mb-2 text-3xl font-bold",
@@ -100,7 +115,7 @@ const landingHeroExtension = defineExtension({
   theme,
 });
 
-export function Editor({ onChange }: { onChange?: (state: string) => void }) {
+export function Editor({ onChange, initialValue }: { onChange?: (state: string) => void; initialValue?: string }) {
   return (
     <LexicalExtensionComposer
       extension={landingHeroExtension}
@@ -122,6 +137,7 @@ export function Editor({ onChange }: { onChange?: (state: string) => void }) {
         <HorizontalRulePlugin />
         <ListPlugin />
         <ImagePlugin />
+        <InitialStatePlugin state={initialValue} />
 
         {onChange && (
           <OnChangePlugin

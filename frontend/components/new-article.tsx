@@ -12,12 +12,13 @@ import { Editor } from "../app/modules/text-editor/components/Editor";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { X, Tag, Image as ImageIcon, Images, Key } from "lucide-react";
+import { X, Tag, Image as ImageIcon, Images, Key, Plus } from "lucide-react";
 import { useNewArticleViewModel } from "../app/viewmodel/new-article.viewmodel";
 import { MediaPickerModal } from "./media-picker-modal";
 import { useState } from "react";
 import { IMedia } from "../app/type/media";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { IArticle } from "../app/type/article";
 
 // Dados de Exemplo para Tipo
 const CATEGORIES = [
@@ -27,9 +28,13 @@ const CATEGORIES = [
   { id: "announcement", label: "Comunicado" },
 ];
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-export default function MateriaForm() {
+export default function MateriaForm({
+  initialData,
+  onSuccess,
+}: {
+  initialData?: IArticle;
+  onSuccess?: () => void;
+}) {
   const {
     form,
     setField,
@@ -48,7 +53,7 @@ export default function MateriaForm() {
     setIsGalleryModalOpen,
     entities,
     isLoadingEntities,
-  } = useNewArticleViewModel();
+  } = useNewArticleViewModel(initialData, onSuccess);
 
   const [tagInput, setTagInput] = useState("");
   const [seoKeywordInput, setSeoKeywordInput] = useState("");
@@ -81,7 +86,12 @@ export default function MateriaForm() {
     setSeoKeywordInput("");
   };
 
-  const getMediaUrl = (media: string) => `${API_URL}/media/file/${media}`;
+  const getMediaUrl = (media: string) =>
+    `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media}`;
+
+  const getCover = initialData ? initialData.cover?.key : form.cover?.key;
+
+  const getGallery = ["teste", "teste2"];
 
   return (
     <>
@@ -212,6 +222,7 @@ export default function MateriaForm() {
                   Conteúdo (Corpo) <span className="text-destructive">*</span>
                 </Label>
                 <Editor
+                  initialValue={initialData?.body}
                   onChange={(content) => (editorContentRef.current = content)}
                 />
               </div>
@@ -222,112 +233,134 @@ export default function MateriaForm() {
                 Mídias (Capa e Galeria)
               </legend>
 
-              <div className="flex flex-col sm:flex-row gap-6">
-                {/* Capa */}
-                <div className="flex-1 space-y-3">
+              {/* 1. items-stretch faz ambas as colunas terem exatamente a mesma altura */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+                {/* COLUNA 1: Imagem de Capa */}
+                <div className="flex flex-col gap-3 h-full">
                   <Label className="font-medium">Imagem de Capa</Label>
-                  {form.cover ? (
-                    <div className="relative aspect-video rounded-md overflow-hidden border">
+
+                  {getCover ? (
+                    /* 2. flex-1 faz o container ocupar toda a altura restante */
+                    <div className="relative w-full flex-1 min-h-50 rounded-lg overflow-hidden border border-border bg-muted group">
                       <img
-                        src={getMediaUrl(form.cover.key as string)}
+                        src={getMediaUrl(getCover!)}
                         alt="Capa"
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 rounded-full h-8 w-8"
-                        onClick={() => setField("cover", null)}
+                      <button
+                        type="button"
+                        className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        <X size={16} />
-                      </Button>
+                        <X size={12} />
+                      </button>
                     </div>
                   ) : (
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full h-32 border-dashed flex flex-col gap-2"
+                      className="w-full flex-1 min-h-50 border-dashed flex flex-col gap-2 justify-center items-center rounded-lg hover:border-primary/60 transition-colors"
                       onClick={() => setIsCoverModalOpen(true)}
                     >
-                      <ImageIcon className="h-6 w-6 text-muted-foreground" />
-                      <span className="text-muted-foreground">
+                      <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground font-normal">
                         Selecionar Capa
                       </span>
                     </Button>
                   )}
                 </div>
 
-                {/* Galeria */}
-                <div className="flex-1 space-y-3">
-                  <Label className="font-medium">Galeria de Imagens</Label>
+                {/* COLUNA 2: Galeria de Imagens (Determina a altura do conjunto) */}
+                <div className="flex flex-col gap-3 h-full">
+                  <div className="flex items-center justify-between">
+                    <Label className="font-medium">Galeria de Imagens</Label>
+                    {getGallery?.length > 0 && (
+                      <span className="text-xs text-muted-foreground font-normal">
+                        {getGallery.length}{" "}
+                        {getGallery.length === 1 ? "foto" : "fotos"}
+                      </span>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-3 gap-2">
-                    {form.galleryImages.map((media, idx) => (
-                      <div
-                        key={idx}
-                        className="relative aspect-square rounded-md overflow-hidden border"
-                      >
-                        <img
-                          src={getMediaUrl(media.key)}
-                          alt="Galeria"
-                          className="w-full h-full object-cover"
-                        />
-                        <Button
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-1 right-1 rounded-full h-5 w-5 p-0"
-                          onClick={() =>
-                            setField(
-                              "galleryImages",
-                              form.galleryImages.filter(
-                                (m) => m.id !== media.id,
-                              ),
-                            )
-                          }
-                        >
-                          <X size={12} />
-                        </Button>
-                      </div>
-                    ))}
-                    <Button
+                    {/* SLOT 1: Botão de Adicionar */}
+                    <button
                       type="button"
-                      variant="outline"
-                      className="aspect-square w-full h-32 border-dashed flex flex-col gap-2"
                       onClick={() => setIsGalleryModalOpen(true)}
+                      className="aspect-square rounded-lg border-2 border-dashed border-border hover:border-primary/60 hover:bg-muted/50 flex flex-col items-center justify-center gap-1 transition-all text-muted-foreground hover:text-foreground"
                     >
-                      <Images className="h-5 w-5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">
+                      <Plus className="h-5 w-5" />
+                      <span className="text-[10px] font-medium uppercase tracking-wider">
                         Adicionar
                       </span>
-                    </Button>
+                    </button>
+
+                    {/* Lógica das thumbs da galeria */}
+                    {(() => {
+                      const gallery = getGallery || [];
+                      const maxVisible = 5;
+                      const hasMore = gallery.length > maxVisible;
+
+                      const visibleImages = hasMore
+                        ? gallery.slice(0, 4)
+                        : gallery.slice(0, 5);
+                      const remainingCount = gallery.length - 4;
+
+                      return (
+                        <>
+                          {visibleImages.map((item, index) => (
+                            <div
+                              key={index}
+                              className="relative aspect-square rounded-lg overflow-hidden border border-border group bg-muted"
+                            >
+                              <img
+                                src={getMediaUrl(item)}
+                                alt={`Galeria ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <button
+                                type="button"
+                                className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X size={12} />
+                              </button>
+                            </div>
+                          ))}
+
+                          {hasMore && (
+                            <div
+                              onClick={() => setIsGalleryModalOpen(true)}
+                              className="relative aspect-square rounded-lg overflow-hidden border border-border cursor-pointer group bg-muted"
+                            >
+                              <img
+                                src={getMediaUrl(gallery[4])}
+                                alt="Mais mídias"
+                                className="w-full h-full object-cover blur-[2px] scale-105"
+                              />
+                              <div className="absolute inset-0 bg-black/60 group-hover:bg-black/70 flex flex-col items-center justify-center text-white transition-colors">
+                                <span className="text-base font-bold">
+                                  +{remainingCount}
+                                </span>
+                                <span className="text-[10px] uppercase tracking-wider font-medium">
+                                  Ver todas
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {Array.from({
+                            length: Math.max(0, maxVisible - gallery.length),
+                          }).map((_, index) => (
+                            <div
+                              key={`empty-${index}`}
+                              className="aspect-square rounded-lg border border-dashed border-border/50 bg-muted/20 flex items-center justify-center text-muted-foreground/30"
+                            >
+                              <ImageIcon className="h-4 w-4" />
+                            </div>
+                          ))}
+                        </>
+                      );
+                    })()}
                   </div>
-                  {form.galleryImages.length > 0 && (
-                    <div className="flex gap-4 pt-2">
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          id="autoplay"
-                          checked={form.galleryAutoplay}
-                          onCheckedChange={(v) =>
-                            setField("galleryAutoplay", v)
-                          }
-                        />
-                        <Label htmlFor="autoplay" className="text-sm">
-                          Autoplay
-                        </Label>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Switch
-                          id="thumbs"
-                          checked={form.galleryShowThumbnails}
-                          onCheckedChange={(v) =>
-                            setField("galleryShowThumbnails", v)
-                          }
-                        />
-                        <Label htmlFor="thumbs" className="text-sm">
-                          Miniaturas
-                        </Label>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </fieldset>
@@ -578,7 +611,9 @@ export default function MateriaForm() {
           <Button type="button" variant="outline" onClick={handleSaveDraft}>
             Salvar Rascunho
           </Button>
-          <Button type="submit">Salvar e Publicar</Button>
+          <Button type="submit">
+            {initialData ? "Atualizar Matéria" : "Salvar e Publicar"}
+          </Button>
         </div>
       </form>
 
@@ -588,18 +623,6 @@ export default function MateriaForm() {
         onClose={() => setIsCoverModalOpen(false)}
         onSelect={(media) => setField("cover", media as IMedia)}
         multiple={false}
-      />
-
-      <MediaPickerModal
-        isOpen={isGalleryModalOpen}
-        onClose={() => setIsGalleryModalOpen(false)}
-        onSelect={(medias) =>
-          setField("galleryImages", [
-            ...form.galleryImages,
-            ...(medias as IMedia[]),
-          ])
-        }
-        multiple={true}
       />
     </>
   );
