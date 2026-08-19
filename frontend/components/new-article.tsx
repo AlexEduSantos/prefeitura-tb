@@ -98,13 +98,17 @@ export default function MateriaForm({
     setSeoKeywordInput("");
   };
 
+  const handleRemoveGallery = () => {
+    setField("galleryId", []);
+    setField("gallery", null);
+  };
+
   const getMediaUrl = (media: string) =>
     `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media}`;
 
-  // Prioriza o estado do form (alterações do usuário), com fallback para initialData
-  const getCover = form.cover?.key ?? initialData?.cover?.key;
+  const getCover = form.cover?.key;
 
-  const getGallery = form.gallery ?? initialData?.gallery;
+  const getGallery = form.gallery;
 
   return (
     <>
@@ -254,31 +258,37 @@ export default function MateriaForm({
                     <Label className="font-medium min-h-10">
                       Imagem de Capa
                     </Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      type="button"
-                      className="text-muted-foreground/50 hover:text-primary hover:bg-transparent hidden group-hover:flex transition-all duration-300 p-0 h-fit!"
-                      onClick={() => setIsCoverModalOpen(true)}
-                    >
-                      <RefreshCcw className="mr-2 h-4 w-4" /> Substituir
-                    </Button>
+                    {getCover && (
+                      <div className="hidden group-hover:block items-center space-x-3 transition-all duration-300">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="text-destructive hover:text-destructive/80 hover:bg-transparent p-0 h-fit!"
+                          onClick={() => setField("cover", null)}
+                        >
+                          <X className="mr-1 h-4 w-4" /> Remover
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="text-muted-foreground/50 hover:text-primary hover:bg-transparent p-0 h-fit!"
+                          onClick={() => setIsCoverModalOpen(true)}
+                        >
+                          <RefreshCcw className="mr-1 h-4 w-4" /> Substituir
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
                   {getCover ? (
-                    /* 2. flex-1 faz o container ocupar toda a altura restante */
                     <div className="relative w-full flex-1 min-h-70 group border border-border overflow-hidden rounded-lg">
                       <img
                         src={getMediaUrl(getCover!)}
                         alt="Capa"
                         className="absolute inset-0 w-full h-full object-cover"
                       />
-                      <button
-                        type="button"
-                        className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <X size={12} />
-                      </button>
                     </div>
                   ) : (
                     <Button
@@ -301,50 +311,54 @@ export default function MateriaForm({
                     <Label className="font-medium min-h-10">
                       Galeria de Imagens
                     </Label>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      type="button"
-                      className="text-muted-foreground/50 hover:text-primary hover:bg-transparent hidden group-hover:flex transition-all duration-300 p-0 h-fit!"
-                      onClick={() => setIsGalleryModalOpen(true)}
-                    >
-                      <RefreshCcw className="mr-2 h-4 w-4" /> Substituir
-                    </Button>
+                    {getGallery && (
+                      <div className="hidden group-hover:flex items-center gap-3 transition-all duration-300">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="text-destructive hover:text-destructive/80 hover:bg-transparent p-0 h-fit!"
+                          onClick={handleRemoveGallery}
+                        >
+                          <X className="mr-1 h-4 w-4" /> Remover
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          className="text-muted-foreground/50 hover:text-primary hover:bg-transparent p-0 h-fit!"
+                          onClick={() => setIsGalleryModalOpen(true)}
+                        >
+                          <RefreshCcw className="mr-1 h-4 w-4" /> Substituir
+                        </Button>
+                      </div>
+                    )}
                   </div>
 
                   {getGallery ? (
-                    <div className="w-full flex-1 min-h-50 border-dashed flex flex-col gap-2 justify-center items-center rounded-lg hover:border-primary/60 transition-colors relative">
+                    <div className="w-full flex-1 min-h-50 flex flex-col gap-2 justify-center items-center rounded-lg relative">
                       {getGallery.slides.length > 1 ? (
-                        <div className="grid grid-cols-3 grid-rows-2 gap-2 w-full h-full overflow-y-auto">
+                        <div className="grid grid-cols-3 gap-2 w-full h-full overflow-y-auto">
                           {getGallery.slides.map((slide) => (
-                            <div className="relative w-full h-50 border border-border overflow-hidden rounded-lg group">
+                            <div
+                              className="relative w-full h-32 border border-border overflow-hidden rounded-lg"
+                              key={slide.id}
+                            >
                               <img
                                 src={getMediaUrl(slide.media.key!)}
-                                alt="Capa"
+                                alt={slide.caption ?? "Slide"}
                                 className="absolute inset-0 w-full h-full object-cover"
                               />
-                              <button
-                                type="button"
-                                className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X size={12} />
-                              </button>
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className="relative w-full flex-1 min-h-50 group border border-border overflow-hidden rounded-lg">
+                        <div className="relative w-full flex-1 min-h-50 border border-border overflow-hidden rounded-lg">
                           <img
                             src={getMediaUrl(getGallery.slides[0].media.key!)}
-                            alt="Capa"
+                            alt={getGallery.slides[0].caption ?? "Slide"}
                             className="absolute inset-0 w-full h-full object-cover"
                           />
-                          <button
-                            type="button"
-                            className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X size={12} />
-                          </button>
                         </div>
                       )}
                     </div>
@@ -608,6 +622,9 @@ export default function MateriaForm({
         </Tabs>
 
         <div className="flex justify-end gap-3 pb-12 mt-4">
+          <Button type="button" variant="outline">
+            Cancelar
+          </Button>
           <Button type="button" variant="outline" onClick={handleSaveDraft}>
             Salvar Rascunho
           </Button>

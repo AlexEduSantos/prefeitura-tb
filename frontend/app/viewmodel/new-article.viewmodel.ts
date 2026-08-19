@@ -159,8 +159,9 @@ export function useNewArticleViewModel(
       type: form.type,
       status: status === "draft" ? "rascunho" : "publicado",
       entityId: form.entityId,
-      coverId: form.cover?.id,
-      galleryId: form.gallery?.id as any,
+      // Envia null explicitamente para que a API limpe o campo quando removido
+      coverId: (form.cover?.id ?? null) as any,
+      galleryId: (form.gallery?.id ?? null) as any,
 
       featured: form.featured,
       authorId: user?.id,
@@ -189,8 +190,6 @@ export function useNewArticleViewModel(
       payload.expirationDate = new Date(
         form.expirationDate,
       ).toISOString() as any;
-
-    if (form.cover) payload.coverId = form.cover.id as any;
 
     if (initialData?.id) {
       updateArticle(
