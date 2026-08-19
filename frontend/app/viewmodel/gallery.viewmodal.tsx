@@ -44,7 +44,8 @@ export function useGalleryViewModel() {
 
   // Mutations
   const createBannerMutation = useMutation({
-    mutationFn: (banner: Partial<IGallery>) => GalleryService.createGallery(banner),
+    mutationFn: (banner: Partial<IGallery>) =>
+      GalleryService.createGallery(banner),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
     },
@@ -185,14 +186,14 @@ export function useGalleryViewModel() {
 
   return {
     galleryList: galleryQuery.data ?? [],
-    isLoadinggallery: galleryQuery.isLoading,
-    isErrorgallery: galleryQuery.isError,
-    errorgallery: galleryQuery.error,
-    refetchgallery: galleryQuery.refetch,
-    
+    isLoadingGallery: galleryQuery.isLoading,
+    isErrorGallery: galleryQuery.isError,
+    errorGallery: galleryQuery.error,
+    refetchGallery: galleryQuery.refetch,
+
     entities: entitiesQuery.data ?? [],
     isLoadingEntities: entitiesQuery.isLoading,
-    
+
     mediaList: mediaQuery.data ?? [],
     isLoadingMedia: mediaQuery.isLoading,
 

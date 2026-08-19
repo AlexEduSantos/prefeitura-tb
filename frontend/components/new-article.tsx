@@ -12,13 +12,25 @@ import { Editor } from "../app/modules/text-editor/components/Editor";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { X, Tag, Image as ImageIcon, Images, Key, Plus } from "lucide-react";
+import {
+  X,
+  Tag,
+  Image as ImageIcon,
+  Images,
+  Key,
+  Plus,
+  RefreshCcw,
+} from "lucide-react";
 import { useNewArticleViewModel } from "../app/viewmodel/new-article.viewmodel";
 import { MediaPickerModal } from "./media-picker-modal";
 import { useState } from "react";
 import { IMedia } from "../app/type/media";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { IArticle } from "../app/type/article";
+import { GalleryPickerModal } from "./gallery-picker-modal";
+import { IGallery } from "@/app/type/gallery";
+import { Carousel } from "./carousel";
+import Image from "next/image";
 
 // Dados de Exemplo para Tipo
 const CATEGORIES = [
@@ -89,9 +101,10 @@ export default function MateriaForm({
   const getMediaUrl = (media: string) =>
     `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media}`;
 
-  const getCover = initialData ? initialData.cover?.key : form.cover?.key;
+  // Prioriza o estado do form (alterações do usuário), com fallback para initialData
+  const getCover = form.cover?.key ?? initialData?.cover?.key;
 
-  const getGallery = ["teste", "teste2"];
+  const getGallery = form.gallery ?? initialData?.gallery;
 
   return (
     <>
@@ -228,20 +241,33 @@ export default function MateriaForm({
               </div>
             </fieldset>
 
-            <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
+            <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6 pt-2">
               <legend className="px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 Mídias (Capa e Galeria)
               </legend>
 
               {/* 1. items-stretch faz ambas as colunas terem exatamente a mesma altura */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-stretch">
                 {/* COLUNA 1: Imagem de Capa */}
-                <div className="flex flex-col gap-3 h-full">
-                  <Label className="font-medium">Imagem de Capa</Label>
+                <div className="flex flex-col gap-2 h-full group">
+                  <div className="flex justify-between items-center">
+                    <Label className="font-medium min-h-10">
+                      Imagem de Capa
+                    </Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      type="button"
+                      className="text-muted-foreground/50 hover:text-primary hover:bg-transparent hidden group-hover:flex transition-all duration-300 p-0 h-fit!"
+                      onClick={() => setIsCoverModalOpen(true)}
+                    >
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Substituir
+                    </Button>
+                  </div>
 
                   {getCover ? (
                     /* 2. flex-1 faz o container ocupar toda a altura restante */
-                    <div className="relative w-full flex-1 min-h-50 rounded-lg overflow-hidden border border-border bg-muted group">
+                    <div className="relative w-full flex-1 min-h-70 group border border-border overflow-hidden rounded-lg">
                       <img
                         src={getMediaUrl(getCover!)}
                         alt="Capa"
@@ -270,52 +296,32 @@ export default function MateriaForm({
                 </div>
 
                 {/* COLUNA 2: Galeria de Imagens (Determina a altura do conjunto) */}
-                <div className="flex flex-col gap-3 h-full">
-                  <div className="flex items-center justify-between">
-                    <Label className="font-medium">Galeria de Imagens</Label>
-                    {getGallery?.length > 0 && (
-                      <span className="text-xs text-muted-foreground font-normal">
-                        {getGallery.length}{" "}
-                        {getGallery.length === 1 ? "foto" : "fotos"}
-                      </span>
-                    )}
+                <div className="flex flex-col gap-2 h-full group">
+                  <div className="flex justify-between items-center">
+                    <Label className="font-medium min-h-10">
+                      Galeria de Imagens
+                    </Label>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      type="button"
+                      className="text-muted-foreground/50 hover:text-primary hover:bg-transparent hidden group-hover:flex transition-all duration-300 p-0 h-fit!"
+                      onClick={() => setIsGalleryModalOpen(true)}
+                    >
+                      <RefreshCcw className="mr-2 h-4 w-4" /> Substituir
+                    </Button>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
-                    {/* SLOT 1: Botão de Adicionar */}
-                    <button
-                      type="button"
-                      onClick={() => setIsGalleryModalOpen(true)}
-                      className="aspect-square rounded-lg border-2 border-dashed border-border hover:border-primary/60 hover:bg-muted/50 flex flex-col items-center justify-center gap-1 transition-all text-muted-foreground hover:text-foreground"
-                    >
-                      <Plus className="h-5 w-5" />
-                      <span className="text-[10px] font-medium uppercase tracking-wider">
-                        Adicionar
-                      </span>
-                    </button>
-
-                    {/* Lógica das thumbs da galeria */}
-                    {(() => {
-                      const gallery = getGallery || [];
-                      const maxVisible = 5;
-                      const hasMore = gallery.length > maxVisible;
-
-                      const visibleImages = hasMore
-                        ? gallery.slice(0, 4)
-                        : gallery.slice(0, 5);
-                      const remainingCount = gallery.length - 4;
-
-                      return (
-                        <>
-                          {visibleImages.map((item, index) => (
-                            <div
-                              key={index}
-                              className="relative aspect-square rounded-lg overflow-hidden border border-border group bg-muted"
-                            >
+                  {getGallery ? (
+                    <div className="w-full flex-1 min-h-50 border-dashed flex flex-col gap-2 justify-center items-center rounded-lg hover:border-primary/60 transition-colors relative">
+                      {getGallery.slides.length > 1 ? (
+                        <div className="grid grid-cols-3 grid-rows-2 gap-2 w-full h-full overflow-y-auto">
+                          {getGallery.slides.map((slide) => (
+                            <div className="relative w-full h-50 border border-border overflow-hidden rounded-lg group">
                               <img
-                                src={getMediaUrl(item)}
-                                alt={`Galeria ${index + 1}`}
-                                className="w-full h-full object-cover"
+                                src={getMediaUrl(slide.media.key!)}
+                                alt="Capa"
+                                className="absolute inset-0 w-full h-full object-cover"
                               />
                               <button
                                 type="button"
@@ -325,42 +331,36 @@ export default function MateriaForm({
                               </button>
                             </div>
                           ))}
-
-                          {hasMore && (
-                            <div
-                              onClick={() => setIsGalleryModalOpen(true)}
-                              className="relative aspect-square rounded-lg overflow-hidden border border-border cursor-pointer group bg-muted"
-                            >
-                              <img
-                                src={getMediaUrl(gallery[4])}
-                                alt="Mais mídias"
-                                className="w-full h-full object-cover blur-[2px] scale-105"
-                              />
-                              <div className="absolute inset-0 bg-black/60 group-hover:bg-black/70 flex flex-col items-center justify-center text-white transition-colors">
-                                <span className="text-base font-bold">
-                                  +{remainingCount}
-                                </span>
-                                <span className="text-[10px] uppercase tracking-wider font-medium">
-                                  Ver todas
-                                </span>
-                              </div>
-                            </div>
-                          )}
-
-                          {Array.from({
-                            length: Math.max(0, maxVisible - gallery.length),
-                          }).map((_, index) => (
-                            <div
-                              key={`empty-${index}`}
-                              className="aspect-square rounded-lg border border-dashed border-border/50 bg-muted/20 flex items-center justify-center text-muted-foreground/30"
-                            >
-                              <ImageIcon className="h-4 w-4" />
-                            </div>
-                          ))}
-                        </>
-                      );
-                    })()}
-                  </div>
+                        </div>
+                      ) : (
+                        <div className="relative w-full flex-1 min-h-50 group border border-border overflow-hidden rounded-lg">
+                          <img
+                            src={getMediaUrl(getGallery.slides[0].media.key!)}
+                            alt="Capa"
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            className="absolute top-1 right-1 p-1 bg-black/60 hover:bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full flex-1 min-h-50 border-dashed flex flex-col gap-2 justify-center items-center rounded-lg hover:border-primary/60 transition-colors"
+                      onClick={() => setIsGalleryModalOpen(true)}
+                    >
+                      <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground font-normal">
+                        Selecionar Galeria
+                      </span>
+                    </Button>
+                  )}
                 </div>
               </div>
             </fieldset>
@@ -623,6 +623,13 @@ export default function MateriaForm({
         onClose={() => setIsCoverModalOpen(false)}
         onSelect={(media) => setField("cover", media as IMedia)}
         multiple={false}
+      />
+
+      <GalleryPickerModal
+        isOpen={isGalleryModalOpen}
+        onClose={() => setIsGalleryModalOpen(false)}
+        onSelectGallery={(gallery) => setField("gallery", gallery as IGallery)}
+        selectedGallery={form.gallery}
       />
     </>
   );
