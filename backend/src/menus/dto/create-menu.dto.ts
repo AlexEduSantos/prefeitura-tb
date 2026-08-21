@@ -1,4 +1,11 @@
-import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsOptional,
+  IsUUID,
+  IsArray,
+} from 'class-validator';
+import { CreateMenuItemDto } from './create-menu-item.dto';
 
 export class CreateMenuDto {
   @IsString()
@@ -12,4 +19,8 @@ export class CreateMenuDto {
   @IsUUID()
   @IsOptional()
   entityId?: string;
+
+  @IsArray()
+  @IsOptional()
+  items?: CreateMenuItemDto[];
 }

@@ -57,7 +57,7 @@ export function useMenusViewModel() {
 
   // Mutation to create a menu
   const createMenuMutation = useMutation({
-    mutationFn: (data: ICreateMenu) => MenusService.createMenu(data),
+    mutationFn: (data: Partial<IMenu>) => MenusService.createMenu(data),
     onSuccess: (newMenu) => {
       queryClient.invalidateQueries({
         queryKey: ["menu", newMenu.location, newMenu.entityId],
@@ -168,8 +168,10 @@ export function useMenusViewModel() {
   const [selectedLevel, setSelectedLevel] = useState<number | "all">("all");
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [selectedMenu, setSelectedMenu] = useState<IMenu | null>(null);
   const [selectedItem, setSelectedItem] = useState<IMenuItem | null>(null);
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
+  const [isMenuItemModalOpen, setIsMenuItemModalOpen] = useState(false);
   const [selectedMode, setSelectedMode] = useState<"create" | "edit">("create");
 
   // Mapa menuId -> nome (para exibir na coluna "Menu")
@@ -470,10 +472,14 @@ export function useMenusViewModel() {
     sorting,
     setSorting,
 
+    selectedMenu,
+    setSelectedMenu,
     selectedItem,
     setSelectedItem,
     isMenuModalOpen,
     setIsMenuModalOpen,
+    isMenuItemModalOpen,
+    setIsMenuItemModalOpen,
     selectedMode,
     setSelectedMode,
 

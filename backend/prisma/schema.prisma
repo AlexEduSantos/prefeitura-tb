@@ -90,6 +90,7 @@ model Entity {
   popups    Popups[]
   galleries Galleries[]
   menuItems MenuItem[]
+  services  Services[]
 
   @@map("entity")
 }
@@ -322,9 +323,11 @@ model Services {
   title     String
   link      String   @unique
   altText   String?
-  icon      String?
   createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
   updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+
+  entityId String @db.Uuid
+  entity   Entity @relation(fields: [entityId], references: [id])
 
   // ✅ Corrigido: Relação nomeada
   image   Media  @relation("serviceImage", fields: [imageId], references: [id])

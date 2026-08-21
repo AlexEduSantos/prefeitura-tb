@@ -13,3 +13,7 @@ O componente da parte pública de exibição dos artigos precisa ser corrigido.
 [14/08/2026 - 17:27]
 
 [x] O new-article foi atualizado, retirei o controle de galeria de dentro da tabela de artigos para utilizar o model correto de galerias. Foram necessárias alterações no schema, article.service e new-article.tsx. Apenas a parte visual foi implementada no new-article.tsx, falta criar um model para escolha de galeria na edição do artigo.
+
+[21/08/2026 - 16:24]
+
+[x] Criei o model para criação de menus, mas percebi que a forma de visualização deles está confusa. Vou precisar pensar em outra forma de gereciamento para os menus.

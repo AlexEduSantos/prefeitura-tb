@@ -7,3 +7,5 @@ TODO: (Menu Manager) - Dar refresh na lista de menus do dashboard e na lista de 
 FEAT: Adicionar função de deleção em massa no media-upload-modal.
 
 TODO: (Galleries Picker Modal) - Criar um model para escolha de galeria na edição do artigo que permita criação.
+
+TODO: refatorar menu manager. (Acho que ficou muito confuso a forma de gerenciamento dos menus)

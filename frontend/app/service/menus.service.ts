@@ -49,7 +49,7 @@ export class MenusService {
   }
 
   // Criar menu
-  static async createMenu(data: ICreateMenu): Promise<IMenu> {
+  static async createMenu(data: Partial<IMenu>): Promise<IMenu> {
     const response = await fetch(`${API_URL}/menus`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

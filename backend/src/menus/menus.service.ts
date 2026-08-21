@@ -27,8 +27,13 @@ export class MenusService {
       );
     }
 
+    const { items, ...menuData } = createMenuDto;
+
     return this.prisma.menu.create({
-      data: createMenuDto,
+      data: {
+        ...menuData,
+        items: items?.length ? { create: items } : undefined,
+      },
     });
   }
 
@@ -101,9 +106,18 @@ export class MenusService {
 
   async updateMenu(id: string, updateMenuDto: UpdateMenuDto) {
     await this.findOneMenu(id); // ensure exists
+
+    const { items, ...menuData } = updateMenuDto;
+
+    console.log(items, menuData);
+
+    const data: Prisma.MenuUncheckedUpdateInput = { ...menuData };
+    if (items && items.length > 0) {
+      data.items = { create: items };
+    }
     return this.prisma.menu.update({
       where: { id },
-      data: updateMenuDto,
+      data,
     });
   }
 

@@ -18,9 +18,10 @@ import {
 } from "@/components/ui/select";
 import { Plus, Search } from "lucide-react";
 import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
-import { MenuModal } from "./menu-modal";
+import { MenuItemModal } from "./menu-item-modal";
 import { IMenu, IMenuItem } from "@/app/type/menu";
 import { MenuItemTree } from "./menu-item-tree";
+import { MenuModal } from "./menu-modal";
 
 export function MenusManager() {
   const {
@@ -48,10 +49,14 @@ export function MenusManager() {
     levelOptions,
     table,
     columns,
+    selectedMenu,
+    setSelectedMenu,
     selectedItem,
     setSelectedItem,
     isMenuModalOpen,
     setIsMenuModalOpen,
+    isMenuItemModalOpen,
+    setIsMenuItemModalOpen,
     selectedMode,
     setSelectedMode,
     rootItems,
@@ -92,7 +97,7 @@ export function MenusManager() {
               value={selectedMenuId}
               onValueChange={(value) => setSelectedMenuId(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-45">
                 <SelectValue placeholder="Todos os menus" />
               </SelectTrigger>
               <SelectContent>
@@ -117,10 +122,6 @@ export function MenusManager() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button>
-            <Plus />
-            Novo Menu
-          </Button>
           <Button
             onClick={() => {
               setSelectedMode("create");
@@ -129,57 +130,22 @@ export function MenusManager() {
             }}
           >
             <Plus />
-            Adicionar item
+            Novo Menu
           </Button>
+          {menus && menus?.data && menus.data.length > 0 && (
+            <Button
+              onClick={() => {
+                setSelectedMode("create");
+                setSelectedItem(null);
+                setIsMenuItemModalOpen(true);
+              }}
+            >
+              <Plus />
+              Adicionar item
+            </Button>
+          )}
         </div>
       </div>
-
-      {/* Tabela */}
-      {/* <div className="rounded-lg border overflow-hidden">
-        <Table>
-          <TableHeader className="bg-card">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Nenhum item encontrado.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div> */}
 
       <div>
         <MenuItemTree
@@ -222,12 +188,30 @@ export function MenusManager() {
           </Button>
         </div>
       </div>
+
       <MenuModal
+        isOpen={isMenuModalOpen}
+        mode={selectedMode}
+        menu={selectedMenu}
+        onSave={(data) => {
+          if (selectedMode === "edit") {
+            updateMenuMutation.mutate({
+              menuId: selectedMenu?.id || "",
+              data,
+            });
+          } else {
+            createMenuMutation.mutate(data);
+          }
+        }}
+        onClose={() => setIsMenuModalOpen(false)}
+      />
+
+      <MenuItemModal
         menuItem={selectedItem}
         mode={selectedItem ? "edit" : "create"}
-        isOpen={isMenuModalOpen}
+        isOpen={isMenuItemModalOpen}
         onClose={() => {
-          setIsMenuModalOpen(false);
+          setIsMenuItemModalOpen(false);
           setSelectedItem(null);
         }}
         onSave={handleSaveItem}

@@ -1,252 +1,145 @@
-import { useEffect, useMemo, useState } from "react";
+"use client";
+import { IMenu } from "@/app/type/menu";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "./ui/dialog";
+import { useState } from "react";
+import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
+import { Skeleton } from "./ui/skeleton";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { IMenuItem } from "@/app/type/menu";
-import { usePagesViewModel } from "@/app/viewmodel/pages.viewmodel";
-import { Switch } from "./ui/switch";
-import { useMenusViewModel } from "@/app/viewmodel/menus.viewmodel";
-import { Combobox } from "./ui/combobox";
-
-type ParentOption =
-  | IMenuItem
-  | { id: string; label: string; order: number; isRoot: true };
+} from "./ui/select";
+import { Button } from "./ui/button";
+import { PlusIcon } from "lucide-react";
 
 interface MenuModalProps {
-  menuItem: IMenuItem | null;
-  mode: "create" | "edit";
   isOpen: boolean;
+  mode: "create" | "edit";
+  menu: IMenu | null;
+  onSave: (data: Partial<IMenu>) => void;
   onClose: () => void;
-  onSave: (item: Partial<IMenuItem>) => void;
-  allItems?: IMenuItem[];
 }
 
 export function MenuModal({
-  menuItem,
-  mode,
   isOpen,
-  onClose,
+  mode = "create",
+  menu,
   onSave,
-  allItems = [],
+  onClose,
 }: MenuModalProps) {
-  const { menus } = useMenusViewModel();
-  const { pages } = usePagesViewModel(null);
-
-  const [formData, setFormData] = useState<Partial<IMenuItem>>({
-    label: "",
-    url: "",
-    pageId: null,
-    parentId: null,
-    menuId: "",
-    order: 0,
+  const [formData, setFormData] = useState<Partial<IMenu>>({
+    name: "",
+    location: "",
+    entityId: "",
+    items: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
-  const [linkMode, setLinkMode] = useState<"page" | "url">("page");
 
-  useEffect(() => {
-    if (menuItem && mode === "edit") {
-      setFormData({
-        label: menuItem.label || "",
-        url: menuItem.url || "",
-        pageId: menuItem.pageId || null,
-        parentId: menuItem.parentId || null,
-        menuId: menuItem.menuId || "",
-        order: menuItem.order || 0,
-      });
-    } else if (mode === "create") {
-      setFormData({
-        label: "",
-        url: "",
-        pageId: null,
-        parentId: null,
-        menuId: "",
-        order: 0,
-      });
-    }
-  }, [menuItem, mode, isOpen]);
+  const { entities, isLoadingEntities, errorEntities } = useEntityViewModel();
 
-  const handleChange = (field: keyof IMenuItem, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  if (isLoadingEntities) {
+    return;
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Ao salvar, se o parentId for '__root__', envia null
-    const dataToSave = {
-      ...formData,
-      parentId: formData.parentId === "__root__" ? null : formData.parentId,
-    };
-    onSave(dataToSave);
+  if (errorEntities) {
+    return;
+  }
+
+  const handleSave = () => {
+    onSave(formData);
     onClose();
   };
 
-  // Opções para o seletor de pai, incluindo a opção "Raiz"
-  const selectedMenuName = useMemo(() => {
-    if (!formData.menuId || !menus?.data) return "Menu";
-    return (
-      menus.data.find((m: any) => m.id === formData.menuId)?.name || "Menu"
-    );
-  }, [formData.menuId, menus]);
-
-  const parentOptions = useMemo<ParentOption[]>(() => {
-    const items = allItems.filter((item) => item.id !== menuItem?.id);
-    const rootOption: ParentOption = {
-      id: "__root__",
-      label: `Raiz (${selectedMenuName})`,
-      order: -1,
-      isRoot: true,
-    };
-    return [rootOption, ...items];
-  }, [allItems, menuItem, selectedMenuName]);
-
-  // Filtra os itens que podem ser pais (exclui o próprio item e seus descendentes? Para simplificar, lista todos)
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {mode === "create" ? "Criar novo item" : "Editar item"}
+            {mode === "create" ? "Criar novo menu" : "Editar menu"}
           </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Label */}
-          <div className="space-y-2">
-            <Label htmlFor="label">Nome do Menu</Label>
-            <Input
-              id="label"
-              value={formData.label || ""}
-              onChange={(e) => handleChange("label", e.target.value)}
-              placeholder="Ex: Sobre Nós"
-              required
-            />
-          </div>
-
-          <div className="flex justify-between gap-4">
-            {/* Menu */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="menu">
-                Menu <small>(obrigatório)</small>
-              </Label>
-              <Select
-                name="menu"
-                value={formData.menuId || "none"}
-                onValueChange={(value) =>
-                  handleChange("menuId", value === "none" ? null : value)
-                }
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Selecione um menu" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Nenhum</SelectItem>
-                  {menus?.data?.map((menu: any) => (
-                    <SelectItem key={menu.id} value={menu.id}>
-                      {menu.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            {/* Item pai */}
-            <div className="space-y-2 w-full">
-              <Label htmlFor="parent">Item pai (opcional)</Label>
-              <Combobox
-                items={parentOptions}
-                value={formData.parentId || "__root__"}
-                onChange={(value) => handleChange("parentId", value)}
-                getLabel={(item) => item.label}
-                getSublabel={(item) => {
-                  if ("isRoot" in item && item.isRoot) {
-                    return "Item ficará na raiz do menu";
-                  }
-                  return `Ordem: ${item.order}`;
-                }}
-                getValue={(item) => item.id}
-                placeholder="Selecione um item pai"
-                searchPlaceholder="Buscar pai..."
-                emptyText="Nenhuma opção disponível"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="airplane-mode">Página</Label>
-            <Switch
-              id="airplane-mode"
-              checked={linkMode === "url"}
-              onCheckedChange={(checked) =>
-                setLinkMode(checked ? "url" : "page")
-              }
-            />
-            <Label htmlFor="airplane-mode">Link externo</Label>
-          </div>
-
-          {linkMode === "page" ? (
+          <form onSubmit={handleSave} className="pt-4 flex flex-col gap-4">
             <div className="space-y-2">
-              <Label htmlFor="page">Página (opcional)</Label>
-              <Combobox
-                items={pages || []}
-                value={formData.pageId || null}
-                onChange={(value) => handleChange("pageId", value)}
-                getLabel={(page) => page.title || page.slug}
-                getSublabel={(page) => `/${page.slug}`}
-                getValue={(page) => page.id}
-                placeholder="Selecione uma página"
-                searchPlaceholder="Buscar página..."
-                emptyText="Nenhuma página encontrada"
-              />
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <Label htmlFor="url">URL (opcional)</Label>
+              <Label htmlFor="name">Nome do menu</Label>
               <Input
-                id="url"
-                value={formData.url || ""}
-                onChange={(e) => handleChange("url", e.target.value)}
-                placeholder="Ex: /sobre ou https://exemplo.com"
+                id="name"
+                value={formData.name || ""}
+                placeholder="Nome que será exibido no site"
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
               />
-              <p className="text-xs text-muted-foreground">
-                Preencha para um link externo ou caminho personalizado. Deixe
-                vazio para usar uma página.
-              </p>
             </div>
-          )}
-
-          {/* Ordem */}
-          <div className="space-y-2">
-            <Label htmlFor="order">Ordem</Label>
-            <Input
-              id="order"
-              type="number"
-              min="0"
-              value={formData.order ?? 0}
-              onChange={(e) =>
-                handleChange("order", parseInt(e.target.value, 10) || 0)
-              }
-            />
-          </div>
-
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancelar
-            </Button>
-            <Button type="submit">Salvar</Button>
-          </DialogFooter>
-        </form>
+            <div className="flex gap-4">
+              <div className="space-y-2 w-full">
+                <Label htmlFor="location">Localização</Label>
+                <Select
+                  name="location"
+                  value={formData.location || ""}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, location: value })
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione a localização" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="header">Cabeçalho</SelectItem>
+                    <SelectItem value="footer">Rodapé</SelectItem>
+                    <SelectItem value="sidebar">Barra lateral</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="entity">Categoria</Label>
+                <Select
+                  name="entity"
+                  value={formData.entityId || ""}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, entityId: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {entities?.map((entity) => (
+                      <SelectItem key={entity.id} value={entity.id}>
+                        {entity.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Button
+                type="button"
+                className="w-full border-dashed text-muted-foreground"
+                variant="outline"
+              >
+                <PlusIcon />
+                Adicionar itens do menu
+              </Button>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button type="reset" variant="outline" onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button type="submit">Salvar</Button>
+            </div>
+          </form>
+        </DialogHeader>
       </DialogContent>
     </Dialog>
   );
