@@ -9,7 +9,6 @@ import { PagesModule } from './pages/pages.module';
 import { ArticlesModule } from './articles/articles.module';
 import { MediaModule } from './media/media.module';
 import { EntitiesModule } from './entities/entities.module';
-import { MenusModule } from './menus/menus.module';
 import { BullModule } from '@nestjs/bullmq';
 import { GalleriesModule } from './galleries/galleries.module';
 import { GalleryMediaModule } from './gallery-media/gallery-media.module';
@@ -30,7 +29,6 @@ import { PopupsModule } from './popups/popups.module';
     ArticlesModule,
     MediaModule,
     EntitiesModule,
-    MenusModule,
     GalleriesModule,
     GalleryMediaModule,
     PopupsModule,

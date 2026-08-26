@@ -89,10 +89,8 @@ model Entity {
   pages     Page[]
   users     User[]
   articles  Article[]
-  menus     Menu[]
   popups    Popups[]
   galleries Galleries[]
-  menuItems MenuItem[]
   services  Services[]
 
   @@map("entity")
@@ -108,8 +106,6 @@ model Page {
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])
 
-  menuItems MenuItem[]
-
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
@@ -117,42 +113,6 @@ model Page {
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([entityId, slug])
-}
-
-model Menu {
-  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name     String
-  location String
-  items    MenuItem[]
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
-
-  entity   Entity? @relation(fields: [entityId], references: [id])
-  entityId String? @db.Uuid
-}
-
-model MenuItem {
-  id    String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  label String
-  order Int     @default(0)
-  url   String?
-
-  menuId String @db.Uuid
-  menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
-
-  pageId String? @db.Uuid
-  page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
-
-  parentId String?    @db.Uuid
-  parent   MenuItem?  @relation("MenuHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-  children MenuItem[] @relation("MenuHierarchy")
-
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
-
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
 }
 
 model Article {

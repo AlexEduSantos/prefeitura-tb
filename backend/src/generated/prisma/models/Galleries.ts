@@ -623,6 +623,14 @@ export type EnumGalleryTypeFieldUpdateOperationsInput = {
   set?: $Enums.GalleryType
 }
 
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type GalleriesCreateNestedOneWithoutSlidesInput = {
   create?: Prisma.XOR<Prisma.GalleriesCreateWithoutSlidesInput, Prisma.GalleriesUncheckedCreateWithoutSlidesInput>
   connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutSlidesInput

@@ -177,10 +177,8 @@ export type EntityWhereInput = {
   pages?: Prisma.PageListRelationFilter
   users?: Prisma.UserListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
-  menus?: Prisma.MenuListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
   galleries?: Prisma.GalleriesListRelationFilter
-  menuItems?: Prisma.MenuItemListRelationFilter
   services?: Prisma.ServicesListRelationFilter
 }
 
@@ -192,10 +190,8 @@ export type EntityOrderByWithRelationInput = {
   pages?: Prisma.PageOrderByRelationAggregateInput
   users?: Prisma.UserOrderByRelationAggregateInput
   articles?: Prisma.ArticleOrderByRelationAggregateInput
-  menus?: Prisma.MenuOrderByRelationAggregateInput
   popups?: Prisma.PopupsOrderByRelationAggregateInput
   galleries?: Prisma.GalleriesOrderByRelationAggregateInput
-  menuItems?: Prisma.MenuItemOrderByRelationAggregateInput
   services?: Prisma.ServicesOrderByRelationAggregateInput
 }
 
@@ -210,10 +206,8 @@ export type EntityWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.PageListRelationFilter
   users?: Prisma.UserListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
-  menus?: Prisma.MenuListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
   galleries?: Prisma.GalleriesListRelationFilter
-  menuItems?: Prisma.MenuItemListRelationFilter
   services?: Prisma.ServicesListRelationFilter
 }, "id">
 
@@ -245,10 +239,8 @@ export type EntityCreateInput = {
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -260,10 +252,8 @@ export type EntityUncheckedCreateInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -275,10 +265,8 @@ export type EntityUpdateInput = {
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -290,10 +278,8 @@ export type EntityUncheckedUpdateInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
 }
 
@@ -344,11 +330,6 @@ export type EntityMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type EntityNullableScalarRelationFilter = {
-  is?: Prisma.EntityWhereInput | null
-  isNot?: Prisma.EntityWhereInput | null
-}
-
 export type EntityCreateNestedOneWithoutUsersInput = {
   create?: Prisma.XOR<Prisma.EntityCreateWithoutUsersInput, Prisma.EntityUncheckedCreateWithoutUsersInput>
   connectOrCreate?: Prisma.EntityCreateOrConnectWithoutUsersInput
@@ -375,36 +356,6 @@ export type EntityUpdateOneRequiredWithoutPagesNestedInput = {
   upsert?: Prisma.EntityUpsertWithoutPagesInput
   connect?: Prisma.EntityWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EntityUpdateToOneWithWhereWithoutPagesInput, Prisma.EntityUpdateWithoutPagesInput>, Prisma.EntityUncheckedUpdateWithoutPagesInput>
-}
-
-export type EntityCreateNestedOneWithoutMenusInput = {
-  create?: Prisma.XOR<Prisma.EntityCreateWithoutMenusInput, Prisma.EntityUncheckedCreateWithoutMenusInput>
-  connectOrCreate?: Prisma.EntityCreateOrConnectWithoutMenusInput
-  connect?: Prisma.EntityWhereUniqueInput
-}
-
-export type EntityUpdateOneWithoutMenusNestedInput = {
-  create?: Prisma.XOR<Prisma.EntityCreateWithoutMenusInput, Prisma.EntityUncheckedCreateWithoutMenusInput>
-  connectOrCreate?: Prisma.EntityCreateOrConnectWithoutMenusInput
-  upsert?: Prisma.EntityUpsertWithoutMenusInput
-  disconnect?: Prisma.EntityWhereInput | boolean
-  delete?: Prisma.EntityWhereInput | boolean
-  connect?: Prisma.EntityWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EntityUpdateToOneWithWhereWithoutMenusInput, Prisma.EntityUpdateWithoutMenusInput>, Prisma.EntityUncheckedUpdateWithoutMenusInput>
-}
-
-export type EntityCreateNestedOneWithoutMenuItemsInput = {
-  create?: Prisma.XOR<Prisma.EntityCreateWithoutMenuItemsInput, Prisma.EntityUncheckedCreateWithoutMenuItemsInput>
-  connectOrCreate?: Prisma.EntityCreateOrConnectWithoutMenuItemsInput
-  connect?: Prisma.EntityWhereUniqueInput
-}
-
-export type EntityUpdateOneRequiredWithoutMenuItemsNestedInput = {
-  create?: Prisma.XOR<Prisma.EntityCreateWithoutMenuItemsInput, Prisma.EntityUncheckedCreateWithoutMenuItemsInput>
-  connectOrCreate?: Prisma.EntityCreateOrConnectWithoutMenuItemsInput
-  upsert?: Prisma.EntityUpsertWithoutMenuItemsInput
-  connect?: Prisma.EntityWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.EntityUpdateToOneWithWhereWithoutMenuItemsInput, Prisma.EntityUpdateWithoutMenuItemsInput>, Prisma.EntityUncheckedUpdateWithoutMenuItemsInput>
 }
 
 export type EntityCreateNestedOneWithoutArticlesInput = {
@@ -470,10 +421,8 @@ export type EntityCreateWithoutUsersInput = {
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -484,10 +433,8 @@ export type EntityUncheckedCreateWithoutUsersInput = {
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -514,10 +461,8 @@ export type EntityUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -528,10 +473,8 @@ export type EntityUncheckedUpdateWithoutUsersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
 }
 
@@ -542,10 +485,8 @@ export type EntityCreateWithoutPagesInput = {
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -556,10 +497,8 @@ export type EntityUncheckedCreateWithoutPagesInput = {
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -586,10 +525,8 @@ export type EntityUpdateWithoutPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -600,152 +537,6 @@ export type EntityUncheckedUpdateWithoutPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
-  popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
-  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
-  services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
-}
-
-export type EntityCreateWithoutMenusInput = {
-  id?: string
-  name: string
-  slug: string
-  createdAt?: Date | string
-  pages?: Prisma.PageCreateNestedManyWithoutEntityInput
-  users?: Prisma.UserCreateNestedManyWithoutEntityInput
-  articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
-  galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
-  services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
-}
-
-export type EntityUncheckedCreateWithoutMenusInput = {
-  id?: string
-  name: string
-  slug: string
-  createdAt?: Date | string
-  pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
-  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
-  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
-  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
-}
-
-export type EntityCreateOrConnectWithoutMenusInput = {
-  where: Prisma.EntityWhereUniqueInput
-  create: Prisma.XOR<Prisma.EntityCreateWithoutMenusInput, Prisma.EntityUncheckedCreateWithoutMenusInput>
-}
-
-export type EntityUpsertWithoutMenusInput = {
-  update: Prisma.XOR<Prisma.EntityUpdateWithoutMenusInput, Prisma.EntityUncheckedUpdateWithoutMenusInput>
-  create: Prisma.XOR<Prisma.EntityCreateWithoutMenusInput, Prisma.EntityUncheckedCreateWithoutMenusInput>
-  where?: Prisma.EntityWhereInput
-}
-
-export type EntityUpdateToOneWithWhereWithoutMenusInput = {
-  where?: Prisma.EntityWhereInput
-  data: Prisma.XOR<Prisma.EntityUpdateWithoutMenusInput, Prisma.EntityUncheckedUpdateWithoutMenusInput>
-}
-
-export type EntityUpdateWithoutMenusInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
-  users?: Prisma.UserUpdateManyWithoutEntityNestedInput
-  articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
-  galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
-  services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
-}
-
-export type EntityUncheckedUpdateWithoutMenusInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
-  users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
-  articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
-  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
-  services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
-}
-
-export type EntityCreateWithoutMenuItemsInput = {
-  id?: string
-  name: string
-  slug: string
-  createdAt?: Date | string
-  pages?: Prisma.PageCreateNestedManyWithoutEntityInput
-  users?: Prisma.UserCreateNestedManyWithoutEntityInput
-  articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
-  popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
-  galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
-}
-
-export type EntityUncheckedCreateWithoutMenuItemsInput = {
-  id?: string
-  name: string
-  slug: string
-  createdAt?: Date | string
-  pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
-  users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
-  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
-  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
-  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
-}
-
-export type EntityCreateOrConnectWithoutMenuItemsInput = {
-  where: Prisma.EntityWhereUniqueInput
-  create: Prisma.XOR<Prisma.EntityCreateWithoutMenuItemsInput, Prisma.EntityUncheckedCreateWithoutMenuItemsInput>
-}
-
-export type EntityUpsertWithoutMenuItemsInput = {
-  update: Prisma.XOR<Prisma.EntityUpdateWithoutMenuItemsInput, Prisma.EntityUncheckedUpdateWithoutMenuItemsInput>
-  create: Prisma.XOR<Prisma.EntityCreateWithoutMenuItemsInput, Prisma.EntityUncheckedCreateWithoutMenuItemsInput>
-  where?: Prisma.EntityWhereInput
-}
-
-export type EntityUpdateToOneWithWhereWithoutMenuItemsInput = {
-  where?: Prisma.EntityWhereInput
-  data: Prisma.XOR<Prisma.EntityUpdateWithoutMenuItemsInput, Prisma.EntityUncheckedUpdateWithoutMenuItemsInput>
-}
-
-export type EntityUpdateWithoutMenuItemsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
-  users?: Prisma.UserUpdateManyWithoutEntityNestedInput
-  articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
-  popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
-  galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
-}
-
-export type EntityUncheckedUpdateWithoutMenuItemsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
-  users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
-  articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
@@ -758,10 +549,8 @@ export type EntityCreateWithoutArticlesInput = {
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -772,10 +561,8 @@ export type EntityUncheckedCreateWithoutArticlesInput = {
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -802,10 +589,8 @@ export type EntityUpdateWithoutArticlesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -816,10 +601,8 @@ export type EntityUncheckedUpdateWithoutArticlesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
 }
 
@@ -831,9 +614,7 @@ export type EntityCreateWithoutGalleriesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -845,9 +626,7 @@ export type EntityUncheckedCreateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -875,9 +654,7 @@ export type EntityUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -889,9 +666,7 @@ export type EntityUncheckedUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
 }
 
@@ -903,9 +678,7 @@ export type EntityCreateWithoutPopupsInput = {
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesCreateNestedManyWithoutEntityInput
 }
 
@@ -917,9 +690,7 @@ export type EntityUncheckedCreateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutEntityInput
 }
 
@@ -947,9 +718,7 @@ export type EntityUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUpdateManyWithoutEntityNestedInput
 }
 
@@ -961,9 +730,7 @@ export type EntityUncheckedUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutEntityNestedInput
 }
 
@@ -975,10 +742,8 @@ export type EntityCreateWithoutServicesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemCreateNestedManyWithoutEntityInput
 }
 
 export type EntityUncheckedCreateWithoutServicesInput = {
@@ -989,10 +754,8 @@ export type EntityUncheckedCreateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutEntityInput
-  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutEntityInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutEntityInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutEntityInput
-  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutEntityInput
 }
 
 export type EntityCreateOrConnectWithoutServicesInput = {
@@ -1019,10 +782,8 @@ export type EntityUpdateWithoutServicesInput = {
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUpdateManyWithoutEntityNestedInput
 }
 
 export type EntityUncheckedUpdateWithoutServicesInput = {
@@ -1033,10 +794,8 @@ export type EntityUncheckedUpdateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutEntityNestedInput
-  menus?: Prisma.MenuUncheckedUpdateManyWithoutEntityNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutEntityNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutEntityNestedInput
-  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutEntityNestedInput
 }
 
 
@@ -1048,10 +807,8 @@ export type EntityCountOutputType = {
   pages: number
   users: number
   articles: number
-  menus: number
   popups: number
   galleries: number
-  menuItems: number
   services: number
 }
 
@@ -1059,10 +816,8 @@ export type EntityCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   pages?: boolean | EntityCountOutputTypeCountPagesArgs
   users?: boolean | EntityCountOutputTypeCountUsersArgs
   articles?: boolean | EntityCountOutputTypeCountArticlesArgs
-  menus?: boolean | EntityCountOutputTypeCountMenusArgs
   popups?: boolean | EntityCountOutputTypeCountPopupsArgs
   galleries?: boolean | EntityCountOutputTypeCountGalleriesArgs
-  menuItems?: boolean | EntityCountOutputTypeCountMenuItemsArgs
   services?: boolean | EntityCountOutputTypeCountServicesArgs
 }
 
@@ -1100,13 +855,6 @@ export type EntityCountOutputTypeCountArticlesArgs<ExtArgs extends runtime.Types
 /**
  * EntityCountOutputType without action
  */
-export type EntityCountOutputTypeCountMenusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MenuWhereInput
-}
-
-/**
- * EntityCountOutputType without action
- */
 export type EntityCountOutputTypeCountPopupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PopupsWhereInput
 }
@@ -1116,13 +864,6 @@ export type EntityCountOutputTypeCountPopupsArgs<ExtArgs extends runtime.Types.E
  */
 export type EntityCountOutputTypeCountGalleriesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GalleriesWhereInput
-}
-
-/**
- * EntityCountOutputType without action
- */
-export type EntityCountOutputTypeCountMenuItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.MenuItemWhereInput
 }
 
 /**
@@ -1141,10 +882,8 @@ export type EntitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   pages?: boolean | Prisma.Entity$pagesArgs<ExtArgs>
   users?: boolean | Prisma.Entity$usersArgs<ExtArgs>
   articles?: boolean | Prisma.Entity$articlesArgs<ExtArgs>
-  menus?: boolean | Prisma.Entity$menusArgs<ExtArgs>
   popups?: boolean | Prisma.Entity$popupsArgs<ExtArgs>
   galleries?: boolean | Prisma.Entity$galleriesArgs<ExtArgs>
-  menuItems?: boolean | Prisma.Entity$menuItemsArgs<ExtArgs>
   services?: boolean | Prisma.Entity$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.EntityCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["entity"]>
@@ -1175,10 +914,8 @@ export type EntityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   pages?: boolean | Prisma.Entity$pagesArgs<ExtArgs>
   users?: boolean | Prisma.Entity$usersArgs<ExtArgs>
   articles?: boolean | Prisma.Entity$articlesArgs<ExtArgs>
-  menus?: boolean | Prisma.Entity$menusArgs<ExtArgs>
   popups?: boolean | Prisma.Entity$popupsArgs<ExtArgs>
   galleries?: boolean | Prisma.Entity$galleriesArgs<ExtArgs>
-  menuItems?: boolean | Prisma.Entity$menuItemsArgs<ExtArgs>
   services?: boolean | Prisma.Entity$servicesArgs<ExtArgs>
   _count?: boolean | Prisma.EntityCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1191,10 +928,8 @@ export type $EntityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     pages: Prisma.$PagePayload<ExtArgs>[]
     users: Prisma.$UserPayload<ExtArgs>[]
     articles: Prisma.$ArticlePayload<ExtArgs>[]
-    menus: Prisma.$MenuPayload<ExtArgs>[]
     popups: Prisma.$PopupsPayload<ExtArgs>[]
     galleries: Prisma.$GalleriesPayload<ExtArgs>[]
-    menuItems: Prisma.$MenuItemPayload<ExtArgs>[]
     services: Prisma.$ServicesPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1599,10 +1334,8 @@ export interface Prisma__EntityClient<T, Null = never, ExtArgs extends runtime.T
   pages<T extends Prisma.Entity$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   users<T extends Prisma.Entity$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.Entity$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  menus<T extends Prisma.Entity$menusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$menusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   popups<T extends Prisma.Entity$popupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$popupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PopupsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   galleries<T extends Prisma.Entity$galleriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$galleriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GalleriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  menuItems<T extends Prisma.Entity$menuItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$menuItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Entity$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Entity$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2102,30 +1835,6 @@ export type Entity$articlesArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Entity.menus
- */
-export type Entity$menusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Menu
-   */
-  select?: Prisma.MenuSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Menu
-   */
-  omit?: Prisma.MenuOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MenuInclude<ExtArgs> | null
-  where?: Prisma.MenuWhereInput
-  orderBy?: Prisma.MenuOrderByWithRelationInput | Prisma.MenuOrderByWithRelationInput[]
-  cursor?: Prisma.MenuWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MenuScalarFieldEnum | Prisma.MenuScalarFieldEnum[]
-}
-
-/**
  * Entity.popups
  */
 export type Entity$popupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2171,30 +1880,6 @@ export type Entity$galleriesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.GalleriesScalarFieldEnum | Prisma.GalleriesScalarFieldEnum[]
-}
-
-/**
- * Entity.menuItems
- */
-export type Entity$menuItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the MenuItem
-   */
-  select?: Prisma.MenuItemSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the MenuItem
-   */
-  omit?: Prisma.MenuItemOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.MenuItemInclude<ExtArgs> | null
-  where?: Prisma.MenuItemWhereInput
-  orderBy?: Prisma.MenuItemOrderByWithRelationInput | Prisma.MenuItemOrderByWithRelationInput[]
-  cursor?: Prisma.MenuItemWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.MenuItemScalarFieldEnum | Prisma.MenuItemScalarFieldEnum[]
 }
 
 /**

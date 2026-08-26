@@ -55,8 +55,6 @@ export const ModelName = {
   Session: 'Session',
   Entity: 'Entity',
   Page: 'Page',
-  Menu: 'Menu',
-  MenuItem: 'MenuItem',
   Article: 'Article',
   Media: 'Media',
   Folder: 'Folder',
@@ -133,34 +131,6 @@ export const PageScalarFieldEnum = {
 } as const
 
 export type PageScalarFieldEnum = (typeof PageScalarFieldEnum)[keyof typeof PageScalarFieldEnum]
-
-
-export const MenuScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  location: 'location',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  entityId: 'entityId'
-} as const
-
-export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
-
-
-export const MenuItemScalarFieldEnum = {
-  id: 'id',
-  label: 'label',
-  order: 'order',
-  url: 'url',
-  menuId: 'menuId',
-  pageId: 'pageId',
-  parentId: 'parentId',
-  entityId: 'entityId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
 
 
 export const ArticleScalarFieldEnum = {

@@ -38,16 +38,6 @@ export type Entity = Prisma.EntityModel
  */
 export type Page = Prisma.PageModel
 /**
- * Model Menu
- * 
- */
-export type Menu = Prisma.MenuModel
-/**
- * Model MenuItem
- * 
- */
-export type MenuItem = Prisma.MenuItemModel
-/**
  * Model Article
  * 
  */
