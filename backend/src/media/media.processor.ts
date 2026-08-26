@@ -5,7 +5,7 @@ import { MediaService, sanitizeFilename } from './media.service';
 import { MediaGateway } from './media.gateway';
 import * as fs from 'fs/promises';
 import sharp from 'sharp';
-import { fileTypeFromBuffer } from 'file-type';
+import { detectFileTypeFromBuffer } from '../common/utils/file-type-detector';
 
 @Processor('media-processing')
 export class MediaProcessor extends WorkerHost {
@@ -40,7 +40,7 @@ export class MediaProcessor extends WorkerHost {
 
         // 2. Ler arquivo temporário
         const fileBuffer = await fs.readFile(tempFilePath);
-        const fileType = await fileTypeFromBuffer(fileBuffer);
+        const fileType = await detectFileTypeFromBuffer(fileBuffer);
         const ext = fileType?.ext || 'bin';
         const detectedMime =
           fileType?.mime || media.mimeType || 'application/octet-stream';

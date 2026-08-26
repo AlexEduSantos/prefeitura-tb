@@ -3,11 +3,11 @@ import { IsString, IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
 export class CreatePageDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsNotEmpty()
-  slug: string;
+  slug!: string;
 
   @IsNotEmpty()
   content: any; // Estrutura em formato JSON do Page Builder
@@ -18,9 +18,9 @@ export class CreatePageDto {
 
   @IsString()
   @IsNotEmpty()
-  entityId: string;
+  entityId!: string;
 
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  userId!: string;
 }

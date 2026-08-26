@@ -1,12 +1,20 @@
-import { IsString, IsOptional, IsBoolean, IsInt, IsUUID, IsEnum, IsDateString } from 'class-validator';
-import { PopupStatus, PopupType } from '@prisma/client';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  IsInt,
+  IsUUID,
+  IsEnum,
+  IsDateString,
+} from 'class-validator';
+import { PopupStatus, PopupType } from '../../generated/prisma/enums';
 
 export class CreatePopupDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsUUID()
-  imageId: string;
+  imageId!: string;
 
   @IsOptional()
   @IsString()
@@ -49,5 +57,5 @@ export class CreatePopupDto {
   expirationDate?: string;
 
   @IsUUID()
-  entityId: string;
+  entityId!: string;
 }

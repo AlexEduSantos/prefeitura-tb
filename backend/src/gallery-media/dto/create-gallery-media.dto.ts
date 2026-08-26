@@ -6,7 +6,7 @@ export class CreateGalleryMediaDto {
   bannerId?: string;
 
   @IsUUID()
-  mediaId: string;
+  mediaId!: string;
 
   @IsOptional()
   @IsInt()

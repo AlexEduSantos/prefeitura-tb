@@ -10,11 +10,11 @@ import { CreateMenuItemDto } from './create-menu-item.dto';
 export class CreateMenuDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @IsString()
   @IsNotEmpty()
-  location: string;
+  location!: string;
 
   @IsUUID()
   @IsOptional()

@@ -2,11 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Media } from '@prisma/client';
 import { join } from 'path';
 import * as fs from 'fs/promises';
 import sharp from 'sharp';
-import { fileTypeFromBuffer } from 'file-type';
 import {
   S3Client,
   PutObjectCommand,
@@ -18,6 +16,8 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigService } from '@nestjs/config';
+import { Media } from '../generated/prisma/client';
+import { detectFileTypeFromBuffer } from '../common/utils/file-type-detector';
 
 export function sanitizeFilename(title: string): string {
   return title
@@ -177,7 +177,7 @@ export class MediaService {
 
   async uploadDocument(createMediaDto: CreateMediaDto, file: any) {
     const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
-    const type = await fileTypeFromBuffer(file.buffer);
+    const type = await detectFileTypeFromBuffer(file.buffer);
     if (!type || !allowedExtensions.includes(type.ext)) {
       throw new BadRequestException(
         'Arquivo não corresponde ao tipo declarado',
@@ -215,7 +215,7 @@ export class MediaService {
 
   async uploadVideo(createMediaDto: CreateMediaDto, file: any): Promise<Media> {
     const allowedExtensions = ['mp4', 'webm', 'ogg', 'mkv'];
-    const type = await fileTypeFromBuffer(file.buffer);
+    const type = await detectFileTypeFromBuffer(file.buffer);
     if (!type || !allowedExtensions.includes(type.ext)) {
       throw new BadRequestException(
         'Arquivo não corresponde ao tipo declarado',

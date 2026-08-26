@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGalleriesDto } from './dto/create-galleries.dto';
 import { UpdateGalleriesDto } from './dto/update-galleries.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Galleries } from '@prisma/client';
+import { Galleries } from '../generated/prisma/client';
 
 @Injectable()
 export class GalleriesService {

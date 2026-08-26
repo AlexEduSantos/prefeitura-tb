@@ -10,14 +10,14 @@ import { CreateGalleryMediaDto } from '../../gallery-media/dto/create-gallery-me
 
 export class CreateGalleriesDto {
   @IsString()
-  name: string;
+  name!: string;
 
   @IsOptional()
   @IsBoolean()
   active?: boolean;
 
   @IsUUID()
-  entityId: string;
+  entityId!: string;
 
   @IsOptional()
   @ValidateNested({ each: true })

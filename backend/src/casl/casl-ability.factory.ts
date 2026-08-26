@@ -5,23 +5,23 @@ import {
   MongoAbility,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
+import { Action } from './action.enum';
 import {
-  User,
   Article,
-  Page,
-  Media,
-  UserRole,
   Entity,
   Galleries,
   GalleryMedia,
+  Media,
+  Page,
   Popups,
-} from '@prisma/client';
-import { Action } from './action.enum';
+  User,
+  UserRole,
+} from '../generated/prisma/client';
 
 // Definimos uma classe temporária para Category se ela ainda não existir no Prisma
 export class Category {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
 }
 
 // Os Subjects permitidos

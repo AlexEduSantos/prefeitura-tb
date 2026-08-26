@@ -6,9 +6,9 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
-import { Prisma } from '@prisma/client';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
+import { Prisma } from '../generated/prisma/client';
 
 @Injectable()
 export class MenusService {

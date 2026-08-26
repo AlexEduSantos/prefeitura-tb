@@ -23,7 +23,7 @@ export enum ArticleStatusEnum {
 export class CreateArticleDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsString()
   @IsOptional()
@@ -31,19 +31,19 @@ export class CreateArticleDto {
 
   @IsUUID()
   @IsNotEmpty()
-  entityId: string;
+  entityId!: string;
 
   // ✅ Corrigido: coverId em vez de cover
   @IsUUID()
   @IsNotEmpty() // É obrigatório no model
-  coverId: string;
+  coverId!: string;
 
   @IsNotEmpty()
   body: any;
 
   @IsString()
   @IsNotEmpty()
-  slug: string;
+  slug!: string;
 
   @IsString()
   @IsOptional()
@@ -69,7 +69,7 @@ export class CreateArticleDto {
   // ✅ Corrigido: authorId em vez de author, e obrigatório
   @IsUUID()
   @IsNotEmpty()
-  authorId: string;
+  authorId!: string;
 
   // ✅ Corrigido: editorId em vez de editor
   @IsUUID()

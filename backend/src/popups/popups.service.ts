@@ -2,13 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePopupDto } from './dto/create-popup.dto';
 import { UpdatePopupDto } from './dto/update-popup.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Popups } from '@prisma/client';
+import { Popups } from '../generated/prisma/client';
 
 @Injectable()
 export class PopupsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPopupDto: CreatePopupDto, userId: string): Promise<Popups> {
+  async create(
+    createPopupDto: CreatePopupDto,
+    userId: string,
+  ): Promise<Popups> {
     const data: any = {
       ...createPopupDto,
       userId,

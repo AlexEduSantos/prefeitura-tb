@@ -23,7 +23,7 @@ import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
 import { SessionGuard } from '../auth/session.guard';
-import { UserRole } from '@prisma/client';
+import { UserRole } from '../generated/prisma/enums';
 
 @Controller('menus')
 export class MenusController {

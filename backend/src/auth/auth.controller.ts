@@ -14,8 +14,8 @@ import { RegisterDto } from './dto/register.dto';
 import type { Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { SessionGuard } from './session.guard';
-import { User } from '@prisma/client';
 import { PoliciesGuard } from '../casl/policies.guard';
+import { User } from '../generated/prisma/client';
 
 @Controller('auth')
 export class AuthController {

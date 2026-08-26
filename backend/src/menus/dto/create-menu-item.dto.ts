@@ -14,7 +14,7 @@ export class CreateMenuItemDto {
 
   @IsString()
   @IsNotEmpty()
-  label: string;
+  label!: string;
 
   @IsInt()
   @IsOptional()
@@ -36,10 +36,10 @@ export class CreateMenuItemDto {
   // ✅ Adicionado: Obrigatório no model
   @IsUUID()
   @IsNotEmpty()
-  menuId: string;
+  menuId!: string;
 
   // ✅ Adicionado: Obrigatório no model
   @IsUUID()
   @IsNotEmpty()
-  entityId: string;
+  entityId!: string;
 }

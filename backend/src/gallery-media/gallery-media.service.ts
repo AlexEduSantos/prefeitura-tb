@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGalleryMediaDto } from './dto/create-gallery-media.dto';
 import { UpdateGalleryMediaDto } from './dto/update-gallery-media.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { GalleryMedia } from '@prisma/client';
+import { GalleryMedia } from '../generated/prisma/client';
 
 @Injectable()
 export class GalleryMediaService {
