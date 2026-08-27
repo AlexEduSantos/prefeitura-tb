@@ -20,6 +20,7 @@ export function useAuthViewModel() {
       setError(err.message || "Ocorreu um erro ao fazer login");
     } finally {
       setLoading(false);
+      router.push("/administrator");
     }
   };
 

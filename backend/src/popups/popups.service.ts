@@ -30,14 +30,18 @@ export class PopupsService {
 
   async findAll(): Promise<Popups[]> {
     return this.prisma.popups.findMany({
-      include: { entity: true, image: true },
+      include: { entity: true, image: true, user: true },
     });
   }
 
   async findOne(id: string): Promise<Popups> {
     const popup = await this.prisma.popups.findUnique({
       where: { id },
-      include: { entity: true, image: true },
+      include: {
+        entity: true,
+        image: true,
+        user: { select: { name: true, avatar: true } },
+      },
     });
     if (!popup) {
       throw new NotFoundException(`Popup com ID ${id} não encontrado.`);
@@ -46,13 +50,44 @@ export class PopupsService {
   }
 
   async update(id: string, updatePopupDto: UpdatePopupDto): Promise<Popups> {
-    const data: any = { ...updatePopupDto };
-    if (updatePopupDto.publicationDate) {
-      data.publicationDate = new Date(updatePopupDto.publicationDate);
-    }
-    if (updatePopupDto.expirationDate) {
-      data.expirationDate = new Date(updatePopupDto.expirationDate);
-    }
+    // Extrai apenas os campos que existem no modelo Popups (colunas)
+    const {
+      name,
+      link,
+      active,
+      displayTime,
+      status,
+      type,
+      position,
+      closeButton,
+      priority,
+      publicationDate,
+      expirationDate,
+      imageId,
+      entityId,
+      userId,
+      // Ignore os objetos de relação: image, entity, user
+    } = updatePopupDto;
+
+    const data: any = {};
+
+    // Adiciona apenas se o campo foi enviado (undefined significa que não foi alterado)
+    if (name !== undefined) data.name = name;
+    if (link !== undefined) data.link = link;
+    if (active !== undefined) data.active = active;
+    if (displayTime !== undefined) data.displayTime = displayTime;
+    if (status !== undefined) data.status = status;
+    if (type !== undefined) data.type = type;
+    if (position !== undefined) data.position = position;
+    if (closeButton !== undefined) data.closeButton = closeButton;
+    if (priority !== undefined) data.priority = priority;
+    if (publicationDate !== undefined)
+      data.publicationDate = new Date(publicationDate);
+    if (expirationDate !== undefined)
+      data.expirationDate = new Date(expirationDate);
+    if (imageId !== undefined) data.imageId = imageId;
+    if (entityId !== undefined) data.entityId = entityId;
+    if (userId !== undefined) data.userId = userId;
 
     return this.prisma.popups.update({
       where: { id },

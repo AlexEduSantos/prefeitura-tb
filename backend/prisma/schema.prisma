@@ -27,6 +27,7 @@ enum MediaStatus {
 
 enum PopupStatus {
   rascunho
+  agendado
   publicado
   arquivado
   expirado
@@ -262,7 +263,7 @@ model Popups {
   type            PopupType   @default(modal)
   position        String?
   closeButton     Boolean     @default(true)
-  priority        Int         @default(0)
+  priority        Int         @default(10)
   publicationDate DateTime?
   expirationDate  DateTime?
   createdAt       DateTime    @default(now()) @db.Timestamp // ✅ Adicionado

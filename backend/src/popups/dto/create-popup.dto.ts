@@ -58,4 +58,7 @@ export class CreatePopupDto {
 
   @IsUUID()
   entityId!: string;
+
+  @IsUUID()
+  userId!: string;
 }

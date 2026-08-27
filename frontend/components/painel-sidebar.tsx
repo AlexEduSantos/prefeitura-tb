@@ -80,19 +80,9 @@ export function PainelSidebar() {
       ],
     },
     {
-      title: "Páginas e Menus",
+      title: "Páginas",
       icon: FileText,
-      href: "#",
-      subItems: [
-        {
-          title: "Páginas",
-          href: "/administrator/pages",
-        },
-        {
-          title: "Menus",
-          href: "/administrator/menus",
-        },
-      ],
+      href: "/administrator/pages",
     },
     {
       title: "Configurações",
