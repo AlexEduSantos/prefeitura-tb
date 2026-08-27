@@ -17,3 +17,7 @@ O componente da parte pública de exibição dos artigos precisa ser corrigido.
 [21/08/2026 - 16:24]
 
 [x] Criei o model para criação de menus, mas percebi que a forma de visualização deles está confusa. Vou precisar pensar em outra forma de gereciamento para os menus.
+
+[24 a 27/08/2026]
+
+[x] Adicionada função de gerenciamento de popUps na área administrativa. Foi necessário criar um model PopUp, um service PopUp e adicionar uma nova rota. A função de criação, edição, remoção e listagem está funcionando.
