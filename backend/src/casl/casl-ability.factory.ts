@@ -14,6 +14,7 @@ import {
   Media,
   Page,
   Popups,
+  Services,
   User,
   UserRole,
 } from '../generated/prisma/client';
@@ -36,6 +37,7 @@ export type Subjects =
   | 'Galleries'
   | 'GalleryMedia'
   | 'Popups'
+  | 'Services'
   | Article
   | Page
   | Media
@@ -44,7 +46,8 @@ export type Subjects =
   | Entity
   | Galleries
   | GalleryMedia
-  | Popups;
+  | Popups
+  | Services;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 

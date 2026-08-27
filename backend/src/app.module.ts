@@ -13,6 +13,8 @@ import { BullModule } from '@nestjs/bullmq';
 import { GalleriesModule } from './galleries/galleries.module';
 import { GalleryMediaModule } from './gallery-media/gallery-media.module';
 import { PopupsModule } from './popups/popups.module';
+import { ServicesService } from './service/services.service';
+import { ServicesModule } from './service/services.module';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { PopupsModule } from './popups/popups.module';
     GalleriesModule,
     GalleryMediaModule,
     PopupsModule,
+    ServicesModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
