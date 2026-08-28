@@ -1622,6 +1622,8 @@ export const StoriesItemScalarFieldEnum = {
   caption: 'caption',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  publishedDate: 'publishedDate',
+  expirationDate: 'expirationDate',
   storyId: 'storyId',
   mediaId: 'mediaId'
 } as const

@@ -16,7 +16,6 @@ import { PopupsModule } from './popups/popups.module';
 import { ServicesService } from './service/services.service';
 import { ServicesModule } from './service/services.module';
 import { StoryModule } from './story/story.module';
-import { StoryItemModule } from './story-item/story-item.module';
 
 @Module({
   imports: [
@@ -38,7 +37,6 @@ import { StoryItemModule } from './story-item/story-item.module';
     PopupsModule,
     ServicesModule,
     StoryModule,
-    StoryItemModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

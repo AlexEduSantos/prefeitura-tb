@@ -40,6 +40,8 @@ export type StoriesItemMinAggregateOutputType = {
   caption: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  publishedDate: Date | null
+  expirationDate: Date | null
   storyId: string | null
   mediaId: string | null
 }
@@ -50,6 +52,8 @@ export type StoriesItemMaxAggregateOutputType = {
   caption: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  publishedDate: Date | null
+  expirationDate: Date | null
   storyId: string | null
   mediaId: string | null
 }
@@ -60,6 +64,8 @@ export type StoriesItemCountAggregateOutputType = {
   caption: number
   createdAt: number
   updatedAt: number
+  publishedDate: number
+  expirationDate: number
   storyId: number
   mediaId: number
   _all: number
@@ -80,6 +86,8 @@ export type StoriesItemMinAggregateInputType = {
   caption?: true
   createdAt?: true
   updatedAt?: true
+  publishedDate?: true
+  expirationDate?: true
   storyId?: true
   mediaId?: true
 }
@@ -90,6 +98,8 @@ export type StoriesItemMaxAggregateInputType = {
   caption?: true
   createdAt?: true
   updatedAt?: true
+  publishedDate?: true
+  expirationDate?: true
   storyId?: true
   mediaId?: true
 }
@@ -100,6 +110,8 @@ export type StoriesItemCountAggregateInputType = {
   caption?: true
   createdAt?: true
   updatedAt?: true
+  publishedDate?: true
+  expirationDate?: true
   storyId?: true
   mediaId?: true
   _all?: true
@@ -197,6 +209,8 @@ export type StoriesItemGroupByOutputType = {
   caption: string | null
   createdAt: Date
   updatedAt: Date
+  publishedDate: Date | null
+  expirationDate: Date | null
   storyId: string
   mediaId: string
   _count: StoriesItemCountAggregateOutputType | null
@@ -230,6 +244,8 @@ export type StoriesItemWhereInput = {
   caption?: Prisma.StringNullableFilter<"StoriesItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
+  publishedDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
+  expirationDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
   storyId?: Prisma.UuidFilter<"StoriesItem"> | string
   mediaId?: Prisma.UuidFilter<"StoriesItem"> | string
   story?: Prisma.XOR<Prisma.StoriesScalarRelationFilter, Prisma.StoriesWhereInput>
@@ -242,6 +258,8 @@ export type StoriesItemOrderByWithRelationInput = {
   caption?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publishedDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  expirationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   storyId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   story?: Prisma.StoriesOrderByWithRelationInput
@@ -258,6 +276,8 @@ export type StoriesItemWhereUniqueInput = Prisma.AtLeast<{
   caption?: Prisma.StringNullableFilter<"StoriesItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
+  publishedDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
+  expirationDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
   storyId?: Prisma.UuidFilter<"StoriesItem"> | string
   mediaId?: Prisma.UuidFilter<"StoriesItem"> | string
   story?: Prisma.XOR<Prisma.StoriesScalarRelationFilter, Prisma.StoriesWhereInput>
@@ -270,6 +290,8 @@ export type StoriesItemOrderByWithAggregationInput = {
   caption?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publishedDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  expirationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   storyId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
   _count?: Prisma.StoriesItemCountOrderByAggregateInput
@@ -288,6 +310,8 @@ export type StoriesItemScalarWhereWithAggregatesInput = {
   caption?: Prisma.StringNullableWithAggregatesFilter<"StoriesItem"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StoriesItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StoriesItem"> | Date | string
+  publishedDate?: Prisma.DateTimeNullableWithAggregatesFilter<"StoriesItem"> | Date | string | null
+  expirationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"StoriesItem"> | Date | string | null
   storyId?: Prisma.UuidWithAggregatesFilter<"StoriesItem"> | string
   mediaId?: Prisma.UuidWithAggregatesFilter<"StoriesItem"> | string
 }
@@ -298,6 +322,8 @@ export type StoriesItemCreateInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   story: Prisma.StoriesCreateNestedOneWithoutItemsInput
   media: Prisma.MediaCreateNestedOneWithoutStoriesItemsInput
 }
@@ -308,6 +334,8 @@ export type StoriesItemUncheckedCreateInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   storyId: string
   mediaId: string
 }
@@ -318,6 +346,8 @@ export type StoriesItemUpdateInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   story?: Prisma.StoriesUpdateOneRequiredWithoutItemsNestedInput
   media?: Prisma.MediaUpdateOneRequiredWithoutStoriesItemsNestedInput
 }
@@ -328,6 +358,8 @@ export type StoriesItemUncheckedUpdateInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   storyId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -338,6 +370,8 @@ export type StoriesItemCreateManyInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   storyId: string
   mediaId: string
 }
@@ -348,6 +382,8 @@ export type StoriesItemUpdateManyMutationInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StoriesItemUncheckedUpdateManyInput = {
@@ -356,6 +392,8 @@ export type StoriesItemUncheckedUpdateManyInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   storyId?: Prisma.StringFieldUpdateOperationsInput | string
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -381,6 +419,8 @@ export type StoriesItemCountOrderByAggregateInput = {
   caption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publishedDate?: Prisma.SortOrder
+  expirationDate?: Prisma.SortOrder
   storyId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
 }
@@ -395,6 +435,8 @@ export type StoriesItemMaxOrderByAggregateInput = {
   caption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publishedDate?: Prisma.SortOrder
+  expirationDate?: Prisma.SortOrder
   storyId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
 }
@@ -405,6 +447,8 @@ export type StoriesItemMinOrderByAggregateInput = {
   caption?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  publishedDate?: Prisma.SortOrder
+  expirationDate?: Prisma.SortOrder
   storyId?: Prisma.SortOrder
   mediaId?: Prisma.SortOrder
 }
@@ -503,6 +547,8 @@ export type StoriesItemCreateWithoutMediaInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   story: Prisma.StoriesCreateNestedOneWithoutItemsInput
 }
 
@@ -512,6 +558,8 @@ export type StoriesItemUncheckedCreateWithoutMediaInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   storyId: string
 }
 
@@ -550,6 +598,8 @@ export type StoriesItemScalarWhereInput = {
   caption?: Prisma.StringNullableFilter<"StoriesItem"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StoriesItem"> | Date | string
+  publishedDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
+  expirationDate?: Prisma.DateTimeNullableFilter<"StoriesItem"> | Date | string | null
   storyId?: Prisma.UuidFilter<"StoriesItem"> | string
   mediaId?: Prisma.UuidFilter<"StoriesItem"> | string
 }
@@ -560,6 +610,8 @@ export type StoriesItemCreateWithoutStoryInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   media: Prisma.MediaCreateNestedOneWithoutStoriesItemsInput
 }
 
@@ -569,6 +621,8 @@ export type StoriesItemUncheckedCreateWithoutStoryInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   mediaId: string
 }
 
@@ -604,6 +658,8 @@ export type StoriesItemCreateManyMediaInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   storyId: string
 }
 
@@ -613,6 +669,8 @@ export type StoriesItemUpdateWithoutMediaInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   story?: Prisma.StoriesUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -622,6 +680,8 @@ export type StoriesItemUncheckedUpdateWithoutMediaInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   storyId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -631,6 +691,8 @@ export type StoriesItemUncheckedUpdateManyWithoutMediaInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   storyId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -640,6 +702,8 @@ export type StoriesItemCreateManyStoryInput = {
   caption?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  publishedDate?: Date | string | null
+  expirationDate?: Date | string | null
   mediaId: string
 }
 
@@ -649,6 +713,8 @@ export type StoriesItemUpdateWithoutStoryInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   media?: Prisma.MediaUpdateOneRequiredWithoutStoriesItemsNestedInput
 }
 
@@ -658,6 +724,8 @@ export type StoriesItemUncheckedUpdateWithoutStoryInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -667,6 +735,8 @@ export type StoriesItemUncheckedUpdateManyWithoutStoryInput = {
   caption?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  publishedDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   mediaId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -678,6 +748,8 @@ export type StoriesItemSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   caption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  publishedDate?: boolean
+  expirationDate?: boolean
   storyId?: boolean
   mediaId?: boolean
   story?: boolean | Prisma.StoriesDefaultArgs<ExtArgs>
@@ -690,6 +762,8 @@ export type StoriesItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   caption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  publishedDate?: boolean
+  expirationDate?: boolean
   storyId?: boolean
   mediaId?: boolean
   story?: boolean | Prisma.StoriesDefaultArgs<ExtArgs>
@@ -702,6 +776,8 @@ export type StoriesItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   caption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  publishedDate?: boolean
+  expirationDate?: boolean
   storyId?: boolean
   mediaId?: boolean
   story?: boolean | Prisma.StoriesDefaultArgs<ExtArgs>
@@ -714,11 +790,13 @@ export type StoriesItemSelectScalar = {
   caption?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  publishedDate?: boolean
+  expirationDate?: boolean
   storyId?: boolean
   mediaId?: boolean
 }
 
-export type StoriesItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order" | "caption" | "createdAt" | "updatedAt" | "storyId" | "mediaId", ExtArgs["result"]["storiesItem"]>
+export type StoriesItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "order" | "caption" | "createdAt" | "updatedAt" | "publishedDate" | "expirationDate" | "storyId" | "mediaId", ExtArgs["result"]["storiesItem"]>
 export type StoriesItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   story?: boolean | Prisma.StoriesDefaultArgs<ExtArgs>
   media?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
@@ -744,6 +822,8 @@ export type $StoriesItemPayload<ExtArgs extends runtime.Types.Extensions.Interna
     caption: string | null
     createdAt: Date
     updatedAt: Date
+    publishedDate: Date | null
+    expirationDate: Date | null
     storyId: string
     mediaId: string
   }, ExtArgs["result"]["storiesItem"]>
@@ -1176,6 +1256,8 @@ export interface StoriesItemFieldRefs {
   readonly caption: Prisma.FieldRef<"StoriesItem", 'String'>
   readonly createdAt: Prisma.FieldRef<"StoriesItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StoriesItem", 'DateTime'>
+  readonly publishedDate: Prisma.FieldRef<"StoriesItem", 'DateTime'>
+  readonly expirationDate: Prisma.FieldRef<"StoriesItem", 'DateTime'>
   readonly storyId: Prisma.FieldRef<"StoriesItem", 'String'>
   readonly mediaId: Prisma.FieldRef<"StoriesItem", 'String'>
 }

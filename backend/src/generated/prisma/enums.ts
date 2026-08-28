@@ -32,6 +32,7 @@ export type MediaStatus = (typeof MediaStatus)[keyof typeof MediaStatus]
 
 export const PopupStatus = {
   rascunho: 'rascunho',
+  agendado: 'agendado',
   publicado: 'publicado',
   arquivado: 'arquivado',
   expirado: 'expirado',

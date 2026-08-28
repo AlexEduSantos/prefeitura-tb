@@ -1,4 +1,6 @@
+// create-story-item.dto.ts
 import {
+  IsDateString,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -17,9 +19,13 @@ export class CreateStoryItemDto {
 
   @IsUUID()
   @IsNotEmpty()
-  storyId!: string;
-
-  @IsUUID()
-  @IsNotEmpty()
   mediaId!: string;
+
+  @IsDateString()
+  @IsOptional()
+  publishedDate?: string;
+
+  @IsDateString()
+  @IsOptional()
+  expirationDate?: string;
 }

@@ -316,11 +316,13 @@ model Stories {
 }
 
 model StoriesItem {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  order     Int      @default(0)
-  caption   String?
-  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order          Int       @default(0)
+  caption        String?
+  createdAt      DateTime  @default(now()) @db.Timestamp // ✅ Adicionado
+  updatedAt      DateTime  @updatedAt @db.Timestamp // ✅ Adicionado
+  publishedDate  DateTime?
+  expirationDate DateTime?
 
   storyId String  @db.Uuid
   story   Stories @relation(fields: [storyId], references: [id], onDelete: Cascade)

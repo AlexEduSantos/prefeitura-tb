@@ -15,11 +15,10 @@ import {
   Page,
   Popups,
   Services,
+  Stories,
   User,
   UserRole,
 } from '../generated/prisma/client';
-import { Story } from '../story/entities/story.entity';
-import { StoryItem } from '../story-item/entities/story-item.entity';
 
 // Definimos uma classe temporária para Category se ela ainda não existir no Prisma
 export class Category {
@@ -40,7 +39,7 @@ export type Subjects =
   | 'GalleryMedia'
   | 'Popups'
   | 'Services'
-  | 'Story'
+  | 'Stories'
   | 'StoryItem'
   | Article
   | Page
@@ -52,8 +51,7 @@ export type Subjects =
   | GalleryMedia
   | Popups
   | Services
-  | Story
-  | StoryItem;
+  | Stories;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 
