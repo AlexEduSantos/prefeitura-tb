@@ -15,6 +15,8 @@ import { GalleryMediaModule } from './gallery-media/gallery-media.module';
 import { PopupsModule } from './popups/popups.module';
 import { ServicesService } from './service/services.service';
 import { ServicesModule } from './service/services.module';
+import { StoryModule } from './story/story.module';
+import { StoryItemModule } from './story-item/story-item.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { ServicesModule } from './service/services.module';
     GalleryMediaModule,
     PopupsModule,
     ServicesModule,
+    StoryModule,
+    StoryItemModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
