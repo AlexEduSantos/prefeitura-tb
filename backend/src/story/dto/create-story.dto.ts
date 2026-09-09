@@ -1,4 +1,10 @@
-import { IsArray, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { CreateStoryItemDto } from './create-story-item.dto';
 
 export class CreateStoryDto {
@@ -9,9 +15,9 @@ export class CreateStoryDto {
   @IsOptional()
   description?: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  alt?: string;
+  order?: number;
 
   @IsUUID()
   coverId!: string;

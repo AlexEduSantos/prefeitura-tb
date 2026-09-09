@@ -272,7 +272,7 @@ export const StoriesScalarFieldEnum = {
   id: 'id',
   title: 'title',
   description: 'description',
-  alt: 'alt',
+  order: 'order',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   coverId: 'coverId'

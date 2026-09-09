@@ -74,7 +74,7 @@ export function PainelSidebar() {
           href: "/administrator/popups",
         },
         {
-          title: "Stories",
+          title: "Destaques",
           href: "/administrator/stories",
         },
       ],

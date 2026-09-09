@@ -213,8 +213,8 @@ model Galleries {
   id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                  String
   active                Boolean     @default(true)
-  createdAt             DateTime    @default(now()) @db.Timestamp // ✅ Adicionado @db.Timestamp
-  updatedAt             DateTime    @updatedAt @db.Timestamp // ✅ Adicionado @db.Timestamp
+  createdAt             DateTime    @default(now()) @db.Timestamp
+  updatedAt             DateTime    @updatedAt @db.Timestamp
   galleryType           GalleryType @default(slider)
   galleryAutoplay       Boolean     @default(true)
   galleryInterval       Int         @default(5000)
@@ -240,8 +240,8 @@ model GalleryMedia {
   order     Int      @default(0)
   caption   String?
   link      String?
-  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   galleryId String    @db.Uuid
   gallery   Galleries @relation(fields: [galleryId], references: [id], onDelete: Cascade)
@@ -266,8 +266,8 @@ model Popups {
   priority        Int         @default(10)
   publicationDate DateTime?
   expirationDate  DateTime?
-  createdAt       DateTime    @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt       DateTime    @updatedAt @db.Timestamp // ✅ Adicionado
+  createdAt       DateTime    @default(now()) @db.Timestamp
+  updatedAt       DateTime    @updatedAt @db.Timestamp
 
   // ✅ Corrigido: Relação nomeada
   imageId String @db.Uuid
@@ -287,8 +287,8 @@ model Services {
   title     String
   link      String   @unique
   altText   String?
-  createdAt DateTime @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])
@@ -305,9 +305,9 @@ model Stories {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title       String
   description String?
-  alt         String?
-  createdAt   DateTime @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt   DateTime @updatedAt @db.Timestamp // ✅ Adicionado
+  order       Int?     @default(0)
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
 
   coverId String @db.Uuid
   cover   Media  @relation("storiesCover", fields: [coverId], references: [id])
@@ -319,8 +319,8 @@ model StoriesItem {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   order          Int       @default(0)
   caption        String?
-  createdAt      DateTime  @default(now()) @db.Timestamp // ✅ Adicionado
-  updatedAt      DateTime  @updatedAt @db.Timestamp // ✅ Adicionado
+  createdAt      DateTime  @default(now()) @db.Timestamp
+  updatedAt      DateTime  @updatedAt @db.Timestamp
   publishedDate  DateTime?
   expirationDate DateTime?
 

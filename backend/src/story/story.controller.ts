@@ -38,7 +38,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para criar stories.',
+        'Você não tem permissão para criar destaques.',
       );
     }
     return this.storyService.create(createStoryDto);
@@ -83,7 +83,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para editar stories.',
+        'Você não tem permissão para editar destaques.',
       );
     }
     return this.storyService.update(id, updateStoryDto);
@@ -97,7 +97,7 @@ export class StoryController {
     const story = await this.storyService.findOne(id);
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para excluir este menu',
+        'Você não tem permissão para excluir este destaque',
       );
     }
     return this.storyService.remove(id);
@@ -116,7 +116,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para criar items de stories.',
+        'Você não tem permissão para criar itens de destaques.',
       );
     }
     return this.storyService.createStoryItem(createStoryItemDto, storyId);
@@ -150,7 +150,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para editar items de stories.',
+        'Você não tem permissão para editar itens de destaque.',
       );
     }
     return this.storyService.updateStoryItem(id, updateStoryItemDto);
@@ -163,7 +163,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para editar a ordem dos items de stories.',
+        'Você não tem permissão para editar a ordem dos itens de destaque.',
       );
     }
     return this.storyService.updateOrderStoryItems(ids);
@@ -179,7 +179,7 @@ export class StoryController {
     const user = req.user;
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
-        'Você não tem permissão para excluir items de stories.',
+        'Você não tem permissão para excluir itens de destaque.',
       );
     }
     return this.storyService.removeStoryItem(id);

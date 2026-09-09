@@ -6,7 +6,7 @@ export interface IStories {
   id: string;
   title: string;
   description: string;
-  alt: string;
+  order: number;
   createdAt: Date;
   updatedAt: Date;
 
@@ -25,4 +25,7 @@ export interface IStoriesItem {
 
   mediaId: string;
   media: IMedia;
+
+  publishedDate: Date;
+  expirationDate: Date;
 }

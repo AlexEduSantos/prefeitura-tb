@@ -20,15 +20,25 @@ export type StoriesModel = runtime.Types.Result.DefaultSelection<Prisma.$Stories
 
 export type AggregateStories = {
   _count: StoriesCountAggregateOutputType | null
+  _avg: StoriesAvgAggregateOutputType | null
+  _sum: StoriesSumAggregateOutputType | null
   _min: StoriesMinAggregateOutputType | null
   _max: StoriesMaxAggregateOutputType | null
+}
+
+export type StoriesAvgAggregateOutputType = {
+  order: number | null
+}
+
+export type StoriesSumAggregateOutputType = {
+  order: number | null
 }
 
 export type StoriesMinAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
-  alt: string | null
+  order: number | null
   createdAt: Date | null
   updatedAt: Date | null
   coverId: string | null
@@ -38,7 +48,7 @@ export type StoriesMaxAggregateOutputType = {
   id: string | null
   title: string | null
   description: string | null
-  alt: string | null
+  order: number | null
   createdAt: Date | null
   updatedAt: Date | null
   coverId: string | null
@@ -48,7 +58,7 @@ export type StoriesCountAggregateOutputType = {
   id: number
   title: number
   description: number
-  alt: number
+  order: number
   createdAt: number
   updatedAt: number
   coverId: number
@@ -56,11 +66,19 @@ export type StoriesCountAggregateOutputType = {
 }
 
 
+export type StoriesAvgAggregateInputType = {
+  order?: true
+}
+
+export type StoriesSumAggregateInputType = {
+  order?: true
+}
+
 export type StoriesMinAggregateInputType = {
   id?: true
   title?: true
   description?: true
-  alt?: true
+  order?: true
   createdAt?: true
   updatedAt?: true
   coverId?: true
@@ -70,7 +88,7 @@ export type StoriesMaxAggregateInputType = {
   id?: true
   title?: true
   description?: true
-  alt?: true
+  order?: true
   createdAt?: true
   updatedAt?: true
   coverId?: true
@@ -80,7 +98,7 @@ export type StoriesCountAggregateInputType = {
   id?: true
   title?: true
   description?: true
-  alt?: true
+  order?: true
   createdAt?: true
   updatedAt?: true
   coverId?: true
@@ -125,6 +143,18 @@ export type StoriesAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: StoriesAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: StoriesSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: StoriesMinAggregateInputType
@@ -155,6 +185,8 @@ export type StoriesGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: StoriesCountAggregateInputType | true
+  _avg?: StoriesAvgAggregateInputType
+  _sum?: StoriesSumAggregateInputType
   _min?: StoriesMinAggregateInputType
   _max?: StoriesMaxAggregateInputType
 }
@@ -163,11 +195,13 @@ export type StoriesGroupByOutputType = {
   id: string
   title: string
   description: string | null
-  alt: string | null
+  order: number | null
   createdAt: Date
   updatedAt: Date
   coverId: string
   _count: StoriesCountAggregateOutputType | null
+  _avg: StoriesAvgAggregateOutputType | null
+  _sum: StoriesSumAggregateOutputType | null
   _min: StoriesMinAggregateOutputType | null
   _max: StoriesMaxAggregateOutputType | null
 }
@@ -194,7 +228,7 @@ export type StoriesWhereInput = {
   id?: Prisma.UuidFilter<"Stories"> | string
   title?: Prisma.StringFilter<"Stories"> | string
   description?: Prisma.StringNullableFilter<"Stories"> | string | null
-  alt?: Prisma.StringNullableFilter<"Stories"> | string | null
+  order?: Prisma.IntNullableFilter<"Stories"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   coverId?: Prisma.UuidFilter<"Stories"> | string
@@ -206,7 +240,7 @@ export type StoriesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  alt?: Prisma.SortOrderInput | Prisma.SortOrder
+  order?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
@@ -221,7 +255,7 @@ export type StoriesWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.StoriesWhereInput | Prisma.StoriesWhereInput[]
   title?: Prisma.StringFilter<"Stories"> | string
   description?: Prisma.StringNullableFilter<"Stories"> | string | null
-  alt?: Prisma.StringNullableFilter<"Stories"> | string | null
+  order?: Prisma.IntNullableFilter<"Stories"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   coverId?: Prisma.UuidFilter<"Stories"> | string
@@ -233,13 +267,15 @@ export type StoriesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
-  alt?: Prisma.SortOrderInput | Prisma.SortOrder
+  order?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
   _count?: Prisma.StoriesCountOrderByAggregateInput
+  _avg?: Prisma.StoriesAvgOrderByAggregateInput
   _max?: Prisma.StoriesMaxOrderByAggregateInput
   _min?: Prisma.StoriesMinOrderByAggregateInput
+  _sum?: Prisma.StoriesSumOrderByAggregateInput
 }
 
 export type StoriesScalarWhereWithAggregatesInput = {
@@ -249,7 +285,7 @@ export type StoriesScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Stories"> | string
   title?: Prisma.StringWithAggregatesFilter<"Stories"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Stories"> | string | null
-  alt?: Prisma.StringNullableWithAggregatesFilter<"Stories"> | string | null
+  order?: Prisma.IntNullableWithAggregatesFilter<"Stories"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Stories"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Stories"> | Date | string
   coverId?: Prisma.UuidWithAggregatesFilter<"Stories"> | string
@@ -259,7 +295,7 @@ export type StoriesCreateInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cover: Prisma.MediaCreateNestedOneWithoutStoriesCoverInput
@@ -270,7 +306,7 @@ export type StoriesUncheckedCreateInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   coverId: string
@@ -281,7 +317,7 @@ export type StoriesUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cover?: Prisma.MediaUpdateOneRequiredWithoutStoriesCoverNestedInput
@@ -292,7 +328,7 @@ export type StoriesUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coverId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -303,7 +339,7 @@ export type StoriesCreateManyInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   coverId: string
@@ -313,7 +349,7 @@ export type StoriesUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -322,7 +358,7 @@ export type StoriesUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coverId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -342,17 +378,21 @@ export type StoriesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  alt?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
+}
+
+export type StoriesAvgOrderByAggregateInput = {
+  order?: Prisma.SortOrder
 }
 
 export type StoriesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  alt?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
@@ -362,10 +402,14 @@ export type StoriesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  alt?: Prisma.SortOrder
+  order?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coverId?: Prisma.SortOrder
+}
+
+export type StoriesSumOrderByAggregateInput = {
+  order?: Prisma.SortOrder
 }
 
 export type StoriesScalarRelationFilter = {
@@ -433,7 +477,7 @@ export type StoriesCreateWithoutCoverInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.StoriesItemCreateNestedManyWithoutStoryInput
@@ -443,7 +487,7 @@ export type StoriesUncheckedCreateWithoutCoverInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   items?: Prisma.StoriesItemUncheckedCreateNestedManyWithoutStoryInput
@@ -482,7 +526,7 @@ export type StoriesScalarWhereInput = {
   id?: Prisma.UuidFilter<"Stories"> | string
   title?: Prisma.StringFilter<"Stories"> | string
   description?: Prisma.StringNullableFilter<"Stories"> | string | null
-  alt?: Prisma.StringNullableFilter<"Stories"> | string | null
+  order?: Prisma.IntNullableFilter<"Stories"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Stories"> | Date | string
   coverId?: Prisma.UuidFilter<"Stories"> | string
@@ -492,7 +536,7 @@ export type StoriesCreateWithoutItemsInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   cover: Prisma.MediaCreateNestedOneWithoutStoriesCoverInput
@@ -502,7 +546,7 @@ export type StoriesUncheckedCreateWithoutItemsInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   coverId: string
@@ -528,7 +572,7 @@ export type StoriesUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   cover?: Prisma.MediaUpdateOneRequiredWithoutStoriesCoverNestedInput
@@ -538,7 +582,7 @@ export type StoriesUncheckedUpdateWithoutItemsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coverId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -548,7 +592,7 @@ export type StoriesCreateManyCoverInput = {
   id?: string
   title: string
   description?: string | null
-  alt?: string | null
+  order?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -557,7 +601,7 @@ export type StoriesUpdateWithoutCoverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.StoriesItemUpdateManyWithoutStoryNestedInput
@@ -567,7 +611,7 @@ export type StoriesUncheckedUpdateWithoutCoverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   items?: Prisma.StoriesItemUncheckedUpdateManyWithoutStoryNestedInput
@@ -577,7 +621,7 @@ export type StoriesUncheckedUpdateManyWithoutCoverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  alt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -617,7 +661,7 @@ export type StoriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   title?: boolean
   description?: boolean
-  alt?: boolean
+  order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   coverId?: boolean
@@ -630,7 +674,7 @@ export type StoriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
-  alt?: boolean
+  order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   coverId?: boolean
@@ -641,7 +685,7 @@ export type StoriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   title?: boolean
   description?: boolean
-  alt?: boolean
+  order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   coverId?: boolean
@@ -652,13 +696,13 @@ export type StoriesSelectScalar = {
   id?: boolean
   title?: boolean
   description?: boolean
-  alt?: boolean
+  order?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   coverId?: boolean
 }
 
-export type StoriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "alt" | "createdAt" | "updatedAt" | "coverId", ExtArgs["result"]["stories"]>
+export type StoriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "order" | "createdAt" | "updatedAt" | "coverId", ExtArgs["result"]["stories"]>
 export type StoriesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cover?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   items?: boolean | Prisma.Stories$itemsArgs<ExtArgs>
@@ -681,7 +725,7 @@ export type $StoriesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     title: string
     description: string | null
-    alt: string | null
+    order: number | null
     createdAt: Date
     updatedAt: Date
     coverId: string
@@ -1113,7 +1157,7 @@ export interface StoriesFieldRefs {
   readonly id: Prisma.FieldRef<"Stories", 'String'>
   readonly title: Prisma.FieldRef<"Stories", 'String'>
   readonly description: Prisma.FieldRef<"Stories", 'String'>
-  readonly alt: Prisma.FieldRef<"Stories", 'String'>
+  readonly order: Prisma.FieldRef<"Stories", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Stories", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Stories", 'DateTime'>
   readonly coverId: Prisma.FieldRef<"Stories", 'String'>

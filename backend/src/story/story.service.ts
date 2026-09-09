@@ -72,10 +72,21 @@ export class StoryService {
           },
           items: {
             where: {
-              publishedDate: { lte: new Date() },
-              expirationDate: { gte: new Date() },
+              OR: [
+                {
+                  publishedDate: { lte: new Date() },
+                  expirationDate: { gte: new Date() },
+                },
+                {
+                  publishedDate: null,
+                  expirationDate: null,
+                },
+              ],
             },
             orderBy: { order: 'asc' },
+            include: {
+              media: { select: { key: true, altText: true } },
+            },
           },
         },
         orderBy: { [sortBy]: sortOrder },
