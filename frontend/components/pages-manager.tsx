@@ -229,7 +229,7 @@ export function PageManager() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-[200px] max-h-96 overflow-y-auto"
+              className="w-50 max-h-96 overflow-y-auto"
             >
               <DropdownMenuLabel>Estado</DropdownMenuLabel>
               <DropdownMenuRadioGroup
@@ -275,7 +275,7 @@ export function PageManager() {
                 table.setPageSize(Number(value));
               }}
             >
-              <SelectTrigger className="h-8 w-[70px]">
+              <SelectTrigger className="h-8 w-17.5">
                 <SelectValue
                   placeholder={table.getState().pagination.pageSize}
                 />
@@ -351,7 +351,7 @@ export function PageManager() {
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-end px-2">
-        <div className="flex items-center gap-2 min-w-[280px]">
+        <div className="flex items-center gap-2 min-w-70">
           <Button
             variant="outline"
             size="sm"

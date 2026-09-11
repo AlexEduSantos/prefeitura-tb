@@ -115,7 +115,13 @@ const landingHeroExtension = defineExtension({
   theme,
 });
 
-export function Editor({ onChange, initialValue }: { onChange?: (state: string) => void; initialValue?: string }) {
+export function Editor({
+  onChange,
+  initialValue,
+}: {
+  onChange?: (state: string) => void;
+  initialValue?: string;
+}) {
   return (
     <LexicalExtensionComposer
       extension={landingHeroExtension}

@@ -115,8 +115,6 @@ export function PopupsManager() {
     }
   };
 
-  console.log(popups);
-
   return (
     <div className="space-y-2">
       {/* Toolbar */}

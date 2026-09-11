@@ -31,12 +31,13 @@ interface NewPageModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "create" | "edit";
-  onSubmit: (content: any, entityId: string) => void;
-  onChangeTitle: (title: string) => void;
-  onChangeSlug: (slug: string) => void;
-  title: string;
-  slug: string;
-  /** Dados iniciais da página (usado no modo de edição) */
+  // Alteramos o onSubmit para devolver todos os dados juntos de uma vez
+  onSubmit: (data: {
+    title: string;
+    slug: string;
+    content: any;
+    entityId: string;
+  }) => void;
   initialData?: {
     content?: any;
     entityId?: string;
@@ -50,43 +51,50 @@ export function NewPageModal({
   mode,
   onClose,
   onSubmit,
-  onChangeTitle,
-  onChangeSlug,
-  title,
-  slug,
   initialData,
 }: NewPageModalProps) {
   const { entities, isLoadingEntities } = useEntityViewModel();
+
+  // Estados centralizados no modal
+  const [title, setTitle] = useState<string>("");
+  const [slug, setSlug] = useState<string>("");
   const [selectedEntityId, setSelectedEntityId] = useState<string>("");
   const [puckData, setPuckData] = useState<any>({});
 
-  // Inicializa/reseta os estados internos quando o modal abre
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Preenche os dados apenas quando o modal for aberto
   useEffect(() => {
     if (isOpen) {
       if (mode === "create") {
+        setTitle("");
+        setSlug(""); // Caso precise de um campo slug depois
         setPuckData({});
         setSelectedEntityId("");
       } else {
+        setTitle(initialData?.title ?? "");
+        setSlug(initialData?.slug ?? "");
         setPuckData(initialData?.content ?? {});
         setSelectedEntityId(initialData?.entityId ?? "");
       }
     }
-  }, [isOpen]);
+  }, [isOpen, mode, initialData]);
 
   const handleCreate = () => {
     if (!title) {
       alert("Por favor, preencha o Nome da página.");
       return;
     }
-    if (!slug) {
-      alert("Por favor, preencha o Caminho (slug) da página.");
-      return;
-    }
     if (!selectedEntityId) {
       alert("Por favor, selecione uma Secretaria.");
       return;
     }
-    onSubmit(puckData, selectedEntityId);
+    // Envia tudo para o componente pai salvar
+    onSubmit({ title, slug, content: puckData, entityId: selectedEntityId });
   };
 
   const overrides: Partial<Overrides> = useMemo(
@@ -102,13 +110,7 @@ export function NewPageModal({
         </div>
       ),
       fieldTypes: {
-        number: ({
-          onChange,
-          name,
-        }: {
-          onChange: (v: any) => void;
-          name: string;
-        }) => (
+        number: ({ onChange, name, value }: any) => (
           <div className="flex flex-col gap-1">
             <Label htmlFor={name} className="capitalize">
               {name}
@@ -116,18 +118,12 @@ export function NewPageModal({
             <Input
               id={name}
               type="number"
-              value={mode === "edit" ? initialData?.content?.[name] : ""}
-              onChange={(e) => onChange(e.currentTarget.value)}
+              value={value ?? ""}
+              onChange={(e) => onChange(Number(e.currentTarget.value))}
             />
           </div>
         ),
-        text: ({
-          onChange,
-          name,
-        }: {
-          onChange: (v: any) => void;
-          name: string;
-        }) => (
+        text: ({ onChange, name, value }: any) => (
           <div className="flex flex-col gap-1">
             <Label htmlFor={name} className="capitalize">
               {name}
@@ -135,23 +131,12 @@ export function NewPageModal({
             <Input
               id={name}
               type="text"
+              value={value ?? ""}
               onChange={(e) => onChange(e.currentTarget.value)}
             />
           </div>
         ),
-        select: ({
-          field,
-          name,
-          value,
-          onChange,
-          readOnly,
-        }: {
-          field: any;
-          name: string;
-          value: any;
-          onChange: (v: any) => void;
-          readOnly?: boolean;
-        }) => (
+        select: ({ field, name, value, onChange, readOnly }: any) => (
           <Select
             value={value || ""}
             onValueChange={onChange}
@@ -184,6 +169,8 @@ export function NewPageModal({
     [],
   );
 
+  if (!isMounted) return null;
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="min-w-[90%] max-h-[95vh] flex flex-col">
@@ -192,26 +179,20 @@ export function NewPageModal({
             {mode === "edit" ? "Editar Página" : "Criar Nova Página"}
           </DialogTitle>
         </DialogHeader>
+
         <div className="flex flex-col gap-4 overflow-hidden flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Campo agora gerencia o próprio estado (não recarrega o Puck à toa) */}
             <div className="space-y-1">
               <Label htmlFor="title">Nome</Label>
               <Input
                 id="title"
                 value={title}
-                onChange={(e) => onChangeTitle(e.target.value)}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Ex: Inscrições Cursos Técnicos"
               />
             </div>
-            <div className="space-y-1">
-              <Label htmlFor="slug">Caminho (Slug)</Label>
-              <Input
-                id="slug"
-                value={slug}
-                onChange={(e) => onChangeSlug(e.target.value)}
-                placeholder="Ex: inscricoes-cursos"
-              />
-            </div>
+
             <div className="space-y-1">
               <Label htmlFor="entity">Secretaria</Label>
               <Select
@@ -237,6 +218,7 @@ export function NewPageModal({
               </Select>
             </div>
           </div>
+
           <Puck
             config={config}
             data={puckData}
@@ -245,6 +227,7 @@ export function NewPageModal({
             onChange={(newData) => setPuckData(newData)}
           />
         </div>
+
         <DialogFooter className="mt-2">
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>
