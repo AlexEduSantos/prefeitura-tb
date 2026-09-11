@@ -21,3 +21,9 @@ O componente da parte pública de exibição dos artigos precisa ser corrigido.
 [24 a 27/08/2026]
 
 [x] Adicionada função de gerenciamento de popUps na área administrativa. Foi necessário criar um model PopUp, um service PopUp e adicionar uma nova rota. A função de criação, edição, remoção e listagem está funcionando.
+
+[09/09/2026]
+[x] Criado gerenciador de destaques.
+
+[11/09/2026]
+[x] Corrigido conflito do new-page-modal com o dnd-kit.
