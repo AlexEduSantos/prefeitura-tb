@@ -27,9 +27,9 @@ export class ArticlesController {
   }
 
   // Qualquer um (Público) pode visualizar os detalhes de um artigo
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.articlesService.findOne(id);
+  @Get(':slug')
+  async findOne(@Param('slug') slug: string) {
+    return this.articlesService.findOne(slug);
   }
 
   // Operações de Mutação exigem sessão ativa e autorização do CASL (Admin ou Publisher/Jornalista)

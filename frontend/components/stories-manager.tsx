@@ -76,8 +76,14 @@ function SortableStoryItem({
   item: IStoriesItem;
   onDelete: () => void;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: item.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -124,7 +130,6 @@ function SortableStoryItem({
     </div>
   );
 }
-
 
 // --- Story Render ---
 function StoryRender({

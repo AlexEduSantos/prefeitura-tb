@@ -18,8 +18,8 @@ export class ArticleService {
     return response.json();
   }
 
-  static async getArticle(id: string): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles/${id}`, {
+  static async getArticle(slug: string): Promise<IArticle> {
+    const response = await fetch(`${API_URL}/articles/${slug}`, {
       headers: {
         "Content-Type": "application/json",
       },

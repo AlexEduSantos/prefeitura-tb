@@ -1,14 +1,13 @@
 "use client";
-import { ChevronRight, Star } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { ArticleViewModel } from "@/app/viewmodel/article.viewmodel";
 import Image from "next/image";
-import { useMediaById } from "@/app/viewmodel/media.viewmodel";
-import { Badge } from "../ui/badge";
 import { sortByDateDesc } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton"; // Assumindo que você tem um componente Skeleton
 import { useMemo } from "react";
 import { IMedia } from "@/app/type/media";
+import { useRouter } from "next/navigation";
 
 // Componente para o loader da imagem
 function ArticleImage({ coverData, alt }: { coverData: IMedia; alt: string }) {
@@ -38,12 +37,19 @@ function ArticleImage({ coverData, alt }: { coverData: IMedia; alt: string }) {
 
 // Componente para o artigo em destaque
 function FeaturedArticle({ article }: { article: any }) {
+  const router = useRouter();
+
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="max-h-168 min-h-128 w-full rounded-lg shadow relative overflow-hidden">
-        <ArticleImage coverData={article.coverData} alt={article.title} />
+    <div className="flex flex-col gap-4 w-full group">
+      <div
+        className="max-h-168 min-h-128 w-full rounded-lg relative overflow-hidden group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300"
+        onClick={() => {
+          router.push(`/noticias/${article.slug}`);
+        }}
+      >
+        <ArticleImage coverData={article.cover} alt={article.title} />
       </div>
-      <h3 className="w-full bg-primary rounded-lg h-32 shadow text-primary-foreground text-3xl font-semibold p-6 line-clamp-2">
+      <h3 className="w-full bg-primary rounded-lg h-32 shadow text-primary-foreground text-3xl font-semibold p-6 line-clamp-2 group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300">
         {article.title}
       </h3>
     </div>
@@ -52,12 +58,22 @@ function FeaturedArticle({ article }: { article: any }) {
 
 // Componente para artigos pequenos na sidebar
 function SmallArticleCard({ article }: { article: any }) {
+  const router = useRouter();
+
   return (
-    <div className="h-full rounded-lg relative overflow-hidden shadow group cursor-pointer hover:shadow-lg transition-shadow">
-      <div className="w-full h-3/4 relative overflow-hidden">
-        <ArticleImage coverData={article.coverData} alt={article.title} />
+    <div className="h-full rounded-lg relative overflow-hidden shadow group cursor-pointer hover:scale-102 transition-transform duration-300">
+      <div
+        className="w-full h-3/4 relative overflow-hidden"
+        onClick={() => {
+          router.push(`/noticias/${article.slug}`);
+        }}
+      >
+        <ArticleImage coverData={article.cover} alt={article.title} />
       </div>
-      <div className="w-full h-1/4 bg-card text-primary px-3 py-2 flex items-center gap-2">
+      <div
+        className="w-full h-1/4 bg-card text-primary px-3 py-2 flex items-center gap-2"
+        onClick={() => router.push(`/noticias/${article.slug}`)}
+      >
         <span className="h-6 w-1 bg-primary rounded-full shrink-0" />
         <p className="line-clamp-2 text-sm leading-tight font-medium group-hover:text-primary transition-colors">
           {article.title}
@@ -69,6 +85,7 @@ function SmallArticleCard({ article }: { article: any }) {
 
 // Componente principal
 export function ArticlesBlock() {
+  const router = useRouter();
   const { article, isLoadingArticle, isErrorArticle } = ArticleViewModel();
 
   // Memoizar os artigos processados
@@ -120,15 +137,16 @@ export function ArticlesBlock() {
   return (
     <section className="w-full max-w-7xl mx-auto">
       {/* Cabeçalho */}
-      <div className="w-full flex items-center gap-2  mb-4">
+      <div className="w-full flex items-center gap-2 ">
         <span className="h-5 w-1 bg-primary rounded-full" />
-        <h3 className="uppercase text-nowrap tracking-widest text-sm font-semibold">
+        <h3 className="uppercase text-nowrap tracking-widest text-sm">
           Últimas Notícias
         </h3>
         <span className="w-full h-px bg-muted-foreground/20 rounded-full" />
         <Button
           variant="ghost"
-          className="text-xs text-primary text-nowrap hover:bg-primary/10"
+          className="text-xs text-primary text-nowrap hover:font-semibold hover:text-primary hover:text-sm transition-all duration-300"
+          onClick={() => router.push("/noticias")}
         >
           Todas as notícias
           <ChevronRight className="h-4 w-4 ml-1" />

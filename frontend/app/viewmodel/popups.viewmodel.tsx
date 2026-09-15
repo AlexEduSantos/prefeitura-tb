@@ -240,7 +240,6 @@ export function usePopupsViewModel() {
   });
 
   const handleSave = () => {
-    console.log(JSON.stringify(formData));
     if (mode === "create") {
       createPopupMutation.mutate(formData as IPopups);
     } else if (mode === "edit" && selectedPopup) {

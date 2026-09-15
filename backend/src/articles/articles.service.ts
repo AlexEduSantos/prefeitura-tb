@@ -49,9 +49,9 @@ export class ArticlesService {
     return articles;
   }
 
-  async findOne(id: string) {
+  async findOne(slug: string) {
     const article = await this.prisma.article.findUnique({
-      where: { id },
+      where: { slug },
       include: {
         entity: true,
         cover: true,
@@ -71,7 +71,7 @@ export class ArticlesService {
     });
 
     if (!article) {
-      throw new NotFoundException(`Artigo com ID ${id} não encontrado.`);
+      throw new NotFoundException(`Artigo com caminho ${slug} não encontrado.`);
     }
 
     return article;

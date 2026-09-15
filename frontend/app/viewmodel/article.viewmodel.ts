@@ -3,8 +3,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArticleService } from "../service/article.service";
 import { IArticle } from "../type/article";
+import { useState } from "react";
 
 export function ArticleViewModel() {
+  const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(10);
+
   const queryClient = useQueryClient();
 
   const articleQuery = useQuery({
@@ -62,5 +66,24 @@ export function ArticleViewModel() {
     deleteArticle: deleteArticleMutation.mutate,
     changeStatus: changeStatusMutation.mutate,
     changeFeatured: changeFeaturedMutation.mutate,
+
+    search,
+    setSearch,
+    limit,
+    setLimit,
+  };
+}
+
+export function useArticleById(slug: string) {
+  const articleByIdQuery = useQuery({
+    queryKey: ["article", slug],
+    queryFn: () => ArticleService.getArticle(slug),
+  });
+
+  return {
+    article: articleByIdQuery.data,
+    isLoading: articleByIdQuery.isLoading,
+    isError: articleByIdQuery.isError,
+    error: articleByIdQuery.error,
   };
 }
