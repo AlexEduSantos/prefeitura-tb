@@ -77,6 +77,34 @@ export class ArticlesService {
     return article;
   }
 
+  async findOneById(id: string) {
+    const article = await this.prisma.article.findUnique({
+      where: { id },
+      include: {
+        entity: true,
+        cover: true,
+        author: true,
+        editor: true,
+        gallery: {
+          include: {
+            slides: {
+              orderBy: { order: 'asc' }, // Garante que as fotos venham na ordem definida
+              include: {
+                media: true, // Traz os dados reais da imagem (url, altText, etc.)
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!article) {
+      throw new NotFoundException(`Artigo com id ${id} não encontrado.`);
+    }
+
+    return article;
+  }
+
   async update(
     id: string,
     updateArticleDto: UpdateArticleDto,

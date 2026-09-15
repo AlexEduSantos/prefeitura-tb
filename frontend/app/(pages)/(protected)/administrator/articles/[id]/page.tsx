@@ -1,19 +1,16 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { ArticleService } from "@/app/service/article.service";
 import MateriaForm from "@/components/new-article";
 import { PainelHeader } from "@/components/painel-header";
+import { useArticleById } from "@/app/viewmodel/article.viewmodel";
 
 export default function EditArticlePage() {
   const params = useParams();
   const id = params.id as string;
 
-  const { data: article, isLoading, isError } = useQuery({
-    queryKey: ["article", id],
-    queryFn: () => ArticleService.getArticle(id),
-    enabled: !!id,
-  });
+  console.log(id);
+
+  const { article, isLoading, isError } = useArticleById(id);
 
   if (isLoading) {
     return <div className="p-8">Carregando dados da matéria...</div>;

@@ -74,10 +74,24 @@ export function ArticleViewModel() {
   };
 }
 
-export function useArticleById(slug: string) {
+export function useArticleBySlug(slug: string) {
   const articleByIdQuery = useQuery({
     queryKey: ["article", slug],
     queryFn: () => ArticleService.getArticle(slug),
+  });
+
+  return {
+    article: articleByIdQuery.data,
+    isLoading: articleByIdQuery.isLoading,
+    isError: articleByIdQuery.isError,
+    error: articleByIdQuery.error,
+  };
+}
+
+export function useArticleById(id: string) {
+  const articleByIdQuery = useQuery({
+    queryKey: ["article", id],
+    queryFn: () => ArticleService.getArticleById(id),
   });
 
   return {

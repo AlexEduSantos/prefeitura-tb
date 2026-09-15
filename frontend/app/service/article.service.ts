@@ -33,6 +33,21 @@ export class ArticleService {
     return response.json();
   }
 
+  static async getArticleById(id: string): Promise<IArticle> {
+    const response = await fetch(`${API_URL}/articles/id/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar artigo");
+    }
+
+    return response.json();
+  }
+
   static async createArticle(data: Partial<IArticle>): Promise<IArticle> {
     const response = await fetch(`${API_URL}/articles`, {
       method: "POST",

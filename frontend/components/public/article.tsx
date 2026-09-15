@@ -1,6 +1,6 @@
 "use client";
 
-import { useArticleById } from "@/app/viewmodel/article.viewmodel";
+import { useArticleBySlug } from "@/app/viewmodel/article.viewmodel";
 import { LexicalViewer } from "@/components/public/article-body-visualizer";
 import { GaleryView } from "@/components/public/gallery-viewer";
 import {
@@ -22,7 +22,7 @@ interface ArticleViewerProps {
 }
 
 export default function ArticleViewer({ slug }: ArticleViewerProps) {
-  const { article, isLoading, isError } = useArticleById(slug);
+  const { article, isLoading, isError } = useArticleBySlug(slug);
 
   if (isLoading) {
     return <div>Carregando...</div>;

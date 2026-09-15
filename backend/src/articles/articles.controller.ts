@@ -32,6 +32,11 @@ export class ArticlesController {
     return this.articlesService.findOne(slug);
   }
 
+  @Get('id/:id')
+  async findOneById(@Param('id') id: string) {
+    return this.articlesService.findOneById(id);
+  }
+
   // Operações de Mutação exigem sessão ativa e autorização do CASL (Admin ou Publisher/Jornalista)
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
