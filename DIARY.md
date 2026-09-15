@@ -27,3 +27,6 @@ O componente da parte pública de exibição dos artigos precisa ser corrigido.
 
 [11/09/2026]
 [x] Corrigido conflito do new-page-modal com o dnd-kit.
+
+[15/09/2026 - 16:00]
+[x] Article-block atualizado com animações e rotas. Criados os componentes articles-list, article e article-body-visualizer para auxiliar na organização e visualização das notícias.
