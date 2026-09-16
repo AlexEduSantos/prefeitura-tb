@@ -77,6 +77,10 @@ export function PainelSidebar() {
           title: "Destaques",
           href: "/administrator/stories",
         },
+        {
+          title: "Serviços",
+          href: "/administrator/services",
+        },
       ],
     },
     {
