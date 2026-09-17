@@ -114,6 +114,7 @@ model Page {
   user   User   @relation(fields: [userId], references: [id])
 
   @@unique([entityId, slug])
+  @@map("page")
 }
 
 model Article {
@@ -151,6 +152,8 @@ model Article {
 
   coverId String @db.Uuid
   cover   Media  @relation("articleCover", fields: [coverId], references: [id])
+
+  @@map("article")
 }
 
 model Media {
@@ -183,6 +186,8 @@ model Media {
   // Stories relations
   storiesCover Stories[]     @relation("storiesCover")
   storiesItems StoriesItem[] @relation("storiesItemMedia") // ✅ Nome adicionado
+
+  @@map("media")
 }
 
 model Folder {
@@ -233,6 +238,7 @@ model Galleries {
   articles Article[]
 
   @@index([entityId, active])
+  @@map("gallery")
 }
 
 model GalleryMedia {
@@ -251,6 +257,7 @@ model GalleryMedia {
 
   @@unique([galleryId, order])
   @@index([galleryId])
+  @@map("gallery_media")
 }
 
 model Popups {
@@ -280,6 +287,7 @@ model Popups {
   user   User   @relation(fields: [userId], references: [id])
 
   @@index([entityId, active, status, publicationDate, expirationDate])
+  @@map("popup")
 }
 
 model Services {
@@ -301,6 +309,8 @@ model Services {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String @db.Uuid
+
+  @@map("service")
 }
 
 model Stories {
@@ -315,6 +325,8 @@ model Stories {
   cover   Media  @relation("storiesCover", fields: [coverId], references: [id])
 
   items StoriesItem[]
+
+  @@map("story")
 }
 
 model StoriesItem {
@@ -334,4 +346,5 @@ model StoriesItem {
   media   Media  @relation("storiesItemMedia", fields: [mediaId], references: [id])
 
   @@unique([storyId, order])
+  @@map("story_item")
 }
