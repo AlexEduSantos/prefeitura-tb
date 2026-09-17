@@ -137,7 +137,7 @@ export function ArticlesBlock() {
   return (
     <section className="w-full max-w-7xl mx-auto">
       {/* Cabeçalho */}
-      <div className="w-full flex items-center gap-2 ">
+      <div className="w-full flex items-center gap-2">
         <span className="h-5 w-1 bg-primary rounded-full" />
         <h3 className="uppercase text-nowrap tracking-widest text-sm">
           Últimas Notícias
@@ -145,11 +145,11 @@ export function ArticlesBlock() {
         <span className="w-full h-px bg-muted-foreground/20 rounded-full" />
         <Button
           variant="ghost"
-          className="text-xs text-primary text-nowrap hover:font-semibold hover:text-primary hover:text-sm transition-all duration-300"
+          className="text-xs text-primary text-nowrap hover:font-semibold hover:scale-105 hover:text-primary group transition-all duration-300 px-0 cursor-pointer"
           onClick={() => router.push("/noticias")}
         >
           Todas as notícias
-          <ChevronRight className="h-4 w-4 ml-1" />
+          <ChevronRight />
         </Button>
       </div>
 

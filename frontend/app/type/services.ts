@@ -9,6 +9,8 @@ export interface IServices {
   altText: string;
   createdAt: Date;
   updatedAt: Date;
+  featured: boolean;
+  description: string;
 
   entityId: string;
   entity: IEntity;

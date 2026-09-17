@@ -1,3 +1,4 @@
+import { Footer } from "@/components/public/footer";
 import Header from "@/components/public/header";
 import { Toaster } from "sonner";
 
@@ -10,7 +11,8 @@ export default function PublicLayout({
     <main className="h-screen flex flex-col w-full">
       <main className="w-full">
         <Header />
-        <section className="w-full max-w-7xl mx-auto p-2">{children}</section>
+        {children}
+        <Footer />
       </main>
       <Toaster />
     </main>

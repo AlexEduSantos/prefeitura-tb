@@ -260,6 +260,8 @@ export const ServicesScalarFieldEnum = {
   altText: 'altText',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  featured: 'featured',
+  description: 'description',
   entityId: 'entityId',
   imageId: 'imageId',
   userId: 'userId'

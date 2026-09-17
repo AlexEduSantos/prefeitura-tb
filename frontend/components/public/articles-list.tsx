@@ -177,7 +177,7 @@ export default function PublicArticlesList() {
 
   return (
     <>
-      <section className="h-screen p-4 space-y-4">
+      <section className="h-screen p-4 space-y-4 w-full max-w-7xl mx-auto">
         {/* Toolbar */}
         <Toolbar
           limit={limit}

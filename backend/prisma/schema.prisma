@@ -283,12 +283,14 @@ model Popups {
 }
 
 model Services {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  link      String   @unique
-  altText   String?
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  link        String   @unique
+  altText     String?
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+  featured    Boolean  @default(false)
+  description String?  @db.VarChar(1000)
 
   entityId String @db.Uuid
   entity   Entity @relation(fields: [entityId], references: [id])

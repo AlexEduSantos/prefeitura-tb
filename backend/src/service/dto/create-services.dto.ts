@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsUUID } from 'class-validator';
+import { IsString, IsOptional, IsUUID, IsBoolean } from 'class-validator';
 
 export class CreateServiceDto {
   @IsString()
@@ -16,4 +16,12 @@ export class CreateServiceDto {
 
   @IsUUID()
   imageId!: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  featured?: boolean;
 }

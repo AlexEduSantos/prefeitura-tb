@@ -33,7 +33,7 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
   }
 
   return (
-    <Card className="p-4 gap-2">
+    <Card className="p-4 gap-4 w-full max-w-7xl mx-auto my-2">
       {/* Breadcrumb - links navigate */}
       <Breadcrumb>
         <BreadcrumbList className="text-xs">
@@ -56,11 +56,10 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
       <div className="w-full flex gap-2 justify-between items-center">
         <div className="w-full flex gap-2 items-center">
           <div className="w-1 h-5 bg-primary rounded-full" />
-          <span>Por {article?.author?.name}</span>
           <div className="text-muted-foreground text-md">
             {format(
               new Date(article?.createdAt || ""),
-              "EEEE, dd 'de' MMMM 'de' yyyy  |  'Horário' H:mm",
+              "EEEE, dd 'de' MMMM 'de' yyyy  'às' H:mm",
               {
                 locale: ptBR,
               },
