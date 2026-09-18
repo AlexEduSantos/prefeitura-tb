@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { ObserveInstrument } from './observe';
 import session from 'express-session';
 import passport from 'passport';
 import { Pool } from 'pg';
@@ -9,7 +10,9 @@ import { ExcludePasswordInterceptor } from './common/interceptors/exclude-passwo
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    instrument: ObserveInstrument,
+  });
   
   // Servir arquivos do volume de uploads do Docker no endpoint /uploads
   app.useStaticAssets('/app/uploads', {

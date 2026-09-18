@@ -16,6 +16,7 @@ import { PopupsModule } from './popups/popups.module';
 import { ServicesService } from './service/services.service';
 import { ServicesModule } from './service/services.module';
 import { StoryModule } from './story/story.module';
+import { ObserveModule } from './observe';
 
 @Module({
   imports: [
@@ -37,6 +38,11 @@ import { StoryModule } from './story/story.module';
     PopupsModule,
     ServicesModule,
     StoryModule,
+    ObserveModule.forRoot({
+      appKey: process.env.OBSERVE_APP_KEY!,
+      appSecret: process.env.OBSERVE_APP_SECRET!,
+      serviceId: 'site-prefeitura',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

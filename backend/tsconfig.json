@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "declaration": true,
@@ -12,14 +13,15 @@
     "target": "ES2023",
     "strict": true,
     "sourceMap": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "types": [
       "node",
       "multer",
-      "jest",
       "express",
       "express-session",
-      "passport"
+      "passport",
+      "vitest/globals"
     ],
     "incremental": true,
     "skipLibCheck": true,
@@ -28,5 +30,7 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
