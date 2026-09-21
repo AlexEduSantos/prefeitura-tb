@@ -250,6 +250,7 @@ export type ServicesOrderByWithRelationInput = {
   entity?: Prisma.EntityOrderByWithRelationInput
   image?: Prisma.MediaOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.ServicesOrderByRelevanceInput
 }
 
 export type ServicesWhereUniqueInput = Prisma.AtLeast<{
@@ -409,6 +410,12 @@ export type ServicesListRelationFilter = {
 
 export type ServicesOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ServicesOrderByRelevanceInput = {
+  fields: Prisma.ServicesOrderByRelevanceFieldEnum | Prisma.ServicesOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ServicesCountOrderByAggregateInput = {

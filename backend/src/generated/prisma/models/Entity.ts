@@ -193,6 +193,7 @@ export type EntityOrderByWithRelationInput = {
   popups?: Prisma.PopupsOrderByRelationAggregateInput
   galleries?: Prisma.GalleriesOrderByRelationAggregateInput
   services?: Prisma.ServicesOrderByRelationAggregateInput
+  _relevance?: Prisma.EntityOrderByRelevanceInput
 }
 
 export type EntityWhereUniqueInput = Prisma.AtLeast<{
@@ -307,6 +308,12 @@ export type EntityUncheckedUpdateManyInput = {
 export type EntityScalarRelationFilter = {
   is?: Prisma.EntityWhereInput
   isNot?: Prisma.EntityWhereInput
+}
+
+export type EntityOrderByRelevanceInput = {
+  fields: Prisma.EntityOrderByRelevanceFieldEnum | Prisma.EntityOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type EntityCountOrderByAggregateInput = {

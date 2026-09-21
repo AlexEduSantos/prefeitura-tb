@@ -381,6 +381,7 @@ export type ArticleOrderByWithRelationInput = {
   editor?: Prisma.UserOrderByWithRelationInput
   entity?: Prisma.EntityOrderByWithRelationInput
   cover?: Prisma.MediaOrderByWithRelationInput
+  _relevance?: Prisma.ArticleOrderByRelevanceInput
 }
 
 export type ArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -698,6 +699,12 @@ export type StringNullableListFilter<$PrismaModel = never> = {
   hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
   isEmpty?: boolean
+}
+
+export type ArticleOrderByRelevanceInput = {
+  fields: Prisma.ArticleOrderByRelevanceFieldEnum | Prisma.ArticleOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ArticleCountOrderByAggregateInput = {

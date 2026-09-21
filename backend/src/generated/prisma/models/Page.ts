@@ -226,6 +226,7 @@ export type PageOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   entity?: Prisma.EntityOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.PageOrderByRelevanceInput
 }
 
 export type PageWhereUniqueInput = Prisma.AtLeast<{
@@ -366,6 +367,12 @@ export type PageListRelationFilter = {
 
 export type PageOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PageOrderByRelevanceInput = {
+  fields: Prisma.PageOrderByRelevanceFieldEnum | Prisma.PageOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PageEntityIdSlugCompoundUniqueInput = {

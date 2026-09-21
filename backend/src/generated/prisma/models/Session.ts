@@ -168,6 +168,7 @@ export type SessionOrderByWithRelationInput = {
   sid?: Prisma.SortOrder
   sess?: Prisma.SortOrder
   expire?: Prisma.SortOrder
+  _relevance?: Prisma.SessionOrderByRelevanceInput
 }
 
 export type SessionWhereUniqueInput = Prisma.AtLeast<{
@@ -237,6 +238,12 @@ export type SessionUncheckedUpdateManyInput = {
   sid?: Prisma.StringFieldUpdateOperationsInput | string
   sess?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   expire?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SessionOrderByRelevanceInput = {
+  fields: Prisma.SessionOrderByRelevanceFieldEnum | Prisma.SessionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SessionCountOrderByAggregateInput = {

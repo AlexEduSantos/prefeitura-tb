@@ -329,6 +329,20 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  username: 'username',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  avatar: 'avatar',
+  phone: 'phone',
+  entityId: 'entityId'
+} as const
+
+export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -336,4 +350,149 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const SessionOrderByRelevanceFieldEnum = {
+  sid: 'sid'
+} as const
+
+export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
+
+
+export const EntityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug'
+} as const
+
+export type EntityOrderByRelevanceFieldEnum = (typeof EntityOrderByRelevanceFieldEnum)[keyof typeof EntityOrderByRelevanceFieldEnum]
+
+
+export const PageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  entityId: 'entityId',
+  userId: 'userId'
+} as const
+
+export type PageOrderByRelevanceFieldEnum = (typeof PageOrderByRelevanceFieldEnum)[keyof typeof PageOrderByRelevanceFieldEnum]
+
+
+export const ArticleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  headline: 'headline',
+  slug: 'slug',
+  type: 'type',
+  seoTitle: 'seoTitle',
+  seoDescription: 'seoDescription',
+  seoKeywords: 'seoKeywords',
+  tags: 'tags',
+  visibility: 'visibility',
+  galleryId: 'galleryId',
+  socialPreviewTitle: 'socialPreviewTitle',
+  socialPreviewImage: 'socialPreviewImage',
+  socialPreviewDescription: 'socialPreviewDescription',
+  authorId: 'authorId',
+  editorId: 'editorId',
+  entityId: 'entityId',
+  coverId: 'coverId'
+} as const
+
+export type ArticleOrderByRelevanceFieldEnum = (typeof ArticleOrderByRelevanceFieldEnum)[keyof typeof ArticleOrderByRelevanceFieldEnum]
+
+
+export const MediaOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  altText: 'altText',
+  description: 'description',
+  type: 'type',
+  key: 'key',
+  url: 'url',
+  mimeType: 'mimeType',
+  tags: 'tags',
+  folderId: 'folderId'
+} as const
+
+export type MediaOrderByRelevanceFieldEnum = (typeof MediaOrderByRelevanceFieldEnum)[keyof typeof MediaOrderByRelevanceFieldEnum]
+
+
+export const FolderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  path: 'path',
+  parentId: 'parentId'
+} as const
+
+export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFieldEnum)[keyof typeof FolderOrderByRelevanceFieldEnum]
+
+
+export const GalleriesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  entityId: 'entityId',
+  userId: 'userId'
+} as const
+
+export type GalleriesOrderByRelevanceFieldEnum = (typeof GalleriesOrderByRelevanceFieldEnum)[keyof typeof GalleriesOrderByRelevanceFieldEnum]
+
+
+export const GalleryMediaOrderByRelevanceFieldEnum = {
+  id: 'id',
+  caption: 'caption',
+  link: 'link',
+  galleryId: 'galleryId',
+  mediaId: 'mediaId'
+} as const
+
+export type GalleryMediaOrderByRelevanceFieldEnum = (typeof GalleryMediaOrderByRelevanceFieldEnum)[keyof typeof GalleryMediaOrderByRelevanceFieldEnum]
+
+
+export const PopupsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  link: 'link',
+  position: 'position',
+  imageId: 'imageId',
+  entityId: 'entityId',
+  userId: 'userId'
+} as const
+
+export type PopupsOrderByRelevanceFieldEnum = (typeof PopupsOrderByRelevanceFieldEnum)[keyof typeof PopupsOrderByRelevanceFieldEnum]
+
+
+export const ServicesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  link: 'link',
+  altText: 'altText',
+  description: 'description',
+  entityId: 'entityId',
+  imageId: 'imageId',
+  userId: 'userId'
+} as const
+
+export type ServicesOrderByRelevanceFieldEnum = (typeof ServicesOrderByRelevanceFieldEnum)[keyof typeof ServicesOrderByRelevanceFieldEnum]
+
+
+export const StoriesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  coverId: 'coverId'
+} as const
+
+export type StoriesOrderByRelevanceFieldEnum = (typeof StoriesOrderByRelevanceFieldEnum)[keyof typeof StoriesOrderByRelevanceFieldEnum]
+
+
+export const StoriesItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  caption: 'caption',
+  storyId: 'storyId',
+  mediaId: 'mediaId'
+} as const
+
+export type StoriesItemOrderByRelevanceFieldEnum = (typeof StoriesItemOrderByRelevanceFieldEnum)[keyof typeof StoriesItemOrderByRelevanceFieldEnum]
 

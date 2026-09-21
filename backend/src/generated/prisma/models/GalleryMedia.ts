@@ -255,6 +255,7 @@ export type GalleryMediaOrderByWithRelationInput = {
   mediaId?: Prisma.SortOrder
   gallery?: Prisma.GalleriesOrderByWithRelationInput
   media?: Prisma.MediaOrderByWithRelationInput
+  _relevance?: Prisma.GalleryMediaOrderByRelevanceInput
 }
 
 export type GalleryMediaWhereUniqueInput = Prisma.AtLeast<{
@@ -387,6 +388,12 @@ export type GalleryMediaListRelationFilter = {
 
 export type GalleryMediaOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type GalleryMediaOrderByRelevanceInput = {
+  fields: Prisma.GalleryMediaOrderByRelevanceFieldEnum | Prisma.GalleryMediaOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type GalleryMediaGalleryIdOrderCompoundUniqueInput = {

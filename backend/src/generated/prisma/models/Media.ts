@@ -341,6 +341,7 @@ export type MediaOrderByWithRelationInput = {
   articleCover?: Prisma.ArticleOrderByRelationAggregateInput
   storiesCover?: Prisma.StoriesOrderByRelationAggregateInput
   storiesItems?: Prisma.StoriesItemOrderByRelationAggregateInput
+  _relevance?: Prisma.MediaOrderByRelevanceInput
 }
 
 export type MediaWhereUniqueInput = Prisma.AtLeast<{
@@ -577,6 +578,12 @@ export type MediaUncheckedUpdateManyInput = {
 export type MediaScalarRelationFilter = {
   is?: Prisma.MediaWhereInput
   isNot?: Prisma.MediaWhereInput
+}
+
+export type MediaOrderByRelevanceInput = {
+  fields: Prisma.MediaOrderByRelevanceFieldEnum | Prisma.MediaOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type MediaCountOrderByAggregateInput = {

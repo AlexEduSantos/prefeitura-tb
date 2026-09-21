@@ -286,6 +286,7 @@ export type GalleriesOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   slides?: Prisma.GalleryMediaOrderByRelationAggregateInput
   articles?: Prisma.ArticleOrderByRelationAggregateInput
+  _relevance?: Prisma.GalleriesOrderByRelevanceInput
 }
 
 export type GalleriesWhereUniqueInput = Prisma.AtLeast<{
@@ -462,6 +463,12 @@ export type GalleriesOrderByRelationAggregateInput = {
 export type GalleriesNullableScalarRelationFilter = {
   is?: Prisma.GalleriesWhereInput | null
   isNot?: Prisma.GalleriesWhereInput | null
+}
+
+export type GalleriesOrderByRelevanceInput = {
+  fields: Prisma.GalleriesOrderByRelevanceFieldEnum | Prisma.GalleriesOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type GalleriesCountOrderByAggregateInput = {

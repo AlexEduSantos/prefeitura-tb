@@ -342,6 +342,7 @@ export type PopupsOrderByWithRelationInput = {
   image?: Prisma.MediaOrderByWithRelationInput
   entity?: Prisma.EntityOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.PopupsOrderByRelevanceInput
 }
 
 export type PopupsWhereUniqueInput = Prisma.AtLeast<{
@@ -563,6 +564,12 @@ export type PopupsListRelationFilter = {
 
 export type PopupsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PopupsOrderByRelevanceInput = {
+  fields: Prisma.PopupsOrderByRelevanceFieldEnum | Prisma.PopupsOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PopupsCountOrderByAggregateInput = {

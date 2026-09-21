@@ -246,6 +246,7 @@ export type StoriesOrderByWithRelationInput = {
   coverId?: Prisma.SortOrder
   cover?: Prisma.MediaOrderByWithRelationInput
   items?: Prisma.StoriesItemOrderByRelationAggregateInput
+  _relevance?: Prisma.StoriesOrderByRelevanceInput
 }
 
 export type StoriesWhereUniqueInput = Prisma.AtLeast<{
@@ -372,6 +373,12 @@ export type StoriesListRelationFilter = {
 
 export type StoriesOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type StoriesOrderByRelevanceInput = {
+  fields: Prisma.StoriesOrderByRelevanceFieldEnum | Prisma.StoriesOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StoriesCountOrderByAggregateInput = {

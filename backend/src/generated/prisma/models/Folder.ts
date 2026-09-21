@@ -205,6 +205,7 @@ export type FolderOrderByWithRelationInput = {
   parent?: Prisma.FolderOrderByWithRelationInput
   children?: Prisma.FolderOrderByRelationAggregateInput
   media?: Prisma.MediaOrderByRelationAggregateInput
+  _relevance?: Prisma.FolderOrderByRelevanceInput
 }
 
 export type FolderWhereUniqueInput = Prisma.AtLeast<{
@@ -329,6 +330,12 @@ export type FolderListRelationFilter = {
 
 export type FolderOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FolderOrderByRelevanceInput = {
+  fields: Prisma.FolderOrderByRelevanceFieldEnum | Prisma.FolderOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FolderCountOrderByAggregateInput = {
