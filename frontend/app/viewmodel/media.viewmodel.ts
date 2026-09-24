@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MediaService } from "../service/media.service";
+import { toast } from "sonner";
 
 export function useMediaViewModel() {
   const queryClient = useQueryClient();
@@ -59,6 +60,25 @@ export function useMediaViewModel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
     },
+    onError: (error: any) => {
+      const message =
+        error.response?.data?.message ||
+        "Não foi possível excluir a mídia selecionada.";
+      toast.error(message);
+    },
+  });
+
+  const massDeleteMediaMutation = useMutation({
+    mutationFn: (ids: string[]) => MediaService.massDeleteMedia(ids),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["media"] });
+    },
+    onError: (error: any) => {
+      const message =
+        error.response?.data?.message ||
+        "Não foi possível excluir as mídias selecionadas.";
+      toast.error(message);
+    },
   });
 
   return {
@@ -76,6 +96,9 @@ export function useMediaViewModel() {
     deleteMedia: deleteMediaMutation.mutate,
     isDeleting: deleteMediaMutation.isPending,
     errorDeleting: deleteMediaMutation.error,
+    massDeleteMedia: massDeleteMediaMutation.mutate,
+    isMassDeleting: massDeleteMediaMutation.isPending,
+    errorMassDeleting: massDeleteMediaMutation.error,
   };
 }
 

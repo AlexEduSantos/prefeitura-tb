@@ -30,6 +30,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import type { Request, Response } from 'express';
+import { DeleteMediaDto } from './dto/delete-media.dto';
 
 @Controller('media')
 export class MediaController {
@@ -65,11 +66,14 @@ export class MediaController {
       }
 
       const s3Response = await this.mediaService.getS3Object(key);
-      res.setHeader('Content-Type', s3Response.ContentType || 'application/octet-stream');
+      res.setHeader(
+        'Content-Type',
+        s3Response.ContentType || 'application/octet-stream',
+      );
       if (s3Response.ContentLength) {
         res.setHeader('Content-Length', s3Response.ContentLength);
       }
-      
+
       if (s3Response.Body) {
         (s3Response.Body as any).pipe(res);
       } else {
@@ -252,10 +256,10 @@ export class MediaController {
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
-  @Delete(':id')
+  @Delete('')
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Media'))
-  remove(@Param('id') id: string) {
-    return this.mediaService.remove(id);
+  async removeMany(@Body() body: DeleteMediaDto) {
+    return this.mediaService.removeMany(body.ids);
   }
 
   // --- FOLDER ENDPOINTS ---
@@ -277,7 +281,10 @@ export class MediaController {
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch('folders/:id/move')
   @CheckPolicies((ability) => ability.can(Action.Update, 'Media'))
-  moveFolder(@Param('id') id: string, @Body() body: { parentId: string | null }) {
+  moveFolder(
+    @Param('id') id: string,
+    @Body() body: { parentId: string | null },
+  ) {
     return this.foldersService.move(id, body.parentId);
   }
 

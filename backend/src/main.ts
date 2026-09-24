@@ -8,12 +8,13 @@ import passport from 'passport';
 import { Pool } from 'pg';
 import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
 import { ValidationPipe } from '@nestjs/common';
+import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     instrument: ObserveInstrument,
   });
-  
+
   // Servir arquivos do volume de uploads do Docker no endpoint /uploads
   app.useStaticAssets('/app/uploads', {
     prefix: '/uploads/',
@@ -48,6 +49,7 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.useGlobalFilters(new PrismaClientExceptionFilter());
 
   app.useGlobalPipes(new ValidationPipe());
 

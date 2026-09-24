@@ -31,7 +31,10 @@ import { MediaUploadModal } from "./media-upload-modal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { useFolders } from "@/app/viewmodel/folders.viewmodel";
-import { useMediaList, useMediaViewModel } from "@/app/viewmodel/media.viewmodel";
+import {
+  useMediaList,
+  useMediaViewModel,
+} from "@/app/viewmodel/media.viewmodel";
 
 export interface MediaExplorerProps {
   selectedItems: any[];
@@ -79,6 +82,7 @@ export function MediaExplorer({
     handleRenameFolder,
     handleDeleteFolder,
     modalType,
+    setModalType,
   } = useFolders();
 
   const navigateToFolder = (folderName: string) => {
@@ -106,6 +110,7 @@ export function MediaExplorer({
       <section className="flex flex-col w-full h-fit gap-2">
         {showSearch ? (
           <>
+            {/* Toolbar */}
             <div className="flex gap-2 w-full flex-wrap">
               <Button onClick={() => setIsUploadModalOpen(true)}>
                 <PlusIcon />
@@ -113,12 +118,18 @@ export function MediaExplorer({
               </Button>
               <Button
                 variant="outline"
-                onClick={() => setIsFolderModalOpen(true)}
+                onClick={() => {
+                  setNewFolderName("");
+                  setModalType("create");
+                  setIsFolderModalOpen(true);
+                }}
               >
                 <FolderPlusIcon /> Nova Pasta
               </Button>
               {extraHeaderActions}
             </div>
+
+            {/* Search and Filters */}
             <div className="flex gap-2 w-full">
               <span className="relative w-full">
                 <Input placeholder="Pesquisar" className="pr-8" />
@@ -134,7 +145,10 @@ export function MediaExplorer({
               <Select
                 value={pagination.sort}
                 onValueChange={(value) =>
-                  setPagination({ ...pagination, sort: value as "asc" | "desc" })
+                  setPagination({
+                    ...pagination,
+                    sort: value as "asc" | "desc",
+                  })
                 }
               >
                 <SelectTrigger>
@@ -191,7 +205,10 @@ export function MediaExplorer({
               <Select
                 value={pagination.sort}
                 onValueChange={(value) =>
-                  setPagination({ ...pagination, sort: value as "asc" | "desc" })
+                  setPagination({
+                    ...pagination,
+                    sort: value as "asc" | "desc",
+                  })
                 }
               >
                 <SelectTrigger className="flex-1">
@@ -319,14 +336,16 @@ export function MediaExplorer({
                   onSelectionChange([file]);
                 }
               } else {
-                onSelectionChange(selectedItems.filter((item) => item.id !== file.id));
+                onSelectionChange(
+                  selectedItems.filter((item) => item.id !== file.id),
+                );
               }
             }}
             isSelected={selectedItems.some((item) => item.id === file.id)}
           />
         ))}
       </section>
-      
+
       <MediaUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}

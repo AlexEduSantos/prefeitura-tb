@@ -75,7 +75,6 @@ export const FileItem = ({
     setIsDeleting(true);
     try {
       deleteMedia(id);
-      toast.success("Arquivo excluído com sucesso");
     } catch (error) {
       toast.error("Erro ao excluir arquivo");
     } finally {

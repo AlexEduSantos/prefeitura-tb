@@ -63,7 +63,7 @@ export function PainelSidebar() {
       subItems: [
         {
           title: "Arquivos",
-          href: "/administrator/medias",
+          href: "/administrator/media",
         },
         {
           title: "Galerias",

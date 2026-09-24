@@ -18,6 +18,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigService } from '@nestjs/config';
 import { Media } from '../generated/prisma/client';
 import { detectFileTypeFromBuffer } from '../common/utils/file-type-detector';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 export function sanitizeFilename(title: string): string {
   return title
@@ -282,10 +283,22 @@ export class MediaService {
     });
   }
 
-  async remove(id: string): Promise<Media> {
-    return this.prisma.media.delete({
-      where: { id },
-    });
+  async removeMany(ids: string[]) {
+    try {
+      return await this.prisma.media.deleteMany({
+        where: { id: { in: ids } },
+      });
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2003'
+      ) {
+        throw new BadRequestException(
+          'Uma ou mais mídias selecionadas não podem ser excluídas pois estão em uso por Serviços ou outros módulos.',
+        );
+      }
+      throw error;
+    }
   }
 
   async findByKey(key: string): Promise<Media | null> {

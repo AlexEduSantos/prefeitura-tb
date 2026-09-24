@@ -112,6 +112,24 @@ export class MediaService {
     return response.json();
   }
 
+  static async massDeleteMedia(ids: string[]) {
+    console.log(ids);
+    const response = await fetch(`${API_URL}/media`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ ids }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao deletar mídias");
+    }
+
+    return response.json();
+  }
+
   static async listMediaByPrefix(
     prefix: string,
     page: number,
