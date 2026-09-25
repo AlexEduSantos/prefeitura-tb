@@ -17,18 +17,18 @@ import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 
-@Controller('banners')
+@Controller('galleries')
 export class GalleriesController {
-  constructor(private readonly bannersService: GalleriesService) {}
+  constructor(private readonly galleriesService: GalleriesService) {}
 
   @Get()
   async findAll() {
-    return this.bannersService.findAll();
+    return this.galleriesService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.bannersService.findOne(id);
+    return this.galleriesService.findOne(id);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -39,7 +39,7 @@ export class GalleriesController {
     // Adjust based on how you extract userId from session
     const userId =
       req.session.user?.id || req.user?.id || req.session.passport?.user;
-    return this.bannersService.create(createGalleriesDto, userId);
+    return this.galleriesService.create(createGalleriesDto, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -49,13 +49,13 @@ export class GalleriesController {
     @Param('id') id: string,
     @Body() updateGalleriesDto: UpdateGalleriesDto,
   ) {
-    return this.bannersService.update(id, updateGalleriesDto);
+    return this.galleriesService.update(id, updateGalleriesDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Galleries'))
   async remove(@Param('id') id: string) {
-    return this.bannersService.remove(id);
+    return this.galleriesService.remove(id);
   }
 }

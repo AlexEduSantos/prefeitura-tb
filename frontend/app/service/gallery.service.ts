@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class GalleryService {
   static async getGalleryList(): Promise<IGallery[]> {
-    const response = await fetch(`${API_URL}/banners`, {
+    const response = await fetch(`${API_URL}/galleries`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -12,31 +12,31 @@ export class GalleryService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao buscar banners");
+      throw new Error("Erro ao buscar galeria");
     }
 
     return response.json();
   }
 
-  static async createGallery(banner: Partial<IGallery>): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/banners`, {
+  static async createGallery(gallery: Partial<IGallery>): Promise<IGallery> {
+    const response = await fetch(`${API_URL}/galleries`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(banner),
+      body: JSON.stringify(gallery),
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao criar banner");
+      throw new Error("Erro ao criar galeria");
     }
 
     return response.json();
   }
 
   static async updateGallery(banner: IGallery): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/banners/${banner.id}`, {
+    const response = await fetch(`${API_URL}/galleries/${banner.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -46,14 +46,14 @@ export class GalleryService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao atualizar banner");
+      throw new Error("Erro ao atualizar galeria");
     }
 
     return response.json();
   }
 
   static async deleteGallery(id: string): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/banners/${id}`, {
+    const response = await fetch(`${API_URL}/galleries/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export class GalleryService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao deletar banner");
+      throw new Error("Erro ao deletar galeria");
     }
 
     return response.json();

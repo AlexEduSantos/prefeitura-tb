@@ -49,7 +49,7 @@ export function GalleryModal({
   mediaList = [],
 }: GalleryModalProps) {
   const [formData, setFormData] = useState<any>({
-    name: "",
+    title: "",
     active: false,
     entityId: "",
     slides: [],
@@ -61,7 +61,7 @@ export function GalleryModal({
       if (mode !== "create" && gallery) {
         setFormData({
           id: gallery.id,
-          name: gallery.name,
+          title: gallery.title,
           active: gallery.active,
           entityId: gallery.entityId,
           slides:
@@ -75,7 +75,7 @@ export function GalleryModal({
         });
       } else {
         setFormData({
-          name: "",
+          title: "",
           active: false,
           entityId: "",
           slides: [],
@@ -100,7 +100,9 @@ export function GalleryModal({
   };
 
   const handleMediaSelect = (selectedMedia: IMedia | IMedia[]) => {
-    const mediaArray = Array.isArray(selectedMedia) ? selectedMedia : [selectedMedia];
+    const mediaArray = Array.isArray(selectedMedia)
+      ? selectedMedia
+      : [selectedMedia];
     setFormData((prev: any) => ({
       ...prev,
       slides: [
@@ -129,6 +131,7 @@ export function GalleryModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSave) {
+      console.log(formData);
       onSave(formData);
     }
   };
@@ -142,14 +145,16 @@ export function GalleryModal({
         <Dialog open={isOpen} onOpenChange={onClose}>
           <DialogContent className="min-w-fit">
             <DialogHeader>
-              <DialogTitle>Visualização da Galeria {gallery?.name}</DialogTitle>
+              <DialogTitle>
+                Visualização da Galeria {gallery?.title}
+              </DialogTitle>
             </DialogHeader>
             <div className="min-w-xl p-2">
               {gallery.slides.length > 1 ? (
                 <Carousel slides={gallery.slides} />
               ) : (
                 <div
-                  className="w-full h-[300px] relative overflow-y-auto rounded-xl"
+                  className="w-full h-75 relative overflow-y-auto rounded-xl"
                   key={gallery.slides[0].id}
                 >
                   <Image
@@ -187,11 +192,11 @@ export function GalleryModal({
               className="space-y-4"
             >
               <div className="space-y-2">
-                <Label htmlFor="name">Nome da Galeria</Label>
+                <Label htmlFor="title">Nome da Galeria</Label>
                 <Input
-                  id="name"
-                  value={formData.name || ""}
-                  onChange={(e) => handleChange("name", e.target.value)}
+                  id="title"
+                  value={formData.title || ""}
+                  onChange={(e) => handleChange("title", e.target.value)}
                   placeholder="Ex: Galeria de Fotos"
                   required
                 />
@@ -210,7 +215,7 @@ export function GalleryModal({
                   <SelectContent>
                     {entities.map((entity) => (
                       <SelectItem key={entity.id} value={entity.id}>
-                        {entity.name}
+                        {entity.title}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -228,7 +233,7 @@ export function GalleryModal({
                 </Label>
               </div>
 
-              <ScrollArea className="sm:max-h-[300px] max-h-[200px] overflow-y-auto scrollbar-none  space-y-2">
+              <ScrollArea className="sm:max-h-75 max-h-50 overflow-y-auto scrollbar-none  space-y-2">
                 <Label className="text-lg font-semibold">
                   Imagens da Galeria
                 </Label>
@@ -289,9 +294,9 @@ export function GalleryModal({
                 {/* Seleção de Novas Imagens */}
               </ScrollArea>
               <div className="pt-4 border-t space-y-3">
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   onClick={() => setIsMediaPickerOpen(true)}
                   className="w-full border-dashed"
                 >
@@ -311,7 +316,7 @@ export function GalleryModal({
           </DialogContent>
         </Dialog>
 
-        <MediaPickerModal 
+        <MediaPickerModal
           isOpen={isMediaPickerOpen}
           onClose={() => setIsMediaPickerOpen(false)}
           onSelect={handleMediaSelect}
