@@ -43,7 +43,7 @@ export function usePopupsViewModel() {
   const [mode, setMode] = useState<"create" | "edit" | "view">("create");
   const [selectedPopup, setSelectedPopup] = useState<IPopups | null>(null);
   const [formData, setFormData] = useState<Partial<IPopups>>({
-    name: "",
+    title: "",
     link: "",
     active: true,
     displayTime: 10,
@@ -156,8 +156,8 @@ export function usePopupsViewModel() {
       },
     },
     {
-      accessorKey: "name",
-      header: "Nome",
+      accessorKey: "title",
+      header: "Título",
     },
     {
       accessorKey: "publicationDate",
@@ -269,6 +269,7 @@ export function usePopupsViewModel() {
     errorDeletingPopup: deletePopupMutation.error,
 
     popupsTable,
+    columns,
     openModal,
     setOpenModal,
     mode,

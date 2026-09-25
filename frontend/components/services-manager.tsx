@@ -302,7 +302,7 @@ export default function ServicesManager() {
                   <SelectContent>
                     {entities?.map((entity) => (
                       <SelectItem key={entity.id} value={entity.id}>
-                        {entity.name}
+                        {entity.title}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -356,11 +356,7 @@ export default function ServicesManager() {
               Salvar
             </Button>
             <DrawerClose asChild>
-              <Button
-                type="button"
-                onClick={closeModal}
-                variant="outline"
-              >
+              <Button type="button" onClick={closeModal} variant="outline">
                 Cancelar
               </Button>
             </DrawerClose>
@@ -391,10 +387,7 @@ export default function ServicesManager() {
             <AlertDialogCancel onClick={cancelDelete}>
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              onClick={handleDelete}
-            >
+            <AlertDialogAction variant="destructive" onClick={handleDelete}>
               {deleteServiceMutation.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}

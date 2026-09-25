@@ -157,11 +157,11 @@ export function GalleriesManager() {
           <Table>
             <TableHeader className="bg-white ">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="p-0">
+                <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className={`${header.column.columnDef.header === "Nome" && "w-2/4"} p-2 `}
+                      className={`${header.column.columnDef.header === "Título" && "w-2/4"} p-2 `}
                     >
                       {header.isPlaceholder
                         ? null

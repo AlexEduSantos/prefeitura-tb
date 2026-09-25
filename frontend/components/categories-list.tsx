@@ -72,7 +72,7 @@ export function CategoriesList() {
   // Modal / Form state
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [isSlugManual, setIsSlugManual] = useState(false);
 
@@ -94,14 +94,14 @@ export function CategoriesList() {
     // Local Search
     if (searchTerm.trim() !== "") {
       const lower = searchTerm.toLowerCase();
-      result = result.filter((e) => e.name.toLowerCase().includes(lower));
+      result = result.filter((e) => e.title.toLowerCase().includes(lower));
     }
 
     // Local Sort
     if (sortDirection) {
       result.sort((a, b) => {
-        const nameA = (a.name || "").toString();
-        const nameB = (b.name || "").toString();
+        const nameA = (a.title || "").toString();
+        const nameB = (b.title || "").toString();
         if (sortDirection === "asc") {
           return nameA.localeCompare(nameB);
         } else {
@@ -116,7 +116,7 @@ export function CategoriesList() {
   // Open modal for creating new
   const handleOpenCreate = () => {
     setEditingId(null);
-    setName("");
+    setTitle("");
     setSlug("");
     setIsSlugManual(false);
     setIsOpen(true);
@@ -125,16 +125,16 @@ export function CategoriesList() {
   // Open modal for editing existing
   const handleOpenEdit = (entity: any) => {
     setEditingId(entity.id);
-    setName(entity.name);
+    setTitle(entity.title);
     setSlug(entity.slug);
     setIsSlugManual(true); // Don't auto-generate when editing an existing slug unless cleared
     setIsOpen(true);
   };
 
   // Auto-generate slug on name change
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
-    setName(val);
+    setTitle(val);
     if (!isSlugManual) {
       setSlug(generateSlug(val));
     }
@@ -144,7 +144,7 @@ export function CategoriesList() {
   const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSlug(val);
-    if (val === "" || val === generateSlug(name)) {
+    if (val === "" || val === generateSlug(title)) {
       setIsSlugManual(false);
     } else {
       setIsSlugManual(true);
@@ -154,11 +154,11 @@ export function CategoriesList() {
   // Submit form (create or edit)
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !slug.trim()) return;
+    if (!title.trim() || !slug.trim()) return;
 
     if (editingId) {
       updateEntity(
-        { id: editingId, data: { name, slug } },
+        { id: editingId, data: { title, slug } },
         {
           onSuccess: () => {
             setIsOpen(false);
@@ -170,7 +170,7 @@ export function CategoriesList() {
       );
     } else {
       createEntity(
-        { name, slug },
+        { title, slug },
         {
           onSuccess: () => {
             setIsOpen(false);
@@ -197,125 +197,121 @@ export function CategoriesList() {
   };
 
   return (
-    <div className="w-full space-y-4">
-      <Card className="gap-2">
-        <CardHeader className="flex items-center justify-between">
-          <div className="relative flex items-center gap-2 w-full">
-            <Search className="w-4 h-4 absolute left-3 text-muted-foreground" />
-            <Input
-              placeholder="Pesquisar por nome..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 w-full"
-            />
-          </div>
-          <Button onClick={handleOpenCreate} className="sm:w-auto">
-            <Plus className="w-4 h-4 sm:mr-2" />
-            <p className="sm:block hidden">Nova Categoria</p>
-          </Button>
-        </CardHeader>
+    <div className="w-full space-y-2">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+        <div className="relative flex items-center gap-2 w-full">
+          <Search className="w-4 h-4 absolute left-3 text-muted-foreground" />
+          <Input
+            placeholder="Pesquisar por nome..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9 w-full"
+          />
+        </div>
+        <Button onClick={handleOpenCreate} className="sm:w-auto">
+          <Plus className="w-4 h-4 sm:mr-2" />
+          <p className="sm:block hidden">Nova Categoria</p>
+        </Button>
+      </div>
 
-        <CardContent className="flex flex-col gap-4 w-full">
-          {/* Table Container */}
-          <div className="border rounded-md">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[45%]">
-                    <button
-                      onClick={handleSort}
-                      className="flex items-center hover:text-foreground transition-colors font-semibold"
-                    >
-                      Nome
-                      {sortDirection === "asc" ? (
-                        <ArrowUp className="w-4 h-4 ml-1 text-primary" />
-                      ) : sortDirection === "desc" ? (
-                        <ArrowDown className="w-4 h-4 ml-1 text-primary" />
-                      ) : (
-                        <ArrowUpDown className="w-4 h-4 ml-1 text-muted-foreground" />
-                      )}
-                    </button>
-                  </TableHead>
-                  <TableHead className="w-[25%]">Apelido (Slug)</TableHead>
-                  <TableHead className="w-[20%]">Data de Criação</TableHead>
-                  <TableHead className="w-[10%] text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoadingEntities ? (
-                  // Skeleton state
-                  Array.from({ length: 3 }).map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-                      </TableCell>
-                      <TableCell>
-                        <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
-                      </TableCell>
-                      <TableCell>
-                        <div className="h-4 bg-muted animate-pulse rounded w-2/3" />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="h-8 bg-muted animate-pulse rounded w-16 ml-auto" />
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : filteredAndSortedEntities.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      className="h-24 text-center text-muted-foreground"
-                    >
-                      Nenhuma categoria encontrada.
+      <div className="flex flex-col gap-4 w-full">
+        {/* Table Container */}
+        <div className="rounded-lg border overflow-hidden">
+          <Table>
+            <TableHeader className="bg-white">
+              <TableRow>
+                <TableHead className="w-[45%]">
+                  <button
+                    onClick={handleSort}
+                    className="flex items-center hover:text-foreground transition-colors font-semibold"
+                  >
+                    Título
+                    {sortDirection === "asc" ? (
+                      <ArrowUp className="w-4 h-4 ml-1 text-primary" />
+                    ) : sortDirection === "desc" ? (
+                      <ArrowDown className="w-4 h-4 ml-1 text-primary" />
+                    ) : (
+                      <ArrowUpDown className="w-4 h-4 ml-1 text-muted-foreground" />
+                    )}
+                  </button>
+                </TableHead>
+                <TableHead className="w-[25%]">Apelido</TableHead>
+                <TableHead className="w-[20%]">Data de Criação</TableHead>
+                <TableHead className="w-[10%] text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {isLoadingEntities ? (
+                // Skeleton state
+                Array.from({ length: 3 }).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
+                    </TableCell>
+                    <TableCell>
+                      <div className="h-4 bg-muted animate-pulse rounded w-2/3" />
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="h-8 bg-muted animate-pulse rounded w-16 ml-auto" />
                     </TableCell>
                   </TableRow>
-                ) : (
-                  filteredAndSortedEntities.map((entity) => (
-                    <TableRow key={entity.id}>
-                      <TableCell className="font-medium">
-                        {entity.name}
-                      </TableCell>
-                      <TableCell>
-                        <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono text-muted-foreground">
-                          {entity.slug}
-                        </code>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {entity.createdAt
-                          ? new Date(entity.createdAt).toLocaleDateString(
-                              "pt-BR",
-                            )
-                          : "-"}
-                      </TableCell>
-                      <TableCell className="text-right space-x-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleOpenEdit(entity)}
-                          title="Editar"
-                        >
-                          <Edit2 className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() =>
-                            handleDelete(entity.id, entity.name.toString())
-                          }
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                          title="Excluir"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                ))
+              ) : filteredAndSortedEntities.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="h-24 text-center text-muted-foreground"
+                  >
+                    Nenhuma categoria encontrada.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredAndSortedEntities.map((entity) => (
+                  <TableRow key={entity.id}>
+                    <TableCell className="font-medium">
+                      {entity.title}
+                    </TableCell>
+                    <TableCell>
+                      <code className="bg-muted px-1.5 py-0.5 rounded text-xs font-mono text-muted-foreground">
+                        {entity.slug}
+                      </code>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {entity.createdAt
+                        ? new Date(entity.createdAt).toLocaleDateString("pt-BR")
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-right space-x-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenEdit(entity)}
+                        title="Editar"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          handleDelete(entity.id, entity.title.toString())
+                        }
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        title="Excluir"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </div>
 
       {/* Create / Edit Dialog */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -334,14 +330,14 @@ export function CategoriesList() {
 
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="name">
+                <Label htmlFor="title">
                   Nome da Categoria <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="name"
+                  id="title"
                   placeholder="Ex: Secretaria de Educação"
-                  value={name}
-                  onChange={handleNameChange}
+                  value={title}
+                  onChange={handleTitleChange}
                   required
                 />
               </div>

@@ -45,7 +45,7 @@ import { ptBR } from "date-fns/locale";
 
 // Valores padrão para o formulário
 const initialFormData: Partial<IPopups> = {
-  name: "",
+  title: "",
   link: "",
   active: true,
   displayTime: 10,
@@ -64,6 +64,7 @@ export function PopupsManager() {
   const {
     popups,
     popupsTable,
+    columns,
     openModal,
     setOpenModal,
     mode,
@@ -122,14 +123,14 @@ export function PopupsManager() {
         <div className="flex items-center gap-2 w-full">
           <div className="flex items-center gap-2 w-full relative">
             <Input
-              placeholder="Pesquisar por nome..."
+              placeholder="Pesquisar por título..."
               value={
-                (popupsTable.getColumn("name")?.getFilterValue() as string) ??
+                (popupsTable.getColumn("title")?.getFilterValue() as string) ??
                 ""
               }
               onChange={(event) =>
                 popupsTable
-                  .getColumn("name")
+                  .getColumn("title")
                   ?.setFilterValue(event.target.value)
               }
               className="w-full relative z-10"
@@ -182,7 +183,7 @@ export function PopupsManager() {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`${header.column.columnDef.header === "Nome" && "w-2/4"} p-2 `}
+                    className={`${header.column.columnDef.header === "Título" && "w-2/4"} p-2 `}
                   >
                     {header.isPlaceholder
                       ? null
@@ -196,15 +197,29 @@ export function PopupsManager() {
             ))}
           </TableHeader>
           <TableBody>
-            {popupsTable.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+            {popupsTable.getRowModel().rows?.length ? (
+              popupsTable.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  Nenhum Pop-Up encontrado.
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
 
@@ -235,9 +250,9 @@ export function PopupsManager() {
                   <Input
                     id="name"
                     name="name"
-                    value={formData.name || ""}
+                    value={formData.title || ""}
                     onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
+                      setFormData({ ...formData, title: e.target.value })
                     }
                     required
                   />
@@ -274,7 +289,7 @@ export function PopupsManager() {
                     <SelectContent>
                       {entities?.map((entity) => (
                         <SelectItem key={entity.id} value={entity.id}>
-                          {entity.name}
+                          {entity.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
