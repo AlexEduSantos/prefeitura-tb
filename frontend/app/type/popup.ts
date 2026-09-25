@@ -4,7 +4,7 @@ import { IUser } from "./user";
 
 export interface IPopups {
   id: string;
-  name: string;
+  title: string;
   link: string;
   active: boolean;
   displayTime: number;

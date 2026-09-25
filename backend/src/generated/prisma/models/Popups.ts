@@ -38,7 +38,7 @@ export type PopupsSumAggregateOutputType = {
 
 export type PopupsMinAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   link: string | null
   active: boolean | null
   displayTime: number | null
@@ -58,7 +58,7 @@ export type PopupsMinAggregateOutputType = {
 
 export type PopupsMaxAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   link: string | null
   active: boolean | null
   displayTime: number | null
@@ -78,7 +78,7 @@ export type PopupsMaxAggregateOutputType = {
 
 export type PopupsCountAggregateOutputType = {
   id: number
-  name: number
+  title: number
   link: number
   active: number
   displayTime: number
@@ -110,7 +110,7 @@ export type PopupsSumAggregateInputType = {
 
 export type PopupsMinAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   link?: true
   active?: true
   displayTime?: true
@@ -130,7 +130,7 @@ export type PopupsMinAggregateInputType = {
 
 export type PopupsMaxAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   link?: true
   active?: true
   displayTime?: true
@@ -150,7 +150,7 @@ export type PopupsMaxAggregateInputType = {
 
 export type PopupsCountAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   link?: true
   active?: true
   displayTime?: true
@@ -257,7 +257,7 @@ export type PopupsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type PopupsGroupByOutputType = {
   id: string
-  name: string
+  title: string
   link: string | null
   active: boolean
   displayTime: number
@@ -300,7 +300,7 @@ export type PopupsWhereInput = {
   OR?: Prisma.PopupsWhereInput[]
   NOT?: Prisma.PopupsWhereInput | Prisma.PopupsWhereInput[]
   id?: Prisma.UuidFilter<"Popups"> | string
-  name?: Prisma.StringFilter<"Popups"> | string
+  title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
   displayTime?: Prisma.IntFilter<"Popups"> | number
@@ -323,7 +323,7 @@ export type PopupsWhereInput = {
 
 export type PopupsOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
@@ -350,7 +350,7 @@ export type PopupsWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PopupsWhereInput | Prisma.PopupsWhereInput[]
   OR?: Prisma.PopupsWhereInput[]
   NOT?: Prisma.PopupsWhereInput | Prisma.PopupsWhereInput[]
-  name?: Prisma.StringFilter<"Popups"> | string
+  title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
   displayTime?: Prisma.IntFilter<"Popups"> | number
@@ -373,7 +373,7 @@ export type PopupsWhereUniqueInput = Prisma.AtLeast<{
 
 export type PopupsOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
@@ -401,7 +401,7 @@ export type PopupsScalarWhereWithAggregatesInput = {
   OR?: Prisma.PopupsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PopupsScalarWhereWithAggregatesInput | Prisma.PopupsScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Popups"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Popups"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Popups"> | string
   link?: Prisma.StringNullableWithAggregatesFilter<"Popups"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"Popups"> | boolean
   displayTime?: Prisma.IntWithAggregatesFilter<"Popups"> | number
@@ -421,7 +421,7 @@ export type PopupsScalarWhereWithAggregatesInput = {
 
 export type PopupsCreateInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -441,7 +441,7 @@ export type PopupsCreateInput = {
 
 export type PopupsUncheckedCreateInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -461,7 +461,7 @@ export type PopupsUncheckedCreateInput = {
 
 export type PopupsUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -481,7 +481,7 @@ export type PopupsUpdateInput = {
 
 export type PopupsUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -501,7 +501,7 @@ export type PopupsUncheckedUpdateInput = {
 
 export type PopupsCreateManyInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -521,7 +521,7 @@ export type PopupsCreateManyInput = {
 
 export type PopupsUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -538,7 +538,7 @@ export type PopupsUpdateManyMutationInput = {
 
 export type PopupsUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -574,7 +574,7 @@ export type PopupsOrderByRelevanceInput = {
 
 export type PopupsCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
@@ -599,7 +599,7 @@ export type PopupsAvgOrderByAggregateInput = {
 
 export type PopupsMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
@@ -619,7 +619,7 @@ export type PopupsMaxOrderByAggregateInput = {
 
 export type PopupsMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
@@ -778,7 +778,7 @@ export type EnumPopupTypeFieldUpdateOperationsInput = {
 
 export type PopupsCreateWithoutUserInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -797,7 +797,7 @@ export type PopupsCreateWithoutUserInput = {
 
 export type PopupsUncheckedCreateWithoutUserInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -845,7 +845,7 @@ export type PopupsScalarWhereInput = {
   OR?: Prisma.PopupsScalarWhereInput[]
   NOT?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
   id?: Prisma.UuidFilter<"Popups"> | string
-  name?: Prisma.StringFilter<"Popups"> | string
+  title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
   displayTime?: Prisma.IntFilter<"Popups"> | number
@@ -865,7 +865,7 @@ export type PopupsScalarWhereInput = {
 
 export type PopupsCreateWithoutEntityInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -884,7 +884,7 @@ export type PopupsCreateWithoutEntityInput = {
 
 export type PopupsUncheckedCreateWithoutEntityInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -929,7 +929,7 @@ export type PopupsUpdateManyWithWhereWithoutEntityInput = {
 
 export type PopupsCreateWithoutImageInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -948,7 +948,7 @@ export type PopupsCreateWithoutImageInput = {
 
 export type PopupsUncheckedCreateWithoutImageInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -993,7 +993,7 @@ export type PopupsUpdateManyWithWhereWithoutImageInput = {
 
 export type PopupsCreateManyUserInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -1012,7 +1012,7 @@ export type PopupsCreateManyUserInput = {
 
 export type PopupsUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1031,7 +1031,7 @@ export type PopupsUpdateWithoutUserInput = {
 
 export type PopupsUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1050,7 +1050,7 @@ export type PopupsUncheckedUpdateWithoutUserInput = {
 
 export type PopupsUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1069,7 +1069,7 @@ export type PopupsUncheckedUpdateManyWithoutUserInput = {
 
 export type PopupsCreateManyEntityInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -1088,7 +1088,7 @@ export type PopupsCreateManyEntityInput = {
 
 export type PopupsUpdateWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1107,7 +1107,7 @@ export type PopupsUpdateWithoutEntityInput = {
 
 export type PopupsUncheckedUpdateWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1126,7 +1126,7 @@ export type PopupsUncheckedUpdateWithoutEntityInput = {
 
 export type PopupsUncheckedUpdateManyWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1145,7 +1145,7 @@ export type PopupsUncheckedUpdateManyWithoutEntityInput = {
 
 export type PopupsCreateManyImageInput = {
   id?: string
-  name: string
+  title: string
   link?: string | null
   active?: boolean
   displayTime?: number
@@ -1164,7 +1164,7 @@ export type PopupsCreateManyImageInput = {
 
 export type PopupsUpdateWithoutImageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1183,7 +1183,7 @@ export type PopupsUpdateWithoutImageInput = {
 
 export type PopupsUncheckedUpdateWithoutImageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1202,7 +1202,7 @@ export type PopupsUncheckedUpdateWithoutImageInput = {
 
 export type PopupsUncheckedUpdateManyWithoutImageInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1223,7 +1223,7 @@ export type PopupsUncheckedUpdateManyWithoutImageInput = {
 
 export type PopupsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   link?: boolean
   active?: boolean
   displayTime?: boolean
@@ -1246,7 +1246,7 @@ export type PopupsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type PopupsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   link?: boolean
   active?: boolean
   displayTime?: boolean
@@ -1269,7 +1269,7 @@ export type PopupsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PopupsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   link?: boolean
   active?: boolean
   displayTime?: boolean
@@ -1292,7 +1292,7 @@ export type PopupsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PopupsSelectScalar = {
   id?: boolean
-  name?: boolean
+  title?: boolean
   link?: boolean
   active?: boolean
   displayTime?: boolean
@@ -1310,7 +1310,7 @@ export type PopupsSelectScalar = {
   userId?: boolean
 }
 
-export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "link" | "active" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "imageId" | "entityId" | "userId", ExtArgs["result"]["popups"]>
+export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "active" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "imageId" | "entityId" | "userId", ExtArgs["result"]["popups"]>
 export type PopupsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
@@ -1336,7 +1336,7 @@ export type $PopupsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    title: string
     link: string | null
     active: boolean
     displayTime: number
@@ -1779,7 +1779,7 @@ export interface Prisma__PopupsClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface PopupsFieldRefs {
   readonly id: Prisma.FieldRef<"Popups", 'String'>
-  readonly name: Prisma.FieldRef<"Popups", 'String'>
+  readonly title: Prisma.FieldRef<"Popups", 'String'>
   readonly link: Prisma.FieldRef<"Popups", 'String'>
   readonly active: Prisma.FieldRef<"Popups", 'Boolean'>
   readonly displayTime: Prisma.FieldRef<"Popups", 'Int'>

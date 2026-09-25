@@ -3,7 +3,7 @@ import { IMedia } from "./media";
 
 export interface IGallery {
   id: string;
-  name: string;
+  title: string;
   active: boolean;
   entity: IEntity;
   entityId: string;

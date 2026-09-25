@@ -10,7 +10,7 @@ import { CreateGalleryMediaDto } from '../../gallery-media/dto/create-gallery-me
 
 export class CreateGalleriesDto {
   @IsString()
-  name!: string;
+  title!: string;
 
   @IsOptional()
   @IsBoolean()

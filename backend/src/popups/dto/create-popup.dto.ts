@@ -11,7 +11,7 @@ import { PopupStatus, PopupType } from '../../generated/prisma/enums';
 
 export class CreatePopupDto {
   @IsString()
-  name!: string;
+  title!: string;
 
   @IsUUID()
   imageId!: string;

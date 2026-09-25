@@ -52,7 +52,7 @@ export class PopupsService {
   async update(id: string, updatePopupDto: UpdatePopupDto): Promise<Popups> {
     // Extrai apenas os campos que existem no modelo Popups (colunas)
     const {
-      name,
+      title,
       link,
       active,
       displayTime,
@@ -72,7 +72,7 @@ export class PopupsService {
     const data: any = {};
 
     // Adiciona apenas se o campo foi enviado (undefined significa que não foi alterado)
-    if (name !== undefined) data.name = name;
+    if (title !== undefined) data.title = title;
     if (link !== undefined) data.link = link;
     if (active !== undefined) data.active = active;
     if (displayTime !== undefined) data.displayTime = displayTime;

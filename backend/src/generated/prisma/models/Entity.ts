@@ -26,21 +26,21 @@ export type AggregateEntity = {
 
 export type EntityMinAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   slug: string | null
   createdAt: Date | null
 }
 
 export type EntityMaxAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   slug: string | null
   createdAt: Date | null
 }
 
 export type EntityCountAggregateOutputType = {
   id: number
-  name: number
+  title: number
   slug: number
   createdAt: number
   _all: number
@@ -49,21 +49,21 @@ export type EntityCountAggregateOutputType = {
 
 export type EntityMinAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   slug?: true
   createdAt?: true
 }
 
 export type EntityMaxAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   slug?: true
   createdAt?: true
 }
 
 export type EntityCountAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   slug?: true
   createdAt?: true
   _all?: true
@@ -143,7 +143,7 @@ export type EntityGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type EntityGroupByOutputType = {
   id: string
-  name: string
+  title: string
   slug: string
   createdAt: Date
   _count: EntityCountAggregateOutputType | null
@@ -171,7 +171,7 @@ export type EntityWhereInput = {
   OR?: Prisma.EntityWhereInput[]
   NOT?: Prisma.EntityWhereInput | Prisma.EntityWhereInput[]
   id?: Prisma.UuidFilter<"Entity"> | string
-  name?: Prisma.StringFilter<"Entity"> | string
+  title?: Prisma.StringFilter<"Entity"> | string
   slug?: Prisma.StringFilter<"Entity"> | string
   createdAt?: Prisma.DateTimeFilter<"Entity"> | Date | string
   pages?: Prisma.PageListRelationFilter
@@ -184,7 +184,7 @@ export type EntityWhereInput = {
 
 export type EntityOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   pages?: Prisma.PageOrderByRelationAggregateInput
@@ -201,7 +201,7 @@ export type EntityWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.EntityWhereInput | Prisma.EntityWhereInput[]
   OR?: Prisma.EntityWhereInput[]
   NOT?: Prisma.EntityWhereInput | Prisma.EntityWhereInput[]
-  name?: Prisma.StringFilter<"Entity"> | string
+  title?: Prisma.StringFilter<"Entity"> | string
   slug?: Prisma.StringFilter<"Entity"> | string
   createdAt?: Prisma.DateTimeFilter<"Entity"> | Date | string
   pages?: Prisma.PageListRelationFilter
@@ -214,7 +214,7 @@ export type EntityWhereUniqueInput = Prisma.AtLeast<{
 
 export type EntityOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.EntityCountOrderByAggregateInput
@@ -227,14 +227,14 @@ export type EntityScalarWhereWithAggregatesInput = {
   OR?: Prisma.EntityScalarWhereWithAggregatesInput[]
   NOT?: Prisma.EntityScalarWhereWithAggregatesInput | Prisma.EntityScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Entity"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Entity"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Entity"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Entity"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Entity"> | Date | string
 }
 
 export type EntityCreateInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -247,7 +247,7 @@ export type EntityCreateInput = {
 
 export type EntityUncheckedCreateInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -260,7 +260,7 @@ export type EntityUncheckedCreateInput = {
 
 export type EntityUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -273,7 +273,7 @@ export type EntityUpdateInput = {
 
 export type EntityUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -286,21 +286,21 @@ export type EntityUncheckedUpdateInput = {
 
 export type EntityCreateManyInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
 }
 
 export type EntityUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type EntityUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -318,21 +318,21 @@ export type EntityOrderByRelevanceInput = {
 
 export type EntityCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type EntityMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type EntityMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -423,7 +423,7 @@ export type EntityUpdateOneRequiredWithoutServicesNestedInput = {
 
 export type EntityCreateWithoutUsersInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -435,7 +435,7 @@ export type EntityCreateWithoutUsersInput = {
 
 export type EntityUncheckedCreateWithoutUsersInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -463,7 +463,7 @@ export type EntityUpdateToOneWithWhereWithoutUsersInput = {
 
 export type EntityUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -475,7 +475,7 @@ export type EntityUpdateWithoutUsersInput = {
 
 export type EntityUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -487,7 +487,7 @@ export type EntityUncheckedUpdateWithoutUsersInput = {
 
 export type EntityCreateWithoutPagesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEntityInput
@@ -499,7 +499,7 @@ export type EntityCreateWithoutPagesInput = {
 
 export type EntityUncheckedCreateWithoutPagesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEntityInput
@@ -527,7 +527,7 @@ export type EntityUpdateToOneWithWhereWithoutPagesInput = {
 
 export type EntityUpdateWithoutPagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEntityNestedInput
@@ -539,7 +539,7 @@ export type EntityUpdateWithoutPagesInput = {
 
 export type EntityUncheckedUpdateWithoutPagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEntityNestedInput
@@ -551,7 +551,7 @@ export type EntityUncheckedUpdateWithoutPagesInput = {
 
 export type EntityCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -563,7 +563,7 @@ export type EntityCreateWithoutArticlesInput = {
 
 export type EntityUncheckedCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -591,7 +591,7 @@ export type EntityUpdateToOneWithWhereWithoutArticlesInput = {
 
 export type EntityUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -603,7 +603,7 @@ export type EntityUpdateWithoutArticlesInput = {
 
 export type EntityUncheckedUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -615,7 +615,7 @@ export type EntityUncheckedUpdateWithoutArticlesInput = {
 
 export type EntityCreateWithoutGalleriesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -627,7 +627,7 @@ export type EntityCreateWithoutGalleriesInput = {
 
 export type EntityUncheckedCreateWithoutGalleriesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -655,7 +655,7 @@ export type EntityUpdateToOneWithWhereWithoutGalleriesInput = {
 
 export type EntityUpdateWithoutGalleriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -667,7 +667,7 @@ export type EntityUpdateWithoutGalleriesInput = {
 
 export type EntityUncheckedUpdateWithoutGalleriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -679,7 +679,7 @@ export type EntityUncheckedUpdateWithoutGalleriesInput = {
 
 export type EntityCreateWithoutPopupsInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -691,7 +691,7 @@ export type EntityCreateWithoutPopupsInput = {
 
 export type EntityUncheckedCreateWithoutPopupsInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -719,7 +719,7 @@ export type EntityUpdateToOneWithWhereWithoutPopupsInput = {
 
 export type EntityUpdateWithoutPopupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -731,7 +731,7 @@ export type EntityUpdateWithoutPopupsInput = {
 
 export type EntityUncheckedUpdateWithoutPopupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -743,7 +743,7 @@ export type EntityUncheckedUpdateWithoutPopupsInput = {
 
 export type EntityCreateWithoutServicesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageCreateNestedManyWithoutEntityInput
@@ -755,7 +755,7 @@ export type EntityCreateWithoutServicesInput = {
 
 export type EntityUncheckedCreateWithoutServicesInput = {
   id?: string
-  name: string
+  title: string
   slug: string
   createdAt?: Date | string
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutEntityInput
@@ -783,7 +783,7 @@ export type EntityUpdateToOneWithWhereWithoutServicesInput = {
 
 export type EntityUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUpdateManyWithoutEntityNestedInput
@@ -795,7 +795,7 @@ export type EntityUpdateWithoutServicesInput = {
 
 export type EntityUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   pages?: Prisma.PageUncheckedUpdateManyWithoutEntityNestedInput
@@ -883,7 +883,7 @@ export type EntityCountOutputTypeCountServicesArgs<ExtArgs extends runtime.Types
 
 export type EntitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   slug?: boolean
   createdAt?: boolean
   pages?: boolean | Prisma.Entity$pagesArgs<ExtArgs>
@@ -897,26 +897,26 @@ export type EntitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type EntitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   slug?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["entity"]>
 
 export type EntitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   slug?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["entity"]>
 
 export type EntitySelectScalar = {
   id?: boolean
-  name?: boolean
+  title?: boolean
   slug?: boolean
   createdAt?: boolean
 }
 
-export type EntityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "createdAt", ExtArgs["result"]["entity"]>
+export type EntityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "createdAt", ExtArgs["result"]["entity"]>
 export type EntityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pages?: boolean | Prisma.Entity$pagesArgs<ExtArgs>
   users?: boolean | Prisma.Entity$usersArgs<ExtArgs>
@@ -941,7 +941,7 @@ export type $EntityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    title: string
     slug: string
     createdAt: Date
   }, ExtArgs["result"]["entity"]>
@@ -1374,7 +1374,7 @@ export interface Prisma__EntityClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface EntityFieldRefs {
   readonly id: Prisma.FieldRef<"Entity", 'String'>
-  readonly name: Prisma.FieldRef<"Entity", 'String'>
+  readonly title: Prisma.FieldRef<"Entity", 'String'>
   readonly slug: Prisma.FieldRef<"Entity", 'String'>
   readonly createdAt: Prisma.FieldRef<"Entity", 'DateTime'>
 }

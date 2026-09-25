@@ -17,7 +17,10 @@ export class EntityService {
 
     return response.json();
   }
-  static async createEntity(data: { name: string; slug: string }): Promise<IEntity> {
+  static async createEntity(data: {
+    title: string;
+    slug: string;
+  }): Promise<IEntity> {
     const response = await fetch(`${API_URL}/entities`, {
       method: "POST",
       headers: {
@@ -34,7 +37,10 @@ export class EntityService {
     return response.json();
   }
 
-  static async updateEntity(id: string, data: { name: string; slug: string }): Promise<IEntity> {
+  static async updateEntity(
+    id: string,
+    data: { title: string; slug: string },
+  ): Promise<IEntity> {
     const response = await fetch(`${API_URL}/entities/${id}`, {
       method: "PATCH",
       headers: {

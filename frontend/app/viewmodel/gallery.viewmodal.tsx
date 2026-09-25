@@ -26,7 +26,7 @@ export function useGalleryViewModel() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    name: true,
+    title: true,
     entityId: true,
     active: true,
     slides: true,
@@ -99,8 +99,8 @@ export function useGalleryViewModel() {
       },
     },
     {
-      accessorKey: "name",
-      header: "Nome",
+      accessorKey: "title",
+      header: "Título",
     },
     {
       accessorKey: "slides",

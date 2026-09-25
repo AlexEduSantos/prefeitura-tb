@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException, NotFoundException, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MediaService } from './media.service';
 import { InjectQueue } from '@nestjs/bullmq';
@@ -49,14 +54,18 @@ export class FoldersService implements OnModuleInit {
           if (!folder) {
             folder = await this.prisma.folder.create({
               data: {
-                name: part,
+                title: part,
                 path: currentPath,
                 parentId: currentParentId,
               },
             });
             const keepKey = `${currentPath}/.keep`;
             try {
-              await this.mediaService.uploadToS3(keepKey, Buffer.from(''), 'application/octet-stream');
+              await this.mediaService.uploadToS3(
+                keepKey,
+                Buffer.from(''),
+                'application/octet-stream',
+              );
             } catch (e) {
               // Ignore S3 errors during startup
             }
@@ -99,12 +108,14 @@ export class FoldersService implements OnModuleInit {
       where: { path },
     });
     if (existing) {
-      throw new BadRequestException('Já existe uma pasta com este nome neste diretório');
+      throw new BadRequestException(
+        'Já existe uma pasta com este nome neste diretório',
+      );
     }
 
     const folder = await this.prisma.folder.create({
       data: {
-        name,
+        title: name,
         path,
         parentId: parentId || null,
       },
@@ -112,7 +123,11 @@ export class FoldersService implements OnModuleInit {
 
     // Create a .keep file in MinIO/S3 to represent the empty directory structure
     const keepKey = `${path}/.keep`;
-    await this.mediaService.uploadToS3(keepKey, Buffer.from(''), 'application/octet-stream');
+    await this.mediaService.uploadToS3(
+      keepKey,
+      Buffer.from(''),
+      'application/octet-stream',
+    );
 
     return folder;
   }
@@ -140,7 +155,9 @@ export class FoldersService implements OnModuleInit {
       where: { path: newPath },
     });
     if (existing) {
-      throw new BadRequestException('Uma pasta com esse nome já existe neste nível');
+      throw new BadRequestException(
+        'Uma pasta com esse nome já existe neste nível',
+      );
     }
 
     // Recursively find and update all children paths and media keys in DB
@@ -182,7 +199,7 @@ export class FoldersService implements OnModuleInit {
       // 1. Update the parent folder
       await tx.folder.update({
         where: { id },
-        data: { name: newName, path: newPath },
+        data: { title: newName, path: newPath },
       });
 
       // 2. Update child folders paths
@@ -200,7 +217,7 @@ export class FoldersService implements OnModuleInit {
         if (media.key) {
           const mediaRelative = media.key.substring(oldPath.length);
           const mediaNewKey = newPath + mediaRelative;
-          
+
           // Construct new URL if applicable
           let newUrl = media.url;
           if (media.url) {
@@ -230,16 +247,20 @@ export class FoldersService implements OnModuleInit {
     }
 
     const oldPath = folder.path;
-    let newPath = folder.name;
+    let newPath = folder.title;
 
     if (newParentId) {
       if (newParentId === id) {
-        throw new BadRequestException('Não é possível mover uma pasta para dentro de si mesma');
+        throw new BadRequestException(
+          'Não é possível mover uma pasta para dentro de si mesma',
+        );
       }
       // Verify that newParentId is not a subfolder of folder (to avoid cycles)
       const children = await this.getAllChildFolders(id);
       if (children.some((child) => child.id === newParentId)) {
-        throw new BadRequestException('Não é possível mover uma pasta para dentro de uma de suas subpastas');
+        throw new BadRequestException(
+          'Não é possível mover uma pasta para dentro de uma de suas subpastas',
+        );
       }
 
       const parent = await this.prisma.folder.findUnique({
@@ -248,7 +269,7 @@ export class FoldersService implements OnModuleInit {
       if (!parent) {
         throw new NotFoundException('Pasta de destino não encontrada');
       }
-      newPath = `${parent.path}/${folder.name}`;
+      newPath = `${parent.path}/${folder.title}`;
     }
 
     if (oldPath === newPath) {
@@ -260,7 +281,9 @@ export class FoldersService implements OnModuleInit {
       where: { path: newPath },
     });
     if (existing) {
-      throw new BadRequestException('Uma pasta com esse nome já existe no destino');
+      throw new BadRequestException(
+        'Uma pasta com esse nome já existe no destino',
+      );
     }
 
     const allChildFolders = await this.getAllChildFolders(id);
@@ -315,7 +338,7 @@ export class FoldersService implements OnModuleInit {
         if (media.key) {
           const mediaRelative = media.key.substring(oldPath.length);
           const mediaNewKey = newPath + mediaRelative;
-          
+
           let newUrl = media.url;
           if (media.url) {
             newUrl = media.url.replace(media.key, mediaNewKey);
@@ -360,7 +383,7 @@ export class FoldersService implements OnModuleInit {
     const children = await this.prisma.folder.findMany({
       where: { parentId: folderId },
     });
-    
+
     let result = [...children];
     for (const child of children) {
       const grandChildren = await this.getAllChildFolders(child.id);
