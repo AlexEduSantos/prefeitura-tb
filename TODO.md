@@ -18,4 +18,8 @@ FEAT: Adicionar função de busca global no site.
 
 TODO: (Notícias) - Adicionar função de busca na lista de notícias. - Adicionar filtros de busca e ordenação. - Adicionar opção de buscar por data. - Adicionar funções de impressão, compartilhamento e e-mail na página da notícia. - Adicionar paginação na lista de notícias. - Adicionar função de comentários. - Adicionar opção de curtir e descurtir. - Adicionar opção de compartilhar nas redes sociais. - Adicionar contador de visualizações. - Adicionar tratamento de imagens para posicionamento de capa.
 
-TODO: (Search Engine) - Criar um motor de busca que indexe todo o conteúdo do site. Usando: [o] Elasticsearch: O serviço central para pesquisa, que oferece busca inteligente, tolerância a erros de digitação e auto-complete. [o] CDC (Change Data Capture) com Debezium: Uma estratégia para manter os dados sincronizados entre o banco principal (Postgres) e o Elasticsearch. [o] Funcionamento do CDC: Em vez de realizar consultas pesadas no banco, o Debezium monitora o arquivo de log de transações do banco (Write-Ahead Log - WAL), capturando mudanças em tempo real e enviando-as para o Apache Kafka . A partir da fila do Kafka, um worker atualiza o Elasticsearch.
+TODO: (Search Engine) - Criar um motor de busca que indexe todo o conteúdo do site. A barra de pesquisa já está funcionando, falta criar um índice pg_trgm nos campos title e text. Será necessário criar uma coluna com o texto do corpo em formato de string sem formatação para poder criar um índice pg_trgm nela.
+
+TODO: Adicionar verificação de slug ao criar novo artigo, se já houver algum artigo com mesmo slug, adicionar um número ao final do slug, ex: "noticia-1".
+
+FEAT: Botão de visualizar matéria dentro da página de artigos
