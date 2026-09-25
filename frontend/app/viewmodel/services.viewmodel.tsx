@@ -17,10 +17,11 @@ import {
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, PenIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, PenIcon, StarIcon, TrashIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImageVisualizer } from "@/components/image-visualizer";
 import { IMedia } from "../type/media";
+import { Switch } from "@/components/ui/switch";
 
 export function useServices() {
   const queryClient = useQueryClient();
@@ -180,6 +181,38 @@ export function useServices() {
   });
   const [rowSelection, setRowSelection] = useState({});
   const columns: ColumnDef<IServices>[] = [
+    {
+      accessorKey: "featured",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Destaque
+          <ArrowUpDown className="ml-1 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        return (
+          <div
+            onClick={() =>
+              updateServiceMutation.mutate({
+                id: row.original.id,
+                data: { featured: !row.original.featured },
+              })
+            }
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            {row.original.featured ? (
+              <StarIcon className="size-4 fill-yellow-500 text-yellow-500" />
+            ) : (
+              <StarIcon className="size-4 text-gray-500" />
+            )}
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "title",
       header: ({ column }) => (
