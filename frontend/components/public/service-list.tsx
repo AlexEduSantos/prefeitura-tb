@@ -114,7 +114,7 @@ function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
             <DropdownMenuRadioItem value="">Todas</DropdownMenuRadioItem>
             {entities.map((entity) => (
               <DropdownMenuRadioItem key={entity.id} value={entity.id}>
-                {entity.name}
+                {entity.title}
               </DropdownMenuRadioItem>
             ))}
           </DropdownMenuRadioGroup>

@@ -94,11 +94,11 @@ export function ArticlesBlock() {
       return { featuredArticle: null, recentArticles: [], hasSidebar: false };
     }
 
-    const [first, ...rest] = article;
-    const recent = sortByDateDesc(rest).slice(0, 3);
+    const features = article.filter((article) => article.featured);
+    const recent = sortByDateDesc(article).slice(0, 3);
 
     return {
-      featuredArticle: first,
+      featuredArticle: features.length > 0 ? features[0] : null,
       recentArticles: recent,
       hasSidebar: recent.length === 3,
     };

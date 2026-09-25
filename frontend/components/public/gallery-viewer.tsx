@@ -70,10 +70,10 @@ export function GaleryView({ gallery }: GalleryProps) {
       <PublicImageVisualizer
         open={open}
         onOpenChange={setOpen}
-        name={selectedImage?.caption || gallery.name}
+        name={selectedImage?.caption || gallery.title}
         image={selectedImage?.media || undefined!}
         mode="modal"
-        alt={selectedImage?.caption || gallery.name}
+        alt={selectedImage?.caption || gallery.title}
         onNext={handleNext}
         onPrev={handlePrev}
         index={currentIndex >= 0 ? currentIndex : undefined}
