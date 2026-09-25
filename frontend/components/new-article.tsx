@@ -200,7 +200,7 @@ export default function MateriaForm({
                     <SelectContent>
                       {entities.map((e) => (
                         <SelectItem key={e.id} value={e.id}>
-                          {e.name}
+                          {e.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
