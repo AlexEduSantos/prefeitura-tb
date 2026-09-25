@@ -36,7 +36,7 @@ export type GalleriesSumAggregateOutputType = {
 
 export type GalleriesMinAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -50,7 +50,7 @@ export type GalleriesMinAggregateOutputType = {
 
 export type GalleriesMaxAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   active: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -64,7 +64,7 @@ export type GalleriesMaxAggregateOutputType = {
 
 export type GalleriesCountAggregateOutputType = {
   id: number
-  name: number
+  title: number
   active: number
   createdAt: number
   updatedAt: number
@@ -88,7 +88,7 @@ export type GalleriesSumAggregateInputType = {
 
 export type GalleriesMinAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -102,7 +102,7 @@ export type GalleriesMinAggregateInputType = {
 
 export type GalleriesMaxAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -116,7 +116,7 @@ export type GalleriesMaxAggregateInputType = {
 
 export type GalleriesCountAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   active?: true
   createdAt?: true
   updatedAt?: true
@@ -217,7 +217,7 @@ export type GalleriesGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type GalleriesGroupByOutputType = {
   id: string
-  name: string
+  title: string
   active: boolean
   createdAt: Date
   updatedAt: Date
@@ -254,7 +254,7 @@ export type GalleriesWhereInput = {
   OR?: Prisma.GalleriesWhereInput[]
   NOT?: Prisma.GalleriesWhereInput | Prisma.GalleriesWhereInput[]
   id?: Prisma.UuidFilter<"Galleries"> | string
-  name?: Prisma.StringFilter<"Galleries"> | string
+  title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
@@ -272,7 +272,7 @@ export type GalleriesWhereInput = {
 
 export type GalleriesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -294,7 +294,7 @@ export type GalleriesWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.GalleriesWhereInput | Prisma.GalleriesWhereInput[]
   OR?: Prisma.GalleriesWhereInput[]
   NOT?: Prisma.GalleriesWhereInput | Prisma.GalleriesWhereInput[]
-  name?: Prisma.StringFilter<"Galleries"> | string
+  title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
@@ -312,7 +312,7 @@ export type GalleriesWhereUniqueInput = Prisma.AtLeast<{
 
 export type GalleriesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -334,7 +334,7 @@ export type GalleriesScalarWhereWithAggregatesInput = {
   OR?: Prisma.GalleriesScalarWhereWithAggregatesInput[]
   NOT?: Prisma.GalleriesScalarWhereWithAggregatesInput | Prisma.GalleriesScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Galleries"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Galleries"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Galleries"> | string
   active?: Prisma.BoolWithAggregatesFilter<"Galleries"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Galleries"> | Date | string
@@ -348,7 +348,7 @@ export type GalleriesScalarWhereWithAggregatesInput = {
 
 export type GalleriesCreateInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -364,7 +364,7 @@ export type GalleriesCreateInput = {
 
 export type GalleriesUncheckedCreateInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -380,7 +380,7 @@ export type GalleriesUncheckedCreateInput = {
 
 export type GalleriesUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -396,7 +396,7 @@ export type GalleriesUpdateInput = {
 
 export type GalleriesUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -412,7 +412,7 @@ export type GalleriesUncheckedUpdateInput = {
 
 export type GalleriesCreateManyInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -426,7 +426,7 @@ export type GalleriesCreateManyInput = {
 
 export type GalleriesUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -438,7 +438,7 @@ export type GalleriesUpdateManyMutationInput = {
 
 export type GalleriesUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -473,7 +473,7 @@ export type GalleriesOrderByRelevanceInput = {
 
 export type GalleriesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -491,7 +491,7 @@ export type GalleriesAvgOrderByAggregateInput = {
 
 export type GalleriesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -505,7 +505,7 @@ export type GalleriesMaxOrderByAggregateInput = {
 
 export type GalleriesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   active?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -654,7 +654,7 @@ export type GalleriesUpdateOneRequiredWithoutSlidesNestedInput = {
 
 export type GalleriesCreateWithoutUserInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -669,7 +669,7 @@ export type GalleriesCreateWithoutUserInput = {
 
 export type GalleriesUncheckedCreateWithoutUserInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -713,7 +713,7 @@ export type GalleriesScalarWhereInput = {
   OR?: Prisma.GalleriesScalarWhereInput[]
   NOT?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
   id?: Prisma.UuidFilter<"Galleries"> | string
-  name?: Prisma.StringFilter<"Galleries"> | string
+  title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
@@ -727,7 +727,7 @@ export type GalleriesScalarWhereInput = {
 
 export type GalleriesCreateWithoutEntityInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -742,7 +742,7 @@ export type GalleriesCreateWithoutEntityInput = {
 
 export type GalleriesUncheckedCreateWithoutEntityInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -783,7 +783,7 @@ export type GalleriesUpdateManyWithWhereWithoutEntityInput = {
 
 export type GalleriesCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -798,7 +798,7 @@ export type GalleriesCreateWithoutArticlesInput = {
 
 export type GalleriesUncheckedCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -829,7 +829,7 @@ export type GalleriesUpdateToOneWithWhereWithoutArticlesInput = {
 
 export type GalleriesUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -844,7 +844,7 @@ export type GalleriesUpdateWithoutArticlesInput = {
 
 export type GalleriesUncheckedUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -859,7 +859,7 @@ export type GalleriesUncheckedUpdateWithoutArticlesInput = {
 
 export type GalleriesCreateWithoutSlidesInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -874,7 +874,7 @@ export type GalleriesCreateWithoutSlidesInput = {
 
 export type GalleriesUncheckedCreateWithoutSlidesInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -905,7 +905,7 @@ export type GalleriesUpdateToOneWithWhereWithoutSlidesInput = {
 
 export type GalleriesUpdateWithoutSlidesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -920,7 +920,7 @@ export type GalleriesUpdateWithoutSlidesInput = {
 
 export type GalleriesUncheckedUpdateWithoutSlidesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -935,7 +935,7 @@ export type GalleriesUncheckedUpdateWithoutSlidesInput = {
 
 export type GalleriesCreateManyUserInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -948,7 +948,7 @@ export type GalleriesCreateManyUserInput = {
 
 export type GalleriesUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -963,7 +963,7 @@ export type GalleriesUpdateWithoutUserInput = {
 
 export type GalleriesUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -978,7 +978,7 @@ export type GalleriesUncheckedUpdateWithoutUserInput = {
 
 export type GalleriesUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -991,7 +991,7 @@ export type GalleriesUncheckedUpdateManyWithoutUserInput = {
 
 export type GalleriesCreateManyEntityInput = {
   id?: string
-  name: string
+  title: string
   active?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1004,7 +1004,7 @@ export type GalleriesCreateManyEntityInput = {
 
 export type GalleriesUpdateWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1019,7 +1019,7 @@ export type GalleriesUpdateWithoutEntityInput = {
 
 export type GalleriesUncheckedUpdateWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1034,7 +1034,7 @@ export type GalleriesUncheckedUpdateWithoutEntityInput = {
 
 export type GalleriesUncheckedUpdateManyWithoutEntityInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1087,7 +1087,7 @@ export type GalleriesCountOutputTypeCountArticlesArgs<ExtArgs extends runtime.Ty
 
 export type GalleriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1106,7 +1106,7 @@ export type GalleriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type GalleriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1122,7 +1122,7 @@ export type GalleriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type GalleriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1138,7 +1138,7 @@ export type GalleriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type GalleriesSelectScalar = {
   id?: boolean
-  name?: boolean
+  title?: boolean
   active?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1150,7 +1150,7 @@ export type GalleriesSelectScalar = {
   userId?: boolean
 }
 
-export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "active" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "entityId" | "userId", ExtArgs["result"]["galleries"]>
+export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "active" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "entityId" | "userId", ExtArgs["result"]["galleries"]>
 export type GalleriesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1177,7 +1177,7 @@ export type $GalleriesPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    title: string
     active: boolean
     createdAt: Date
     updatedAt: Date
@@ -1615,7 +1615,7 @@ export interface Prisma__GalleriesClient<T, Null = never, ExtArgs extends runtim
  */
 export interface GalleriesFieldRefs {
   readonly id: Prisma.FieldRef<"Galleries", 'String'>
-  readonly name: Prisma.FieldRef<"Galleries", 'String'>
+  readonly title: Prisma.FieldRef<"Galleries", 'String'>
   readonly active: Prisma.FieldRef<"Galleries", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Galleries", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Galleries", 'DateTime'>

@@ -7,7 +7,7 @@ import { IUser } from "./user";
 
 export interface IEntity {
   id: string;
-  name: String;
+  title: String;
   slug: String;
   createdAt: Date;
   pages: IPage[];

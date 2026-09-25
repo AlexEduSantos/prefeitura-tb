@@ -1445,7 +1445,7 @@ export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeo
 
 export const EntityScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   slug: 'slug',
   createdAt: 'createdAt'
 } as const
@@ -1524,7 +1524,7 @@ export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof Me
 
 export const FolderScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   path: 'path',
   parentId: 'parentId',
   createdAt: 'createdAt',
@@ -1536,7 +1536,7 @@ export type FolderScalarFieldEnum = (typeof FolderScalarFieldEnum)[keyof typeof 
 
 export const GalleriesScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   active: 'active',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -1567,7 +1567,7 @@ export type GalleryMediaScalarFieldEnum = (typeof GalleryMediaScalarFieldEnum)[k
 
 export const PopupsScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   link: 'link',
   active: 'active',
   displayTime: 'displayTime',
@@ -1696,7 +1696,7 @@ export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFi
 
 export const EntityOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   slug: 'slug'
 } as const
 
@@ -1756,7 +1756,7 @@ export type MediaOrderByRelevanceFieldEnum = (typeof MediaOrderByRelevanceFieldE
 
 export const FolderOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   path: 'path',
   parentId: 'parentId'
 } as const
@@ -1766,7 +1766,7 @@ export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFiel
 
 export const GalleriesOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   entityId: 'entityId',
   userId: 'userId'
 } as const
@@ -1787,7 +1787,7 @@ export type GalleryMediaOrderByRelevanceFieldEnum = (typeof GalleryMediaOrderByR
 
 export const PopupsOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   link: 'link',
   position: 'position',
   imageId: 'imageId',

@@ -369,7 +369,7 @@ export class MediaService {
     // 1. Fetch child folders at this level
     const subfolders = await this.prisma.folder.findMany({
       where: { parentId: parentFolderId },
-      orderBy: { name: 'asc' },
+      orderBy: { title: 'asc' },
     });
 
     // 2. Fetch media files at this level (paginated)
@@ -388,7 +388,7 @@ export class MediaService {
     return {
       folders: subfolders.map((f) => ({
         id: f.id,
-        name: f.name,
+        name: f.title,
         path: f.path,
       })),
       files,

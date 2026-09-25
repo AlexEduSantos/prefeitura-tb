@@ -12,15 +12,21 @@ export function useEntityViewModel() {
   });
 
   const createEntityMutation = useMutation({
-    mutationFn: (data: { name: string; slug: string }) => EntityService.createEntity(data),
+    mutationFn: (data: { title: string; slug: string }) =>
+      EntityService.createEntity(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entities"] });
     },
   });
 
   const updateEntityMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { name: string; slug: string } }) =>
-      EntityService.updateEntity(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: { title: string; slug: string };
+    }) => EntityService.updateEntity(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["entities"] });
     },

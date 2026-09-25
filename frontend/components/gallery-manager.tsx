@@ -83,12 +83,12 @@ export function GalleriesManager() {
         <div className="flex items-center gap-2 w-full">
           <div className="flex items-center gap-2 w-full relative">
             <Input
-              placeholder="Pesquisar por nome..."
+              placeholder="Pesquisar por título..."
               value={
-                (table.getColumn("name")?.getFilterValue() as string) ?? ""
+                (table.getColumn("title")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn("name")?.setFilterValue(event.target.value)
+                table.getColumn("title")?.setFilterValue(event.target.value)
               }
               className="w-full relative z-10"
             />
@@ -208,7 +208,7 @@ export function GalleriesManager() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {galleryList.map((gallery) => (
             <Card key={gallery.id} className="p-2 gap-0">
-              <CardTitle className="px-2">{gallery.name}</CardTitle>
+              <CardTitle className="px-2">{gallery.title}</CardTitle>
               <CardContent className="p-0">
                 <div className="min-w-sm p-2">
                   {gallery.slides.length > 1 ? (

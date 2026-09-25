@@ -85,7 +85,7 @@ model Session {
 
 model Entity {
   id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
+  title     String
   slug      String
   createdAt DateTime    @default(now())
   pages     Page[]
@@ -192,9 +192,9 @@ model Media {
 }
 
 model Folder {
-  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
-  path String @unique
+  id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title String
+  path  String @unique
 
   parentId String?  @db.Uuid
   parent   Folder?  @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
@@ -217,7 +217,7 @@ enum GalleryType {
 
 model Galleries {
   id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                  String
+  title                 String
   active                Boolean     @default(true)
   createdAt             DateTime    @default(now()) @db.Timestamp
   updatedAt             DateTime    @updatedAt @db.Timestamp
@@ -263,7 +263,7 @@ model GalleryMedia {
 
 model Popups {
   id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name            String
+  title           String
   link            String?
   active          Boolean     @default(true)
   displayTime     Int         @default(5)
