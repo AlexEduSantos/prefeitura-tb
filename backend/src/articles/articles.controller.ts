@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -22,8 +23,8 @@ export class ArticlesController {
 
   // Qualquer um (Público) pode listar os artigos
   @Get()
-  async findAll() {
-    return this.articlesService.findAll();
+  async findAll(@Query('search') search: string) {
+    return this.articlesService.findAll(search);
   }
 
   // Qualquer um (Público) pode visualizar os detalhes de um artigo

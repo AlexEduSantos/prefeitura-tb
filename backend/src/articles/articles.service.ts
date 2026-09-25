@@ -22,7 +22,7 @@ export class ArticlesService {
     });
   }
 
-  async findAll() {
+  async findAll(search: string) {
     const articles = await this.prisma.article.findMany({
       include: {
         entity: true,
@@ -32,19 +32,32 @@ export class ArticlesService {
         gallery: {
           include: {
             slides: {
-              orderBy: { order: 'asc' }, // Garante que as fotos venham na ordem definida
+              orderBy: { order: 'asc' },
               include: {
-                media: true, // Traz os dados reais da imagem (url, altText, etc.)
+                media: true,
               },
             },
           },
         },
       },
+      where: search
+        ? {
+            title: {
+              contains: search,
+              mode: 'insensitive',
+            },
+          }
+        : undefined,
+      orderBy: search
+        ? {
+            _relevance: {
+              fields: ['title'],
+              search: search,
+              sort: 'desc',
+            },
+          }
+        : { createdAt: 'desc' },
     });
-
-    if (!articles) {
-      throw new NotFoundException(`Artigos não encontrados.`);
-    }
 
     return articles;
   }

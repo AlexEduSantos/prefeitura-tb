@@ -3,8 +3,13 @@ import { IArticle } from "../type/article";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export class ArticleService {
-  static async getArticles(): Promise<IArticle[]> {
-    const response = await fetch(`${API_URL}/articles`, {
+  static async getArticles(search?: string): Promise<IArticle[]> {
+    const params = new URLSearchParams();
+    if (search && search.trim()) {
+      params.append("search", search.trim());
+    }
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    const response = await fetch(`${API_URL}/articles${queryString}`, {
       headers: {
         "Content-Type": "application/json",
       },

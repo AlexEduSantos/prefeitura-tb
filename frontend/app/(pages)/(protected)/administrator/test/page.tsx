@@ -1,12 +1,13 @@
-import { FileExplorer } from "@/components/media-manager";
+"use client";
 import { PainelHeader } from "@/components/painel-header";
+import TestComponent from "@/components/test";
 
-export default function MediaPage() {
+export default function TestPage() {
   return (
     <div>
-      <PainelHeader title="Gerenciador de Mídia" />
-      <div className="p-4">
-        <FileExplorer />
+      <PainelHeader title="Teste" />
+      <div className="p-2">
+        <TestComponent />
       </div>
     </div>
   );
