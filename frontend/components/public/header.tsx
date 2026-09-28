@@ -1,10 +1,9 @@
 "use client";
-import { Contrast, ZoomIn, ZoomOut } from "lucide-react";
+import { Contrast, Search, ZoomIn, ZoomOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function header() {
   const router = useRouter();
-
   return (
     <div className="w-screen">
       <div className="w-full flex items-center justify-center h-8 bg-primary text-primary-foreground">
@@ -40,11 +39,12 @@ export default function header() {
           >
             <img src="/logo.png" alt="" />
           </div>
-          <div className="w-1/2 flex gap-2 items-center justify-end-safe">
+          <div className="w-1/2 flex gap-4 items-center justify-end-safe text-primary text-lg font-semibold cursor-pointer">
             <p>Prefeitura</p>
             <p>Serviços</p>
             <p>Servidores</p>
             <p>Notícias</p>
+            <Search className="size-5" />
           </div>
         </div>
       </div>
