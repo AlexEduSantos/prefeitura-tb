@@ -21,7 +21,7 @@ export function ServicesBlock() {
     .slice(0, 6);
 
   return (
-    <section className="w-full max-w-7xl mx-auto">
+    <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
       <div className="w-full flex items-center gap-2">
         <span className="h-5 w-1 bg-primary rounded-full" />
         <h3 className="uppercase text-nowrap tracking-widest text-sm">
@@ -37,7 +37,7 @@ export function ServicesBlock() {
           <ChevronRight />
         </Button>
       </div>
-      <div className="w-full grid grid-cols-3 grid-rows-2 gap-4">
+      <div className="w-full grid md:grid-cols-3 grid-cols-2 md:grid-rows-2 grid-rows-3 gap-2 sm:gap-4">
         {!featuredServices.length && (
           <div>Não foi possível obter os serviços.</div>
         )}
@@ -45,7 +45,7 @@ export function ServicesBlock() {
         {featuredServices.map((service: IServices) => (
           <div
             key={service.id}
-            className="w-full h-full min-h-50 rounded-lg bg-card shadow relative hover:scale-104 hover:shadow-md cursor-pointer transition-all duration-300"
+            className="w-full h-full sm:min-h-50 min-h-30 rounded-lg bg-card shadow relative hover:scale-104 hover:shadow-md cursor-pointer transition-all duration-300"
             onClick={() => {
               service.link ? window.open(service.link, "_blank") : null;
             }}

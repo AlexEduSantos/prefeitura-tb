@@ -1,10 +1,15 @@
+import Image from "next/image";
 import Link from "next/link";
+import { FacebookIcon } from "../icons/facebook-icon";
+import { InstagramIcon } from "../icons/instagram-icon";
+import { YoutubeIcon } from "../icons/youtube-icon";
+import DynamicIcon from "../icons/dynamic-icon";
 
 export function Footer() {
   return (
     <footer className="w-full gradient-primary text-primary-foreground py-8 space-y-8">
-      <div className="w-full max-w-7xl mx-auto px-4  flex flex-col gap-4 items-center text-center">
-        <div className="grid grid-cols-5 items-start gap-8 font-light text-sm pb-8 border-b border-border/30">
+      <div className="w-full max-w-7xl mx-auto px-4 flex flex-col gap-2 items-center text-center">
+        <div className="grid grid-cols-1 md:grid-cols-5 items-start gap-8 font-light text-sm pb-8 border-b border-border/30">
           <div className="text-left w-full col-span-1 space-y-2">
             <h4 className="font-semibold">Prefeitura de Telêmaco Borba</h4>
             <p>Nossa Histório</p>
@@ -57,21 +62,23 @@ export function Footer() {
             <p>Download</p>
           </div>
         </div>
-        <div className="flex justify-between items-center w-full font-light text-xs">
-          <p>
-            Praça Horácio Klabin, 34 - Centro - Telêmaco Borba - PR - Cep
-            84267-000 - Fone (42) 3127-8004
-          </p>
-          <div className="flex gap-4">
+        <div className="flex xl:flex-row flex-col items-center justify-between w-full font-light text-sm gap-2">
+          <div className="flex sm:gap-4 gap-2 sm:flex-row flex-col">
             <Link href={"/administrator"}>Painel de Controle</Link>
             <p>Mapa do Site</p>
-            <p>Plítica de Privacidade</p>
+            <p>Política de Privacidade</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <FacebookIcon className="w-8 h-8 transition-all duration-300 cursor-pointer hover:scale-110" />
+            <InstagramIcon className="w-8 h-8 transition-all duration-300 cursor-pointer hover:scale-110" />
+            <YoutubeIcon className="w-8 h-8 transition-all duration-300 cursor-pointer hover:scale-110" />
           </div>
         </div>
       </div>
-      <div className="w-full flex items-center justify-center">
-        <p className="text-sm font-light">
-          © 2026 | Todos os direitos reservados.
+      <div className="w-full flex md:flex-row flex-col items-center justify-center">
+        <p className="text-xs font-light">
+          © 2026 | Praça Horácio Klabin, 34 - Centro - Telêmaco Borba - PR - Cep
+          84267-000
         </p>
       </div>
     </footer>

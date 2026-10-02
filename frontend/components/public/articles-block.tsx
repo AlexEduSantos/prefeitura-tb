@@ -40,16 +40,16 @@ function FeaturedArticle({ article }: { article: any }) {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-4 w-full group">
+    <div className="flex flex-col gap-2 sm:gap-4 w-full group">
       <div
-        className="max-h-168 min-h-128 w-full rounded-lg relative overflow-hidden group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300"
+        className="sm:max-h-168 sm:min-h-128 max-h-60 min-h-48 w-full rounded-lg relative overflow-hidden group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300"
         onClick={() => {
           router.push(`/noticias/${article.slug}`);
         }}
       >
         <ArticleImage coverData={article.cover} alt={article.title} />
       </div>
-      <h3 className="w-full bg-primary rounded-lg h-32 shadow text-primary-foreground text-3xl font-semibold p-6 line-clamp-2 group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300">
+      <h3 className="w-full bg-primary rounded-lg sm:h-32 min-h-16 shadow text-primary-foreground sm:text-3xl text-xl font-semibold sm:p-6 p-2 line-clamp-2 group-hover:cursor-pointer group-hover:scale-101 transition-transform duration-300">
         {article.title}
       </h3>
     </div>
@@ -61,9 +61,9 @@ function SmallArticleCard({ article }: { article: any }) {
   const router = useRouter();
 
   return (
-    <div className="h-full rounded-lg relative overflow-hidden shadow group cursor-pointer hover:scale-102 transition-transform duration-300">
+    <div className="sm:h-full h-32 rounded-lg relative overflow-hidden shadow group cursor-pointer hover:scale-102 transition-transform duration-300">
       <div
-        className="w-full h-3/4 relative overflow-hidden"
+        className="w-full sm:h-3/4 h-3/5 relative overflow-hidden"
         onClick={() => {
           router.push(`/noticias/${article.slug}`);
         }}
@@ -71,11 +71,11 @@ function SmallArticleCard({ article }: { article: any }) {
         <ArticleImage coverData={article.cover} alt={article.title} />
       </div>
       <div
-        className="w-full h-1/4 bg-card text-primary px-3 py-2 flex items-center gap-2"
+        className="w-full sm:h-1/4 h-2/5 bg-card text-primary sm:px-3 sm:py-2 p-2 flex sm:flex-row flex-col items-start sm:items-center sm:gap-2 gap-1"
         onClick={() => router.push(`/noticias/${article.slug}`)}
       >
-        <span className="h-6 w-1 bg-primary rounded-full shrink-0" />
-        <p className="line-clamp-2 text-sm leading-tight font-medium group-hover:text-primary transition-colors">
+        <span className="sm:h-6 sm:w-1 w-4 h-0.5 bg-primary rounded-full shrink-0" />
+        <p className="line-clamp-2 sm:text-sm text-xs leading-tight font-medium group-hover:text-primary transition-colors ">
           {article.title}
         </p>
       </div>
@@ -135,7 +135,7 @@ export function ArticlesBlock() {
   }
 
   return (
-    <section className="w-full max-w-7xl mx-auto">
+    <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
       {/* Cabeçalho */}
       <div className="w-full flex items-center gap-2">
         <span className="h-5 w-1 bg-primary rounded-full" />
@@ -154,17 +154,17 @@ export function ArticlesBlock() {
       </div>
 
       {/* Conteúdo */}
-      <div className="w-full flex gap-4">
+      <div className="w-full flex sm:flex-row flex-col gap-2 sm:gap-4">
         {/* Artigo em destaque */}
         {featuredArticle && featuredArticle.coverId && (
-          <div className={hasSidebar ? "w-3/4" : "w-full"}>
+          <div className={hasSidebar ? "w-full sm:w-3/4" : "w-full sm:w-full"}>
             <FeaturedArticle article={featuredArticle} />
           </div>
         )}
 
         {/* Sidebar com artigos recentes */}
         {hasSidebar && (
-          <div className="w-1/4 grid grid-rows-3 gap-4">
+          <div className="w-full sm:w-1/4 grid sm:grid-rows-3 sm:grid-cols-1 grid-cols-3 gap-2 sm:gap-4">
             {recentArticles.map((item) => (
               <SmallArticleCard key={item.id} article={item} />
             ))}

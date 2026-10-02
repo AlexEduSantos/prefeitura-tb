@@ -22,11 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="pt-BR"
-      className={`${inter.variable} w-screen h-screen antialiased`}
-    >
-      <body className="h-screen flex flex-col w-full">
+    <html lang="pt-BR" className={`${inter.variable} antialiased`}>
+      <body className="h-svh flex flex-col">
         <Providers>{children}</Providers>
         <Toaster />
       </body>

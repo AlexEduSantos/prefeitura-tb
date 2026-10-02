@@ -8,8 +8,8 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="h-screen flex flex-col w-full">
-      <main className="w-full">
+    <main className="flex flex-col h-screen">
+      <main className="relative h-screen">
         <Header />
         {children}
         <Footer />
