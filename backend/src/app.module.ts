@@ -8,7 +8,10 @@ import { CaslModule } from './casl/casl.module';
 import { PagesModule } from './pages/pages.module';
 import { ArticlesModule } from './articles/articles.module';
 import { MediaModule } from './media/media.module';
-import { EntitiesModule } from './entities/entities.module';
+
+import { OrganizationsModule } from './organizations/organizations.module';
+import { SpacesModule } from './spaces/spaces.module';
+import { CategoriesModule } from './categories/categories.module';
 import { BullModule } from '@nestjs/bullmq';
 import { GalleriesModule } from './galleries/galleries.module';
 import { GalleryMediaModule } from './gallery-media/gallery-media.module';
@@ -32,7 +35,10 @@ import { ObserveModule } from './observe';
     PagesModule,
     ArticlesModule,
     MediaModule,
-    EntitiesModule,
+
+    OrganizationsModule,
+    SpacesModule,
+    CategoriesModule,
     GalleriesModule,
     GalleryMediaModule,
     PopupsModule,

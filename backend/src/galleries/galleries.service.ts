@@ -34,7 +34,8 @@ export class GalleriesService {
   async findAll(): Promise<Galleries[]> {
     return this.prisma.galleries.findMany({
       include: {
-        entity: true,
+        organization: true,
+        space: true,
         slides: { include: { media: true }, orderBy: { order: 'asc' } },
         user: { select: { name: true, email: true, avatar: true } },
       },
@@ -45,7 +46,8 @@ export class GalleriesService {
     const galleries = await this.prisma.galleries.findUnique({
       where: { id },
       include: {
-        entity: true,
+        organization: true,
+        space: true,
         slides: { include: { media: true }, orderBy: { order: 'asc' } },
         user: { select: { name: true, email: true, avatar: true } },
       },

@@ -11,8 +11,9 @@ export class CreateServiceDto {
   @IsOptional()
   altText?: string;
 
+  @IsOptional()
   @IsUUID()
-  entityId!: string;
+  organizationId?: string;
 
   @IsUUID()
   imageId!: string;

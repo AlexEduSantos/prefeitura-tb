@@ -32,7 +32,7 @@ import {
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { Switch } from "./ui/switch";
-import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
+import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 import { MediaPickerModal } from "./media-picker-modal";
 import { IMedia } from "@/app/type/media";
 import { useEffect, useState } from "react";
@@ -56,7 +56,6 @@ const initialFormData: Partial<IPopups> = {
   priority: 0,
   publicationDate: new Date(),
   expirationDate: new Date(),
-  entityId: "",
   imageId: "",
 };
 
@@ -76,7 +75,7 @@ export function PopupsManager() {
     handleSave,
   } = usePopupsViewModel();
 
-  const { entities } = useEntityViewModel();
+  const { organizations, spaces } = useOrganizationViewModel();
 
   // Estado para controlar a abertura do seletor de mídia
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
@@ -272,24 +271,53 @@ export function PopupsManager() {
                   />
                 </div>
 
-                {/* Entidade */}
+                {/* Organização Responsável */}
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="entityId">Entidade *</Label>
+                  <Label htmlFor="organizationId">Secretaria / Órgão *</Label>
                   <Select
-                    name="entityId"
-                    value={formData.entityId || ""}
+                    name="organizationId"
+                    value={formData.organizationId || ""}
                     onValueChange={(value) =>
-                      setFormData({ ...formData, entityId: value })
+                      setFormData({ ...formData, organizationId: value })
                     }
                     required
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Selecione uma entidade" />
+                      <SelectValue placeholder="Selecione uma secretaria/órgão" />
                     </SelectTrigger>
                     <SelectContent>
-                      {entities?.map((entity) => (
-                        <SelectItem key={entity.id} value={entity.id}>
-                          {entity.title}
+                      {organizations?.map((org) => (
+                        <SelectItem key={org.id} value={org.id}>
+                          {org.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Espaço de Exibição (Global vs Específico) */}
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="spaceId">Espaço de Exibição</Label>
+                  <Select
+                    name="spaceId"
+                    value={formData.spaceId || "global"}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        spaceId: value === "global" ? null : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Todo o portal (Global)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="global">
+                        Todo o Portal (Global)
+                      </SelectItem>
+                      {spaces?.map((sp) => (
+                        <SelectItem key={sp.id} value={sp.id}>
+                          /{sp.slug}/ ({sp.title})
                         </SelectItem>
                       ))}
                     </SelectContent>

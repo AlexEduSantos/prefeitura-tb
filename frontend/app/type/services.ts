@@ -1,4 +1,3 @@
-import { IEntity } from "./entity";
 import { IMedia } from "./media";
 import { IUser } from "./user";
 
@@ -12,8 +11,8 @@ export interface IServices {
   featured: boolean;
   description: string;
 
-  entityId: string;
-  entity: IEntity;
+  organizationId?: string;
+  organization?: any;
 
   imageId: string;
   image: IMedia;

@@ -51,9 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Organization: 'Organization',
+  Space: 'Space',
+  Category: 'Category',
   User: 'User',
   Session: 'Session',
-  Entity: 'Entity',
   Page: 'Page',
   Article: 'Article',
   Media: 'Media',
@@ -82,6 +84,46 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  acronym: 'acronym',
+  type: 'type',
+  active: 'active',
+  parentId: 'parentId',
+  defaultSpaceId: 'defaultSpaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const SpaceScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof SpaceScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -90,10 +132,10 @@ export const UserScalarFieldEnum = {
   password: 'password',
   avatar: 'avatar',
   phone: 'phone',
-  entityId: 'entityId',
+  role: 'role',
+  organizationId: 'organizationId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  role: 'role'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -108,23 +150,14 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
-export const EntityScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  slug: 'slug',
-  createdAt: 'createdAt'
-} as const
-
-export type EntityScalarFieldEnum = (typeof EntityScalarFieldEnum)[keyof typeof EntityScalarFieldEnum]
-
-
 export const PageScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
   content: 'content',
   published: 'published',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'
@@ -156,9 +189,9 @@ export const ArticleScalarFieldEnum = {
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
   socialPreviewDescription: 'socialPreviewDescription',
+  organizationId: 'organizationId',
   authorId: 'authorId',
   editorId: 'editorId',
-  entityId: 'entityId',
   coverId: 'coverId'
 } as const
 
@@ -209,7 +242,8 @@ export const GalleriesScalarFieldEnum = {
   galleryAutoplay: 'galleryAutoplay',
   galleryInterval: 'galleryInterval',
   galleryShowThumbnails: 'galleryShowThumbnails',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -245,8 +279,9 @@ export const PopupsScalarFieldEnum = {
   expirationDate: 'expirationDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
-  entityId: 'entityId',
   userId: 'userId'
 } as const
 
@@ -262,7 +297,7 @@ export const ServicesScalarFieldEnum = {
   updatedAt: 'updatedAt',
   featured: 'featured',
   description: 'description',
-  entityId: 'entityId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
   userId: 'userId'
 } as const
@@ -329,6 +364,38 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const OrganizationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  acronym: 'acronym',
+  parentId: 'parentId',
+  defaultSpaceId: 'defaultSpaceId'
+} as const
+
+export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
+
+
+export const SpaceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type SpaceOrderByRelevanceFieldEnum = (typeof SpaceOrderByRelevanceFieldEnum)[keyof typeof SpaceOrderByRelevanceFieldEnum]
+
+
+export const CategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  parentId: 'parentId'
+} as const
+
+export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
+
+
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   username: 'username',
@@ -337,7 +404,7 @@ export const UserOrderByRelevanceFieldEnum = {
   password: 'password',
   avatar: 'avatar',
   phone: 'phone',
-  entityId: 'entityId'
+  organizationId: 'organizationId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -359,20 +426,12 @@ export const SessionOrderByRelevanceFieldEnum = {
 export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
 
 
-export const EntityOrderByRelevanceFieldEnum = {
-  id: 'id',
-  title: 'title',
-  slug: 'slug'
-} as const
-
-export type EntityOrderByRelevanceFieldEnum = (typeof EntityOrderByRelevanceFieldEnum)[keyof typeof EntityOrderByRelevanceFieldEnum]
-
-
 export const PageOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -394,9 +453,9 @@ export const ArticleOrderByRelevanceFieldEnum = {
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
   socialPreviewDescription: 'socialPreviewDescription',
+  organizationId: 'organizationId',
   authorId: 'authorId',
   editorId: 'editorId',
-  entityId: 'entityId',
   coverId: 'coverId'
 } as const
 
@@ -432,7 +491,8 @@ export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFiel
 export const GalleriesOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -455,8 +515,9 @@ export const PopupsOrderByRelevanceFieldEnum = {
   title: 'title',
   link: 'link',
   position: 'position',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
-  entityId: 'entityId',
   userId: 'userId'
 } as const
 
@@ -469,7 +530,7 @@ export const ServicesOrderByRelevanceFieldEnum = {
   link: 'link',
   altText: 'altText',
   description: 'description',
-  entityId: 'entityId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
   userId: 'userId'
 } as const

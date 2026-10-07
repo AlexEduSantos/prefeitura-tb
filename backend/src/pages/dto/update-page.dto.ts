@@ -18,5 +18,9 @@ export class UpdatePageDto {
 
   @IsString()
   @IsOptional()
-  entityId?: string;
+  spaceId?: string;
+
+  @IsString()
+  @IsOptional()
+  organizationId?: string;
 }

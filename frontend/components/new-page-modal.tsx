@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
+import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 import { useState, useEffect, useMemo } from "react";
 import type { Overrides } from "@puckeditor/core";
 import { CustomHeader } from "./puck/custom-header";
@@ -31,16 +31,17 @@ interface NewPageModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: "create" | "edit";
-  // Alteramos o onSubmit para devolver todos os dados juntos de uma vez
   onSubmit: (data: {
     title: string;
     slug: string;
     content: any;
-    entityId: string;
+    organizationId: string;
+    spaceId?: string | null;
   }) => void;
   initialData?: {
     content?: any;
-    entityId?: string;
+    organizationId?: string;
+    spaceId?: string;
     title?: string;
     slug?: string;
   };
@@ -53,13 +54,15 @@ export function NewPageModal({
   onSubmit,
   initialData,
 }: NewPageModalProps) {
-  const { entities, isLoadingEntities } = useEntityViewModel();
+  const { organizations, isLoadingOrganizations, spaces, isLoadingSpaces } =
+    useOrganizationViewModel();
 
   // Estados centralizados no modal
   const [title, setTitle] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
-  const [selectedEntityId, setSelectedEntityId] = useState<string>("");
   const [puckData, setPuckData] = useState<any>({});
+  const [selectedOrgId, setSelectedOrgId] = useState<string>("");
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string>("");
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -72,14 +75,16 @@ export function NewPageModal({
     if (isOpen) {
       if (mode === "create") {
         setTitle("");
-        setSlug(""); // Caso precise de um campo slug depois
+        setSlug("");
         setPuckData({});
-        setSelectedEntityId("");
+        setSelectedOrgId("");
+        setSelectedSpaceId("");
       } else {
         setTitle(initialData?.title ?? "");
         setSlug(initialData?.slug ?? "");
         setPuckData(initialData?.content ?? {});
-        setSelectedEntityId(initialData?.entityId ?? "");
+        setSelectedOrgId(initialData?.organizationId ?? "");
+        setSelectedSpaceId(initialData?.spaceId ?? "");
       }
     }
   }, [isOpen, mode, initialData]);
@@ -89,12 +94,17 @@ export function NewPageModal({
       alert("Por favor, preencha o Nome da página.");
       return;
     }
-    if (!selectedEntityId) {
-      alert("Por favor, selecione uma Secretaria.");
+    if (!selectedOrgId) {
+      alert("Por favor, selecione uma Secretaria / Órgão.");
       return;
     }
-    // Envia tudo para o componente pai salvar
-    onSubmit({ title, slug, content: puckData, entityId: selectedEntityId });
+    onSubmit({
+      title,
+      slug,
+      content: puckData,
+      organizationId: selectedOrgId,
+      spaceId: selectedSpaceId || null,
+    });
   };
 
   const overrides: Partial<Overrides> = useMemo(
@@ -194,24 +204,47 @@ export function NewPageModal({
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="entity">Secretaria</Label>
-              <Select
-                value={selectedEntityId}
-                onValueChange={setSelectedEntityId}
-              >
-                <SelectTrigger id="entity" className="w-full">
+              <Label htmlFor="org">Secretaria / Órgão Responsável</Label>
+              <Select value={selectedOrgId} onValueChange={setSelectedOrgId}>
+                <SelectTrigger id="org" className="w-full">
                   <SelectValue
                     placeholder={
-                      isLoadingEntities
+                      isLoadingOrganizations
                         ? "Carregando..."
-                        : "Selecione uma secretaria"
+                        : "Selecione uma secretaria/órgão"
                     }
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {entities?.map((e) => (
-                    <SelectItem key={e.id} value={e.id}>
-                      {e.name}
+                  {organizations?.map((org) => (
+                    <SelectItem key={org.id} value={org.id}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="space">Espaço de URL (Prefixo de rota)</Label>
+              <Select
+                value={selectedSpaceId || "root"}
+                onValueChange={(val) =>
+                  setSelectedSpaceId(val === "root" ? "" : val)
+                }
+              >
+                <SelectTrigger id="space" className="w-full">
+                  <SelectValue
+                    placeholder={
+                      isLoadingSpaces ? "Carregando..." : "Raiz (/) do portal"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="root">Raiz (/) - Sem prefixo</SelectItem>
+                  {spaces?.map((sp) => (
+                    <SelectItem key={sp.id} value={sp.id}>
+                      /{sp.slug}/ ({sp.title})
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -31,10 +31,25 @@ export class PagesController {
     return this.pagesService.findAll();
   }
 
-  // Qualquer um (Público) pode visualizar os detalhes de uma página
+  // Qualquer um (Público) pode visualizar os detalhes de uma página por ID
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.pagesService.findOne(id);
+  }
+
+  // Rota pública para buscar página raiz (sem espaço): ex /historia
+  @Get('public/root/:slug')
+  async findByRootSlug(@Param('slug') slug: string) {
+    return this.pagesService.findByRoute(null, slug);
+  }
+
+  // Rota pública para buscar página por espaço: ex /educacao/matriculas
+  @Get('public/:spaceSlug/:slug')
+  async findBySpaceAndSlug(
+    @Param('spaceSlug') spaceSlug: string,
+    @Param('slug') slug: string,
+  ) {
+    return this.pagesService.findByRoute(spaceSlug, slug);
   }
 
   // Operações de Mutação exigem autenticação do usuário
@@ -44,7 +59,7 @@ export class PagesController {
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
     // Validação ABAC na Criação:
-    // Garante que o usuário tem permissão para associar a nova página à secretaria especificada (entityId)
+    // Garante que o usuário tem permissão para associar a nova página à organização especificada (organizationId)
     if (!ability.can(Action.Create, subject('Page', createPageDto as any))) {
       throw new ForbiddenException(
         'Você não tem permissão para criar páginas para esta secretaria.',
@@ -65,7 +80,7 @@ export class PagesController {
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
     // Validação ABAC na Atualização:
-    // Garante que o usuário só consiga atualizar se pertencer à mesma secretaria (Page.entityId == User.entityId),
+    // Garante que o usuário só consiga atualizar se pertencer à mesma organização (Page.organizationId == User.organizationId),
     // a menos que seja um Administrador com permissões completas
     if (!ability.can(Action.Update, subject('Page', page))) {
       throw new ForbiddenException(

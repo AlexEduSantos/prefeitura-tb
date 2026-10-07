@@ -23,8 +23,12 @@ export class ArticlesController {
 
   // Qualquer um (Público) pode listar os artigos
   @Get()
-  async findAll(@Query('search') search: string) {
-    return this.articlesService.findAll(search);
+  async findAll(
+    @Query('search') search?: string,
+    @Query('category') category?: string,
+    @Query('organizationId') organizationId?: string,
+  ) {
+    return this.articlesService.findAll(search, category, organizationId);
   }
 
   // Qualquer um (Público) pode visualizar os detalhes de um artigo

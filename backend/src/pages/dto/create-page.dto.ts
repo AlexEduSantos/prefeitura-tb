@@ -17,8 +17,12 @@ export class CreatePageDto {
   published?: boolean;
 
   @IsString()
-  @IsNotEmpty()
-  entityId!: string;
+  @IsOptional()
+  spaceId?: string;
+
+  @IsString()
+  @IsOptional()
+  organizationId?: string;
 
   @IsString()
   @IsNotEmpty()

@@ -17,7 +17,8 @@ export class PagesService {
   async findAll(): Promise<Page[]> {
     return this.prisma.page.findMany({
       include: {
-        entity: true,
+        space: true,
+        organization: true,
         user: {
           select: { name: true, username: true, avatar: true, email: true },
         },
@@ -29,7 +30,8 @@ export class PagesService {
     const page = await this.prisma.page.findUnique({
       where: { id },
       include: {
-        entity: true,
+        space: true,
+        organization: true,
         user: {
           select: { name: true, username: true, avatar: true, email: true },
         },
@@ -38,6 +40,34 @@ export class PagesService {
     if (!page) {
       throw new NotFoundException(`Página com ID ${id} não encontrada.`);
     }
+    return page;
+  }
+
+  async findByRoute(spaceSlug: string | null, pageSlug: string): Promise<Page> {
+    const space = spaceSlug
+      ? await this.prisma.space.findUnique({ where: { slug: spaceSlug } })
+      : null;
+
+    if (spaceSlug && !space) {
+      throw new NotFoundException(`Espaço "${spaceSlug}" não encontrado.`);
+    }
+
+    const page = await this.prisma.page.findFirst({
+      where: {
+        spaceId: space ? space.id : null,
+        slug: pageSlug,
+        published: true,
+      },
+      include: {
+        space: true,
+        organization: true,
+      },
+    });
+
+    if (!page) {
+      throw new NotFoundException(`Página "${pageSlug}" não encontrada.`);
+    }
+
     return page;
   }
 

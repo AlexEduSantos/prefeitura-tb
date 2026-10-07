@@ -315,12 +315,6 @@ export function ArticleViewModel() {
         },
       },
       {
-        id: "categoria",
-        accessorFn: (row) => row.entity?.title,
-        header: "Categoria",
-        cell: ({ row }) => <div>{row.getValue("categoria") as string}</div>,
-      },
-      {
         accessorKey: "actions",
         header: "Ações",
         cell: ({ row, table }) => {

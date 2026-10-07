@@ -5,7 +5,7 @@ import { IMedia } from "../type/media";
 import { IArticle } from "../type/article";
 import { ArticleViewModel } from "./article.viewmodel";
 import { useRouter } from "next/navigation";
-import { useEntityViewModel } from "./entity.viewmodel";
+import { useOrganizationViewModel } from "./organization.viewmodel";
 import { useUserViewModel } from "./user.viewmodel";
 import { IGallery } from "../type/gallery";
 
@@ -26,7 +26,8 @@ export interface NewArticleFormState {
   socialPreviewTitle: string;
   socialPreviewImage: string;
   socialPreviewDescription: string;
-  entityId: string;
+  organizationId: string;
+  categoryIds: string[];
   // Dates
   publicationDate: string;
   expirationDate: string;
@@ -55,7 +56,12 @@ export function useNewArticleViewModel(
   const router = useRouter();
   const { createArticle, updateArticle } = ArticleViewModel();
   const { user } = useUserViewModel();
-  const { entities, isLoadingEntities } = useEntityViewModel();
+  const {
+    organizations,
+    isLoadingOrganizations,
+    categories,
+    isLoadingCategories,
+  } = useOrganizationViewModel();
 
   // Toggles de visibilidade (UI)
   const [hasHeadline, setHasHeadline] = useState(false);
@@ -88,8 +94,10 @@ export function useNewArticleViewModel(
     tags: initialData?.tags || [],
     socialPreviewTitle: initialData?.socialPreviewTitle || "",
     socialPreviewImage: initialData?.socialPreviewImage || "",
-    socialPreviewDescription: initialData?.socialPreviewDescription || "",
-    entityId: initialData?.entityId || "",
+    socialPreviewDescription:
+      (initialData as any)?.socialPreviewDescription || "",
+    organizationId: initialData?.organizationId || "",
+    categoryIds: (initialData as any)?.categories?.map((c: any) => c.id) || [],
     publicationDate: initialData?.publicationDate
       ? new Date(initialData.publicationDate).toISOString().slice(0, 16)
       : "",
@@ -158,7 +166,8 @@ export function useNewArticleViewModel(
       body: editorContentRef.current,
       type: form.type,
       status: status === "draft" ? "rascunho" : "publicado",
-      entityId: form.entityId,
+      organizationId: form.organizationId,
+      categoryIds: form.categoryIds,
       // Envia null explicitamente para que a API limpe o campo quando removido
       coverId: (form.cover?.id ?? null) as any,
       galleryId: (form.gallery?.id ?? null) as any,
@@ -178,7 +187,6 @@ export function useNewArticleViewModel(
 
       socialPreviewTitle: form.socialPreviewTitle || undefined,
       socialPreviewImage: form.socialPreviewImage || undefined,
-      socialPreviewDescription: form.socialPreviewDescription || undefined,
     };
 
     if (hasHeadline && form.headline) payload.headline = form.headline;
@@ -247,7 +255,9 @@ export function useNewArticleViewModel(
     setIsCoverModalOpen,
     isGalleryModalOpen,
     setIsGalleryModalOpen,
-    entities,
-    isLoadingEntities,
+    organizations,
+    isLoadingOrganizations,
+    categories,
+    isLoadingCategories,
   };
 }

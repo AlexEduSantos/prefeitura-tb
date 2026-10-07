@@ -8,9 +8,11 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Organization'
+export type * from './models/Space'
+export type * from './models/Category'
 export type * from './models/User'
 export type * from './models/Session'
-export type * from './models/Entity'
 export type * from './models/Page'
 export type * from './models/Article'
 export type * from './models/Media'

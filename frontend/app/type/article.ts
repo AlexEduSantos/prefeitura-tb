@@ -1,4 +1,3 @@
-import { IEntity } from "./entity";
 import { IGallery } from "./gallery";
 import { IMedia } from "./media";
 import { IUser } from "./user";
@@ -36,8 +35,9 @@ export interface IArticle {
   gallery: IGallery;
   socialPreviewTitle?: string;
   socialPreviewImage?: string;
-  socialPreviewDescription?: string;
-  entity: IEntity;
-  entityId?: string;
+  organizationId?: string;
+  organization?: any;
+  categories?: any[];
+  categoryIds?: string[];
   visibility?: string;
 }

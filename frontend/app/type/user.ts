@@ -1,4 +1,4 @@
-import { IEntity } from "./entity";
+import { IOrganization } from "./organization";
 
 export interface IUser {
   id: string;
@@ -7,8 +7,8 @@ export interface IUser {
   email: string;
   avatar: string;
   phone: string;
-  entityId: string;
-  entity: IEntity;
+  organizationId?: string;
+  organization?: IOrganization;
   createdAt: string;
   updatedAt: string;
   role?: "admin" | "journalist" | "secretary";

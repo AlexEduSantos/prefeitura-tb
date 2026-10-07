@@ -34,7 +34,7 @@ import { MediaPickerModal } from "./media-picker-modal";
 import { IMedia } from "@/app/type/media";
 import { useEffect, useState } from "react";
 import { ImageVisualizer } from "./image-visualizer";
-import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
+import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,7 +47,7 @@ import {
 } from "./ui/alert-dialog";
 
 export default function ServicesManager() {
-  const { entities } = useEntityViewModel();
+  const { organizations, isLoadingOrganizations } = useOrganizationViewModel();
 
   const {
     isLoadingServices,
@@ -285,24 +285,30 @@ export default function ServicesManager() {
                 />
               </div>
 
-              {/* Entidade */}
+              {/* Secretaria / Órgão Responsável */}
               <div className="flex flex-col gap-2">
-                <Label htmlFor="entityId">Entidade *</Label>
+                <Label htmlFor="organizationId">Secretaria / Órgão *</Label>
                 <Select
-                  name="entityId"
-                  value={formData.entityId || ""}
+                  name="organizationId"
+                  value={formData.organizationId || ""}
                   onValueChange={(value) =>
-                    setFormData({ ...formData, entityId: value })
+                    setFormData({ ...formData, organizationId: value })
                   }
                   required
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione uma entidade" />
+                    <SelectValue
+                      placeholder={
+                        isLoadingOrganizations
+                          ? "Carregando..."
+                          : "Selecione uma secretaria/órgão"
+                      }
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    {entities?.map((entity) => (
-                      <SelectItem key={entity.id} value={entity.id}>
-                        {entity.title}
+                    {organizations?.map((org) => (
+                      <SelectItem key={org.id} value={org.id}>
+                        {org.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

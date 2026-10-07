@@ -62,6 +62,17 @@ export const UserRole = {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const OrganizationTypes = {
+  secretaria: 'secretaria',
+  divisão: 'divisão',
+  seção: 'seção',
+  conselho: 'conselho',
+  projeto: 'projeto'
+} as const
+
+export type OrganizationTypes = (typeof OrganizationTypes)[keyof typeof OrganizationTypes]
+
+
 export const GalleryType = {
   slider: 'slider',
   sliderVertical: 'sliderVertical',

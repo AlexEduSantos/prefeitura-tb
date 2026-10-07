@@ -56,8 +56,13 @@ export class CreatePopupDto {
   @IsDateString()
   expirationDate?: string;
 
+  @IsOptional()
   @IsUUID()
-  entityId!: string;
+  organizationId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  spaceId?: string;
 
   @IsUUID()
   userId!: string;

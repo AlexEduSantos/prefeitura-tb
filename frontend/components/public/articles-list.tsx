@@ -49,7 +49,7 @@ function ArticleCard({ article }: { article: any }) {
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-4">
         <div className="text-xs text-gray-200 mb-1 uppercase tracking-wider font-medium">
-          {article.entity?.name || "Notícias"}
+          "Notícias"
         </div>
         <h3 className="text-white text-lg font-bold leading-snug line-clamp-2 group-hover:text-blue-300 transition-colors">
           {article.title}

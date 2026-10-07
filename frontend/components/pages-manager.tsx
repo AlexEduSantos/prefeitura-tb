@@ -49,7 +49,6 @@ import {
 } from "./ui/select";
 import { NewPageModal } from "./new-page-modal";
 import { ViewPageModal } from "./view-page-modal";
-import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
 
 export const columns: ColumnDef<IPage>[] = [
   {
@@ -113,19 +112,22 @@ export const columns: ColumnDef<IPage>[] = [
     ),
   },
   {
-    accessorKey: "entityId",
-    header: "Secretaria",
+    accessorKey: "organization",
+    header: "Secretaria / Órgão",
     cell: ({ row }) => {
-      const { entities, isLoadingEntities } = useEntityViewModel();
-
-      const entityId = row.getValue("entityId") as string;
-      const entity = entities?.find((e) => e.id === entityId);
-
-      if (isLoadingEntities) return <span>Carregando...</span>;
-      if (!entity) return <span>Nenhuma</span>;
+      const page = row.original as any;
+      const orgName = page.organization?.name;
+      const spaceSlug = page.space?.slug ? `/${page.space.slug}` : "/";
 
       return (
-        <div className="font-medium text-muted-foreground">{entity.name}</div>
+        <div className="flex flex-col">
+          <span className="font-medium text-foreground">
+            {orgName || "Nenhuma"}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Espaço: {spaceSlug}
+          </span>
+        </div>
       );
     },
   },
@@ -377,15 +379,12 @@ export function PageManager() {
         onClose={handleCloseNewPageModal}
         mode={modalMode}
         onSubmit={handleSubmitPage}
-        onChangeTitle={setTitle}
-        onChangeSlug={setSlug}
-        title={page?.title || ""}
-        slug={page?.slug || ""}
         initialData={
           page
             ? {
                 content: page.content,
-                entityId: page.entityId,
+                organizationId: page.organizationId || "",
+                spaceId: page.spaceId || "",
                 title: page.title,
                 slug: page.slug,
               }

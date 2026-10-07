@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto): Promise<any> {
-    const { email, name, username, entityId, password } = registerDto;
+    const { email, name, username, organizationId, password } = registerDto;
 
     // Verifica se já existe um usuário com o mesmo e-mail ou nome de usuário (ambos são únicos no Prisma)
     const existingUser = await this.prisma.user.findFirst({
@@ -41,7 +41,7 @@ export class AuthService {
         email,
         name,
         username,
-        entityId,
+        organizationId,
         password: hashedPassword,
         avatar: '',
       },

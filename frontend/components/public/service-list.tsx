@@ -22,7 +22,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { useEntityViewModel } from "@/app/viewmodel/entity.viewmodel";
 
 interface ServiceItemProps {
   service: IServices;
@@ -57,10 +56,6 @@ interface ToolbarProps {
 }
 
 function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
-  const { entities, isLoadingEntities } = useEntityViewModel();
-
-  if (isLoadingEntities) return <>Carregando...</>;
-
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
       <div className="flex-1 w-full sm:w-auto relative">
@@ -112,11 +107,6 @@ function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
           <DropdownMenuLabel>Categoria</DropdownMenuLabel>
           <DropdownMenuRadioGroup>
             <DropdownMenuRadioItem value="">Todas</DropdownMenuRadioItem>
-            {entities.map((entity) => (
-              <DropdownMenuRadioItem key={entity.id} value={entity.id}>
-                {entity.title}
-              </DropdownMenuRadioItem>
-            ))}
           </DropdownMenuRadioGroup>
           <DropdownMenuSeparator />
 

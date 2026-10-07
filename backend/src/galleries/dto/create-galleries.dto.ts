@@ -16,8 +16,13 @@ export class CreateGalleriesDto {
   @IsBoolean()
   active?: boolean;
 
+  @IsOptional()
   @IsUUID()
-  entityId!: string;
+  organizationId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  spaceId?: string;
 
   @IsOptional()
   @ValidateNested({ each: true })

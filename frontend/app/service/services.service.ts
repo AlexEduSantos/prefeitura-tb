@@ -6,13 +6,11 @@ export class ServicesService {
   static async getServicesList(params?: {
     page?: number;
     limit?: number;
-    entity?: string;
     title?: string;
   }) {
     const query = new URLSearchParams();
     if (params?.page) query.append("page", String(params.page));
     if (params?.limit) query.append("limit", String(params.limit));
-    if (params?.entity) query.append("entity", params.entity);
     if (params?.title) query.append("title", params.title);
     const url = `${API_URL}?${query.toString()}`;
 

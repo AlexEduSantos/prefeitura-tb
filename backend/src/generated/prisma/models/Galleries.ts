@@ -44,7 +44,8 @@ export type GalleriesMinAggregateOutputType = {
   galleryAutoplay: boolean | null
   galleryInterval: number | null
   galleryShowThumbnails: boolean | null
-  entityId: string | null
+  spaceId: string | null
+  organizationId: string | null
   userId: string | null
 }
 
@@ -58,7 +59,8 @@ export type GalleriesMaxAggregateOutputType = {
   galleryAutoplay: boolean | null
   galleryInterval: number | null
   galleryShowThumbnails: boolean | null
-  entityId: string | null
+  spaceId: string | null
+  organizationId: string | null
   userId: string | null
 }
 
@@ -72,7 +74,8 @@ export type GalleriesCountAggregateOutputType = {
   galleryAutoplay: number
   galleryInterval: number
   galleryShowThumbnails: number
-  entityId: number
+  spaceId: number
+  organizationId: number
   userId: number
   _all: number
 }
@@ -96,7 +99,8 @@ export type GalleriesMinAggregateInputType = {
   galleryAutoplay?: true
   galleryInterval?: true
   galleryShowThumbnails?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   userId?: true
 }
 
@@ -110,7 +114,8 @@ export type GalleriesMaxAggregateInputType = {
   galleryAutoplay?: true
   galleryInterval?: true
   galleryShowThumbnails?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   userId?: true
 }
 
@@ -124,7 +129,8 @@ export type GalleriesCountAggregateInputType = {
   galleryAutoplay?: true
   galleryInterval?: true
   galleryShowThumbnails?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   userId?: true
   _all?: true
 }
@@ -225,7 +231,8 @@ export type GalleriesGroupByOutputType = {
   galleryAutoplay: boolean
   galleryInterval: number
   galleryShowThumbnails: boolean
-  entityId: string
+  spaceId: string | null
+  organizationId: string | null
   userId: string
   _count: GalleriesCountAggregateOutputType | null
   _avg: GalleriesAvgAggregateOutputType | null
@@ -262,9 +269,11 @@ export type GalleriesWhereInput = {
   galleryAutoplay?: Prisma.BoolFilter<"Galleries"> | boolean
   galleryInterval?: Prisma.IntFilter<"Galleries"> | number
   galleryShowThumbnails?: Prisma.BoolFilter<"Galleries"> | boolean
-  entityId?: Prisma.UuidFilter<"Galleries"> | string
+  spaceId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
   userId?: Prisma.UuidFilter<"Galleries"> | string
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   slides?: Prisma.GalleryMediaListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
@@ -280,9 +289,11 @@ export type GalleriesOrderByWithRelationInput = {
   galleryAutoplay?: Prisma.SortOrder
   galleryInterval?: Prisma.SortOrder
   galleryShowThumbnails?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
-  entity?: Prisma.EntityOrderByWithRelationInput
+  space?: Prisma.SpaceOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   slides?: Prisma.GalleryMediaOrderByRelationAggregateInput
   articles?: Prisma.ArticleOrderByRelationAggregateInput
@@ -302,9 +313,11 @@ export type GalleriesWhereUniqueInput = Prisma.AtLeast<{
   galleryAutoplay?: Prisma.BoolFilter<"Galleries"> | boolean
   galleryInterval?: Prisma.IntFilter<"Galleries"> | number
   galleryShowThumbnails?: Prisma.BoolFilter<"Galleries"> | boolean
-  entityId?: Prisma.UuidFilter<"Galleries"> | string
+  spaceId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
   userId?: Prisma.UuidFilter<"Galleries"> | string
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   slides?: Prisma.GalleryMediaListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
@@ -320,7 +333,8 @@ export type GalleriesOrderByWithAggregationInput = {
   galleryAutoplay?: Prisma.SortOrder
   galleryInterval?: Prisma.SortOrder
   galleryShowThumbnails?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   _count?: Prisma.GalleriesCountOrderByAggregateInput
   _avg?: Prisma.GalleriesAvgOrderByAggregateInput
@@ -342,7 +356,8 @@ export type GalleriesScalarWhereWithAggregatesInput = {
   galleryAutoplay?: Prisma.BoolWithAggregatesFilter<"Galleries"> | boolean
   galleryInterval?: Prisma.IntWithAggregatesFilter<"Galleries"> | number
   galleryShowThumbnails?: Prisma.BoolWithAggregatesFilter<"Galleries"> | boolean
-  entityId?: Prisma.UuidWithAggregatesFilter<"Galleries"> | string
+  spaceId?: Prisma.UuidNullableWithAggregatesFilter<"Galleries"> | string | null
+  organizationId?: Prisma.UuidNullableWithAggregatesFilter<"Galleries"> | string | null
   userId?: Prisma.UuidWithAggregatesFilter<"Galleries"> | string
 }
 
@@ -356,7 +371,8 @@ export type GalleriesCreateInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entity: Prisma.EntityCreateNestedOneWithoutGalleriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutGalleriesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutGalleriesInput
   user: Prisma.UserCreateNestedOneWithoutGalleriesInput
   slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
   articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
@@ -372,7 +388,8 @@ export type GalleriesUncheckedCreateInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
   slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
@@ -388,7 +405,8 @@ export type GalleriesUpdateInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entity?: Prisma.EntityUpdateOneRequiredWithoutGalleriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutGalleriesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutGalleriesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
   slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
@@ -404,7 +422,8 @@ export type GalleriesUncheckedUpdateInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
@@ -420,7 +439,8 @@ export type GalleriesCreateManyInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
 }
 
@@ -446,7 +466,8 @@ export type GalleriesUncheckedUpdateManyInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -481,7 +502,8 @@ export type GalleriesCountOrderByAggregateInput = {
   galleryAutoplay?: Prisma.SortOrder
   galleryInterval?: Prisma.SortOrder
   galleryShowThumbnails?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -499,7 +521,8 @@ export type GalleriesMaxOrderByAggregateInput = {
   galleryAutoplay?: Prisma.SortOrder
   galleryInterval?: Prisma.SortOrder
   galleryShowThumbnails?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -513,7 +536,8 @@ export type GalleriesMinOrderByAggregateInput = {
   galleryAutoplay?: Prisma.SortOrder
   galleryInterval?: Prisma.SortOrder
   galleryShowThumbnails?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -524,6 +548,90 @@ export type GalleriesSumOrderByAggregateInput = {
 export type GalleriesScalarRelationFilter = {
   is?: Prisma.GalleriesWhereInput
   isNot?: Prisma.GalleriesWhereInput
+}
+
+export type GalleriesCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput> | Prisma.GalleriesCreateWithoutOrganizationInput[] | Prisma.GalleriesUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutOrganizationInput | Prisma.GalleriesCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.GalleriesCreateManyOrganizationInputEnvelope
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+}
+
+export type GalleriesUncheckedCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput> | Prisma.GalleriesCreateWithoutOrganizationInput[] | Prisma.GalleriesUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutOrganizationInput | Prisma.GalleriesCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.GalleriesCreateManyOrganizationInputEnvelope
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+}
+
+export type GalleriesUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput> | Prisma.GalleriesCreateWithoutOrganizationInput[] | Prisma.GalleriesUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutOrganizationInput | Prisma.GalleriesCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.GalleriesCreateManyOrganizationInputEnvelope
+  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutOrganizationInput | Prisma.GalleriesUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
+}
+
+export type GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput> | Prisma.GalleriesCreateWithoutOrganizationInput[] | Prisma.GalleriesUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutOrganizationInput | Prisma.GalleriesCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.GalleriesCreateManyOrganizationInputEnvelope
+  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutOrganizationInput | Prisma.GalleriesUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
+}
+
+export type GalleriesCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput> | Prisma.GalleriesCreateWithoutSpaceInput[] | Prisma.GalleriesUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutSpaceInput | Prisma.GalleriesCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.GalleriesCreateManySpaceInputEnvelope
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+}
+
+export type GalleriesUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput> | Prisma.GalleriesCreateWithoutSpaceInput[] | Prisma.GalleriesUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutSpaceInput | Prisma.GalleriesCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.GalleriesCreateManySpaceInputEnvelope
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+}
+
+export type GalleriesUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput> | Prisma.GalleriesCreateWithoutSpaceInput[] | Prisma.GalleriesUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutSpaceInput | Prisma.GalleriesCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutSpaceInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.GalleriesCreateManySpaceInputEnvelope
+  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutSpaceInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutSpaceInput | Prisma.GalleriesUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
+}
+
+export type GalleriesUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput> | Prisma.GalleriesCreateWithoutSpaceInput[] | Prisma.GalleriesUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutSpaceInput | Prisma.GalleriesCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutSpaceInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.GalleriesCreateManySpaceInputEnvelope
+  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
+  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutSpaceInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutSpaceInput | Prisma.GalleriesUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
 }
 
 export type GalleriesCreateNestedManyWithoutUserInput = {
@@ -565,48 +673,6 @@ export type GalleriesUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
   update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutUserInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutUserInput | Prisma.GalleriesUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
-}
-
-export type GalleriesCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput> | Prisma.GalleriesCreateWithoutEntityInput[] | Prisma.GalleriesUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutEntityInput | Prisma.GalleriesCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.GalleriesCreateManyEntityInputEnvelope
-  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-}
-
-export type GalleriesUncheckedCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput> | Prisma.GalleriesCreateWithoutEntityInput[] | Prisma.GalleriesUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutEntityInput | Prisma.GalleriesCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.GalleriesCreateManyEntityInputEnvelope
-  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-}
-
-export type GalleriesUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput> | Prisma.GalleriesCreateWithoutEntityInput[] | Prisma.GalleriesUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutEntityInput | Prisma.GalleriesCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutEntityInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.GalleriesCreateManyEntityInputEnvelope
-  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutEntityInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutEntityInput | Prisma.GalleriesUpdateManyWithWhereWithoutEntityInput[]
-  deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
-}
-
-export type GalleriesUncheckedUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput> | Prisma.GalleriesCreateWithoutEntityInput[] | Prisma.GalleriesUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.GalleriesCreateOrConnectWithoutEntityInput | Prisma.GalleriesCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.GalleriesUpsertWithWhereUniqueWithoutEntityInput | Prisma.GalleriesUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.GalleriesCreateManyEntityInputEnvelope
-  set?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  disconnect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  delete?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  connect?: Prisma.GalleriesWhereUniqueInput | Prisma.GalleriesWhereUniqueInput[]
-  update?: Prisma.GalleriesUpdateWithWhereUniqueWithoutEntityInput | Prisma.GalleriesUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.GalleriesUpdateManyWithWhereWithoutEntityInput | Prisma.GalleriesUpdateManyWithWhereWithoutEntityInput[]
   deleteMany?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
 }
 
@@ -652,6 +718,140 @@ export type GalleriesUpdateOneRequiredWithoutSlidesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GalleriesUpdateToOneWithWhereWithoutSlidesInput, Prisma.GalleriesUpdateWithoutSlidesInput>, Prisma.GalleriesUncheckedUpdateWithoutSlidesInput>
 }
 
+export type GalleriesCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  space?: Prisma.SpaceCreateNestedOneWithoutGalleriesInput
+  user: Prisma.UserCreateNestedOneWithoutGalleriesInput
+  slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
+}
+
+export type GalleriesUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  spaceId?: string | null
+  userId: string
+  slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
+}
+
+export type GalleriesCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  create: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput>
+}
+
+export type GalleriesCreateManyOrganizationInputEnvelope = {
+  data: Prisma.GalleriesCreateManyOrganizationInput | Prisma.GalleriesCreateManyOrganizationInput[]
+  skipDuplicates?: boolean
+}
+
+export type GalleriesUpsertWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  update: Prisma.XOR<Prisma.GalleriesUpdateWithoutOrganizationInput, Prisma.GalleriesUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.GalleriesCreateWithoutOrganizationInput, Prisma.GalleriesUncheckedCreateWithoutOrganizationInput>
+}
+
+export type GalleriesUpdateWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  data: Prisma.XOR<Prisma.GalleriesUpdateWithoutOrganizationInput, Prisma.GalleriesUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type GalleriesUpdateManyWithWhereWithoutOrganizationInput = {
+  where: Prisma.GalleriesScalarWhereInput
+  data: Prisma.XOR<Prisma.GalleriesUpdateManyMutationInput, Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationInput>
+}
+
+export type GalleriesScalarWhereInput = {
+  AND?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
+  OR?: Prisma.GalleriesScalarWhereInput[]
+  NOT?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
+  id?: Prisma.UuidFilter<"Galleries"> | string
+  title?: Prisma.StringFilter<"Galleries"> | string
+  active?: Prisma.BoolFilter<"Galleries"> | boolean
+  createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFilter<"Galleries"> | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFilter<"Galleries"> | boolean
+  galleryInterval?: Prisma.IntFilter<"Galleries"> | number
+  galleryShowThumbnails?: Prisma.BoolFilter<"Galleries"> | boolean
+  spaceId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  userId?: Prisma.UuidFilter<"Galleries"> | string
+}
+
+export type GalleriesCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  organization?: Prisma.OrganizationCreateNestedOneWithoutGalleriesInput
+  user: Prisma.UserCreateNestedOneWithoutGalleriesInput
+  slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
+}
+
+export type GalleriesUncheckedCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  organizationId?: string | null
+  userId: string
+  slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
+}
+
+export type GalleriesCreateOrConnectWithoutSpaceInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  create: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput>
+}
+
+export type GalleriesCreateManySpaceInputEnvelope = {
+  data: Prisma.GalleriesCreateManySpaceInput | Prisma.GalleriesCreateManySpaceInput[]
+  skipDuplicates?: boolean
+}
+
+export type GalleriesUpsertWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  update: Prisma.XOR<Prisma.GalleriesUpdateWithoutSpaceInput, Prisma.GalleriesUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.GalleriesCreateWithoutSpaceInput, Prisma.GalleriesUncheckedCreateWithoutSpaceInput>
+}
+
+export type GalleriesUpdateWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.GalleriesWhereUniqueInput
+  data: Prisma.XOR<Prisma.GalleriesUpdateWithoutSpaceInput, Prisma.GalleriesUncheckedUpdateWithoutSpaceInput>
+}
+
+export type GalleriesUpdateManyWithWhereWithoutSpaceInput = {
+  where: Prisma.GalleriesScalarWhereInput
+  data: Prisma.XOR<Prisma.GalleriesUpdateManyMutationInput, Prisma.GalleriesUncheckedUpdateManyWithoutSpaceInput>
+}
+
 export type GalleriesCreateWithoutUserInput = {
   id?: string
   title: string
@@ -662,7 +862,8 @@ export type GalleriesCreateWithoutUserInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entity: Prisma.EntityCreateNestedOneWithoutGalleriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutGalleriesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutGalleriesInput
   slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
   articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
 }
@@ -677,7 +878,8 @@ export type GalleriesUncheckedCreateWithoutUserInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
 }
@@ -708,79 +910,6 @@ export type GalleriesUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.GalleriesUpdateManyMutationInput, Prisma.GalleriesUncheckedUpdateManyWithoutUserInput>
 }
 
-export type GalleriesScalarWhereInput = {
-  AND?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
-  OR?: Prisma.GalleriesScalarWhereInput[]
-  NOT?: Prisma.GalleriesScalarWhereInput | Prisma.GalleriesScalarWhereInput[]
-  id?: Prisma.UuidFilter<"Galleries"> | string
-  title?: Prisma.StringFilter<"Galleries"> | string
-  active?: Prisma.BoolFilter<"Galleries"> | boolean
-  createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
-  galleryType?: Prisma.EnumGalleryTypeFilter<"Galleries"> | $Enums.GalleryType
-  galleryAutoplay?: Prisma.BoolFilter<"Galleries"> | boolean
-  galleryInterval?: Prisma.IntFilter<"Galleries"> | number
-  galleryShowThumbnails?: Prisma.BoolFilter<"Galleries"> | boolean
-  entityId?: Prisma.UuidFilter<"Galleries"> | string
-  userId?: Prisma.UuidFilter<"Galleries"> | string
-}
-
-export type GalleriesCreateWithoutEntityInput = {
-  id?: string
-  title: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  galleryType?: $Enums.GalleryType
-  galleryAutoplay?: boolean
-  galleryInterval?: number
-  galleryShowThumbnails?: boolean
-  user: Prisma.UserCreateNestedOneWithoutGalleriesInput
-  slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
-  articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
-}
-
-export type GalleriesUncheckedCreateWithoutEntityInput = {
-  id?: string
-  title: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  galleryType?: $Enums.GalleryType
-  galleryAutoplay?: boolean
-  galleryInterval?: number
-  galleryShowThumbnails?: boolean
-  userId: string
-  slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
-  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
-}
-
-export type GalleriesCreateOrConnectWithoutEntityInput = {
-  where: Prisma.GalleriesWhereUniqueInput
-  create: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput>
-}
-
-export type GalleriesCreateManyEntityInputEnvelope = {
-  data: Prisma.GalleriesCreateManyEntityInput | Prisma.GalleriesCreateManyEntityInput[]
-  skipDuplicates?: boolean
-}
-
-export type GalleriesUpsertWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.GalleriesWhereUniqueInput
-  update: Prisma.XOR<Prisma.GalleriesUpdateWithoutEntityInput, Prisma.GalleriesUncheckedUpdateWithoutEntityInput>
-  create: Prisma.XOR<Prisma.GalleriesCreateWithoutEntityInput, Prisma.GalleriesUncheckedCreateWithoutEntityInput>
-}
-
-export type GalleriesUpdateWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.GalleriesWhereUniqueInput
-  data: Prisma.XOR<Prisma.GalleriesUpdateWithoutEntityInput, Prisma.GalleriesUncheckedUpdateWithoutEntityInput>
-}
-
-export type GalleriesUpdateManyWithWhereWithoutEntityInput = {
-  where: Prisma.GalleriesScalarWhereInput
-  data: Prisma.XOR<Prisma.GalleriesUpdateManyMutationInput, Prisma.GalleriesUncheckedUpdateManyWithoutEntityInput>
-}
-
 export type GalleriesCreateWithoutArticlesInput = {
   id?: string
   title: string
@@ -791,7 +920,8 @@ export type GalleriesCreateWithoutArticlesInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entity: Prisma.EntityCreateNestedOneWithoutGalleriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutGalleriesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutGalleriesInput
   user: Prisma.UserCreateNestedOneWithoutGalleriesInput
   slides?: Prisma.GalleryMediaCreateNestedManyWithoutGalleryInput
 }
@@ -806,7 +936,8 @@ export type GalleriesUncheckedCreateWithoutArticlesInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
   slides?: Prisma.GalleryMediaUncheckedCreateNestedManyWithoutGalleryInput
 }
@@ -837,7 +968,8 @@ export type GalleriesUpdateWithoutArticlesInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entity?: Prisma.EntityUpdateOneRequiredWithoutGalleriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutGalleriesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutGalleriesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
   slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
 }
@@ -852,7 +984,8 @@ export type GalleriesUncheckedUpdateWithoutArticlesInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
 }
@@ -867,7 +1000,8 @@ export type GalleriesCreateWithoutSlidesInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entity: Prisma.EntityCreateNestedOneWithoutGalleriesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutGalleriesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutGalleriesInput
   user: Prisma.UserCreateNestedOneWithoutGalleriesInput
   articles?: Prisma.ArticleCreateNestedManyWithoutGalleryInput
 }
@@ -882,7 +1016,8 @@ export type GalleriesUncheckedCreateWithoutSlidesInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutGalleryInput
 }
@@ -913,7 +1048,8 @@ export type GalleriesUpdateWithoutSlidesInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entity?: Prisma.EntityUpdateOneRequiredWithoutGalleriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutGalleriesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutGalleriesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
 }
@@ -928,9 +1064,130 @@ export type GalleriesUncheckedUpdateWithoutSlidesInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
+}
+
+export type GalleriesCreateManyOrganizationInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  spaceId?: string | null
+  userId: string
+}
+
+export type GalleriesUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  space?: Prisma.SpaceUpdateOneWithoutGalleriesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
+  slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
+}
+
+export type GalleriesUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
+}
+
+export type GalleriesUncheckedUpdateManyWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type GalleriesCreateManySpaceInput = {
+  id?: string
+  title: string
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  galleryType?: $Enums.GalleryType
+  galleryAutoplay?: boolean
+  galleryInterval?: number
+  galleryShowThumbnails?: boolean
+  organizationId?: string | null
+  userId: string
+}
+
+export type GalleriesUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organization?: Prisma.OrganizationUpdateOneWithoutGalleriesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
+  slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
+}
+
+export type GalleriesUncheckedUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
+}
+
+export type GalleriesUncheckedUpdateManyWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
+  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
+  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type GalleriesCreateManyUserInput = {
@@ -943,7 +1200,8 @@ export type GalleriesCreateManyUserInput = {
   galleryAutoplay?: boolean
   galleryInterval?: number
   galleryShowThumbnails?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
 }
 
 export type GalleriesUpdateWithoutUserInput = {
@@ -956,7 +1214,8 @@ export type GalleriesUpdateWithoutUserInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entity?: Prisma.EntityUpdateOneRequiredWithoutGalleriesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutGalleriesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutGalleriesNestedInput
   slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
 }
@@ -971,7 +1230,8 @@ export type GalleriesUncheckedUpdateWithoutUserInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
 }
@@ -986,63 +1246,8 @@ export type GalleriesUncheckedUpdateManyWithoutUserInput = {
   galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
   galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type GalleriesCreateManyEntityInput = {
-  id?: string
-  title: string
-  active?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  galleryType?: $Enums.GalleryType
-  galleryAutoplay?: boolean
-  galleryInterval?: number
-  galleryShowThumbnails?: boolean
-  userId: string
-}
-
-export type GalleriesUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
-  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  user?: Prisma.UserUpdateOneRequiredWithoutGalleriesNestedInput
-  slides?: Prisma.GalleryMediaUpdateManyWithoutGalleryNestedInput
-  articles?: Prisma.ArticleUpdateManyWithoutGalleryNestedInput
-}
-
-export type GalleriesUncheckedUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
-  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-  slides?: Prisma.GalleryMediaUncheckedUpdateManyWithoutGalleryNestedInput
-  articles?: Prisma.ArticleUncheckedUpdateManyWithoutGalleryNestedInput
-}
-
-export type GalleriesUncheckedUpdateManyWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
-  galleryAutoplay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  galleryInterval?: Prisma.IntFieldUpdateOperationsInput | number
-  galleryShowThumbnails?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1095,9 +1300,11 @@ export type GalleriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   galleryAutoplay?: boolean
   galleryInterval?: boolean
   galleryShowThumbnails?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   slides?: boolean | Prisma.Galleries$slidesArgs<ExtArgs>
   articles?: boolean | Prisma.Galleries$articlesArgs<ExtArgs>
@@ -1114,9 +1321,11 @@ export type GalleriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   galleryAutoplay?: boolean
   galleryInterval?: boolean
   galleryShowThumbnails?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["galleries"]>
 
@@ -1130,9 +1339,11 @@ export type GalleriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   galleryAutoplay?: boolean
   galleryInterval?: boolean
   galleryShowThumbnails?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["galleries"]>
 
@@ -1146,31 +1357,36 @@ export type GalleriesSelectScalar = {
   galleryAutoplay?: boolean
   galleryInterval?: boolean
   galleryShowThumbnails?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   userId?: boolean
 }
 
-export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "active" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "entityId" | "userId", ExtArgs["result"]["galleries"]>
+export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "active" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "spaceId" | "organizationId" | "userId", ExtArgs["result"]["galleries"]>
 export type GalleriesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   slides?: boolean | Prisma.Galleries$slidesArgs<ExtArgs>
   articles?: boolean | Prisma.Galleries$articlesArgs<ExtArgs>
   _count?: boolean | Prisma.GalleriesCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GalleriesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type GalleriesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $GalleriesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Galleries"
   objects: {
-    entity: Prisma.$EntityPayload<ExtArgs>
+    space: Prisma.$SpacePayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
     slides: Prisma.$GalleryMediaPayload<ExtArgs>[]
     articles: Prisma.$ArticlePayload<ExtArgs>[]
@@ -1185,7 +1401,8 @@ export type $GalleriesPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     galleryAutoplay: boolean
     galleryInterval: number
     galleryShowThumbnails: boolean
-    entityId: string
+    spaceId: string | null
+    organizationId: string | null
     userId: string
   }, ExtArgs["result"]["galleries"]>
   composites: {}
@@ -1581,7 +1798,8 @@ readonly fields: GalleriesFieldRefs;
  */
 export interface Prisma__GalleriesClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  entity<T extends Prisma.EntityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EntityDefaultArgs<ExtArgs>>): Prisma.Prisma__EntityClient<runtime.Types.Result.GetResult<Prisma.$EntityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  space<T extends Prisma.Galleries$spaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Galleries$spaceArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.Galleries$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Galleries$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   slides<T extends Prisma.Galleries$slidesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Galleries$slidesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GalleryMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.Galleries$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Galleries$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1623,7 +1841,8 @@ export interface GalleriesFieldRefs {
   readonly galleryAutoplay: Prisma.FieldRef<"Galleries", 'Boolean'>
   readonly galleryInterval: Prisma.FieldRef<"Galleries", 'Int'>
   readonly galleryShowThumbnails: Prisma.FieldRef<"Galleries", 'Boolean'>
-  readonly entityId: Prisma.FieldRef<"Galleries", 'String'>
+  readonly spaceId: Prisma.FieldRef<"Galleries", 'String'>
+  readonly organizationId: Prisma.FieldRef<"Galleries", 'String'>
   readonly userId: Prisma.FieldRef<"Galleries", 'String'>
 }
     
@@ -2023,6 +2242,44 @@ export type GalleriesDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Galleries to delete.
    */
   limit?: number
+}
+
+/**
+ * Galleries.space
+ */
+export type Galleries$spaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Space
+   */
+  select?: Prisma.SpaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Space
+   */
+  omit?: Prisma.SpaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SpaceInclude<ExtArgs> | null
+  where?: Prisma.SpaceWhereInput
+}
+
+/**
+ * Galleries.organization
+ */
+export type Galleries$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

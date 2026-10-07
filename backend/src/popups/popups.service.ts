@@ -30,7 +30,12 @@ export class PopupsService {
 
   async findAll(): Promise<Popups[]> {
     return this.prisma.popups.findMany({
-      include: { entity: true, image: true, user: true },
+      include: {
+        organization: true,
+        space: true,
+        image: true,
+        user: true,
+      },
     });
   }
 
@@ -38,7 +43,8 @@ export class PopupsService {
     const popup = await this.prisma.popups.findUnique({
       where: { id },
       include: {
-        entity: true,
+        organization: true,
+        space: true,
         image: true,
         user: { select: { name: true, avatar: true } },
       },
@@ -50,7 +56,6 @@ export class PopupsService {
   }
 
   async update(id: string, updatePopupDto: UpdatePopupDto): Promise<Popups> {
-    // Extrai apenas os campos que existem no modelo Popups (colunas)
     const {
       title,
       link,
@@ -64,14 +69,13 @@ export class PopupsService {
       publicationDate,
       expirationDate,
       imageId,
-      entityId,
+      organizationId,
+      spaceId,
       userId,
-      // Ignore os objetos de relação: image, entity, user
-    } = updatePopupDto;
+    } = updatePopupDto as any;
 
     const data: any = {};
 
-    // Adiciona apenas se o campo foi enviado (undefined significa que não foi alterado)
     if (title !== undefined) data.title = title;
     if (link !== undefined) data.link = link;
     if (active !== undefined) data.active = active;
@@ -86,7 +90,8 @@ export class PopupsService {
     if (expirationDate !== undefined)
       data.expirationDate = new Date(expirationDate);
     if (imageId !== undefined) data.imageId = imageId;
-    if (entityId !== undefined) data.entityId = entityId;
+    if (organizationId !== undefined) data.organizationId = organizationId;
+    if (spaceId !== undefined) data.spaceId = spaceId;
     if (userId !== undefined) data.userId = userId;
 
     return this.prisma.popups.update({

@@ -87,15 +87,6 @@ export function ArticlesList() {
     );
   }
 
-  // Obter categorias únicas com segurança
-  const uniqueCategories = Array.from(
-    new Set(
-      article
-        ?.map((a) => a.entity?.title)
-        .filter((cat): cat is string => Boolean(cat)),
-    ),
-  );
-
   return (
     <div className="w-full space-y-4">
       {/* Toolbar */}

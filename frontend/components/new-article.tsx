@@ -63,8 +63,10 @@ export default function MateriaForm({
     setIsCoverModalOpen,
     isGalleryModalOpen,
     setIsGalleryModalOpen,
-    entities,
-    isLoadingEntities,
+    organizations,
+    isLoadingOrganizations,
+    categories,
+    isLoadingCategories,
   } = useNewArticleViewModel(initialData, onSuccess);
 
   const [tagInput, setTagInput] = useState("");
@@ -179,28 +181,55 @@ export default function MateriaForm({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="categoria" className="font-medium">
-                    Categoria (Secretaria){" "}
+                  <Label htmlFor="organization" className="font-medium">
+                    Secretaria / Órgão Responsável{" "}
                     <span className="text-destructive">*</span>
                   </Label>
                   <Select
-                    value={form.entityId}
-                    onValueChange={(v) => setField("entityId", v)}
+                    value={form.organizationId}
+                    onValueChange={(v) => setField("organizationId", v)}
                     required
                   >
-                    <SelectTrigger id="categoria" className="w-full">
+                    <SelectTrigger id="organization" className="w-full">
                       <SelectValue
                         placeholder={
-                          isLoadingEntities
+                          isLoadingOrganizations
                             ? "Carregando..."
-                            : "Selecione uma secretaria"
+                            : "Selecione uma secretaria/órgão"
                         }
                       />
                     </SelectTrigger>
                     <SelectContent>
-                      {entities.map((e) => (
-                        <SelectItem key={e.id} value={e.id}>
-                          {e.title}
+                      {organizations.map((org) => (
+                        <SelectItem key={org.id} value={org.id}>
+                          {org.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <Label htmlFor="category" className="font-medium">
+                    Categoria Principal
+                  </Label>
+                  <Select
+                    value={form.categoryIds[0] || ""}
+                    onValueChange={(v) => setField("categoryIds", [v])}
+                  >
+                    <SelectTrigger id="category" className="w-full">
+                      <SelectValue
+                        placeholder={
+                          isLoadingCategories
+                            ? "Carregando..."
+                            : "Selecione uma categoria"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.id}>
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

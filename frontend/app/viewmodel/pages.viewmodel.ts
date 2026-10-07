@@ -99,10 +99,16 @@ export function usePagesViewModel(columns: ColumnDef<IPage>[] | null) {
   // ── Handlers ──────────────────────────────────────────────────────────────────
 
   /** Chamado pelo NewPageModal ao confirmar criação ou edição. */
-  const handleSubmitPage = (puckData: any, entityId: string) => {
+  const handleSubmitPage = (data: {
+    title: string;
+    slug: string;
+    content: any;
+    organizationId: string;
+    spaceId?: string | null;
+  }) => {
     if (modalMode === "create") {
       savePageMutation.mutate(
-        { title, slug, content: puckData, entityId },
+        data as any,
         {
           onSuccess: () => {
             setIsOpenNewPageModal(false);
@@ -113,7 +119,7 @@ export function usePagesViewModel(columns: ColumnDef<IPage>[] | null) {
       );
     } else {
       updatePageMutation.mutate(
-        { id, data: { title, slug, content: puckData, entityId } },
+        { id, data: data as any },
         {
           onSuccess: () => {
             setIsOpenNewPageModal(false);

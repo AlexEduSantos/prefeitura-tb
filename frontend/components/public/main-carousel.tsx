@@ -149,10 +149,10 @@ export function MainCarousel() {
                 key={i}
                 onClick={() => goToSlide(i)}
                 className={cn(
-                  "h-2 rounded-full transition-all min-w-0 p-0",
+                  "h-2 rounded-full transition-all min-w-0 p-0 shadow",
                   currentIndex === i
                     ? "sm:w-8 w-3 bg-primary"
-                    : "w-2 bg-white/60 hover:bg-white/90",
+                    : "w-2 bg-white/80 hover:bg-white/90",
                 )}
                 aria-label={`Ir para slide ${i + 1}`}
                 aria-current={currentIndex === i}

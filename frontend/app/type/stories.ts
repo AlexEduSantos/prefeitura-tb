@@ -1,6 +1,4 @@
-import { IEntity } from "./entity";
 import { IMedia } from "./media";
-import { IUser } from "./user";
 
 export interface IStories {
   id: string;

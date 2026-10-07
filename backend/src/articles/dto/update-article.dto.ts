@@ -5,6 +5,7 @@ import {
   IsArray,
   IsDateString,
   IsInt,
+  IsUUID,
 } from 'class-validator';
 
 export class UpdateArticleDto {
@@ -16,9 +17,13 @@ export class UpdateArticleDto {
   @IsOptional()
   headline?: string;
 
-  @IsString()
+  @IsUUID()
   @IsOptional()
-  entityId?: string;
+  organizationId?: string;
+
+  @IsArray()
+  @IsOptional()
+  categoryIds?: string[];
 
   @IsString()
   @IsOptional()

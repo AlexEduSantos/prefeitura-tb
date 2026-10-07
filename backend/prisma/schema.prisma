@@ -49,27 +49,103 @@ enum UserRole {
   USER
 }
 
-// ========== MODELS ==========
-model User {
-  id        String      @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username  String      @unique
-  name      String
-  email     String      @unique
-  password  String
-  avatar    String?
-  phone     String?
-  entityId  String      @db.Uuid
-  entity    Entity      @relation(fields: [entityId], references: [id])
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  role      UserRole    @default(USER)
-  galleries Galleries[]
-  popups    Popups[]
-  services  Services[]
-  pages     Page[]
+enum OrganizationTypes {
+  secretaria
+  divisão
+  seção
+  conselho
+  projeto
+}
 
-  articleAuthor Article[] @relation("articleAuthor")
-  articleEditor Article[] @relation("articleEditor")
+// ========== MODELS ==========
+model Organization {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String
+  acronym        String?
+  type           OrganizationTypes @default(secretaria)
+  active         Boolean           @default(true)
+
+  // Hierarquia administrativa
+  parentId       String?           @db.Uuid
+  parent         Organization?     @relation("OrgHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children       Organization[]    @relation("OrgHierarchy")
+
+  // Espaço de URL padrão associado (ex: Secretaria de Educação -> /educacao)
+  defaultSpaceId String?           @db.Uuid
+  defaultSpace   Space?            @relation("OrgDefaultSpace", fields: [defaultSpaceId], references: [id], onDelete: SetNull)
+
+  // Conteúdos pertencentes a esta organização
+  users          User[]
+  articles       Article[]
+  pages          Page[]
+  galleries      Galleries[]
+  popups         Popups[]
+  services       Services[]
+
+  createdAt      DateTime          @default(now()) @db.Timestamp
+  updatedAt      DateTime          @updatedAt @db.Timestamp
+
+  @@map("organization")
+}
+
+model Space {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug          String         @unique
+  title         String
+  description   String?
+
+  organizations Organization[] @relation("OrgDefaultSpace")
+  pages         Page[]
+  galleries     Galleries[]
+  popups        Popups[]
+
+  createdAt     DateTime       @default(now()) @db.Timestamp
+  updatedAt     DateTime       @updatedAt @db.Timestamp
+
+  @@map("space")
+}
+
+model Category {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  slug        String     @unique
+  description String?
+
+  parentId    String?    @db.Uuid
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[] @relation("CategoryHierarchy")
+
+  articles    Article[]  @relation("ArticleCategories")
+
+  createdAt   DateTime   @default(now()) @db.Timestamp
+  updatedAt   DateTime   @updatedAt @db.Timestamp
+
+  @@map("category")
+}
+
+model User {
+  id             String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username       String        @unique
+  name           String
+  email          String        @unique
+  password       String
+  avatar         String?
+  phone          String?
+  role           UserRole      @default(USER)
+
+  // Vínculo organizacional (1:1)
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  galleries      Galleries[]
+  popups         Popups[]
+  services       Services[]
+  pages          Page[]
+
+  articleAuthor  Article[]     @relation("articleAuthor")
+  articleEditor  Article[]     @relation("articleEditor")
 
   @@map("user")
 }
@@ -83,38 +159,28 @@ model Session {
   @@map("session")
 }
 
-model Entity {
-  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  slug      String
-  createdAt DateTime    @default(now())
-  pages     Page[]
-  users     User[]
-  articles  Article[]
-  popups    Popups[]
-  galleries Galleries[]
-  services  Services[]
-
-  @@map("entity")
-}
-
 model Page {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  slug      String
-  content   Json
-  published Boolean @default(false)
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  slug           String
+  content        Json
+  published      Boolean       @default(false)
 
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
+  // Roteamento: /[spaceSlug]/[slug] ou /[slug] se spaceId for null
+  spaceId        String?       @db.Uuid
+  space          Space?        @relation(fields: [spaceId], references: [id])
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+  // Responsável organizacional
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  createdAt      DateTime      @default(now()) @db.Timestamp
+  updatedAt      DateTime      @updatedAt @db.Timestamp
 
-  @@unique([entityId, slug])
+  userId         String        @db.Uuid
+  user           User          @relation(fields: [userId], references: [id])
+
+  @@unique([spaceId, slug])
   @@map("page")
 }
 
@@ -143,16 +209,20 @@ model Article {
   socialPreviewImage       String?
   socialPreviewDescription String?
 
-  authorId String  @db.Uuid
-  author   User    @relation("articleAuthor", fields: [authorId], references: [id])
-  editorId String? @db.Uuid
-  editor   User?   @relation("articleEditor", fields: [editorId], references: [id])
+  // Vínculo Organizacional (RBAC)
+  organizationId           String?       @db.Uuid
+  organization             Organization? @relation(fields: [organizationId], references: [id])
 
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
+  // Taxonomia Editorial
+  categories               Category[]    @relation("ArticleCategories")
 
-  coverId String @db.Uuid
-  cover   Media  @relation("articleCover", fields: [coverId], references: [id])
+  authorId                 String        @db.Uuid
+  author                   User          @relation("articleAuthor", fields: [authorId], references: [id])
+  editorId                 String?       @db.Uuid
+  editor                   User?         @relation("articleEditor", fields: [editorId], references: [id])
+
+  coverId                  String        @db.Uuid
+  cover                    Media         @relation("articleCover", fields: [coverId], references: [id])
 
   @@map("article")
 }
@@ -186,7 +256,7 @@ model Media {
 
   // Stories relations
   storiesCover Stories[]     @relation("storiesCover")
-  storiesItems StoriesItem[] @relation("storiesItemMedia") // ✅ Nome adicionado
+  storiesItems StoriesItem[] @relation("storiesItemMedia")
 
   @@map("media")
 }
@@ -216,29 +286,34 @@ enum GalleryType {
 }
 
 model Galleries {
-  id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                 String
-  active                Boolean     @default(true)
-  createdAt             DateTime    @default(now()) @db.Timestamp
-  updatedAt             DateTime    @updatedAt @db.Timestamp
-  galleryType           GalleryType @default(slider)
-  galleryAutoplay       Boolean     @default(true)
-  galleryInterval       Int         @default(5000)
-  galleryShowThumbnails Boolean     @default(true)
+  active                Boolean       @default(true)
+  createdAt             DateTime      @default(now()) @db.Timestamp
+  updatedAt             DateTime      @updatedAt @db.Timestamp
+  galleryType           GalleryType   @default(slider)
+  galleryAutoplay       Boolean       @default(true)
+  galleryInterval       Int           @default(5000)
+  galleryShowThumbnails Boolean       @default(true)
 
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
+  // Espaço de exibição: null = portal inteiro / preenchido = restrito ao space
+  spaceId               String?       @db.Uuid
+  space                 Space?        @relation(fields: [spaceId], references: [id], onDelete: SetNull)
 
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  // Gestor da galeria (RBAC)
+  organizationId        String?       @db.Uuid
+  organization          Organization? @relation(fields: [organizationId], references: [id])
 
-  // ✅ Mantido apenas GalleryMedia como relação N:N explícita
-  slides GalleryMedia[]
+  userId                String        @db.Uuid
+  user                  User          @relation(fields: [userId], references: [id])
 
-  // ❌ Removido: medias Media[] (estava inconsistente)
-  articles Article[]
+  // GalleryMedia como relação N:N explícita
+  slides                GalleryMedia[]
 
-  @@index([entityId, active])
+  articles              Article[]
+
+  @@index([organizationId, active])
+  @@index([spaceId, active])
   @@map("gallery")
 }
 
@@ -253,8 +328,8 @@ model GalleryMedia {
   galleryId String    @db.Uuid
   gallery   Galleries @relation(fields: [galleryId], references: [id], onDelete: Cascade)
 
-  mediaId String @db.Uuid
-  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId   String    @db.Uuid
+  media     Media     @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
   @@unique([galleryId, order])
   @@index([galleryId])
@@ -262,54 +337,59 @@ model GalleryMedia {
 }
 
 model Popups {
-  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title           String
   link            String?
-  active          Boolean     @default(true)
-  displayTime     Int         @default(5)
-  status          PopupStatus @default(rascunho)
-  type            PopupType   @default(modal)
+  active          Boolean       @default(true)
+  displayTime     Int           @default(5)
+  status          PopupStatus   @default(rascunho)
+  type            PopupType     @default(modal)
   position        String?
-  closeButton     Boolean     @default(true)
-  priority        Int         @default(10)
+  closeButton     Boolean       @default(true)
+  priority        Int           @default(10)
   publicationDate DateTime?
   expirationDate  DateTime?
-  createdAt       DateTime    @default(now()) @db.Timestamp
-  updatedAt       DateTime    @updatedAt @db.Timestamp
+  createdAt       DateTime      @default(now()) @db.Timestamp
+  updatedAt       DateTime      @updatedAt @db.Timestamp
 
-  // ✅ Corrigido: Relação nomeada
-  imageId String @db.Uuid
-  image   Media  @relation("popupImage", fields: [imageId], references: [id])
+  // Espaço de exibição: null = portal inteiro / preenchido = restrito ao space
+  spaceId         String?       @db.Uuid
+  space           Space?        @relation(fields: [spaceId], references: [id], onDelete: SetNull)
 
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
+  // Gestor do popup (RBAC)
+  organizationId  String?       @db.Uuid
+  organization    Organization? @relation(fields: [organizationId], references: [id])
 
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  imageId         String        @db.Uuid
+  image           Media         @relation("popupImage", fields: [imageId], references: [id])
 
-  @@index([entityId, active, status, publicationDate, expirationDate])
+  userId          String        @db.Uuid
+  user            User          @relation(fields: [userId], references: [id])
+
+  @@index([organizationId, active, status])
+  @@index([spaceId, active, status])
   @@map("popup")
 }
 
 model Services {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  link        String   @unique
-  altText     String?
-  createdAt   DateTime @default(now()) @db.Timestamp
-  updatedAt   DateTime @updatedAt @db.Timestamp
-  featured    Boolean  @default(false)
-  description String?  @db.VarChar(1000)
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  link           String        @unique
+  altText        String?
+  createdAt      DateTime      @default(now()) @db.Timestamp
+  updatedAt      DateTime      @updatedAt @db.Timestamp
+  featured       Boolean       @default(false)
+  description    String?       @db.VarChar(1000)
 
-  entityId String @db.Uuid
-  entity   Entity @relation(fields: [entityId], references: [id])
+  // Gestor do serviço (RBAC)
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  // ✅ Corrigido: Relação nomeada
-  image   Media  @relation("serviceImage", fields: [imageId], references: [id])
-  imageId String @db.Uuid
+  image          Media         @relation("serviceImage", fields: [imageId], references: [id])
+  imageId        String        @db.Uuid
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @db.Uuid
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String        @db.Uuid
 
   @@map("service")
 }
@@ -342,7 +422,6 @@ model StoriesItem {
   storyId String  @db.Uuid
   story   Stories @relation(fields: [storyId], references: [id], onDelete: Cascade)
 
-  // ✅ Corrigido: Relação nomeada
   mediaId String @db.Uuid
   media   Media  @relation("storiesItemMedia", fields: [mediaId], references: [id])
 

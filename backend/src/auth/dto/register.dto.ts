@@ -4,6 +4,7 @@ import {
   IsString,
   MinLength,
   IsUUID,
+  IsOptional,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -18,10 +19,9 @@ export class RegisterDto {
   @IsNotEmpty()
   username!: string;
 
-  @IsString()
-  @IsNotEmpty()
   @IsUUID()
-  entityId!: string; // Deve ser o UUID de uma Secretaria (Entity) existente no banco
+  @IsOptional()
+  organizationId?: string; // UUID de uma Organization existente no banco
 
   @IsString()
   @IsNotEmpty()

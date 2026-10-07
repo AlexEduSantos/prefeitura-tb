@@ -17,7 +17,7 @@ export class ServicesService {
   findAll(): Promise<Services[]> {
     return this.prisma.services.findMany({
       include: {
-        entity: true,
+        organization: true,
         image: true,
         user: { select: { name: true, avatar: true } },
       },

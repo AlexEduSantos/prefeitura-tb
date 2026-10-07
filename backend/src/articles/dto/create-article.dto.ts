@@ -30,12 +30,16 @@ export class CreateArticleDto {
   headline?: string;
 
   @IsUUID()
-  @IsNotEmpty()
-  entityId!: string;
+  @IsOptional()
+  organizationId?: string;
 
-  // ✅ Corrigido: coverId em vez de cover
+  @IsArray()
+  @IsUUID('4', { each: true })
+  @IsOptional()
+  categoryIds?: string[];
+
   @IsUUID()
-  @IsNotEmpty() // É obrigatório no model
+  @IsNotEmpty()
   coverId!: string;
 
   @IsNotEmpty()
@@ -49,7 +53,6 @@ export class CreateArticleDto {
   @IsOptional()
   type?: string;
 
-  // ✅ Opcional: Validar como enum se quiser mais segurança
   @IsEnum(ArticleStatusEnum)
   @IsOptional()
   status?: ArticleStatusEnum;
@@ -66,12 +69,10 @@ export class CreateArticleDto {
   @IsOptional()
   featured?: boolean;
 
-  // ✅ Corrigido: authorId em vez de author, e obrigatório
   @IsUUID()
   @IsNotEmpty()
   authorId!: string;
 
-  // ✅ Corrigido: editorId em vez de editor
   @IsUUID()
   @IsOptional()
   editorId?: string;

@@ -31,7 +31,6 @@ export function usePopupsViewModel() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     name: true,
-    entityId: true,
     active: true,
     slides: true,
     updatedAt: true,
@@ -54,7 +53,6 @@ export function usePopupsViewModel() {
     priority: 0,
     publicationDate: new Date(),
     expirationDate: new Date(),
-    entityId: "",
     userId: "",
     imageId: "",
   });

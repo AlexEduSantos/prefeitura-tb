@@ -1,12 +1,13 @@
-import { IEntity } from "./entity";
 import { IMedia } from "./media";
 
 export interface IGallery {
   id: string;
   title: string;
   active: boolean;
-  entity: IEntity;
-  entityId: string;
+  organizationId?: string;
+  organization?: any;
+  spaceId?: string | null;
+  space?: any;
   userId: string;
   slides: IGalleryImage[];
   createdAt: string;

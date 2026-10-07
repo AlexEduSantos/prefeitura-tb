@@ -1,6 +1,5 @@
 "use client";
 import { IGallery, IGalleryImage } from "@/app/type/gallery";
-import { IEntity } from "@/app/type/entity";
 import { IMedia } from "@/app/type/media";
 import { Button } from "./ui/button";
 import {
@@ -28,6 +27,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { ScrollArea } from "./ui/scroll-area";
+import { IOrganization } from "@/app/type/organization";
 
 interface GalleryModalProps {
   gallery?: IGallery | null;
@@ -35,7 +35,7 @@ interface GalleryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave?: (item: any) => void;
-  entities?: IEntity[];
+  organizations?: IOrganization[];
   mediaList?: IMedia[];
 }
 
@@ -45,13 +45,13 @@ export function GalleryModal({
   isOpen,
   onClose,
   onSave,
-  entities = [],
+  organizations = [],
   mediaList = [],
 }: GalleryModalProps) {
   const [formData, setFormData] = useState<any>({
     title: "",
     active: false,
-    entityId: "",
+    organizationId: "",
     slides: [],
   });
   const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
@@ -63,7 +63,7 @@ export function GalleryModal({
           id: gallery.id,
           title: gallery.title,
           active: gallery.active,
-          entityId: gallery.entityId,
+          organizationId: gallery.organizationId || "",
           slides:
             gallery.slides?.map((s) => ({
               mediaId: s.mediaId,
@@ -77,7 +77,6 @@ export function GalleryModal({
         setFormData({
           title: "",
           active: false,
-          entityId: "",
           slides: [],
         });
       }
@@ -203,19 +202,19 @@ export function GalleryModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="entityId">Entidade</Label>
+                <Label htmlFor="organizationId">Secretaria / Órgão</Label>
                 <Select
-                  value={formData.entityId}
-                  onValueChange={(val) => handleChange("entityId", val)}
+                  value={formData.organizationId}
+                  onValueChange={(val) => handleChange("organizationId", val)}
                   required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma entidade" />
+                    <SelectValue placeholder="Selecione uma secretaria/órgão" />
                   </SelectTrigger>
                   <SelectContent>
-                    {entities.map((entity) => (
-                      <SelectItem key={entity.id} value={entity.id}>
-                        {entity.title}
+                    {organizations.map((org) => (
+                      <SelectItem key={org.id} value={org.id}>
+                        {org.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

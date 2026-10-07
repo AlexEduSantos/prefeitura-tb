@@ -51,8 +51,9 @@ export type PopupsMinAggregateOutputType = {
   expirationDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  spaceId: string | null
+  organizationId: string | null
   imageId: string | null
-  entityId: string | null
   userId: string | null
 }
 
@@ -71,8 +72,9 @@ export type PopupsMaxAggregateOutputType = {
   expirationDate: Date | null
   createdAt: Date | null
   updatedAt: Date | null
+  spaceId: string | null
+  organizationId: string | null
   imageId: string | null
-  entityId: string | null
   userId: string | null
 }
 
@@ -91,8 +93,9 @@ export type PopupsCountAggregateOutputType = {
   expirationDate: number
   createdAt: number
   updatedAt: number
+  spaceId: number
+  organizationId: number
   imageId: number
-  entityId: number
   userId: number
   _all: number
 }
@@ -123,8 +126,9 @@ export type PopupsMinAggregateInputType = {
   expirationDate?: true
   createdAt?: true
   updatedAt?: true
+  spaceId?: true
+  organizationId?: true
   imageId?: true
-  entityId?: true
   userId?: true
 }
 
@@ -143,8 +147,9 @@ export type PopupsMaxAggregateInputType = {
   expirationDate?: true
   createdAt?: true
   updatedAt?: true
+  spaceId?: true
+  organizationId?: true
   imageId?: true
-  entityId?: true
   userId?: true
 }
 
@@ -163,8 +168,9 @@ export type PopupsCountAggregateInputType = {
   expirationDate?: true
   createdAt?: true
   updatedAt?: true
+  spaceId?: true
+  organizationId?: true
   imageId?: true
-  entityId?: true
   userId?: true
   _all?: true
 }
@@ -270,8 +276,9 @@ export type PopupsGroupByOutputType = {
   expirationDate: Date | null
   createdAt: Date
   updatedAt: Date
+  spaceId: string | null
+  organizationId: string | null
   imageId: string
-  entityId: string
   userId: string
   _count: PopupsCountAggregateOutputType | null
   _avg: PopupsAvgAggregateOutputType | null
@@ -313,11 +320,13 @@ export type PopupsWhereInput = {
   expirationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
+  spaceId?: Prisma.UuidNullableFilter<"Popups"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Popups"> | string | null
   imageId?: Prisma.UuidFilter<"Popups"> | string
-  entityId?: Prisma.UuidFilter<"Popups"> | string
   userId?: Prisma.UuidFilter<"Popups"> | string
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   image?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -336,11 +345,13 @@ export type PopupsOrderByWithRelationInput = {
   expirationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  space?: Prisma.SpaceOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   image?: Prisma.MediaOrderByWithRelationInput
-  entity?: Prisma.EntityOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.PopupsOrderByRelevanceInput
 }
@@ -363,11 +374,13 @@ export type PopupsWhereUniqueInput = Prisma.AtLeast<{
   expirationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
+  spaceId?: Prisma.UuidNullableFilter<"Popups"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Popups"> | string | null
   imageId?: Prisma.UuidFilter<"Popups"> | string
-  entityId?: Prisma.UuidFilter<"Popups"> | string
   userId?: Prisma.UuidFilter<"Popups"> | string
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   image?: Prisma.XOR<Prisma.MediaScalarRelationFilter, Prisma.MediaWhereInput>
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -386,8 +399,9 @@ export type PopupsOrderByWithAggregationInput = {
   expirationDate?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   imageId?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   _count?: Prisma.PopupsCountOrderByAggregateInput
   _avg?: Prisma.PopupsAvgOrderByAggregateInput
@@ -414,8 +428,9 @@ export type PopupsScalarWhereWithAggregatesInput = {
   expirationDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Popups"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Popups"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Popups"> | Date | string
+  spaceId?: Prisma.UuidNullableWithAggregatesFilter<"Popups"> | string | null
+  organizationId?: Prisma.UuidNullableWithAggregatesFilter<"Popups"> | string | null
   imageId?: Prisma.UuidWithAggregatesFilter<"Popups"> | string
-  entityId?: Prisma.UuidWithAggregatesFilter<"Popups"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Popups"> | string
 }
 
@@ -434,8 +449,9 @@ export type PopupsCreateInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  space?: Prisma.SpaceCreateNestedOneWithoutPopupsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPopupsInput
   image: Prisma.MediaCreateNestedOneWithoutPopupsInput
-  entity: Prisma.EntityCreateNestedOneWithoutPopupsInput
   user: Prisma.UserCreateNestedOneWithoutPopupsInput
 }
 
@@ -454,8 +470,9 @@ export type PopupsUncheckedCreateInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  spaceId?: string | null
+  organizationId?: string | null
   imageId: string
-  entityId: string
   userId: string
 }
 
@@ -474,8 +491,9 @@ export type PopupsUpdateInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  space?: Prisma.SpaceUpdateOneWithoutPopupsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutPopupsNestedInput
   image?: Prisma.MediaUpdateOneRequiredWithoutPopupsNestedInput
-  entity?: Prisma.EntityUpdateOneRequiredWithoutPopupsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPopupsNestedInput
 }
 
@@ -494,8 +512,9 @@ export type PopupsUncheckedUpdateInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -514,8 +533,9 @@ export type PopupsCreateManyInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  spaceId?: string | null
+  organizationId?: string | null
   imageId: string
-  entityId: string
   userId: string
 }
 
@@ -551,8 +571,9 @@ export type PopupsUncheckedUpdateManyInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -587,8 +608,9 @@ export type PopupsCountOrderByAggregateInput = {
   expirationDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -612,8 +634,9 @@ export type PopupsMaxOrderByAggregateInput = {
   expirationDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
@@ -632,14 +655,99 @@ export type PopupsMinOrderByAggregateInput = {
   expirationDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
   userId?: Prisma.SortOrder
 }
 
 export type PopupsSumOrderByAggregateInput = {
   displayTime?: Prisma.SortOrder
   priority?: Prisma.SortOrder
+}
+
+export type PopupsCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput> | Prisma.PopupsCreateWithoutOrganizationInput[] | Prisma.PopupsUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutOrganizationInput | Prisma.PopupsCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.PopupsCreateManyOrganizationInputEnvelope
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+}
+
+export type PopupsUncheckedCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput> | Prisma.PopupsCreateWithoutOrganizationInput[] | Prisma.PopupsUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutOrganizationInput | Prisma.PopupsCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.PopupsCreateManyOrganizationInputEnvelope
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+}
+
+export type PopupsUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput> | Prisma.PopupsCreateWithoutOrganizationInput[] | Prisma.PopupsUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutOrganizationInput | Prisma.PopupsCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.PopupsUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.PopupsCreateManyOrganizationInputEnvelope
+  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.PopupsUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutOrganizationInput | Prisma.PopupsUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
+}
+
+export type PopupsUncheckedUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput> | Prisma.PopupsCreateWithoutOrganizationInput[] | Prisma.PopupsUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutOrganizationInput | Prisma.PopupsCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.PopupsUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.PopupsCreateManyOrganizationInputEnvelope
+  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.PopupsUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutOrganizationInput | Prisma.PopupsUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
+}
+
+export type PopupsCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput> | Prisma.PopupsCreateWithoutSpaceInput[] | Prisma.PopupsUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutSpaceInput | Prisma.PopupsCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.PopupsCreateManySpaceInputEnvelope
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+}
+
+export type PopupsUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput> | Prisma.PopupsCreateWithoutSpaceInput[] | Prisma.PopupsUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutSpaceInput | Prisma.PopupsCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.PopupsCreateManySpaceInputEnvelope
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+}
+
+export type PopupsUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput> | Prisma.PopupsCreateWithoutSpaceInput[] | Prisma.PopupsUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutSpaceInput | Prisma.PopupsCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutSpaceInput | Prisma.PopupsUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.PopupsCreateManySpaceInputEnvelope
+  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutSpaceInput | Prisma.PopupsUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutSpaceInput | Prisma.PopupsUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
+}
+
+export type PopupsUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput> | Prisma.PopupsCreateWithoutSpaceInput[] | Prisma.PopupsUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutSpaceInput | Prisma.PopupsCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutSpaceInput | Prisma.PopupsUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.PopupsCreateManySpaceInputEnvelope
+  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
+  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutSpaceInput | Prisma.PopupsUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutSpaceInput | Prisma.PopupsUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
 }
 
 export type PopupsCreateNestedManyWithoutUserInput = {
@@ -681,48 +789,6 @@ export type PopupsUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
   update?: Prisma.PopupsUpdateWithWhereUniqueWithoutUserInput | Prisma.PopupsUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutUserInput | Prisma.PopupsUpdateManyWithWhereWithoutUserInput[]
-  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
-}
-
-export type PopupsCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput> | Prisma.PopupsCreateWithoutEntityInput[] | Prisma.PopupsUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutEntityInput | Prisma.PopupsCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.PopupsCreateManyEntityInputEnvelope
-  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-}
-
-export type PopupsUncheckedCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput> | Prisma.PopupsCreateWithoutEntityInput[] | Prisma.PopupsUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutEntityInput | Prisma.PopupsCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.PopupsCreateManyEntityInputEnvelope
-  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-}
-
-export type PopupsUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput> | Prisma.PopupsCreateWithoutEntityInput[] | Prisma.PopupsUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutEntityInput | Prisma.PopupsCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutEntityInput | Prisma.PopupsUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.PopupsCreateManyEntityInputEnvelope
-  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutEntityInput | Prisma.PopupsUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutEntityInput | Prisma.PopupsUpdateManyWithWhereWithoutEntityInput[]
-  deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
-}
-
-export type PopupsUncheckedUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput> | Prisma.PopupsCreateWithoutEntityInput[] | Prisma.PopupsUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PopupsCreateOrConnectWithoutEntityInput | Prisma.PopupsCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.PopupsUpsertWithWhereUniqueWithoutEntityInput | Prisma.PopupsUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.PopupsCreateManyEntityInputEnvelope
-  set?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  disconnect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  delete?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  connect?: Prisma.PopupsWhereUniqueInput | Prisma.PopupsWhereUniqueInput[]
-  update?: Prisma.PopupsUpdateWithWhereUniqueWithoutEntityInput | Prisma.PopupsUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.PopupsUpdateManyWithWhereWithoutEntityInput | Prisma.PopupsUpdateManyWithWhereWithoutEntityInput[]
   deleteMany?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
 }
 
@@ -776,6 +842,162 @@ export type EnumPopupTypeFieldUpdateOperationsInput = {
   set?: $Enums.PopupType
 }
 
+export type PopupsCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  space?: Prisma.SpaceCreateNestedOneWithoutPopupsInput
+  image: Prisma.MediaCreateNestedOneWithoutPopupsInput
+  user: Prisma.UserCreateNestedOneWithoutPopupsInput
+}
+
+export type PopupsUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  spaceId?: string | null
+  imageId: string
+  userId: string
+}
+
+export type PopupsCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  create: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput>
+}
+
+export type PopupsCreateManyOrganizationInputEnvelope = {
+  data: Prisma.PopupsCreateManyOrganizationInput | Prisma.PopupsCreateManyOrganizationInput[]
+  skipDuplicates?: boolean
+}
+
+export type PopupsUpsertWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  update: Prisma.XOR<Prisma.PopupsUpdateWithoutOrganizationInput, Prisma.PopupsUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.PopupsCreateWithoutOrganizationInput, Prisma.PopupsUncheckedCreateWithoutOrganizationInput>
+}
+
+export type PopupsUpdateWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  data: Prisma.XOR<Prisma.PopupsUpdateWithoutOrganizationInput, Prisma.PopupsUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type PopupsUpdateManyWithWhereWithoutOrganizationInput = {
+  where: Prisma.PopupsScalarWhereInput
+  data: Prisma.XOR<Prisma.PopupsUpdateManyMutationInput, Prisma.PopupsUncheckedUpdateManyWithoutOrganizationInput>
+}
+
+export type PopupsScalarWhereInput = {
+  AND?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
+  OR?: Prisma.PopupsScalarWhereInput[]
+  NOT?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
+  id?: Prisma.UuidFilter<"Popups"> | string
+  title?: Prisma.StringFilter<"Popups"> | string
+  link?: Prisma.StringNullableFilter<"Popups"> | string | null
+  active?: Prisma.BoolFilter<"Popups"> | boolean
+  displayTime?: Prisma.IntFilter<"Popups"> | number
+  status?: Prisma.EnumPopupStatusFilter<"Popups"> | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFilter<"Popups"> | $Enums.PopupType
+  position?: Prisma.StringNullableFilter<"Popups"> | string | null
+  closeButton?: Prisma.BoolFilter<"Popups"> | boolean
+  priority?: Prisma.IntFilter<"Popups"> | number
+  publicationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
+  expirationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
+  spaceId?: Prisma.UuidNullableFilter<"Popups"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Popups"> | string | null
+  imageId?: Prisma.UuidFilter<"Popups"> | string
+  userId?: Prisma.UuidFilter<"Popups"> | string
+}
+
+export type PopupsCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPopupsInput
+  image: Prisma.MediaCreateNestedOneWithoutPopupsInput
+  user: Prisma.UserCreateNestedOneWithoutPopupsInput
+}
+
+export type PopupsUncheckedCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organizationId?: string | null
+  imageId: string
+  userId: string
+}
+
+export type PopupsCreateOrConnectWithoutSpaceInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  create: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput>
+}
+
+export type PopupsCreateManySpaceInputEnvelope = {
+  data: Prisma.PopupsCreateManySpaceInput | Prisma.PopupsCreateManySpaceInput[]
+  skipDuplicates?: boolean
+}
+
+export type PopupsUpsertWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  update: Prisma.XOR<Prisma.PopupsUpdateWithoutSpaceInput, Prisma.PopupsUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.PopupsCreateWithoutSpaceInput, Prisma.PopupsUncheckedCreateWithoutSpaceInput>
+}
+
+export type PopupsUpdateWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.PopupsWhereUniqueInput
+  data: Prisma.XOR<Prisma.PopupsUpdateWithoutSpaceInput, Prisma.PopupsUncheckedUpdateWithoutSpaceInput>
+}
+
+export type PopupsUpdateManyWithWhereWithoutSpaceInput = {
+  where: Prisma.PopupsScalarWhereInput
+  data: Prisma.XOR<Prisma.PopupsUpdateManyMutationInput, Prisma.PopupsUncheckedUpdateManyWithoutSpaceInput>
+}
+
 export type PopupsCreateWithoutUserInput = {
   id?: string
   title: string
@@ -791,8 +1013,9 @@ export type PopupsCreateWithoutUserInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  space?: Prisma.SpaceCreateNestedOneWithoutPopupsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPopupsInput
   image: Prisma.MediaCreateNestedOneWithoutPopupsInput
-  entity: Prisma.EntityCreateNestedOneWithoutPopupsInput
 }
 
 export type PopupsUncheckedCreateWithoutUserInput = {
@@ -810,8 +1033,9 @@ export type PopupsUncheckedCreateWithoutUserInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  spaceId?: string | null
+  organizationId?: string | null
   imageId: string
-  entityId: string
 }
 
 export type PopupsCreateOrConnectWithoutUserInput = {
@@ -840,93 +1064,6 @@ export type PopupsUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.PopupsUpdateManyMutationInput, Prisma.PopupsUncheckedUpdateManyWithoutUserInput>
 }
 
-export type PopupsScalarWhereInput = {
-  AND?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
-  OR?: Prisma.PopupsScalarWhereInput[]
-  NOT?: Prisma.PopupsScalarWhereInput | Prisma.PopupsScalarWhereInput[]
-  id?: Prisma.UuidFilter<"Popups"> | string
-  title?: Prisma.StringFilter<"Popups"> | string
-  link?: Prisma.StringNullableFilter<"Popups"> | string | null
-  active?: Prisma.BoolFilter<"Popups"> | boolean
-  displayTime?: Prisma.IntFilter<"Popups"> | number
-  status?: Prisma.EnumPopupStatusFilter<"Popups"> | $Enums.PopupStatus
-  type?: Prisma.EnumPopupTypeFilter<"Popups"> | $Enums.PopupType
-  position?: Prisma.StringNullableFilter<"Popups"> | string | null
-  closeButton?: Prisma.BoolFilter<"Popups"> | boolean
-  priority?: Prisma.IntFilter<"Popups"> | number
-  publicationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
-  expirationDate?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Popups"> | Date | string
-  imageId?: Prisma.UuidFilter<"Popups"> | string
-  entityId?: Prisma.UuidFilter<"Popups"> | string
-  userId?: Prisma.UuidFilter<"Popups"> | string
-}
-
-export type PopupsCreateWithoutEntityInput = {
-  id?: string
-  title: string
-  link?: string | null
-  active?: boolean
-  displayTime?: number
-  status?: $Enums.PopupStatus
-  type?: $Enums.PopupType
-  position?: string | null
-  closeButton?: boolean
-  priority?: number
-  publicationDate?: Date | string | null
-  expirationDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  image: Prisma.MediaCreateNestedOneWithoutPopupsInput
-  user: Prisma.UserCreateNestedOneWithoutPopupsInput
-}
-
-export type PopupsUncheckedCreateWithoutEntityInput = {
-  id?: string
-  title: string
-  link?: string | null
-  active?: boolean
-  displayTime?: number
-  status?: $Enums.PopupStatus
-  type?: $Enums.PopupType
-  position?: string | null
-  closeButton?: boolean
-  priority?: number
-  publicationDate?: Date | string | null
-  expirationDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  imageId: string
-  userId: string
-}
-
-export type PopupsCreateOrConnectWithoutEntityInput = {
-  where: Prisma.PopupsWhereUniqueInput
-  create: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput>
-}
-
-export type PopupsCreateManyEntityInputEnvelope = {
-  data: Prisma.PopupsCreateManyEntityInput | Prisma.PopupsCreateManyEntityInput[]
-  skipDuplicates?: boolean
-}
-
-export type PopupsUpsertWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.PopupsWhereUniqueInput
-  update: Prisma.XOR<Prisma.PopupsUpdateWithoutEntityInput, Prisma.PopupsUncheckedUpdateWithoutEntityInput>
-  create: Prisma.XOR<Prisma.PopupsCreateWithoutEntityInput, Prisma.PopupsUncheckedCreateWithoutEntityInput>
-}
-
-export type PopupsUpdateWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.PopupsWhereUniqueInput
-  data: Prisma.XOR<Prisma.PopupsUpdateWithoutEntityInput, Prisma.PopupsUncheckedUpdateWithoutEntityInput>
-}
-
-export type PopupsUpdateManyWithWhereWithoutEntityInput = {
-  where: Prisma.PopupsScalarWhereInput
-  data: Prisma.XOR<Prisma.PopupsUpdateManyMutationInput, Prisma.PopupsUncheckedUpdateManyWithoutEntityInput>
-}
-
 export type PopupsCreateWithoutImageInput = {
   id?: string
   title: string
@@ -942,7 +1079,8 @@ export type PopupsCreateWithoutImageInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  entity: Prisma.EntityCreateNestedOneWithoutPopupsInput
+  space?: Prisma.SpaceCreateNestedOneWithoutPopupsInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPopupsInput
   user: Prisma.UserCreateNestedOneWithoutPopupsInput
 }
 
@@ -961,7 +1099,8 @@ export type PopupsUncheckedCreateWithoutImageInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
 }
 
@@ -991,6 +1130,166 @@ export type PopupsUpdateManyWithWhereWithoutImageInput = {
   data: Prisma.XOR<Prisma.PopupsUpdateManyMutationInput, Prisma.PopupsUncheckedUpdateManyWithoutImageInput>
 }
 
+export type PopupsCreateManyOrganizationInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  spaceId?: string | null
+  imageId: string
+  userId: string
+}
+
+export type PopupsUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  space?: Prisma.SpaceUpdateOneWithoutPopupsNestedInput
+  image?: Prisma.MediaUpdateOneRequiredWithoutPopupsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPopupsNestedInput
+}
+
+export type PopupsUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PopupsUncheckedUpdateManyWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PopupsCreateManySpaceInput = {
+  id?: string
+  title: string
+  link?: string | null
+  active?: boolean
+  displayTime?: number
+  status?: $Enums.PopupStatus
+  type?: $Enums.PopupType
+  position?: string | null
+  closeButton?: boolean
+  priority?: number
+  publicationDate?: Date | string | null
+  expirationDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organizationId?: string | null
+  imageId: string
+  userId: string
+}
+
+export type PopupsUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutPopupsNestedInput
+  image?: Prisma.MediaUpdateOneRequiredWithoutPopupsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPopupsNestedInput
+}
+
+export type PopupsUncheckedUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PopupsUncheckedUpdateManyWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
+  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
+  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  priority?: Prisma.IntFieldUpdateOperationsInput | number
+  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageId?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type PopupsCreateManyUserInput = {
   id?: string
   title: string
@@ -1006,8 +1305,9 @@ export type PopupsCreateManyUserInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  spaceId?: string | null
+  organizationId?: string | null
   imageId: string
-  entityId: string
 }
 
 export type PopupsUpdateWithoutUserInput = {
@@ -1025,8 +1325,9 @@ export type PopupsUpdateWithoutUserInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  space?: Prisma.SpaceUpdateOneWithoutPopupsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutPopupsNestedInput
   image?: Prisma.MediaUpdateOneRequiredWithoutPopupsNestedInput
-  entity?: Prisma.EntityUpdateOneRequiredWithoutPopupsNestedInput
 }
 
 export type PopupsUncheckedUpdateWithoutUserInput = {
@@ -1044,8 +1345,9 @@ export type PopupsUncheckedUpdateWithoutUserInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PopupsUncheckedUpdateManyWithoutUserInput = {
@@ -1063,84 +1365,9 @@ export type PopupsUncheckedUpdateManyWithoutUserInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type PopupsCreateManyEntityInput = {
-  id?: string
-  title: string
-  link?: string | null
-  active?: boolean
-  displayTime?: number
-  status?: $Enums.PopupStatus
-  type?: $Enums.PopupType
-  position?: string | null
-  closeButton?: boolean
-  priority?: number
-  publicationDate?: Date | string | null
-  expirationDate?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  imageId: string
-  userId: string
-}
-
-export type PopupsUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
-  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
-  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priority?: Prisma.IntFieldUpdateOperationsInput | number
-  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  image?: Prisma.MediaUpdateOneRequiredWithoutPopupsNestedInput
-  user?: Prisma.UserUpdateOneRequiredWithoutPopupsNestedInput
-}
-
-export type PopupsUncheckedUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
-  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
-  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priority?: Prisma.IntFieldUpdateOperationsInput | number
-  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type PopupsUncheckedUpdateManyWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  displayTime?: Prisma.IntFieldUpdateOperationsInput | number
-  status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
-  type?: Prisma.EnumPopupTypeFieldUpdateOperationsInput | $Enums.PopupType
-  position?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  closeButton?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  priority?: Prisma.IntFieldUpdateOperationsInput | number
-  publicationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imageId?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PopupsCreateManyImageInput = {
@@ -1158,7 +1385,8 @@ export type PopupsCreateManyImageInput = {
   expirationDate?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   userId: string
 }
 
@@ -1177,7 +1405,8 @@ export type PopupsUpdateWithoutImageInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  entity?: Prisma.EntityUpdateOneRequiredWithoutPopupsNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutPopupsNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutPopupsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPopupsNestedInput
 }
 
@@ -1196,7 +1425,8 @@ export type PopupsUncheckedUpdateWithoutImageInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1215,7 +1445,8 @@ export type PopupsUncheckedUpdateManyWithoutImageInput = {
   expirationDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1236,11 +1467,13 @@ export type PopupsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   expirationDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   imageId?: boolean
-  entityId?: boolean
   userId?: boolean
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["popups"]>
 
@@ -1259,11 +1492,13 @@ export type PopupsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   expirationDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   imageId?: boolean
-  entityId?: boolean
   userId?: boolean
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["popups"]>
 
@@ -1282,11 +1517,13 @@ export type PopupsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   expirationDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   imageId?: boolean
-  entityId?: boolean
   userId?: boolean
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["popups"]>
 
@@ -1305,33 +1542,38 @@ export type PopupsSelectScalar = {
   expirationDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   imageId?: boolean
-  entityId?: boolean
   userId?: boolean
 }
 
-export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "active" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "imageId" | "entityId" | "userId", ExtArgs["result"]["popups"]>
+export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "active" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "spaceId" | "organizationId" | "imageId" | "userId", ExtArgs["result"]["popups"]>
 export type PopupsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PopupsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PopupsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PopupsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Popups"
   objects: {
+    space: Prisma.$SpacePayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     image: Prisma.$MediaPayload<ExtArgs>
-    entity: Prisma.$EntityPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1349,8 +1591,9 @@ export type $PopupsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     expirationDate: Date | null
     createdAt: Date
     updatedAt: Date
+    spaceId: string | null
+    organizationId: string | null
     imageId: string
-    entityId: string
     userId: string
   }, ExtArgs["result"]["popups"]>
   composites: {}
@@ -1746,8 +1989,9 @@ readonly fields: PopupsFieldRefs;
  */
 export interface Prisma__PopupsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  space<T extends Prisma.Popups$spaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Popups$spaceArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.Popups$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Popups$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   image<T extends Prisma.MediaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MediaDefaultArgs<ExtArgs>>): Prisma.Prisma__MediaClient<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  entity<T extends Prisma.EntityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EntityDefaultArgs<ExtArgs>>): Prisma.Prisma__EntityClient<runtime.Types.Result.GetResult<Prisma.$EntityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1792,8 +2036,9 @@ export interface PopupsFieldRefs {
   readonly expirationDate: Prisma.FieldRef<"Popups", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Popups", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Popups", 'DateTime'>
+  readonly spaceId: Prisma.FieldRef<"Popups", 'String'>
+  readonly organizationId: Prisma.FieldRef<"Popups", 'String'>
   readonly imageId: Prisma.FieldRef<"Popups", 'String'>
-  readonly entityId: Prisma.FieldRef<"Popups", 'String'>
   readonly userId: Prisma.FieldRef<"Popups", 'String'>
 }
     
@@ -2193,6 +2438,44 @@ export type PopupsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Popups to delete.
    */
   limit?: number
+}
+
+/**
+ * Popups.space
+ */
+export type Popups$spaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Space
+   */
+  select?: Prisma.SpaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Space
+   */
+  omit?: Prisma.SpaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SpaceInclude<ExtArgs> | null
+  where?: Prisma.SpaceWhereInput
+}
+
+/**
+ * Popups.organization
+ */
+export type Popups$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**

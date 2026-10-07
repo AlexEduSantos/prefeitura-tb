@@ -9,23 +9,34 @@ export class ArticlesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createArticleDto: CreateArticleDto): Promise<Article> {
+    const { categoryIds, ...rest } = createArticleDto;
     return this.prisma.article.create({
       data: {
-        ...createArticleDto,
+        ...rest,
         publicationDate: createArticleDto.publicationDate
           ? new Date(createArticleDto.publicationDate)
           : null,
         expirationDate: createArticleDto.expirationDate
           ? new Date(createArticleDto.expirationDate)
           : null,
+        categories: categoryIds?.length
+          ? {
+              connect: categoryIds.map((id) => ({ id })),
+            }
+          : undefined,
       },
     });
   }
 
-  async findAll(search: string) {
+  async findAll(
+    search?: string,
+    categorySlug?: string,
+    organizationId?: string,
+  ) {
     const articles = await this.prisma.article.findMany({
       include: {
-        entity: true,
+        organization: true,
+        categories: true,
         cover: true,
         author: true,
         editor: true,
@@ -40,14 +51,26 @@ export class ArticlesService {
           },
         },
       },
-      where: search
-        ? {
-            title: {
-              contains: search,
-              mode: 'insensitive',
-            },
-          }
-        : undefined,
+      where: {
+        ...(search
+          ? {
+              title: {
+                contains: search,
+                mode: 'insensitive',
+              },
+            }
+          : {}),
+        ...(categorySlug
+          ? {
+              categories: {
+                some: {
+                  slug: categorySlug,
+                },
+              },
+            }
+          : {}),
+        ...(organizationId ? { organizationId } : {}),
+      },
       orderBy: search
         ? {
             _relevance: {
@@ -66,7 +89,8 @@ export class ArticlesService {
     const article = await this.prisma.article.findUnique({
       where: { slug },
       include: {
-        entity: true,
+        organization: true,
+        categories: true,
         cover: true,
         author: true,
         editor: true,
@@ -94,7 +118,8 @@ export class ArticlesService {
     const article = await this.prisma.article.findUnique({
       where: { id },
       include: {
-        entity: true,
+        organization: true,
+        categories: true,
         cover: true,
         author: true,
         editor: true,
@@ -122,7 +147,8 @@ export class ArticlesService {
     id: string,
     updateArticleDto: UpdateArticleDto,
   ): Promise<Article> {
-    const formattedData: any = { ...updateArticleDto };
+    const { categoryIds, ...rest } = updateArticleDto;
+    const formattedData: any = { ...rest };
     if (updateArticleDto.publicationDate) {
       formattedData.publicationDate = new Date(
         updateArticleDto.publicationDate,
@@ -131,10 +157,19 @@ export class ArticlesService {
     if (updateArticleDto.expirationDate) {
       formattedData.expirationDate = new Date(updateArticleDto.expirationDate);
     }
+    if (categoryIds) {
+      formattedData.categories = {
+        set: categoryIds.map((cid) => ({ id: cid })),
+      };
+    }
 
     return this.prisma.article.update({
       where: { id },
       data: formattedData,
+      include: {
+        organization: true,
+        categories: true,
+      },
     });
   }
 

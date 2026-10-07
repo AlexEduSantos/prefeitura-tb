@@ -28,7 +28,6 @@ export function useServices() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
-  const [entity, setEntity] = useState("");
 
   // Modal states (following popups pattern)
   const [openModal, setOpenModal] = useState(false);
@@ -41,7 +40,6 @@ export function useServices() {
     link: "",
     altText: "",
     imageId: "",
-    entityId: "",
   });
 
   // Delete confirmation
@@ -57,7 +55,6 @@ export function useServices() {
         page,
         limit,
         title: search,
-        entity: entity,
       }),
     staleTime: 1000 * 60 * 5,
   });
@@ -110,7 +107,6 @@ export function useServices() {
       link: "",
       altText: "",
       imageId: "",
-      entityId: "",
     });
     setOpenModal(true);
   };
@@ -123,7 +119,6 @@ export function useServices() {
       link: service.link,
       altText: service.altText,
       imageId: service.imageId,
-      entityId: service.entityId,
     });
     setOpenModal(true);
   };
@@ -136,7 +131,6 @@ export function useServices() {
       link: "",
       altText: "",
       imageId: "",
-      entityId: "",
     });
   };
 

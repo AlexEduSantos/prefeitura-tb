@@ -1,4 +1,3 @@
-import { IEntity } from "./entity";
 import { IMedia } from "./media";
 import { IUser } from "./user";
 
@@ -21,8 +20,10 @@ export interface IPopups {
   imageId: string;
   image: IMedia;
 
-  entityId: string;
-  entity: IEntity;
+  organizationId?: string;
+  organization?: any;
+  spaceId?: string | null;
+  space?: any;
 
   userId: string;
   user: IUser;

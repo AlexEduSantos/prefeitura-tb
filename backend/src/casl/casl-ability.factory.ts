@@ -8,23 +8,19 @@ import { Injectable } from '@nestjs/common';
 import { Action } from './action.enum';
 import {
   Article,
-  Entity,
+  Category,
   Galleries,
   GalleryMedia,
   Media,
+  Organization,
   Page,
   Popups,
   Services,
+  Space,
   Stories,
   User,
   UserRole,
 } from '../generated/prisma/client';
-
-// Definimos uma classe temporária para Category se ela ainda não existir no Prisma
-export class Category {
-  id?: string;
-  name?: string;
-}
 
 // Os Subjects permitidos
 export type Subjects =
@@ -33,8 +29,9 @@ export type Subjects =
   | 'Page'
   | 'Media'
   | 'Category'
+  | 'Organization'
+  | 'Space'
   | 'User'
-  | 'Entity'
   | 'Galleries'
   | 'GalleryMedia'
   | 'Popups'
@@ -46,7 +43,8 @@ export type Subjects =
   | Media
   | User
   | Category
-  | Entity
+  | Organization
+  | Space
   | Galleries
   | GalleryMedia
   | Popups
@@ -65,10 +63,12 @@ export class CaslAbilityFactory {
     // ==========================================
     // 1. Qualquer um (Público)
     // ==========================================
-    // Acesso livre no Portal para leitura de Articles, Pages e Entities (Secretarias)
+    // Acesso livre no Portal para leitura de Articles, Pages, Organizations, Spaces e Categories
     can(Action.Read, 'Article');
     can(Action.Read, 'Page');
-    can(Action.Read, 'Entity');
+    can(Action.Read, 'Organization');
+    can(Action.Read, 'Space');
+    can(Action.Read, 'Category');
 
     // Se o usuário não estiver autenticado, retorna as regras públicas
     if (!user) {
@@ -102,14 +102,13 @@ export class CaslAbilityFactory {
     }
 
     // ==========================================
-    // 4. User (Secretaria)
+    // 4. User (Secretaria/Departamento)
     // ==========================================
     else if (user.role === UserRole.USER) {
-      // Create, Update, Delete apenas se Page.entityId == User.entityId
-      if (user.entityId) {
-        can(Action.Create, 'Page', { entityId: user.entityId });
-        can(Action.Update, 'Page', { entityId: user.entityId });
-        can(Action.Delete, 'Page', { entityId: user.entityId });
+      if (user.organizationId) {
+        can(Action.Create, 'Page', { organizationId: user.organizationId });
+        can(Action.Update, 'Page', { organizationId: user.organizationId });
+        can(Action.Delete, 'Page', { organizationId: user.organizationId });
       }
     }
 

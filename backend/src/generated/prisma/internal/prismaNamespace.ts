@@ -384,9 +384,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Organization: 'Organization',
+  Space: 'Space',
+  Category: 'Category',
   User: 'User',
   Session: 'Session',
-  Entity: 'Entity',
   Page: 'Page',
   Article: 'Article',
   Media: 'Media',
@@ -412,10 +414,232 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "entity" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem"
+    modelProps: "organization" | "space" | "category" | "user" | "session" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Organization: {
+      payload: Prisma.$OrganizationPayload<ExtArgs>
+      fields: Prisma.OrganizationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OrganizationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OrganizationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        findFirst: {
+          args: Prisma.OrganizationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OrganizationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        findMany: {
+          args: Prisma.OrganizationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        create: {
+          args: Prisma.OrganizationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        createMany: {
+          args: Prisma.OrganizationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OrganizationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        delete: {
+          args: Prisma.OrganizationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        update: {
+          args: Prisma.OrganizationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        deleteMany: {
+          args: Prisma.OrganizationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OrganizationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OrganizationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>[]
+        }
+        upsert: {
+          args: Prisma.OrganizationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OrganizationPayload>
+        }
+        aggregate: {
+          args: Prisma.OrganizationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOrganization>
+        }
+        groupBy: {
+          args: Prisma.OrganizationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OrganizationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OrganizationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Space: {
+      payload: Prisma.$SpacePayload<ExtArgs>
+      fields: Prisma.SpaceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SpaceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SpaceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        findFirst: {
+          args: Prisma.SpaceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SpaceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        findMany: {
+          args: Prisma.SpaceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>[]
+        }
+        create: {
+          args: Prisma.SpaceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        createMany: {
+          args: Prisma.SpaceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SpaceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>[]
+        }
+        delete: {
+          args: Prisma.SpaceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        update: {
+          args: Prisma.SpaceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        deleteMany: {
+          args: Prisma.SpaceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SpaceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SpaceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>[]
+        }
+        upsert: {
+          args: Prisma.SpaceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SpacePayload>
+        }
+        aggregate: {
+          args: Prisma.SpaceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSpace>
+        }
+        groupBy: {
+          args: Prisma.SpaceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpaceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SpaceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SpaceCountAggregateOutputType> | number
+        }
+      }
+    }
+    Category: {
+      payload: Prisma.$CategoryPayload<ExtArgs>
+      fields: Prisma.CategoryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        findFirst: {
+          args: Prisma.CategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        findMany: {
+          args: Prisma.CategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>[]
+        }
+        create: {
+          args: Prisma.CategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        createMany: {
+          args: Prisma.CategoryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CategoryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>[]
+        }
+        delete: {
+          args: Prisma.CategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        update: {
+          args: Prisma.CategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        deleteMany: {
+          args: Prisma.CategoryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CategoryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CategoryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>[]
+        }
+        upsert: {
+          args: Prisma.CategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+        }
+        aggregate: {
+          args: Prisma.CategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCategory>
+        }
+        groupBy: {
+          args: Prisma.CategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategoryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -561,80 +785,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.SessionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.SessionCountAggregateOutputType> | number
-        }
-      }
-    }
-    Entity: {
-      payload: Prisma.$EntityPayload<ExtArgs>
-      fields: Prisma.EntityFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.EntityFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.EntityFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        findFirst: {
-          args: Prisma.EntityFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.EntityFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        findMany: {
-          args: Prisma.EntityFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
-        }
-        create: {
-          args: Prisma.EntityCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        createMany: {
-          args: Prisma.EntityCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.EntityCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
-        }
-        delete: {
-          args: Prisma.EntityDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        update: {
-          args: Prisma.EntityUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        deleteMany: {
-          args: Prisma.EntityDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.EntityUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.EntityUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>[]
-        }
-        upsert: {
-          args: Prisma.EntityUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$EntityPayload>
-        }
-        aggregate: {
-          args: Prisma.EntityAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateEntity>
-        }
-        groupBy: {
-          args: Prisma.EntityGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.EntityCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.EntityCountAggregateOutputType> | number
         }
       }
     }
@@ -1417,6 +1567,46 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const OrganizationScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  acronym: 'acronym',
+  type: 'type',
+  active: 'active',
+  parentId: 'parentId',
+  defaultSpaceId: 'defaultSpaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrganizationScalarFieldEnum = (typeof OrganizationScalarFieldEnum)[keyof typeof OrganizationScalarFieldEnum]
+
+
+export const SpaceScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof SpaceScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  parentId: 'parentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   username: 'username',
@@ -1425,10 +1615,10 @@ export const UserScalarFieldEnum = {
   password: 'password',
   avatar: 'avatar',
   phone: 'phone',
-  entityId: 'entityId',
+  role: 'role',
+  organizationId: 'organizationId',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  role: 'role'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1443,23 +1633,14 @@ export const SessionScalarFieldEnum = {
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
 
 
-export const EntityScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  slug: 'slug',
-  createdAt: 'createdAt'
-} as const
-
-export type EntityScalarFieldEnum = (typeof EntityScalarFieldEnum)[keyof typeof EntityScalarFieldEnum]
-
-
 export const PageScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
   content: 'content',
   published: 'published',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'
@@ -1491,9 +1672,9 @@ export const ArticleScalarFieldEnum = {
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
   socialPreviewDescription: 'socialPreviewDescription',
+  organizationId: 'organizationId',
   authorId: 'authorId',
   editorId: 'editorId',
-  entityId: 'entityId',
   coverId: 'coverId'
 } as const
 
@@ -1544,7 +1725,8 @@ export const GalleriesScalarFieldEnum = {
   galleryAutoplay: 'galleryAutoplay',
   galleryInterval: 'galleryInterval',
   galleryShowThumbnails: 'galleryShowThumbnails',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -1580,8 +1762,9 @@ export const PopupsScalarFieldEnum = {
   expirationDate: 'expirationDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
-  entityId: 'entityId',
   userId: 'userId'
 } as const
 
@@ -1597,7 +1780,7 @@ export const ServicesScalarFieldEnum = {
   updatedAt: 'updatedAt',
   featured: 'featured',
   description: 'description',
-  entityId: 'entityId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
   userId: 'userId'
 } as const
@@ -1664,6 +1847,38 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+export const OrganizationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  acronym: 'acronym',
+  parentId: 'parentId',
+  defaultSpaceId: 'defaultSpaceId'
+} as const
+
+export type OrganizationOrderByRelevanceFieldEnum = (typeof OrganizationOrderByRelevanceFieldEnum)[keyof typeof OrganizationOrderByRelevanceFieldEnum]
+
+
+export const SpaceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  title: 'title',
+  description: 'description'
+} as const
+
+export type SpaceOrderByRelevanceFieldEnum = (typeof SpaceOrderByRelevanceFieldEnum)[keyof typeof SpaceOrderByRelevanceFieldEnum]
+
+
+export const CategoryOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  parentId: 'parentId'
+} as const
+
+export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
+
+
 export const UserOrderByRelevanceFieldEnum = {
   id: 'id',
   username: 'username',
@@ -1672,7 +1887,7 @@ export const UserOrderByRelevanceFieldEnum = {
   password: 'password',
   avatar: 'avatar',
   phone: 'phone',
-  entityId: 'entityId'
+  organizationId: 'organizationId'
 } as const
 
 export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
@@ -1694,20 +1909,12 @@ export const SessionOrderByRelevanceFieldEnum = {
 export type SessionOrderByRelevanceFieldEnum = (typeof SessionOrderByRelevanceFieldEnum)[keyof typeof SessionOrderByRelevanceFieldEnum]
 
 
-export const EntityOrderByRelevanceFieldEnum = {
-  id: 'id',
-  title: 'title',
-  slug: 'slug'
-} as const
-
-export type EntityOrderByRelevanceFieldEnum = (typeof EntityOrderByRelevanceFieldEnum)[keyof typeof EntityOrderByRelevanceFieldEnum]
-
-
 export const PageOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -1729,9 +1936,9 @@ export const ArticleOrderByRelevanceFieldEnum = {
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
   socialPreviewDescription: 'socialPreviewDescription',
+  organizationId: 'organizationId',
   authorId: 'authorId',
   editorId: 'editorId',
-  entityId: 'entityId',
   coverId: 'coverId'
 } as const
 
@@ -1767,7 +1974,8 @@ export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFiel
 export const GalleriesOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
-  entityId: 'entityId',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   userId: 'userId'
 } as const
 
@@ -1790,8 +1998,9 @@ export const PopupsOrderByRelevanceFieldEnum = {
   title: 'title',
   link: 'link',
   position: 'position',
+  spaceId: 'spaceId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
-  entityId: 'entityId',
   userId: 'userId'
 } as const
 
@@ -1804,7 +2013,7 @@ export const ServicesOrderByRelevanceFieldEnum = {
   link: 'link',
   altText: 'altText',
   description: 'description',
-  entityId: 'entityId',
+  organizationId: 'organizationId',
   imageId: 'imageId',
   userId: 'userId'
 } as const
@@ -1853,6 +2062,27 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'OrganizationTypes'
+ */
+export type EnumOrganizationTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationTypes'>
+    
+
+
+/**
+ * Reference to a field of type 'OrganizationTypes[]'
+ */
+export type ListEnumOrganizationTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrganizationTypes[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1891,13 +2121,6 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -2108,9 +2331,11 @@ export type PrismaClientOptions = ({
   queryPlanCacheMaxSize?: number
 }
 export type GlobalOmitConfig = {
+  organization?: Prisma.OrganizationOmit
+  space?: Prisma.SpaceOmit
+  category?: Prisma.CategoryOmit
   user?: Prisma.UserOmit
   session?: Prisma.SessionOmit
-  entity?: Prisma.EntityOmit
   page?: Prisma.PageOmit
   article?: Prisma.ArticleOmit
   media?: Prisma.MediaOmit

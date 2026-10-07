@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GalleryService } from "../service/gallery.service";
-import { EntityService } from "../service/entity.service";
 import { MediaService } from "../service/media.service";
 import { IGallery } from "../type/gallery";
 import {
@@ -27,7 +26,6 @@ export function useGalleryViewModel() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     title: true,
-    entityId: true,
     active: true,
     slides: true,
     updatedAt: true,
@@ -49,11 +47,6 @@ export function useGalleryViewModel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
     },
-  });
-
-  const entitiesQuery = useQuery({
-    queryKey: ["entities"],
-    queryFn: () => EntityService.getEntities(),
   });
 
   const mediaQuery = useQuery({
@@ -190,9 +183,6 @@ export function useGalleryViewModel() {
     isErrorGallery: galleryQuery.isError,
     errorGallery: galleryQuery.error,
     refetchGallery: galleryQuery.refetch,
-
-    entities: entitiesQuery.data ?? [],
-    isLoadingEntities: entitiesQuery.isLoading,
 
     mediaList: mediaQuery.data ?? [],
     isLoadingMedia: mediaQuery.isLoading,

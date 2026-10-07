@@ -29,7 +29,8 @@ export type PageMinAggregateOutputType = {
   title: string | null
   slug: string | null
   published: boolean | null
-  entityId: string | null
+  spaceId: string | null
+  organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -40,7 +41,8 @@ export type PageMaxAggregateOutputType = {
   title: string | null
   slug: string | null
   published: boolean | null
-  entityId: string | null
+  spaceId: string | null
+  organizationId: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -52,7 +54,8 @@ export type PageCountAggregateOutputType = {
   slug: number
   content: number
   published: number
-  entityId: number
+  spaceId: number
+  organizationId: number
   createdAt: number
   updatedAt: number
   userId: number
@@ -65,7 +68,8 @@ export type PageMinAggregateInputType = {
   title?: true
   slug?: true
   published?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -76,7 +80,8 @@ export type PageMaxAggregateInputType = {
   title?: true
   slug?: true
   published?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -88,7 +93,8 @@ export type PageCountAggregateInputType = {
   slug?: true
   content?: true
   published?: true
-  entityId?: true
+  spaceId?: true
+  organizationId?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -173,7 +179,8 @@ export type PageGroupByOutputType = {
   slug: string
   content: runtime.JsonValue
   published: boolean
-  entityId: string
+  spaceId: string | null
+  organizationId: string | null
   createdAt: Date
   updatedAt: Date
   userId: string
@@ -206,11 +213,13 @@ export type PageWhereInput = {
   slug?: Prisma.StringFilter<"Page"> | string
   content?: Prisma.JsonFilter<"Page">
   published?: Prisma.BoolFilter<"Page"> | boolean
-  entityId?: Prisma.UuidFilter<"Page"> | string
+  spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Page"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Page"> | Date | string
   userId?: Prisma.UuidFilter<"Page"> | string
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -220,18 +229,20 @@ export type PageOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  entity?: Prisma.EntityOrderByWithRelationInput
+  space?: Prisma.SpaceOrderByWithRelationInput
+  organization?: Prisma.OrganizationOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.PageOrderByRelevanceInput
 }
 
 export type PageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  entityId_slug?: Prisma.PageEntityIdSlugCompoundUniqueInput
+  spaceId_slug?: Prisma.PageSpaceIdSlugCompoundUniqueInput
   AND?: Prisma.PageWhereInput | Prisma.PageWhereInput[]
   OR?: Prisma.PageWhereInput[]
   NOT?: Prisma.PageWhereInput | Prisma.PageWhereInput[]
@@ -239,13 +250,15 @@ export type PageWhereUniqueInput = Prisma.AtLeast<{
   slug?: Prisma.StringFilter<"Page"> | string
   content?: Prisma.JsonFilter<"Page">
   published?: Prisma.BoolFilter<"Page"> | boolean
-  entityId?: Prisma.UuidFilter<"Page"> | string
+  spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Page"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Page"> | Date | string
   userId?: Prisma.UuidFilter<"Page"> | string
-  entity?: Prisma.XOR<Prisma.EntityScalarRelationFilter, Prisma.EntityWhereInput>
+  space?: Prisma.XOR<Prisma.SpaceNullableScalarRelationFilter, Prisma.SpaceWhereInput> | null
+  organization?: Prisma.XOR<Prisma.OrganizationNullableScalarRelationFilter, Prisma.OrganizationWhereInput> | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "entityId_slug">
+}, "id" | "spaceId_slug">
 
 export type PageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -253,7 +266,8 @@ export type PageOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -271,7 +285,8 @@ export type PageScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Page"> | string
   content?: Prisma.JsonWithAggregatesFilter<"Page">
   published?: Prisma.BoolWithAggregatesFilter<"Page"> | boolean
-  entityId?: Prisma.UuidWithAggregatesFilter<"Page"> | string
+  spaceId?: Prisma.UuidNullableWithAggregatesFilter<"Page"> | string | null
+  organizationId?: Prisma.UuidNullableWithAggregatesFilter<"Page"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Page"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Page"> | Date | string
   userId?: Prisma.UuidWithAggregatesFilter<"Page"> | string
@@ -285,7 +300,8 @@ export type PageCreateInput = {
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  entity: Prisma.EntityCreateNestedOneWithoutPagesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutPagesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPagesInput
   user: Prisma.UserCreateNestedOneWithoutPagesInput
 }
 
@@ -295,7 +311,8 @@ export type PageUncheckedCreateInput = {
   slug: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -309,7 +326,8 @@ export type PageUpdateInput = {
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  entity?: Prisma.EntityUpdateOneRequiredWithoutPagesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutPagesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutPagesNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPagesNestedInput
 }
 
@@ -319,7 +337,8 @@ export type PageUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -331,7 +350,8 @@ export type PageCreateManyInput = {
   slug: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -353,7 +373,8 @@ export type PageUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -375,8 +396,8 @@ export type PageOrderByRelevanceInput = {
   search: string
 }
 
-export type PageEntityIdSlugCompoundUniqueInput = {
-  entityId: string
+export type PageSpaceIdSlugCompoundUniqueInput = {
+  spaceId: string
   slug: string
 }
 
@@ -386,7 +407,8 @@ export type PageCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   content?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -397,7 +419,8 @@ export type PageMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -408,10 +431,95 @@ export type PageMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  entityId?: Prisma.SortOrder
+  spaceId?: Prisma.SortOrder
+  organizationId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+}
+
+export type PageCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput> | Prisma.PageCreateWithoutOrganizationInput[] | Prisma.PageUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutOrganizationInput | Prisma.PageCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.PageCreateManyOrganizationInputEnvelope
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+}
+
+export type PageUncheckedCreateNestedManyWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput> | Prisma.PageCreateWithoutOrganizationInput[] | Prisma.PageUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutOrganizationInput | Prisma.PageCreateOrConnectWithoutOrganizationInput[]
+  createMany?: Prisma.PageCreateManyOrganizationInputEnvelope
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+}
+
+export type PageUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput> | Prisma.PageCreateWithoutOrganizationInput[] | Prisma.PageUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutOrganizationInput | Prisma.PageCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.PageUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.PageCreateManyOrganizationInputEnvelope
+  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  update?: Prisma.PageUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.PageUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.PageUpdateManyWithWhereWithoutOrganizationInput | Prisma.PageUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+}
+
+export type PageUncheckedUpdateManyWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput> | Prisma.PageCreateWithoutOrganizationInput[] | Prisma.PageUncheckedCreateWithoutOrganizationInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutOrganizationInput | Prisma.PageCreateOrConnectWithoutOrganizationInput[]
+  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutOrganizationInput | Prisma.PageUpsertWithWhereUniqueWithoutOrganizationInput[]
+  createMany?: Prisma.PageCreateManyOrganizationInputEnvelope
+  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  update?: Prisma.PageUpdateWithWhereUniqueWithoutOrganizationInput | Prisma.PageUpdateWithWhereUniqueWithoutOrganizationInput[]
+  updateMany?: Prisma.PageUpdateManyWithWhereWithoutOrganizationInput | Prisma.PageUpdateManyWithWhereWithoutOrganizationInput[]
+  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+}
+
+export type PageCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput> | Prisma.PageCreateWithoutSpaceInput[] | Prisma.PageUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutSpaceInput | Prisma.PageCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.PageCreateManySpaceInputEnvelope
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+}
+
+export type PageUncheckedCreateNestedManyWithoutSpaceInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput> | Prisma.PageCreateWithoutSpaceInput[] | Prisma.PageUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutSpaceInput | Prisma.PageCreateOrConnectWithoutSpaceInput[]
+  createMany?: Prisma.PageCreateManySpaceInputEnvelope
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+}
+
+export type PageUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput> | Prisma.PageCreateWithoutSpaceInput[] | Prisma.PageUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutSpaceInput | Prisma.PageCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutSpaceInput | Prisma.PageUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.PageCreateManySpaceInputEnvelope
+  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  update?: Prisma.PageUpdateWithWhereUniqueWithoutSpaceInput | Prisma.PageUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.PageUpdateManyWithWhereWithoutSpaceInput | Prisma.PageUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+}
+
+export type PageUncheckedUpdateManyWithoutSpaceNestedInput = {
+  create?: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput> | Prisma.PageCreateWithoutSpaceInput[] | Prisma.PageUncheckedCreateWithoutSpaceInput[]
+  connectOrCreate?: Prisma.PageCreateOrConnectWithoutSpaceInput | Prisma.PageCreateOrConnectWithoutSpaceInput[]
+  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutSpaceInput | Prisma.PageUpsertWithWhereUniqueWithoutSpaceInput[]
+  createMany?: Prisma.PageCreateManySpaceInputEnvelope
+  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+  update?: Prisma.PageUpdateWithWhereUniqueWithoutSpaceInput | Prisma.PageUpdateWithWhereUniqueWithoutSpaceInput[]
+  updateMany?: Prisma.PageUpdateManyWithWhereWithoutSpaceInput | Prisma.PageUpdateManyWithWhereWithoutSpaceInput[]
+  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
 }
 
 export type PageCreateNestedManyWithoutUserInput = {
@@ -456,50 +564,120 @@ export type PageUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
 }
 
-export type PageCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput> | Prisma.PageCreateWithoutEntityInput[] | Prisma.PageUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PageCreateOrConnectWithoutEntityInput | Prisma.PageCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.PageCreateManyEntityInputEnvelope
-  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+export type PageCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  slug: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  space?: Prisma.SpaceCreateNestedOneWithoutPagesInput
+  user: Prisma.UserCreateNestedOneWithoutPagesInput
 }
 
-export type PageUncheckedCreateNestedManyWithoutEntityInput = {
-  create?: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput> | Prisma.PageCreateWithoutEntityInput[] | Prisma.PageUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PageCreateOrConnectWithoutEntityInput | Prisma.PageCreateOrConnectWithoutEntityInput[]
-  createMany?: Prisma.PageCreateManyEntityInputEnvelope
-  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
+export type PageUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  title: string
+  slug: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: boolean
+  spaceId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
 }
 
-export type PageUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput> | Prisma.PageCreateWithoutEntityInput[] | Prisma.PageUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PageCreateOrConnectWithoutEntityInput | Prisma.PageCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutEntityInput | Prisma.PageUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.PageCreateManyEntityInputEnvelope
-  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  update?: Prisma.PageUpdateWithWhereUniqueWithoutEntityInput | Prisma.PageUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.PageUpdateManyWithWhereWithoutEntityInput | Prisma.PageUpdateManyWithWhereWithoutEntityInput[]
-  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+export type PageCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.PageWhereUniqueInput
+  create: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput>
 }
 
-export type PageUncheckedUpdateManyWithoutEntityNestedInput = {
-  create?: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput> | Prisma.PageCreateWithoutEntityInput[] | Prisma.PageUncheckedCreateWithoutEntityInput[]
-  connectOrCreate?: Prisma.PageCreateOrConnectWithoutEntityInput | Prisma.PageCreateOrConnectWithoutEntityInput[]
-  upsert?: Prisma.PageUpsertWithWhereUniqueWithoutEntityInput | Prisma.PageUpsertWithWhereUniqueWithoutEntityInput[]
-  createMany?: Prisma.PageCreateManyEntityInputEnvelope
-  set?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  disconnect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  delete?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  connect?: Prisma.PageWhereUniqueInput | Prisma.PageWhereUniqueInput[]
-  update?: Prisma.PageUpdateWithWhereUniqueWithoutEntityInput | Prisma.PageUpdateWithWhereUniqueWithoutEntityInput[]
-  updateMany?: Prisma.PageUpdateManyWithWhereWithoutEntityInput | Prisma.PageUpdateManyWithWhereWithoutEntityInput[]
-  deleteMany?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+export type PageCreateManyOrganizationInputEnvelope = {
+  data: Prisma.PageCreateManyOrganizationInput | Prisma.PageCreateManyOrganizationInput[]
+  skipDuplicates?: boolean
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type PageUpsertWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.PageWhereUniqueInput
+  update: Prisma.XOR<Prisma.PageUpdateWithoutOrganizationInput, Prisma.PageUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.PageCreateWithoutOrganizationInput, Prisma.PageUncheckedCreateWithoutOrganizationInput>
+}
+
+export type PageUpdateWithWhereUniqueWithoutOrganizationInput = {
+  where: Prisma.PageWhereUniqueInput
+  data: Prisma.XOR<Prisma.PageUpdateWithoutOrganizationInput, Prisma.PageUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type PageUpdateManyWithWhereWithoutOrganizationInput = {
+  where: Prisma.PageScalarWhereInput
+  data: Prisma.XOR<Prisma.PageUpdateManyMutationInput, Prisma.PageUncheckedUpdateManyWithoutOrganizationInput>
+}
+
+export type PageScalarWhereInput = {
+  AND?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+  OR?: Prisma.PageScalarWhereInput[]
+  NOT?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
+  id?: Prisma.UuidFilter<"Page"> | string
+  title?: Prisma.StringFilter<"Page"> | string
+  slug?: Prisma.StringFilter<"Page"> | string
+  content?: Prisma.JsonFilter<"Page">
+  published?: Prisma.BoolFilter<"Page"> | boolean
+  spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
+  organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Page"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Page"> | Date | string
+  userId?: Prisma.UuidFilter<"Page"> | string
+}
+
+export type PageCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  slug: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPagesInput
+  user: Prisma.UserCreateNestedOneWithoutPagesInput
+}
+
+export type PageUncheckedCreateWithoutSpaceInput = {
+  id?: string
+  title: string
+  slug: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: boolean
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
+}
+
+export type PageCreateOrConnectWithoutSpaceInput = {
+  where: Prisma.PageWhereUniqueInput
+  create: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput>
+}
+
+export type PageCreateManySpaceInputEnvelope = {
+  data: Prisma.PageCreateManySpaceInput | Prisma.PageCreateManySpaceInput[]
+  skipDuplicates?: boolean
+}
+
+export type PageUpsertWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.PageWhereUniqueInput
+  update: Prisma.XOR<Prisma.PageUpdateWithoutSpaceInput, Prisma.PageUncheckedUpdateWithoutSpaceInput>
+  create: Prisma.XOR<Prisma.PageCreateWithoutSpaceInput, Prisma.PageUncheckedCreateWithoutSpaceInput>
+}
+
+export type PageUpdateWithWhereUniqueWithoutSpaceInput = {
+  where: Prisma.PageWhereUniqueInput
+  data: Prisma.XOR<Prisma.PageUpdateWithoutSpaceInput, Prisma.PageUncheckedUpdateWithoutSpaceInput>
+}
+
+export type PageUpdateManyWithWhereWithoutSpaceInput = {
+  where: Prisma.PageScalarWhereInput
+  data: Prisma.XOR<Prisma.PageUpdateManyMutationInput, Prisma.PageUncheckedUpdateManyWithoutSpaceInput>
 }
 
 export type PageCreateWithoutUserInput = {
@@ -510,7 +688,8 @@ export type PageCreateWithoutUserInput = {
   published?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  entity: Prisma.EntityCreateNestedOneWithoutPagesInput
+  space?: Prisma.SpaceCreateNestedOneWithoutPagesInput
+  organization?: Prisma.OrganizationCreateNestedOneWithoutPagesInput
 }
 
 export type PageUncheckedCreateWithoutUserInput = {
@@ -519,7 +698,8 @@ export type PageUncheckedCreateWithoutUserInput = {
   slug: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -550,67 +730,100 @@ export type PageUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.PageUpdateManyMutationInput, Prisma.PageUncheckedUpdateManyWithoutUserInput>
 }
 
-export type PageScalarWhereInput = {
-  AND?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
-  OR?: Prisma.PageScalarWhereInput[]
-  NOT?: Prisma.PageScalarWhereInput | Prisma.PageScalarWhereInput[]
-  id?: Prisma.UuidFilter<"Page"> | string
-  title?: Prisma.StringFilter<"Page"> | string
-  slug?: Prisma.StringFilter<"Page"> | string
-  content?: Prisma.JsonFilter<"Page">
-  published?: Prisma.BoolFilter<"Page"> | boolean
-  entityId?: Prisma.UuidFilter<"Page"> | string
-  createdAt?: Prisma.DateTimeFilter<"Page"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Page"> | Date | string
-  userId?: Prisma.UuidFilter<"Page"> | string
-}
-
-export type PageCreateWithoutEntityInput = {
+export type PageCreateManyOrganizationInput = {
   id?: string
   title: string
   slug: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPagesInput
-}
-
-export type PageUncheckedCreateWithoutEntityInput = {
-  id?: string
-  title: string
-  slug: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  published?: boolean
+  spaceId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
 }
 
-export type PageCreateOrConnectWithoutEntityInput = {
-  where: Prisma.PageWhereUniqueInput
-  create: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput>
+export type PageUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  space?: Prisma.SpaceUpdateOneWithoutPagesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPagesNestedInput
 }
 
-export type PageCreateManyEntityInputEnvelope = {
-  data: Prisma.PageCreateManyEntityInput | Prisma.PageCreateManyEntityInput[]
-  skipDuplicates?: boolean
+export type PageUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type PageUpsertWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.PageWhereUniqueInput
-  update: Prisma.XOR<Prisma.PageUpdateWithoutEntityInput, Prisma.PageUncheckedUpdateWithoutEntityInput>
-  create: Prisma.XOR<Prisma.PageCreateWithoutEntityInput, Prisma.PageUncheckedCreateWithoutEntityInput>
+export type PageUncheckedUpdateManyWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
-export type PageUpdateWithWhereUniqueWithoutEntityInput = {
-  where: Prisma.PageWhereUniqueInput
-  data: Prisma.XOR<Prisma.PageUpdateWithoutEntityInput, Prisma.PageUncheckedUpdateWithoutEntityInput>
+export type PageCreateManySpaceInput = {
+  id?: string
+  title: string
+  slug: string
+  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: boolean
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
 }
 
-export type PageUpdateManyWithWhereWithoutEntityInput = {
-  where: Prisma.PageScalarWhereInput
-  data: Prisma.XOR<Prisma.PageUpdateManyMutationInput, Prisma.PageUncheckedUpdateManyWithoutEntityInput>
+export type PageUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organization?: Prisma.OrganizationUpdateOneWithoutPagesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPagesNestedInput
+}
+
+export type PageUncheckedUpdateWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type PageUncheckedUpdateManyWithoutSpaceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PageCreateManyUserInput = {
@@ -619,7 +832,8 @@ export type PageCreateManyUserInput = {
   slug: string
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: boolean
-  entityId: string
+  spaceId?: string | null
+  organizationId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -632,7 +846,8 @@ export type PageUpdateWithoutUserInput = {
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  entity?: Prisma.EntityUpdateOneRequiredWithoutPagesNestedInput
+  space?: Prisma.SpaceUpdateOneWithoutPagesNestedInput
+  organization?: Prisma.OrganizationUpdateOneWithoutPagesNestedInput
 }
 
 export type PageUncheckedUpdateWithoutUserInput = {
@@ -641,7 +856,8 @@ export type PageUncheckedUpdateWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -652,53 +868,10 @@ export type PageUncheckedUpdateManyWithoutUserInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  entityId?: Prisma.StringFieldUpdateOperationsInput | string
+  spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PageCreateManyEntityInput = {
-  id?: string
-  title: string
-  slug: string
-  content: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  published?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userId: string
-}
-
-export type PageUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPagesNestedInput
-}
-
-export type PageUncheckedUpdateWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
-}
-
-export type PageUncheckedUpdateManyWithoutEntityInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  slug?: Prisma.StringFieldUpdateOperationsInput | string
-  content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -709,11 +882,13 @@ export type PageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   slug?: boolean
   content?: boolean
   published?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["page"]>
 
@@ -723,11 +898,13 @@ export type PageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   content?: boolean
   published?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["page"]>
 
@@ -737,11 +914,13 @@ export type PageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   slug?: boolean
   content?: boolean
   published?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["page"]>
 
@@ -751,30 +930,35 @@ export type PageSelectScalar = {
   slug?: boolean
   content?: boolean
   published?: boolean
-  entityId?: boolean
+  spaceId?: boolean
+  organizationId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
 }
 
-export type PageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "published" | "entityId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["page"]>
+export type PageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "published" | "spaceId" | "organizationId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["page"]>
 export type PageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PageIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PageIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  entity?: boolean | Prisma.EntityDefaultArgs<ExtArgs>
+  space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
+  organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Page"
   objects: {
-    entity: Prisma.$EntityPayload<ExtArgs>
+    space: Prisma.$SpacePayload<ExtArgs> | null
+    organization: Prisma.$OrganizationPayload<ExtArgs> | null
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -783,7 +967,8 @@ export type $PagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     slug: string
     content: runtime.JsonValue
     published: boolean
-    entityId: string
+    spaceId: string | null
+    organizationId: string | null
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -1181,7 +1366,8 @@ readonly fields: PageFieldRefs;
  */
 export interface Prisma__PageClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  entity<T extends Prisma.EntityDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EntityDefaultArgs<ExtArgs>>): Prisma.Prisma__EntityClient<runtime.Types.Result.GetResult<Prisma.$EntityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  space<T extends Prisma.Page$spaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Page$spaceArgs<ExtArgs>>): Prisma.Prisma__SpaceClient<runtime.Types.Result.GetResult<Prisma.$SpacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  organization<T extends Prisma.Page$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Page$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationClient<runtime.Types.Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1217,7 +1403,8 @@ export interface PageFieldRefs {
   readonly slug: Prisma.FieldRef<"Page", 'String'>
   readonly content: Prisma.FieldRef<"Page", 'Json'>
   readonly published: Prisma.FieldRef<"Page", 'Boolean'>
-  readonly entityId: Prisma.FieldRef<"Page", 'String'>
+  readonly spaceId: Prisma.FieldRef<"Page", 'String'>
+  readonly organizationId: Prisma.FieldRef<"Page", 'String'>
   readonly createdAt: Prisma.FieldRef<"Page", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Page", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Page", 'String'>
@@ -1619,6 +1806,44 @@ export type PageDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Pages to delete.
    */
   limit?: number
+}
+
+/**
+ * Page.space
+ */
+export type Page$spaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Space
+   */
+  select?: Prisma.SpaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Space
+   */
+  omit?: Prisma.SpaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SpaceInclude<ExtArgs> | null
+  where?: Prisma.SpaceWhereInput
+}
+
+/**
+ * Page.organization
+ */
+export type Page$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Organization
+   */
+  select?: Prisma.OrganizationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Organization
+   */
+  omit?: Prisma.OrganizationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationInclude<ExtArgs> | null
+  where?: Prisma.OrganizationWhereInput
 }
 
 /**
