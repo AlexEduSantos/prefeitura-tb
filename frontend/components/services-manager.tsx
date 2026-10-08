@@ -308,7 +308,7 @@ export default function ServicesManager() {
                   <SelectContent>
                     {organizations?.map((org) => (
                       <SelectItem key={org.id} value={org.id}>
-                        {org.name}
+                        {org.title}
                       </SelectItem>
                     ))}
                   </SelectContent>

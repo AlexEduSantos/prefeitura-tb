@@ -57,7 +57,6 @@ export function GalleriesManager() {
     setMode,
     selectedGallery,
     setSelectedGallery,
-    entities,
     mediaList,
     createBanner,
     updateBanner,
@@ -255,7 +254,6 @@ export function GalleriesManager() {
           }
           setOpenModal(false);
         }}
-        entities={entities}
         mediaList={mediaList}
       />
     </div>

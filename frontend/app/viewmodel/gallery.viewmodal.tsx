@@ -18,7 +18,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { useState } from "react";
-import { EyeClosedIcon, EyeIcon, PenIcon, TrashIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  EyeClosedIcon,
+  EyeIcon,
+  PenIcon,
+  TrashIcon,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export function useGalleryViewModel() {
@@ -93,16 +100,55 @@ export function useGalleryViewModel() {
     },
     {
       accessorKey: "title",
-      header: "Título",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Título
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
     },
     {
       accessorKey: "slides",
-      header: "Slides",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Slides
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
       cell: ({ row }) => row.original.slides.length,
     },
     {
       accessorKey: "updatedAt",
-      header: "Atualizado em",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Atualizado em
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
       cell: ({ row }) =>
         format(new Date(row.getValue("updatedAt")), "dd/MM/yyyy HH:mm"),
     },

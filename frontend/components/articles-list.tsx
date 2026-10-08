@@ -195,24 +195,6 @@ export function ArticlesList() {
               <DropdownMenuSeparator />
 
               <DropdownMenuLabel>Categoria</DropdownMenuLabel>
-              <DropdownMenuRadioGroup
-                value={
-                  (table.getColumn("categoria")?.getFilterValue() as string) ||
-                  ""
-                }
-                onValueChange={(value) =>
-                  table
-                    .getColumn("categoria")
-                    ?.setFilterValue(value || undefined)
-                }
-              >
-                <DropdownMenuRadioItem value="">Todas</DropdownMenuRadioItem>
-                {uniqueCategories.map((cat) => (
-                  <DropdownMenuRadioItem key={cat} value={cat}>
-                    {cat}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
               <DropdownMenuSeparator />
 
               <DropdownMenuItem onClick={clearFilters}>

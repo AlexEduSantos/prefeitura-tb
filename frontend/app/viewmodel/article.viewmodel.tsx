@@ -315,6 +315,19 @@ export function ArticleViewModel() {
         },
       },
       {
+        accessorKey: "categories",
+        header: "Categoria",
+        filterFn: (row, columnId, value) => {
+          const categories = row.getValue(columnId) as { name: string }[];
+          const search = value.toLowerCase();
+          return categories.some((c) => c.name.toLowerCase().includes(search));
+        },
+        cell: ({ row }) => {
+          const categories = row.original.categories;
+          return <div>{categories?.map((c) => c.name).join(", ")}</div>;
+        },
+      },
+      {
         accessorKey: "actions",
         header: "Ações",
         cell: ({ row, table }) => {

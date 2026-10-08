@@ -130,7 +130,6 @@ export function GalleryModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSave) {
-      console.log(formData);
       onSave(formData);
     }
   };
@@ -214,7 +213,7 @@ export function GalleryModal({
                   <SelectContent>
                     {organizations.map((org) => (
                       <SelectItem key={org.id} value={org.id}>
-                        {org.name}
+                        {org.title}
                       </SelectItem>
                     ))}
                   </SelectContent>
