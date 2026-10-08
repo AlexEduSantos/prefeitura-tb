@@ -27,7 +27,7 @@ export class CategoriesService {
           },
         },
       },
-      orderBy: { name: 'asc' },
+      orderBy: { title: 'asc' },
     });
   }
 
@@ -43,7 +43,7 @@ export class CategoriesService {
         },
         _count: { select: { articles: true } },
       },
-      orderBy: { name: 'asc' },
+      orderBy: { title: 'asc' },
     });
   }
 
@@ -78,7 +78,9 @@ export class CategoriesService {
       },
     });
     if (!category) {
-      throw new NotFoundException(`Categoria com slug "${slug}" não encontrada.`);
+      throw new NotFoundException(
+        `Categoria com slug "${slug}" não encontrada.`,
+      );
     }
     return category;
   }

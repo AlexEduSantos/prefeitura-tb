@@ -26,7 +26,7 @@ export class OrganizationsService {
         children: true,
         defaultSpace: true,
       },
-      orderBy: { name: 'asc' },
+      orderBy: { title: 'asc' },
     });
   }
 
@@ -43,7 +43,7 @@ export class OrganizationsService {
           },
         },
       },
-      orderBy: { name: 'asc' },
+      orderBy: { title: 'asc' },
     });
   }
 

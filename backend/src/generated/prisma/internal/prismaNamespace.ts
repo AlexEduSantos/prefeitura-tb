@@ -1569,7 +1569,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const OrganizationScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   acronym: 'acronym',
   type: 'type',
   active: 'active',
@@ -1596,7 +1596,7 @@ export type SpaceScalarFieldEnum = (typeof SpaceScalarFieldEnum)[keyof typeof Sp
 
 export const CategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   slug: 'slug',
   description: 'description',
   parentId: 'parentId',
@@ -1849,7 +1849,7 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 export const OrganizationOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   acronym: 'acronym',
   parentId: 'parentId',
   defaultSpaceId: 'defaultSpaceId'
@@ -1870,7 +1870,7 @@ export type SpaceOrderByRelevanceFieldEnum = (typeof SpaceOrderByRelevanceFieldE
 
 export const CategoryOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   slug: 'slug',
   description: 'description',
   parentId: 'parentId'

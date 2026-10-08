@@ -11,7 +11,7 @@ import { OrganizationTypes } from '../../generated/prisma/client';
 export class CreateOrganizationDto {
   @IsString()
   @IsNotEmpty()
-  name!: string;
+  title!: string;
 
   @IsString()
   @IsOptional()

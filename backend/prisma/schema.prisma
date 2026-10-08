@@ -59,93 +59,93 @@ enum OrganizationTypes {
 
 // ========== MODELS ==========
 model Organization {
-  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name           String
-  acronym        String?
-  type           OrganizationTypes @default(secretaria)
-  active         Boolean           @default(true)
+  id      String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title   String
+  acronym String?
+  type    OrganizationTypes @default(secretaria)
+  active  Boolean           @default(true)
 
   // Hierarquia administrativa
-  parentId       String?           @db.Uuid
-  parent         Organization?     @relation("OrgHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children       Organization[]    @relation("OrgHierarchy")
+  parentId String?        @db.Uuid
+  parent   Organization?  @relation("OrgHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Organization[] @relation("OrgHierarchy")
 
   // Espaço de URL padrão associado (ex: Secretaria de Educação -> /educacao)
-  defaultSpaceId String?           @db.Uuid
-  defaultSpace   Space?            @relation("OrgDefaultSpace", fields: [defaultSpaceId], references: [id], onDelete: SetNull)
+  defaultSpaceId String? @db.Uuid
+  defaultSpace   Space?  @relation("OrgDefaultSpace", fields: [defaultSpaceId], references: [id], onDelete: SetNull)
 
   // Conteúdos pertencentes a esta organização
-  users          User[]
-  articles       Article[]
-  pages          Page[]
-  galleries      Galleries[]
-  popups         Popups[]
-  services       Services[]
+  users     User[]
+  articles  Article[]
+  pages     Page[]
+  galleries Galleries[]
+  popups    Popups[]
+  services  Services[]
 
-  createdAt      DateTime          @default(now()) @db.Timestamp
-  updatedAt      DateTime          @updatedAt @db.Timestamp
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@map("organization")
 }
 
 model Space {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  slug          String         @unique
-  title         String
-  description   String?
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String  @unique
+  title       String
+  description String?
 
   organizations Organization[] @relation("OrgDefaultSpace")
   pages         Page[]
   galleries     Galleries[]
   popups        Popups[]
 
-  createdAt     DateTime       @default(now()) @db.Timestamp
-  updatedAt     DateTime       @updatedAt @db.Timestamp
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@map("space")
 }
 
 model Category {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  slug        String     @unique
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  slug        String  @unique
   description String?
 
-  parentId    String?    @db.Uuid
-  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
-  children    Category[] @relation("CategoryHierarchy")
+  parentId String?    @db.Uuid
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryHierarchy")
 
-  articles    Article[]  @relation("ArticleCategories")
+  articles Article[] @relation("ArticleCategories")
 
-  createdAt   DateTime   @default(now()) @db.Timestamp
-  updatedAt   DateTime   @updatedAt @db.Timestamp
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
   @@map("category")
 }
 
 model User {
-  id             String        @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username       String        @unique
-  name           String
-  email          String        @unique
-  password       String
-  avatar         String?
-  phone          String?
-  role           UserRole      @default(USER)
+  id       String   @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username String   @unique
+  name     String
+  email    String   @unique
+  password String
+  avatar   String?
+  phone    String?
+  role     UserRole @default(USER)
 
   // Vínculo organizacional (1:1)
   organizationId String?       @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  galleries      Galleries[]
-  popups         Popups[]
-  services       Services[]
-  pages          Page[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  galleries Galleries[]
+  popups    Popups[]
+  services  Services[]
+  pages     Page[]
 
-  articleAuthor  Article[]     @relation("articleAuthor")
-  articleEditor  Article[]     @relation("articleEditor")
+  articleAuthor Article[] @relation("articleAuthor")
+  articleEditor Article[] @relation("articleEditor")
 
   @@map("user")
 }
@@ -160,25 +160,25 @@ model Session {
 }
 
 model Page {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title          String
-  slug           String
-  content        Json
-  published      Boolean       @default(false)
+  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  slug      String
+  content   Json
+  published Boolean @default(false)
 
   // Roteamento: /[spaceSlug]/[slug] ou /[slug] se spaceId for null
-  spaceId        String?       @db.Uuid
-  space          Space?        @relation(fields: [spaceId], references: [id])
+  spaceId String? @db.Uuid
+  space   Space?  @relation(fields: [spaceId], references: [id])
 
   // Responsável organizacional
   organizationId String?       @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  createdAt      DateTime      @default(now()) @db.Timestamp
-  updatedAt      DateTime      @updatedAt @db.Timestamp
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
 
-  userId         String        @db.Uuid
-  user           User          @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 
   @@unique([spaceId, slug])
   @@map("page")
@@ -210,19 +210,19 @@ model Article {
   socialPreviewDescription String?
 
   // Vínculo Organizacional (RBAC)
-  organizationId           String?       @db.Uuid
-  organization             Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   // Taxonomia Editorial
-  categories               Category[]    @relation("ArticleCategories")
+  categories Category[] @relation("ArticleCategories")
 
-  authorId                 String        @db.Uuid
-  author                   User          @relation("articleAuthor", fields: [authorId], references: [id])
-  editorId                 String?       @db.Uuid
-  editor                   User?         @relation("articleEditor", fields: [editorId], references: [id])
+  authorId String  @db.Uuid
+  author   User    @relation("articleAuthor", fields: [authorId], references: [id])
+  editorId String? @db.Uuid
+  editor   User?   @relation("articleEditor", fields: [editorId], references: [id])
 
-  coverId                  String        @db.Uuid
-  cover                    Media         @relation("articleCover", fields: [coverId], references: [id])
+  coverId String @db.Uuid
+  cover   Media  @relation("articleCover", fields: [coverId], references: [id])
 
   @@map("article")
 }
@@ -286,31 +286,31 @@ enum GalleryType {
 }
 
 model Galleries {
-  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                 String
-  active                Boolean       @default(true)
-  createdAt             DateTime      @default(now()) @db.Timestamp
-  updatedAt             DateTime      @updatedAt @db.Timestamp
-  galleryType           GalleryType   @default(slider)
-  galleryAutoplay       Boolean       @default(true)
-  galleryInterval       Int           @default(5000)
-  galleryShowThumbnails Boolean       @default(true)
+  active                Boolean     @default(true)
+  createdAt             DateTime    @default(now()) @db.Timestamp
+  updatedAt             DateTime    @updatedAt @db.Timestamp
+  galleryType           GalleryType @default(slider)
+  galleryAutoplay       Boolean     @default(true)
+  galleryInterval       Int         @default(5000)
+  galleryShowThumbnails Boolean     @default(true)
 
   // Espaço de exibição: null = portal inteiro / preenchido = restrito ao space
-  spaceId               String?       @db.Uuid
-  space                 Space?        @relation(fields: [spaceId], references: [id], onDelete: SetNull)
+  spaceId String? @db.Uuid
+  space   Space?  @relation(fields: [spaceId], references: [id], onDelete: SetNull)
 
   // Gestor da galeria (RBAC)
-  organizationId        String?       @db.Uuid
-  organization          Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  userId                String        @db.Uuid
-  user                  User          @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 
   // GalleryMedia como relação N:N explícita
-  slides                GalleryMedia[]
+  slides GalleryMedia[]
 
-  articles              Article[]
+  articles Article[]
 
   @@index([organizationId, active])
   @@index([spaceId, active])
@@ -328,8 +328,8 @@ model GalleryMedia {
   galleryId String    @db.Uuid
   gallery   Galleries @relation(fields: [galleryId], references: [id], onDelete: Cascade)
 
-  mediaId   String    @db.Uuid
-  media     Media     @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId String @db.Uuid
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
 
   @@unique([galleryId, order])
   @@index([galleryId])
@@ -337,34 +337,34 @@ model GalleryMedia {
 }
 
 model Popups {
-  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title           String
   link            String?
-  active          Boolean       @default(true)
-  displayTime     Int           @default(5)
-  status          PopupStatus   @default(rascunho)
-  type            PopupType     @default(modal)
+  active          Boolean     @default(true)
+  displayTime     Int         @default(5)
+  status          PopupStatus @default(rascunho)
+  type            PopupType   @default(modal)
   position        String?
-  closeButton     Boolean       @default(true)
-  priority        Int           @default(10)
+  closeButton     Boolean     @default(true)
+  priority        Int         @default(10)
   publicationDate DateTime?
   expirationDate  DateTime?
-  createdAt       DateTime      @default(now()) @db.Timestamp
-  updatedAt       DateTime      @updatedAt @db.Timestamp
+  createdAt       DateTime    @default(now()) @db.Timestamp
+  updatedAt       DateTime    @updatedAt @db.Timestamp
 
   // Espaço de exibição: null = portal inteiro / preenchido = restrito ao space
-  spaceId         String?       @db.Uuid
-  space           Space?        @relation(fields: [spaceId], references: [id], onDelete: SetNull)
+  spaceId String? @db.Uuid
+  space   Space?  @relation(fields: [spaceId], references: [id], onDelete: SetNull)
 
   // Gestor do popup (RBAC)
-  organizationId  String?       @db.Uuid
-  organization    Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  imageId         String        @db.Uuid
-  image           Media         @relation("popupImage", fields: [imageId], references: [id])
+  imageId String @db.Uuid
+  image   Media  @relation("popupImage", fields: [imageId], references: [id])
 
-  userId          String        @db.Uuid
-  user            User          @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
 
   @@index([organizationId, active, status])
   @@index([spaceId, active, status])
@@ -372,24 +372,24 @@ model Popups {
 }
 
 model Services {
-  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title          String
-  link           String        @unique
-  altText        String?
-  createdAt      DateTime      @default(now()) @db.Timestamp
-  updatedAt      DateTime      @updatedAt @db.Timestamp
-  featured       Boolean       @default(false)
-  description    String?       @db.VarChar(1000)
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  link        String   @unique
+  altText     String?
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+  featured    Boolean  @default(false)
+  description String?  @db.VarChar(1000)
 
   // Gestor do serviço (RBAC)
   organizationId String?       @db.Uuid
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  image          Media         @relation("serviceImage", fields: [imageId], references: [id])
-  imageId        String        @db.Uuid
+  image   Media  @relation("serviceImage", fields: [imageId], references: [id])
+  imageId String @db.Uuid
 
-  user           User          @relation(fields: [userId], references: [id])
-  userId         String        @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
 
   @@map("service")
 }

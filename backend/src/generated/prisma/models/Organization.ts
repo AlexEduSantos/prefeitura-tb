@@ -26,7 +26,7 @@ export type AggregateOrganization = {
 
 export type OrganizationMinAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   acronym: string | null
   type: $Enums.OrganizationTypes | null
   active: boolean | null
@@ -38,7 +38,7 @@ export type OrganizationMinAggregateOutputType = {
 
 export type OrganizationMaxAggregateOutputType = {
   id: string | null
-  name: string | null
+  title: string | null
   acronym: string | null
   type: $Enums.OrganizationTypes | null
   active: boolean | null
@@ -50,7 +50,7 @@ export type OrganizationMaxAggregateOutputType = {
 
 export type OrganizationCountAggregateOutputType = {
   id: number
-  name: number
+  title: number
   acronym: number
   type: number
   active: number
@@ -64,7 +64,7 @@ export type OrganizationCountAggregateOutputType = {
 
 export type OrganizationMinAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   acronym?: true
   type?: true
   active?: true
@@ -76,7 +76,7 @@ export type OrganizationMinAggregateInputType = {
 
 export type OrganizationMaxAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   acronym?: true
   type?: true
   active?: true
@@ -88,7 +88,7 @@ export type OrganizationMaxAggregateInputType = {
 
 export type OrganizationCountAggregateInputType = {
   id?: true
-  name?: true
+  title?: true
   acronym?: true
   type?: true
   active?: true
@@ -173,7 +173,7 @@ export type OrganizationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 
 export type OrganizationGroupByOutputType = {
   id: string
-  name: string
+  title: string
   acronym: string | null
   type: $Enums.OrganizationTypes
   active: boolean
@@ -206,7 +206,7 @@ export type OrganizationWhereInput = {
   OR?: Prisma.OrganizationWhereInput[]
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   id?: Prisma.UuidFilter<"Organization"> | string
-  name?: Prisma.StringFilter<"Organization"> | string
+  title?: Prisma.StringFilter<"Organization"> | string
   acronym?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypesFilter<"Organization"> | $Enums.OrganizationTypes
   active?: Prisma.BoolFilter<"Organization"> | boolean
@@ -227,7 +227,7 @@ export type OrganizationWhereInput = {
 
 export type OrganizationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   acronym?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -252,7 +252,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
   OR?: Prisma.OrganizationWhereInput[]
   NOT?: Prisma.OrganizationWhereInput | Prisma.OrganizationWhereInput[]
-  name?: Prisma.StringFilter<"Organization"> | string
+  title?: Prisma.StringFilter<"Organization"> | string
   acronym?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypesFilter<"Organization"> | $Enums.OrganizationTypes
   active?: Prisma.BoolFilter<"Organization"> | boolean
@@ -273,7 +273,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
 
 export type OrganizationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   acronym?: Prisma.SortOrderInput | Prisma.SortOrder
   type?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -291,7 +291,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
   OR?: Prisma.OrganizationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.OrganizationScalarWhereWithAggregatesInput | Prisma.OrganizationScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"Organization"> | string
-  name?: Prisma.StringWithAggregatesFilter<"Organization"> | string
+  title?: Prisma.StringWithAggregatesFilter<"Organization"> | string
   acronym?: Prisma.StringNullableWithAggregatesFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypesWithAggregatesFilter<"Organization"> | $Enums.OrganizationTypes
   active?: Prisma.BoolWithAggregatesFilter<"Organization"> | boolean
@@ -303,7 +303,7 @@ export type OrganizationScalarWhereWithAggregatesInput = {
 
 export type OrganizationCreateInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -322,7 +322,7 @@ export type OrganizationCreateInput = {
 
 export type OrganizationUncheckedCreateInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -341,7 +341,7 @@ export type OrganizationUncheckedCreateInput = {
 
 export type OrganizationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -360,7 +360,7 @@ export type OrganizationUpdateInput = {
 
 export type OrganizationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -379,7 +379,7 @@ export type OrganizationUncheckedUpdateInput = {
 
 export type OrganizationCreateManyInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -391,7 +391,7 @@ export type OrganizationCreateManyInput = {
 
 export type OrganizationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -401,7 +401,7 @@ export type OrganizationUpdateManyMutationInput = {
 
 export type OrganizationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -434,7 +434,7 @@ export type OrganizationOrderByRelevanceInput = {
 
 export type OrganizationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   acronym?: Prisma.SortOrder
   type?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -446,7 +446,7 @@ export type OrganizationCountOrderByAggregateInput = {
 
 export type OrganizationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   acronym?: Prisma.SortOrder
   type?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -458,7 +458,7 @@ export type OrganizationMaxOrderByAggregateInput = {
 
 export type OrganizationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  title?: Prisma.SortOrder
   acronym?: Prisma.SortOrder
   type?: Prisma.SortOrder
   active?: Prisma.SortOrder
@@ -686,7 +686,7 @@ export type OrganizationUpdateOneWithoutServicesNestedInput = {
 
 export type OrganizationCreateWithoutChildrenInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -704,7 +704,7 @@ export type OrganizationCreateWithoutChildrenInput = {
 
 export type OrganizationUncheckedCreateWithoutChildrenInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -727,7 +727,7 @@ export type OrganizationCreateOrConnectWithoutChildrenInput = {
 
 export type OrganizationCreateWithoutParentInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -745,7 +745,7 @@ export type OrganizationCreateWithoutParentInput = {
 
 export type OrganizationUncheckedCreateWithoutParentInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -784,7 +784,7 @@ export type OrganizationUpdateToOneWithWhereWithoutChildrenInput = {
 
 export type OrganizationUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -802,7 +802,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
 
 export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -839,7 +839,7 @@ export type OrganizationScalarWhereInput = {
   OR?: Prisma.OrganizationScalarWhereInput[]
   NOT?: Prisma.OrganizationScalarWhereInput | Prisma.OrganizationScalarWhereInput[]
   id?: Prisma.UuidFilter<"Organization"> | string
-  name?: Prisma.StringFilter<"Organization"> | string
+  title?: Prisma.StringFilter<"Organization"> | string
   acronym?: Prisma.StringNullableFilter<"Organization"> | string | null
   type?: Prisma.EnumOrganizationTypesFilter<"Organization"> | $Enums.OrganizationTypes
   active?: Prisma.BoolFilter<"Organization"> | boolean
@@ -851,7 +851,7 @@ export type OrganizationScalarWhereInput = {
 
 export type OrganizationCreateWithoutDefaultSpaceInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -869,7 +869,7 @@ export type OrganizationCreateWithoutDefaultSpaceInput = {
 
 export type OrganizationUncheckedCreateWithoutDefaultSpaceInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -913,7 +913,7 @@ export type OrganizationUpdateManyWithWhereWithoutDefaultSpaceInput = {
 
 export type OrganizationCreateWithoutUsersInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -931,7 +931,7 @@ export type OrganizationCreateWithoutUsersInput = {
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -965,7 +965,7 @@ export type OrganizationUpdateToOneWithWhereWithoutUsersInput = {
 
 export type OrganizationUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -983,7 +983,7 @@ export type OrganizationUpdateWithoutUsersInput = {
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1001,7 +1001,7 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
 
 export type OrganizationCreateWithoutPagesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1019,7 +1019,7 @@ export type OrganizationCreateWithoutPagesInput = {
 
 export type OrganizationUncheckedCreateWithoutPagesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1053,7 +1053,7 @@ export type OrganizationUpdateToOneWithWhereWithoutPagesInput = {
 
 export type OrganizationUpdateWithoutPagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1071,7 +1071,7 @@ export type OrganizationUpdateWithoutPagesInput = {
 
 export type OrganizationUncheckedUpdateWithoutPagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1089,7 +1089,7 @@ export type OrganizationUncheckedUpdateWithoutPagesInput = {
 
 export type OrganizationCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1107,7 +1107,7 @@ export type OrganizationCreateWithoutArticlesInput = {
 
 export type OrganizationUncheckedCreateWithoutArticlesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1141,7 +1141,7 @@ export type OrganizationUpdateToOneWithWhereWithoutArticlesInput = {
 
 export type OrganizationUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1159,7 +1159,7 @@ export type OrganizationUpdateWithoutArticlesInput = {
 
 export type OrganizationUncheckedUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1177,7 +1177,7 @@ export type OrganizationUncheckedUpdateWithoutArticlesInput = {
 
 export type OrganizationCreateWithoutGalleriesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1195,7 +1195,7 @@ export type OrganizationCreateWithoutGalleriesInput = {
 
 export type OrganizationUncheckedCreateWithoutGalleriesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1229,7 +1229,7 @@ export type OrganizationUpdateToOneWithWhereWithoutGalleriesInput = {
 
 export type OrganizationUpdateWithoutGalleriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1247,7 +1247,7 @@ export type OrganizationUpdateWithoutGalleriesInput = {
 
 export type OrganizationUncheckedUpdateWithoutGalleriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1265,7 +1265,7 @@ export type OrganizationUncheckedUpdateWithoutGalleriesInput = {
 
 export type OrganizationCreateWithoutPopupsInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1283,7 +1283,7 @@ export type OrganizationCreateWithoutPopupsInput = {
 
 export type OrganizationUncheckedCreateWithoutPopupsInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1317,7 +1317,7 @@ export type OrganizationUpdateToOneWithWhereWithoutPopupsInput = {
 
 export type OrganizationUpdateWithoutPopupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1335,7 +1335,7 @@ export type OrganizationUpdateWithoutPopupsInput = {
 
 export type OrganizationUncheckedUpdateWithoutPopupsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1353,7 +1353,7 @@ export type OrganizationUncheckedUpdateWithoutPopupsInput = {
 
 export type OrganizationCreateWithoutServicesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1371,7 +1371,7 @@ export type OrganizationCreateWithoutServicesInput = {
 
 export type OrganizationUncheckedCreateWithoutServicesInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1405,7 +1405,7 @@ export type OrganizationUpdateToOneWithWhereWithoutServicesInput = {
 
 export type OrganizationUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1423,7 +1423,7 @@ export type OrganizationUpdateWithoutServicesInput = {
 
 export type OrganizationUncheckedUpdateWithoutServicesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1441,7 +1441,7 @@ export type OrganizationUncheckedUpdateWithoutServicesInput = {
 
 export type OrganizationCreateManyParentInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1452,7 +1452,7 @@ export type OrganizationCreateManyParentInput = {
 
 export type OrganizationUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1470,7 +1470,7 @@ export type OrganizationUpdateWithoutParentInput = {
 
 export type OrganizationUncheckedUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1488,7 +1488,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1499,7 +1499,7 @@ export type OrganizationUncheckedUpdateManyWithoutParentInput = {
 
 export type OrganizationCreateManyDefaultSpaceInput = {
   id?: string
-  name: string
+  title: string
   acronym?: string | null
   type?: $Enums.OrganizationTypes
   active?: boolean
@@ -1510,7 +1510,7 @@ export type OrganizationCreateManyDefaultSpaceInput = {
 
 export type OrganizationUpdateWithoutDefaultSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1528,7 +1528,7 @@ export type OrganizationUpdateWithoutDefaultSpaceInput = {
 
 export type OrganizationUncheckedUpdateWithoutDefaultSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1546,7 +1546,7 @@ export type OrganizationUncheckedUpdateWithoutDefaultSpaceInput = {
 
 export type OrganizationUncheckedUpdateManyWithoutDefaultSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
   acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1642,7 +1642,7 @@ export type OrganizationCountOutputTypeCountServicesArgs<ExtArgs extends runtime
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   acronym?: boolean
   type?: boolean
   active?: boolean
@@ -1664,7 +1664,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   acronym?: boolean
   type?: boolean
   active?: boolean
@@ -1678,7 +1678,7 @@ export type OrganizationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
 
 export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  title?: boolean
   acronym?: boolean
   type?: boolean
   active?: boolean
@@ -1692,7 +1692,7 @@ export type OrganizationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
 
 export type OrganizationSelectScalar = {
   id?: boolean
-  name?: boolean
+  title?: boolean
   acronym?: boolean
   type?: boolean
   active?: boolean
@@ -1702,7 +1702,7 @@ export type OrganizationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "acronym" | "type" | "active" | "parentId" | "defaultSpaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
+export type OrganizationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "acronym" | "type" | "active" | "parentId" | "defaultSpaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["organization"]>
 export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parent?: boolean | Prisma.Organization$parentArgs<ExtArgs>
   children?: boolean | Prisma.Organization$childrenArgs<ExtArgs>
@@ -1739,7 +1739,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    title: string
     acronym: string | null
     type: $Enums.OrganizationTypes
     active: boolean
@@ -2180,7 +2180,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
  */
 export interface OrganizationFieldRefs {
   readonly id: Prisma.FieldRef<"Organization", 'String'>
-  readonly name: Prisma.FieldRef<"Organization", 'String'>
+  readonly title: Prisma.FieldRef<"Organization", 'String'>
   readonly acronym: Prisma.FieldRef<"Organization", 'String'>
   readonly type: Prisma.FieldRef<"Organization", 'OrganizationTypes'>
   readonly active: Prisma.FieldRef<"Organization", 'Boolean'>
