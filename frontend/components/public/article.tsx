@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Mail, Printer, Send, Share2 } from "lucide-react";
 import Image from "next/image";
+import { Badge } from "../ui/badge";
 
 interface ArticleViewerProps {
   slug: string;
@@ -33,7 +34,7 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
   }
 
   return (
-    <Card className="p-4 gap-4 w-full max-w-7xl mx-auto my-2">
+    <Card className="p-4 gap-6 w-full max-w-7xl mx-auto my-2">
       {/* Breadcrumb - links navigate */}
       <Breadcrumb>
         <BreadcrumbList className="text-xs">
@@ -53,9 +54,9 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
         </BreadcrumbList>
       </Breadcrumb>
       {/* Autor - Data */}
-      <div className="w-full flex gap-2 justify-between items-center">
-        <div className="w-full flex gap-2 items-center">
-          <div className="w-1 h-5 bg-primary rounded-full" />
+      <div className="w-full flex flex-col-reverse sm:flex-row gap-2 justify-between items-center">
+        <div className="w-full flex flex-col sm:flex-row gap-2 sm:items-center items-start">
+          <Badge className="px-4">{article!.categories![0].title}</Badge>{" "}
           <div className="text-muted-foreground text-md">
             {format(
               new Date(article?.createdAt || ""),
@@ -66,7 +67,7 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
             )}
           </div>
         </div>
-        <div className="flex gap-2 items-center">
+        <div className="flex w-full gap-2 sm:items-center justify-end">
           <Printer className="size-4 stroke-1 hover:stroke-2 cursor-pointer text-primary" />
           <Mail className="size-4 stroke-1 hover:stroke-2 cursor-pointer text-primary" />
           <Send className="size-4 stroke-1 hover:stroke-2 cursor-pointer text-primary" />
@@ -75,14 +76,16 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
       </div>
 
       {/* Content */}
-      <CardTitle className="text-2xl">{article?.title}</CardTitle>
-      <CardContent className="p-0 gap-2 flex flex-col">
+      <CardTitle className="md:text-3xl sm:text-2xl text-xl">
+        {article?.title}
+      </CardTitle>
+      <CardContent className="p-0 gap-6 flex flex-col">
         {article?.headline && (
           <h3 className="text-muted-foreground leading-snug italic">
             {article.headline}
           </h3>
         )}
-        <div className="relative max-h-100 min-h-60 aspect-3/2 w-full overflow-hidden rounded-lg">
+        <div className="relative max-h-100 min-h-60 aspect-3/2 w-full overflow-hidden rounded-lg ">
           <Image
             loader={() =>
               `${process.env.NEXT_PUBLIC_API_URL}/media/file/${article?.cover?.key}`
@@ -96,7 +99,7 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
             className="transition-transform duration-300 group-hover:scale-105 object-cover"
           />
         </div>
-        <div className="block">
+        <div className="block pb-20">
           <LexicalViewer content={article?.body || {}} />
         </div>
         {/* Galeria de Imagens */}
