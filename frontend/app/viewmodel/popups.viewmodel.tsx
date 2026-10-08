@@ -20,7 +20,14 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { IMedia } from "../type/media";
 import { ImageVisualizer } from "@/components/image-visualizer";
-import { EyeIcon, ImageIcon, PencilIcon, TrashIcon } from "lucide-react";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  EyeIcon,
+  ImageIcon,
+  PencilIcon,
+  TrashIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IUser } from "../type/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -155,23 +162,75 @@ export function usePopupsViewModel() {
     },
     {
       accessorKey: "title",
-      header: "Título",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Título
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
     },
     {
       accessorKey: "publicationDate",
-      header: "Data de Publicação",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Data de Publicação
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
       cell: ({ row }) =>
         format(new Date(row.getValue("publicationDate")), "dd/MM/yyyy HH:mm"),
     },
     {
       accessorKey: "expirationDate",
-      header: "Data de Expiração",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Data de Expiração
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
       cell: ({ row }) =>
         format(new Date(row.getValue("expirationDate")), "dd/MM/yyyy HH:mm"),
     },
     {
       accessorKey: "user",
-      header: "Criado por",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Criado por
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="ml-1 h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="ml-1 h-4 w-4" />
+          )}
+        </Button>
+      ),
       cell: ({ row }) => {
         const user = row.getValue("user") as IUser;
         return (

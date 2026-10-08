@@ -202,7 +202,7 @@ export default function MateriaForm({
                     <SelectContent>
                       {organizations.map((org) => (
                         <SelectItem key={org.id} value={org.id}>
-                          {org.name}
+                          {org.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -229,7 +229,7 @@ export default function MateriaForm({
                     <SelectContent>
                       {categories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
+                          {cat.title}
                         </SelectItem>
                       ))}
                     </SelectContent>
