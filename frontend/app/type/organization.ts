@@ -1,9 +1,9 @@
 export type OrganizationTypes =
-  | 'secretaria'
-  | 'divisão'
-  | 'seção'
-  | 'conselho'
-  | 'projeto';
+  | "secretaria"
+  | "divisão"
+  | "seção"
+  | "conselho"
+  | "projeto";
 
 export interface ISpace {
   id: string;
@@ -16,7 +16,7 @@ export interface ISpace {
 
 export interface ICategory {
   id: string;
-  name: string;
+  title: string;
   slug: string;
   description?: string;
   parentId?: string | null;
@@ -28,7 +28,7 @@ export interface ICategory {
 
 export interface IOrganization {
   id: string;
-  name: string;
+  title: string;
   acronym?: string | null;
   type: OrganizationTypes;
   active: boolean;

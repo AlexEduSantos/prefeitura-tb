@@ -3,11 +3,16 @@ import { IOrganization, ISpace, ICategory } from "../type/organization";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export class OrganizationService {
-  static async getOrganizations(includeInactive = false): Promise<IOrganization[]> {
-    const response = await fetch(`${API_URL}/organizations?includeInactive=${includeInactive}`, {
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
+  static async getOrganizations(
+    includeInactive = false,
+  ): Promise<IOrganization[]> {
+    const response = await fetch(
+      `${API_URL}/organizations?includeInactive=${includeInactive}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      },
+    );
     if (!response.ok) throw new Error("Erro ao buscar organizações");
     return response.json();
   }
@@ -17,11 +22,14 @@ export class OrganizationService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar organograma de organizações");
+    if (!response.ok)
+      throw new Error("Erro ao buscar organograma de organizações");
     return response.json();
   }
 
-  static async createOrganization(data: Partial<IOrganization>): Promise<IOrganization> {
+  static async createOrganization(
+    data: Partial<IOrganization>,
+  ): Promise<IOrganization> {
     const response = await fetch(`${API_URL}/organizations`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -32,7 +40,10 @@ export class OrganizationService {
     return response.json();
   }
 
-  static async updateOrganization(id: string, data: Partial<IOrganization>): Promise<IOrganization> {
+  static async updateOrganization(
+    id: string,
+    data: Partial<IOrganization>,
+  ): Promise<IOrganization> {
     const response = await fetch(`${API_URL}/organizations/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -112,6 +123,30 @@ export class CategoryService {
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error("Erro ao criar categoria");
+    return response.json();
+  }
+
+  static async updateCategory(
+    id: string,
+    data: Partial<ICategory>,
+  ): Promise<ICategory> {
+    const response = await fetch(`${API_URL}/categories/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar categoria");
+    return response.json();
+  }
+
+  static async deleteCategory(id: string): Promise<ICategory> {
+    const response = await fetch(`${API_URL}/categories/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Erro ao remover categoria");
     return response.json();
   }
 }
