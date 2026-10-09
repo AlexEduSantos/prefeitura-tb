@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { ScrollArea } from "./ui/scroll-area";
-import { IOrganization } from "@/app/type/organization";
+import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 
 interface GalleryModalProps {
   gallery?: IGallery | null;
@@ -35,7 +35,6 @@ interface GalleryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave?: (item: any) => void;
-  organizations?: IOrganization[];
   mediaList?: IMedia[];
 }
 
@@ -45,7 +44,6 @@ export function GalleryModal({
   isOpen,
   onClose,
   onSave,
-  organizations = [],
   mediaList = [],
 }: GalleryModalProps) {
   const [formData, setFormData] = useState<any>({
@@ -55,6 +53,8 @@ export function GalleryModal({
     slides: [],
   });
   const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
+
+  const { organizations } = useOrganizationViewModel();
 
   useEffect(() => {
     if (isOpen) {
