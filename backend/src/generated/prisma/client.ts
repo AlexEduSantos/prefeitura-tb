@@ -114,3 +114,13 @@ export type Stories = Prisma.StoriesModel
  * 
  */
 export type StoriesItem = Prisma.StoriesItemModel
+/**
+ * Model Menu
+ * 
+ */
+export type Menu = Prisma.MenuModel
+/**
+ * Model MenuItem
+ * 
+ */
+export type MenuItem = Prisma.MenuItemModel

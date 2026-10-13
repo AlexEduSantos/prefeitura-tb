@@ -50,6 +50,7 @@ enum UserRole {
 }
 
 enum OrganizationTypes {
+  prefeitura
   secretaria
   divisão
   seção
@@ -84,6 +85,7 @@ model Organization {
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
+  menus     Menu[]
 
   @@map("organization")
 }
@@ -101,6 +103,7 @@ model Space {
 
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
+  menus     Menu[]
 
   @@map("space")
 }
@@ -117,8 +120,9 @@ model Category {
 
   articles Article[] @relation("ArticleCategories")
 
-  createdAt DateTime @default(now()) @db.Timestamp
-  updatedAt DateTime @updatedAt @db.Timestamp
+  createdAt DateTime   @default(now()) @db.Timestamp
+  updatedAt DateTime   @updatedAt @db.Timestamp
+  menuItems MenuItem[]
 
   @@map("category")
 }
@@ -177,8 +181,9 @@ model Page {
   createdAt DateTime @default(now()) @db.Timestamp
   updatedAt DateTime @updatedAt @db.Timestamp
 
-  userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  userId    String     @db.Uuid
+  user      User       @relation(fields: [userId], references: [id])
+  menuItems MenuItem[]
 
   @@unique([spaceId, slug])
   @@map("page")
@@ -427,4 +432,69 @@ model StoriesItem {
 
   @@unique([storyId, order])
   @@map("story_item")
+}
+
+enum MenuLocation {
+  header
+  footer
+  sidebar
+  mobile
+}
+
+model Menu {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  location    MenuLocation
+  description String?
+  active      Boolean      @default(true)
+
+  // Onde aparece (contexto de URL). null = global
+  spaceId String? @db.Uuid
+  space   Space?  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+
+  // Quem gerencia (RBAC). null = admin global
+  organizationId String?       @db.Uuid
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
+  items MenuItem[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@unique([location, spaceId]) // um menu por local em cada espaço
+  @@index([organizationId])
+  @@map("menu")
+}
+
+model MenuItem {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  label       String
+  description String?
+  icon        String?
+  visible     Boolean @default(true)
+  order       Int     @default(0)
+
+  // Destino — no máximo um dos três
+  pageId String? @db.Uuid
+  page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+
+  categoryId String?   @db.Uuid
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  url String? // link externo, âncora, e-mail, tel:
+
+  // Hierarquia
+  parentId String?    @db.Uuid
+  parent   MenuItem?  @relation("MenuHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children MenuItem[] @relation("MenuHierarchy")
+
+  // Pertence a um menu
+  menuId String @db.Uuid
+  menu   Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@index([menuId, parentId, order])
+  @@map("menu_item")
 }

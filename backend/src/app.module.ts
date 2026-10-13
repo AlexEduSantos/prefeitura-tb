@@ -20,6 +20,8 @@ import { ServicesService } from './service/services.service';
 import { ServicesModule } from './service/services.module';
 import { StoryModule } from './story/story.module';
 import { ObserveModule } from './observe';
+import { MenuModule } from './menu/menu.module';
+import { MenuItemModule } from './menu-item/menu-item.module';
 
 @Module({
   imports: [
@@ -35,7 +37,7 @@ import { ObserveModule } from './observe';
     PagesModule,
     ArticlesModule,
     MediaModule,
-
+    MenuModule,
     OrganizationsModule,
     SpacesModule,
     CategoriesModule,
@@ -49,6 +51,7 @@ import { ObserveModule } from './observe';
       appSecret: process.env.OBSERVE_APP_SECRET!,
       serviceId: 'site-prefeitura',
     }),
+    MenuItemModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

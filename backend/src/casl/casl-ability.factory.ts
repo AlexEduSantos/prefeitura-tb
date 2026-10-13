@@ -12,6 +12,8 @@ import {
   Galleries,
   GalleryMedia,
   Media,
+  Menu,
+  MenuItem,
   Organization,
   Page,
   Popups,
@@ -31,6 +33,8 @@ export type Subjects =
   | 'Category'
   | 'Organization'
   | 'Space'
+  | 'Menu'
+  | 'MenuItem'
   | 'User'
   | 'Galleries'
   | 'GalleryMedia'
@@ -45,6 +49,8 @@ export type Subjects =
   | Category
   | Organization
   | Space
+  | Menu
+  | MenuItem
   | Galleries
   | GalleryMedia
   | Popups

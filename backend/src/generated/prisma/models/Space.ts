@@ -194,6 +194,7 @@ export type SpaceWhereInput = {
   pages?: Prisma.PageListRelationFilter
   galleries?: Prisma.GalleriesListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
+  menus?: Prisma.MenuListRelationFilter
 }
 
 export type SpaceOrderByWithRelationInput = {
@@ -207,6 +208,7 @@ export type SpaceOrderByWithRelationInput = {
   pages?: Prisma.PageOrderByRelationAggregateInput
   galleries?: Prisma.GalleriesOrderByRelationAggregateInput
   popups?: Prisma.PopupsOrderByRelationAggregateInput
+  menus?: Prisma.MenuOrderByRelationAggregateInput
   _relevance?: Prisma.SpaceOrderByRelevanceInput
 }
 
@@ -224,6 +226,7 @@ export type SpaceWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.PageListRelationFilter
   galleries?: Prisma.GalleriesListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
+  menus?: Prisma.MenuListRelationFilter
 }, "id" | "slug">
 
 export type SpaceOrderByWithAggregationInput = {
@@ -261,6 +264,7 @@ export type SpaceCreateInput = {
   pages?: Prisma.PageCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateInput = {
@@ -274,6 +278,7 @@ export type SpaceUncheckedCreateInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUpdateInput = {
@@ -287,6 +292,7 @@ export type SpaceUpdateInput = {
   pages?: Prisma.PageUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateInput = {
@@ -300,6 +306,7 @@ export type SpaceUncheckedUpdateInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateManyInput = {
@@ -431,6 +438,22 @@ export type SpaceUpdateOneWithoutPopupsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SpaceUpdateToOneWithWhereWithoutPopupsInput, Prisma.SpaceUpdateWithoutPopupsInput>, Prisma.SpaceUncheckedUpdateWithoutPopupsInput>
 }
 
+export type SpaceCreateNestedOneWithoutMenusInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutMenusInput, Prisma.SpaceUncheckedCreateWithoutMenusInput>
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutMenusInput
+  connect?: Prisma.SpaceWhereUniqueInput
+}
+
+export type SpaceUpdateOneWithoutMenusNestedInput = {
+  create?: Prisma.XOR<Prisma.SpaceCreateWithoutMenusInput, Prisma.SpaceUncheckedCreateWithoutMenusInput>
+  connectOrCreate?: Prisma.SpaceCreateOrConnectWithoutMenusInput
+  upsert?: Prisma.SpaceUpsertWithoutMenusInput
+  disconnect?: Prisma.SpaceWhereInput | boolean
+  delete?: Prisma.SpaceWhereInput | boolean
+  connect?: Prisma.SpaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SpaceUpdateToOneWithWhereWithoutMenusInput, Prisma.SpaceUpdateWithoutMenusInput>, Prisma.SpaceUncheckedUpdateWithoutMenusInput>
+}
+
 export type SpaceCreateWithoutOrganizationsInput = {
   id?: string
   slug: string
@@ -441,6 +464,7 @@ export type SpaceCreateWithoutOrganizationsInput = {
   pages?: Prisma.PageCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutOrganizationsInput = {
@@ -453,6 +477,7 @@ export type SpaceUncheckedCreateWithoutOrganizationsInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutOrganizationsInput = {
@@ -481,6 +506,7 @@ export type SpaceUpdateWithoutOrganizationsInput = {
   pages?: Prisma.PageUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutOrganizationsInput = {
@@ -493,6 +519,7 @@ export type SpaceUncheckedUpdateWithoutOrganizationsInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateWithoutPagesInput = {
@@ -505,6 +532,7 @@ export type SpaceCreateWithoutPagesInput = {
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDefaultSpaceInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutPagesInput = {
@@ -517,6 +545,7 @@ export type SpaceUncheckedCreateWithoutPagesInput = {
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDefaultSpaceInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutPagesInput = {
@@ -545,6 +574,7 @@ export type SpaceUpdateWithoutPagesInput = {
   organizations?: Prisma.OrganizationUpdateManyWithoutDefaultSpaceNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutPagesInput = {
@@ -557,6 +587,7 @@ export type SpaceUncheckedUpdateWithoutPagesInput = {
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDefaultSpaceNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateWithoutGalleriesInput = {
@@ -569,6 +600,7 @@ export type SpaceCreateWithoutGalleriesInput = {
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDefaultSpaceInput
   pages?: Prisma.PageCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutGalleriesInput = {
@@ -581,6 +613,7 @@ export type SpaceUncheckedCreateWithoutGalleriesInput = {
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDefaultSpaceInput
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutSpaceInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutGalleriesInput = {
@@ -609,6 +642,7 @@ export type SpaceUpdateWithoutGalleriesInput = {
   organizations?: Prisma.OrganizationUpdateManyWithoutDefaultSpaceNestedInput
   pages?: Prisma.PageUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutGalleriesInput = {
@@ -621,6 +655,7 @@ export type SpaceUncheckedUpdateWithoutGalleriesInput = {
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDefaultSpaceNestedInput
   pages?: Prisma.PageUncheckedUpdateManyWithoutSpaceNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceCreateWithoutPopupsInput = {
@@ -633,6 +668,7 @@ export type SpaceCreateWithoutPopupsInput = {
   organizations?: Prisma.OrganizationCreateNestedManyWithoutDefaultSpaceInput
   pages?: Prisma.PageCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceUncheckedCreateWithoutPopupsInput = {
@@ -645,6 +681,7 @@ export type SpaceUncheckedCreateWithoutPopupsInput = {
   organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDefaultSpaceInput
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutSpaceInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutSpaceInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutSpaceInput
 }
 
 export type SpaceCreateOrConnectWithoutPopupsInput = {
@@ -673,6 +710,7 @@ export type SpaceUpdateWithoutPopupsInput = {
   organizations?: Prisma.OrganizationUpdateManyWithoutDefaultSpaceNestedInput
   pages?: Prisma.PageUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutSpaceNestedInput
 }
 
 export type SpaceUncheckedUpdateWithoutPopupsInput = {
@@ -685,6 +723,75 @@ export type SpaceUncheckedUpdateWithoutPopupsInput = {
   organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDefaultSpaceNestedInput
   pages?: Prisma.PageUncheckedUpdateManyWithoutSpaceNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutSpaceNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutSpaceNestedInput
+}
+
+export type SpaceCreateWithoutMenusInput = {
+  id?: string
+  slug: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organizations?: Prisma.OrganizationCreateNestedManyWithoutDefaultSpaceInput
+  pages?: Prisma.PageCreateNestedManyWithoutSpaceInput
+  galleries?: Prisma.GalleriesCreateNestedManyWithoutSpaceInput
+  popups?: Prisma.PopupsCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceUncheckedCreateWithoutMenusInput = {
+  id?: string
+  slug: string
+  title: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  organizations?: Prisma.OrganizationUncheckedCreateNestedManyWithoutDefaultSpaceInput
+  pages?: Prisma.PageUncheckedCreateNestedManyWithoutSpaceInput
+  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutSpaceInput
+  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutSpaceInput
+}
+
+export type SpaceCreateOrConnectWithoutMenusInput = {
+  where: Prisma.SpaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutMenusInput, Prisma.SpaceUncheckedCreateWithoutMenusInput>
+}
+
+export type SpaceUpsertWithoutMenusInput = {
+  update: Prisma.XOR<Prisma.SpaceUpdateWithoutMenusInput, Prisma.SpaceUncheckedUpdateWithoutMenusInput>
+  create: Prisma.XOR<Prisma.SpaceCreateWithoutMenusInput, Prisma.SpaceUncheckedCreateWithoutMenusInput>
+  where?: Prisma.SpaceWhereInput
+}
+
+export type SpaceUpdateToOneWithWhereWithoutMenusInput = {
+  where?: Prisma.SpaceWhereInput
+  data: Prisma.XOR<Prisma.SpaceUpdateWithoutMenusInput, Prisma.SpaceUncheckedUpdateWithoutMenusInput>
+}
+
+export type SpaceUpdateWithoutMenusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizations?: Prisma.OrganizationUpdateManyWithoutDefaultSpaceNestedInput
+  pages?: Prisma.PageUpdateManyWithoutSpaceNestedInput
+  galleries?: Prisma.GalleriesUpdateManyWithoutSpaceNestedInput
+  popups?: Prisma.PopupsUpdateManyWithoutSpaceNestedInput
+}
+
+export type SpaceUncheckedUpdateWithoutMenusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  organizations?: Prisma.OrganizationUncheckedUpdateManyWithoutDefaultSpaceNestedInput
+  pages?: Prisma.PageUncheckedUpdateManyWithoutSpaceNestedInput
+  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutSpaceNestedInput
+  popups?: Prisma.PopupsUncheckedUpdateManyWithoutSpaceNestedInput
 }
 
 
@@ -697,6 +804,7 @@ export type SpaceCountOutputType = {
   pages: number
   galleries: number
   popups: number
+  menus: number
 }
 
 export type SpaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -704,6 +812,7 @@ export type SpaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   pages?: boolean | SpaceCountOutputTypeCountPagesArgs
   galleries?: boolean | SpaceCountOutputTypeCountGalleriesArgs
   popups?: boolean | SpaceCountOutputTypeCountPopupsArgs
+  menus?: boolean | SpaceCountOutputTypeCountMenusArgs
 }
 
 /**
@@ -744,6 +853,13 @@ export type SpaceCountOutputTypeCountPopupsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.PopupsWhereInput
 }
 
+/**
+ * SpaceCountOutputType without action
+ */
+export type SpaceCountOutputTypeCountMenusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MenuWhereInput
+}
+
 
 export type SpaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -756,6 +872,7 @@ export type SpaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pages?: boolean | Prisma.Space$pagesArgs<ExtArgs>
   galleries?: boolean | Prisma.Space$galleriesArgs<ExtArgs>
   popups?: boolean | Prisma.Space$popupsArgs<ExtArgs>
+  menus?: boolean | Prisma.Space$menusArgs<ExtArgs>
   _count?: boolean | Prisma.SpaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["space"]>
 
@@ -792,6 +909,7 @@ export type SpaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   pages?: boolean | Prisma.Space$pagesArgs<ExtArgs>
   galleries?: boolean | Prisma.Space$galleriesArgs<ExtArgs>
   popups?: boolean | Prisma.Space$popupsArgs<ExtArgs>
+  menus?: boolean | Prisma.Space$menusArgs<ExtArgs>
   _count?: boolean | Prisma.SpaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SpaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -804,6 +922,7 @@ export type $SpacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     pages: Prisma.$PagePayload<ExtArgs>[]
     galleries: Prisma.$GalleriesPayload<ExtArgs>[]
     popups: Prisma.$PopupsPayload<ExtArgs>[]
+    menus: Prisma.$MenuPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1210,6 +1329,7 @@ export interface Prisma__SpaceClient<T, Null = never, ExtArgs extends runtime.Ty
   pages<T extends Prisma.Space$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   galleries<T extends Prisma.Space$galleriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$galleriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GalleriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   popups<T extends Prisma.Space$popupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$popupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PopupsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  menus<T extends Prisma.Space$menusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Space$menusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1731,6 +1851,30 @@ export type Space$popupsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.PopupsScalarFieldEnum | Prisma.PopupsScalarFieldEnum[]
+}
+
+/**
+ * Space.menus
+ */
+export type Space$menusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Menu
+   */
+  select?: Prisma.MenuSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Menu
+   */
+  omit?: Prisma.MenuOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MenuInclude<ExtArgs> | null
+  where?: Prisma.MenuWhereInput
+  orderBy?: Prisma.MenuOrderByWithRelationInput | Prisma.MenuOrderByWithRelationInput[]
+  cursor?: Prisma.MenuWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MenuScalarFieldEnum | Prisma.MenuScalarFieldEnum[]
 }
 
 /**

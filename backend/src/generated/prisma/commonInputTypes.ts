@@ -434,6 +434,23 @@ export type EnumPopupTypeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumPopupTypeFilter<$PrismaModel>
 }
 
+export type EnumMenuLocationFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenuLocation | Prisma.EnumMenuLocationFieldRefInput<$PrismaModel>
+  in?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel> | $Enums.MenuLocation
+}
+
+export type EnumMenuLocationWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenuLocation | Prisma.EnumMenuLocationFieldRefInput<$PrismaModel>
+  in?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenuLocationWithAggregatesFilter<$PrismaModel> | $Enums.MenuLocation
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel>
+}
+
 export type NestedUuidFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -834,6 +851,23 @@ export type NestedEnumPopupTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumPopupTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumPopupTypeFilter<$PrismaModel>
+}
+
+export type NestedEnumMenuLocationFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenuLocation | Prisma.EnumMenuLocationFieldRefInput<$PrismaModel>
+  in?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel> | $Enums.MenuLocation
+}
+
+export type NestedEnumMenuLocationWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MenuLocation | Prisma.EnumMenuLocationFieldRefInput<$PrismaModel>
+  in?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MenuLocation[] | Prisma.ListEnumMenuLocationFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMenuLocationWithAggregatesFilter<$PrismaModel> | $Enums.MenuLocation
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMenuLocationFilter<$PrismaModel>
 }
 
 

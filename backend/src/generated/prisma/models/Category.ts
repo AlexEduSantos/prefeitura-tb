@@ -201,6 +201,7 @@ export type CategoryWhereInput = {
   parent?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   children?: Prisma.CategoryListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
+  menuItems?: Prisma.MenuItemListRelationFilter
 }
 
 export type CategoryOrderByWithRelationInput = {
@@ -214,6 +215,7 @@ export type CategoryOrderByWithRelationInput = {
   parent?: Prisma.CategoryOrderByWithRelationInput
   children?: Prisma.CategoryOrderByRelationAggregateInput
   articles?: Prisma.ArticleOrderByRelationAggregateInput
+  menuItems?: Prisma.MenuItemOrderByRelationAggregateInput
   _relevance?: Prisma.CategoryOrderByRelevanceInput
 }
 
@@ -231,6 +233,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   parent?: Prisma.XOR<Prisma.CategoryNullableScalarRelationFilter, Prisma.CategoryWhereInput> | null
   children?: Prisma.CategoryListRelationFilter
   articles?: Prisma.ArticleListRelationFilter
+  menuItems?: Prisma.MenuItemListRelationFilter
 }, "id" | "slug">
 
 export type CategoryOrderByWithAggregationInput = {
@@ -269,6 +272,7 @@ export type CategoryCreateInput = {
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateInput = {
@@ -281,6 +285,7 @@ export type CategoryUncheckedCreateInput = {
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUpdateInput = {
@@ -293,6 +298,7 @@ export type CategoryUpdateInput = {
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateInput = {
@@ -305,6 +311,7 @@ export type CategoryUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryCreateManyInput = {
@@ -483,6 +490,22 @@ export type CategoryUncheckedUpdateManyWithoutArticlesNestedInput = {
   deleteMany?: Prisma.CategoryScalarWhereInput | Prisma.CategoryScalarWhereInput[]
 }
 
+export type CategoryCreateNestedOneWithoutMenuItemsInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutMenuItemsInput, Prisma.CategoryUncheckedCreateWithoutMenuItemsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutMenuItemsInput
+  connect?: Prisma.CategoryWhereUniqueInput
+}
+
+export type CategoryUpdateOneWithoutMenuItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.CategoryCreateWithoutMenuItemsInput, Prisma.CategoryUncheckedCreateWithoutMenuItemsInput>
+  connectOrCreate?: Prisma.CategoryCreateOrConnectWithoutMenuItemsInput
+  upsert?: Prisma.CategoryUpsertWithoutMenuItemsInput
+  disconnect?: Prisma.CategoryWhereInput | boolean
+  delete?: Prisma.CategoryWhereInput | boolean
+  connect?: Prisma.CategoryWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CategoryUpdateToOneWithWhereWithoutMenuItemsInput, Prisma.CategoryUpdateWithoutMenuItemsInput>, Prisma.CategoryUncheckedUpdateWithoutMenuItemsInput>
+}
+
 export type CategoryCreateWithoutChildrenInput = {
   id?: string
   title: string
@@ -492,6 +515,7 @@ export type CategoryCreateWithoutChildrenInput = {
   updatedAt?: Date | string
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutChildrenInput = {
@@ -503,6 +527,7 @@ export type CategoryUncheckedCreateWithoutChildrenInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutChildrenInput = {
@@ -519,6 +544,7 @@ export type CategoryCreateWithoutParentInput = {
   updatedAt?: Date | string
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
   articles?: Prisma.ArticleCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutParentInput = {
@@ -530,6 +556,7 @@ export type CategoryUncheckedCreateWithoutParentInput = {
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoriesInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutParentInput = {
@@ -562,6 +589,7 @@ export type CategoryUpdateWithoutChildrenInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutChildrenInput = {
@@ -573,6 +601,7 @@ export type CategoryUncheckedUpdateWithoutChildrenInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUpsertWithWhereUniqueWithoutParentInput = {
@@ -613,6 +642,7 @@ export type CategoryCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
   children?: Prisma.CategoryCreateNestedManyWithoutParentInput
+  menuItems?: Prisma.MenuItemCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryUncheckedCreateWithoutArticlesInput = {
@@ -624,6 +654,7 @@ export type CategoryUncheckedCreateWithoutArticlesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
+  menuItems?: Prisma.MenuItemUncheckedCreateNestedManyWithoutCategoryInput
 }
 
 export type CategoryCreateOrConnectWithoutArticlesInput = {
@@ -647,6 +678,70 @@ export type CategoryUpdateManyWithWhereWithoutArticlesInput = {
   data: Prisma.XOR<Prisma.CategoryUpdateManyMutationInput, Prisma.CategoryUncheckedUpdateManyWithoutArticlesInput>
 }
 
+export type CategoryCreateWithoutMenuItemsInput = {
+  id?: string
+  title: string
+  slug: string
+  description?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.CategoryCreateNestedOneWithoutChildrenInput
+  children?: Prisma.CategoryCreateNestedManyWithoutParentInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutCategoriesInput
+}
+
+export type CategoryUncheckedCreateWithoutMenuItemsInput = {
+  id?: string
+  title: string
+  slug: string
+  description?: string | null
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.CategoryUncheckedCreateNestedManyWithoutParentInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutCategoriesInput
+}
+
+export type CategoryCreateOrConnectWithoutMenuItemsInput = {
+  where: Prisma.CategoryWhereUniqueInput
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutMenuItemsInput, Prisma.CategoryUncheckedCreateWithoutMenuItemsInput>
+}
+
+export type CategoryUpsertWithoutMenuItemsInput = {
+  update: Prisma.XOR<Prisma.CategoryUpdateWithoutMenuItemsInput, Prisma.CategoryUncheckedUpdateWithoutMenuItemsInput>
+  create: Prisma.XOR<Prisma.CategoryCreateWithoutMenuItemsInput, Prisma.CategoryUncheckedCreateWithoutMenuItemsInput>
+  where?: Prisma.CategoryWhereInput
+}
+
+export type CategoryUpdateToOneWithWhereWithoutMenuItemsInput = {
+  where?: Prisma.CategoryWhereInput
+  data: Prisma.XOR<Prisma.CategoryUpdateWithoutMenuItemsInput, Prisma.CategoryUncheckedUpdateWithoutMenuItemsInput>
+}
+
+export type CategoryUpdateWithoutMenuItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutCategoriesNestedInput
+}
+
+export type CategoryUncheckedUpdateWithoutMenuItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoriesNestedInput
+}
+
 export type CategoryCreateManyParentInput = {
   id?: string
   title: string
@@ -665,6 +760,7 @@ export type CategoryUpdateWithoutParentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
   articles?: Prisma.ArticleUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutParentInput = {
@@ -676,6 +772,7 @@ export type CategoryUncheckedUpdateWithoutParentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.ArticleUncheckedUpdateManyWithoutCategoriesNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateManyWithoutParentInput = {
@@ -696,6 +793,7 @@ export type CategoryUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   parent?: Prisma.CategoryUpdateOneWithoutChildrenNestedInput
   children?: Prisma.CategoryUpdateManyWithoutParentNestedInput
+  menuItems?: Prisma.MenuItemUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateWithoutArticlesInput = {
@@ -707,6 +805,7 @@ export type CategoryUncheckedUpdateWithoutArticlesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   children?: Prisma.CategoryUncheckedUpdateManyWithoutParentNestedInput
+  menuItems?: Prisma.MenuItemUncheckedUpdateManyWithoutCategoryNestedInput
 }
 
 export type CategoryUncheckedUpdateManyWithoutArticlesInput = {
@@ -727,11 +826,13 @@ export type CategoryUncheckedUpdateManyWithoutArticlesInput = {
 export type CategoryCountOutputType = {
   children: number
   articles: number
+  menuItems: number
 }
 
 export type CategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   children?: boolean | CategoryCountOutputTypeCountChildrenArgs
   articles?: boolean | CategoryCountOutputTypeCountArticlesArgs
+  menuItems?: boolean | CategoryCountOutputTypeCountMenuItemsArgs
 }
 
 /**
@@ -758,6 +859,13 @@ export type CategoryCountOutputTypeCountArticlesArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ArticleWhereInput
 }
 
+/**
+ * CategoryCountOutputType without action
+ */
+export type CategoryCountOutputTypeCountMenuItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MenuItemWhereInput
+}
+
 
 export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -770,6 +878,7 @@ export type CategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   parent?: boolean | Prisma.Category$parentArgs<ExtArgs>
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.Category$articlesArgs<ExtArgs>
+  menuItems?: boolean | Prisma.Category$menuItemsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["category"]>
 
@@ -810,6 +919,7 @@ export type CategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   parent?: boolean | Prisma.Category$parentArgs<ExtArgs>
   children?: boolean | Prisma.Category$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.Category$articlesArgs<ExtArgs>
+  menuItems?: boolean | Prisma.Category$menuItemsArgs<ExtArgs>
   _count?: boolean | Prisma.CategoryCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -825,6 +935,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     parent: Prisma.$CategoryPayload<ExtArgs> | null
     children: Prisma.$CategoryPayload<ExtArgs>[]
     articles: Prisma.$ArticlePayload<ExtArgs>[]
+    menuItems: Prisma.$MenuItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1231,6 +1342,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
   parent<T extends Prisma.Category$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$parentArgs<ExtArgs>>): Prisma.Prisma__CategoryClient<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   children<T extends Prisma.Category$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.Category$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  menuItems<T extends Prisma.Category$menuItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Category$menuItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1732,6 +1844,30 @@ export type Category$articlesArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ArticleScalarFieldEnum | Prisma.ArticleScalarFieldEnum[]
+}
+
+/**
+ * Category.menuItems
+ */
+export type Category$menuItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MenuItem
+   */
+  select?: Prisma.MenuItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MenuItem
+   */
+  omit?: Prisma.MenuItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MenuItemInclude<ExtArgs> | null
+  where?: Prisma.MenuItemWhereInput
+  orderBy?: Prisma.MenuItemOrderByWithRelationInput | Prisma.MenuItemOrderByWithRelationInput[]
+  cursor?: Prisma.MenuItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MenuItemScalarFieldEnum | Prisma.MenuItemScalarFieldEnum[]
 }
 
 /**

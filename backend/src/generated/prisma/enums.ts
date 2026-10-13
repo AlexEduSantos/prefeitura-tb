@@ -63,6 +63,7 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
 export const OrganizationTypes = {
+  prefeitura: 'prefeitura',
   secretaria: 'secretaria',
   divisão: 'divisão',
   seção: 'seção',
@@ -81,3 +82,13 @@ export const GalleryType = {
 } as const
 
 export type GalleryType = (typeof GalleryType)[keyof typeof GalleryType]
+
+
+export const MenuLocation = {
+  header: 'header',
+  footer: 'footer',
+  sidebar: 'sidebar',
+  mobile: 'mobile'
+} as const
+
+export type MenuLocation = (typeof MenuLocation)[keyof typeof MenuLocation]

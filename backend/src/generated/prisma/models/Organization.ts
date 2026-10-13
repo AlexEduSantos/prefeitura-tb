@@ -223,6 +223,7 @@ export type OrganizationWhereInput = {
   galleries?: Prisma.GalleriesListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
   services?: Prisma.ServicesListRelationFilter
+  menus?: Prisma.MenuListRelationFilter
 }
 
 export type OrganizationOrderByWithRelationInput = {
@@ -244,6 +245,7 @@ export type OrganizationOrderByWithRelationInput = {
   galleries?: Prisma.GalleriesOrderByRelationAggregateInput
   popups?: Prisma.PopupsOrderByRelationAggregateInput
   services?: Prisma.ServicesOrderByRelationAggregateInput
+  menus?: Prisma.MenuOrderByRelationAggregateInput
   _relevance?: Prisma.OrganizationOrderByRelevanceInput
 }
 
@@ -269,6 +271,7 @@ export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
   galleries?: Prisma.GalleriesListRelationFilter
   popups?: Prisma.PopupsListRelationFilter
   services?: Prisma.ServicesListRelationFilter
+  menus?: Prisma.MenuListRelationFilter
 }, "id">
 
 export type OrganizationOrderByWithAggregationInput = {
@@ -318,6 +321,7 @@ export type OrganizationCreateInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateInput = {
@@ -337,6 +341,7 @@ export type OrganizationUncheckedCreateInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUpdateInput = {
@@ -356,6 +361,7 @@ export type OrganizationUpdateInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateInput = {
@@ -375,6 +381,7 @@ export type OrganizationUncheckedUpdateInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyInput = {
@@ -684,6 +691,22 @@ export type OrganizationUpdateOneWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutServicesInput, Prisma.OrganizationUpdateWithoutServicesInput>, Prisma.OrganizationUncheckedUpdateWithoutServicesInput>
 }
 
+export type OrganizationCreateNestedOneWithoutMenusInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMenusInput, Prisma.OrganizationUncheckedCreateWithoutMenusInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMenusInput
+  connect?: Prisma.OrganizationWhereUniqueInput
+}
+
+export type OrganizationUpdateOneWithoutMenusNestedInput = {
+  create?: Prisma.XOR<Prisma.OrganizationCreateWithoutMenusInput, Prisma.OrganizationUncheckedCreateWithoutMenusInput>
+  connectOrCreate?: Prisma.OrganizationCreateOrConnectWithoutMenusInput
+  upsert?: Prisma.OrganizationUpsertWithoutMenusInput
+  disconnect?: Prisma.OrganizationWhereInput | boolean
+  delete?: Prisma.OrganizationWhereInput | boolean
+  connect?: Prisma.OrganizationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrganizationUpdateToOneWithWhereWithoutMenusInput, Prisma.OrganizationUpdateWithoutMenusInput>, Prisma.OrganizationUncheckedUpdateWithoutMenusInput>
+}
+
 export type OrganizationCreateWithoutChildrenInput = {
   id?: string
   title: string
@@ -700,6 +723,7 @@ export type OrganizationCreateWithoutChildrenInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutChildrenInput = {
@@ -718,6 +742,7 @@ export type OrganizationUncheckedCreateWithoutChildrenInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutChildrenInput = {
@@ -741,6 +766,7 @@ export type OrganizationCreateWithoutParentInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutParentInput = {
@@ -759,6 +785,7 @@ export type OrganizationUncheckedCreateWithoutParentInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutParentInput = {
@@ -798,6 +825,7 @@ export type OrganizationUpdateWithoutChildrenInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutChildrenInput = {
@@ -816,6 +844,7 @@ export type OrganizationUncheckedUpdateWithoutChildrenInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUpsertWithWhereUniqueWithoutParentInput = {
@@ -865,6 +894,7 @@ export type OrganizationCreateWithoutDefaultSpaceInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutDefaultSpaceInput = {
@@ -883,6 +913,7 @@ export type OrganizationUncheckedCreateWithoutDefaultSpaceInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutDefaultSpaceInput = {
@@ -927,6 +958,7 @@ export type OrganizationCreateWithoutUsersInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutUsersInput = {
@@ -945,6 +977,7 @@ export type OrganizationUncheckedCreateWithoutUsersInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutUsersInput = {
@@ -979,6 +1012,7 @@ export type OrganizationUpdateWithoutUsersInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutUsersInput = {
@@ -997,6 +1031,7 @@ export type OrganizationUncheckedUpdateWithoutUsersInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPagesInput = {
@@ -1015,6 +1050,7 @@ export type OrganizationCreateWithoutPagesInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPagesInput = {
@@ -1033,6 +1069,7 @@ export type OrganizationUncheckedCreateWithoutPagesInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPagesInput = {
@@ -1067,6 +1104,7 @@ export type OrganizationUpdateWithoutPagesInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPagesInput = {
@@ -1085,6 +1123,7 @@ export type OrganizationUncheckedUpdateWithoutPagesInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutArticlesInput = {
@@ -1103,6 +1142,7 @@ export type OrganizationCreateWithoutArticlesInput = {
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutArticlesInput = {
@@ -1121,6 +1161,7 @@ export type OrganizationUncheckedCreateWithoutArticlesInput = {
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutArticlesInput = {
@@ -1155,6 +1196,7 @@ export type OrganizationUpdateWithoutArticlesInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutArticlesInput = {
@@ -1173,6 +1215,7 @@ export type OrganizationUncheckedUpdateWithoutArticlesInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutGalleriesInput = {
@@ -1191,6 +1234,7 @@ export type OrganizationCreateWithoutGalleriesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutGalleriesInput = {
@@ -1209,6 +1253,7 @@ export type OrganizationUncheckedCreateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutGalleriesInput = {
@@ -1243,6 +1288,7 @@ export type OrganizationUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutGalleriesInput = {
@@ -1261,6 +1307,7 @@ export type OrganizationUncheckedUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutPopupsInput = {
@@ -1279,6 +1326,7 @@ export type OrganizationCreateWithoutPopupsInput = {
   pages?: Prisma.PageCreateNestedManyWithoutOrganizationInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutPopupsInput = {
@@ -1297,6 +1345,7 @@ export type OrganizationUncheckedCreateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutOrganizationInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutPopupsInput = {
@@ -1331,6 +1380,7 @@ export type OrganizationUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUpdateManyWithoutOrganizationNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutPopupsInput = {
@@ -1349,6 +1399,7 @@ export type OrganizationUncheckedUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutOrganizationNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateWithoutServicesInput = {
@@ -1367,6 +1418,7 @@ export type OrganizationCreateWithoutServicesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutOrganizationInput
   galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationUncheckedCreateWithoutServicesInput = {
@@ -1385,6 +1437,7 @@ export type OrganizationUncheckedCreateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutOrganizationInput
   galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
   popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
+  menus?: Prisma.MenuUncheckedCreateNestedManyWithoutOrganizationInput
 }
 
 export type OrganizationCreateOrConnectWithoutServicesInput = {
@@ -1419,6 +1472,7 @@ export type OrganizationUpdateWithoutServicesInput = {
   pages?: Prisma.PageUpdateManyWithoutOrganizationNestedInput
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutServicesInput = {
@@ -1437,6 +1491,99 @@ export type OrganizationUncheckedUpdateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutOrganizationNestedInput
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationCreateWithoutMenusInput = {
+  id?: string
+  title: string
+  acronym?: string | null
+  type?: $Enums.OrganizationTypes
+  active?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.OrganizationCreateNestedOneWithoutChildrenInput
+  children?: Prisma.OrganizationCreateNestedManyWithoutParentInput
+  defaultSpace?: Prisma.SpaceCreateNestedOneWithoutOrganizationsInput
+  users?: Prisma.UserCreateNestedManyWithoutOrganizationInput
+  articles?: Prisma.ArticleCreateNestedManyWithoutOrganizationInput
+  pages?: Prisma.PageCreateNestedManyWithoutOrganizationInput
+  galleries?: Prisma.GalleriesCreateNestedManyWithoutOrganizationInput
+  popups?: Prisma.PopupsCreateNestedManyWithoutOrganizationInput
+  services?: Prisma.ServicesCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationUncheckedCreateWithoutMenusInput = {
+  id?: string
+  title: string
+  acronym?: string | null
+  type?: $Enums.OrganizationTypes
+  active?: boolean
+  parentId?: string | null
+  defaultSpaceId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.OrganizationUncheckedCreateNestedManyWithoutParentInput
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutOrganizationInput
+  articles?: Prisma.ArticleUncheckedCreateNestedManyWithoutOrganizationInput
+  pages?: Prisma.PageUncheckedCreateNestedManyWithoutOrganizationInput
+  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutOrganizationInput
+  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutOrganizationInput
+  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutOrganizationInput
+}
+
+export type OrganizationCreateOrConnectWithoutMenusInput = {
+  where: Prisma.OrganizationWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMenusInput, Prisma.OrganizationUncheckedCreateWithoutMenusInput>
+}
+
+export type OrganizationUpsertWithoutMenusInput = {
+  update: Prisma.XOR<Prisma.OrganizationUpdateWithoutMenusInput, Prisma.OrganizationUncheckedUpdateWithoutMenusInput>
+  create: Prisma.XOR<Prisma.OrganizationCreateWithoutMenusInput, Prisma.OrganizationUncheckedCreateWithoutMenusInput>
+  where?: Prisma.OrganizationWhereInput
+}
+
+export type OrganizationUpdateToOneWithWhereWithoutMenusInput = {
+  where?: Prisma.OrganizationWhereInput
+  data: Prisma.XOR<Prisma.OrganizationUpdateWithoutMenusInput, Prisma.OrganizationUncheckedUpdateWithoutMenusInput>
+}
+
+export type OrganizationUpdateWithoutMenusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.OrganizationUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.OrganizationUpdateManyWithoutParentNestedInput
+  defaultSpace?: Prisma.SpaceUpdateOneWithoutOrganizationsNestedInput
+  users?: Prisma.UserUpdateManyWithoutOrganizationNestedInput
+  articles?: Prisma.ArticleUpdateManyWithoutOrganizationNestedInput
+  pages?: Prisma.PageUpdateManyWithoutOrganizationNestedInput
+  galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
+  popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
+  services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+}
+
+export type OrganizationUncheckedUpdateWithoutMenusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  acronym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  type?: Prisma.EnumOrganizationTypesFieldUpdateOperationsInput | $Enums.OrganizationTypes
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultSpaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.OrganizationUncheckedUpdateManyWithoutParentNestedInput
+  users?: Prisma.UserUncheckedUpdateManyWithoutOrganizationNestedInput
+  articles?: Prisma.ArticleUncheckedUpdateManyWithoutOrganizationNestedInput
+  pages?: Prisma.PageUncheckedUpdateManyWithoutOrganizationNestedInput
+  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
+  popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
+  services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationCreateManyParentInput = {
@@ -1466,6 +1613,7 @@ export type OrganizationUpdateWithoutParentInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutParentInput = {
@@ -1484,6 +1632,7 @@ export type OrganizationUncheckedUpdateWithoutParentInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutParentInput = {
@@ -1524,6 +1673,7 @@ export type OrganizationUpdateWithoutDefaultSpaceInput = {
   galleries?: Prisma.GalleriesUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateWithoutDefaultSpaceInput = {
@@ -1542,6 +1692,7 @@ export type OrganizationUncheckedUpdateWithoutDefaultSpaceInput = {
   galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutOrganizationNestedInput
   popups?: Prisma.PopupsUncheckedUpdateManyWithoutOrganizationNestedInput
   services?: Prisma.ServicesUncheckedUpdateManyWithoutOrganizationNestedInput
+  menus?: Prisma.MenuUncheckedUpdateManyWithoutOrganizationNestedInput
 }
 
 export type OrganizationUncheckedUpdateManyWithoutDefaultSpaceInput = {
@@ -1568,6 +1719,7 @@ export type OrganizationCountOutputType = {
   galleries: number
   popups: number
   services: number
+  menus: number
 }
 
 export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1578,6 +1730,7 @@ export type OrganizationCountOutputTypeSelect<ExtArgs extends runtime.Types.Exte
   galleries?: boolean | OrganizationCountOutputTypeCountGalleriesArgs
   popups?: boolean | OrganizationCountOutputTypeCountPopupsArgs
   services?: boolean | OrganizationCountOutputTypeCountServicesArgs
+  menus?: boolean | OrganizationCountOutputTypeCountMenusArgs
 }
 
 /**
@@ -1639,6 +1792,13 @@ export type OrganizationCountOutputTypeCountServicesArgs<ExtArgs extends runtime
   where?: Prisma.ServicesWhereInput
 }
 
+/**
+ * OrganizationCountOutputType without action
+ */
+export type OrganizationCountOutputTypeCountMenusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MenuWhereInput
+}
+
 
 export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1659,6 +1819,7 @@ export type OrganizationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   galleries?: boolean | Prisma.Organization$galleriesArgs<ExtArgs>
   popups?: boolean | Prisma.Organization$popupsArgs<ExtArgs>
   services?: boolean | Prisma.Organization$servicesArgs<ExtArgs>
+  menus?: boolean | Prisma.Organization$menusArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["organization"]>
 
@@ -1713,6 +1874,7 @@ export type OrganizationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   galleries?: boolean | Prisma.Organization$galleriesArgs<ExtArgs>
   popups?: boolean | Prisma.Organization$popupsArgs<ExtArgs>
   services?: boolean | Prisma.Organization$servicesArgs<ExtArgs>
+  menus?: boolean | Prisma.Organization$menusArgs<ExtArgs>
   _count?: boolean | Prisma.OrganizationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1736,6 +1898,7 @@ export type $OrganizationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     galleries: Prisma.$GalleriesPayload<ExtArgs>[]
     popups: Prisma.$PopupsPayload<ExtArgs>[]
     services: Prisma.$ServicesPayload<ExtArgs>[]
+    menus: Prisma.$MenuPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2150,6 +2313,7 @@ export interface Prisma__OrganizationClient<T, Null = never, ExtArgs extends run
   galleries<T extends Prisma.Organization$galleriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$galleriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GalleriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   popups<T extends Prisma.Organization$popupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$popupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PopupsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   services<T extends Prisma.Organization$servicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$servicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServicesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  menus<T extends Prisma.Organization$menusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Organization$menusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2792,6 +2956,30 @@ export type Organization$servicesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.ServicesScalarFieldEnum | Prisma.ServicesScalarFieldEnum[]
+}
+
+/**
+ * Organization.menus
+ */
+export type Organization$menusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Menu
+   */
+  select?: Prisma.MenuSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Menu
+   */
+  omit?: Prisma.MenuOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MenuInclude<ExtArgs> | null
+  where?: Prisma.MenuWhereInput
+  orderBy?: Prisma.MenuOrderByWithRelationInput | Prisma.MenuOrderByWithRelationInput[]
+  cursor?: Prisma.MenuWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MenuScalarFieldEnum | Prisma.MenuScalarFieldEnum[]
 }
 
 /**
