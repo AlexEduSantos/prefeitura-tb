@@ -42,12 +42,16 @@ export class MenusController {
     return this.menusService.findBy(field, value);
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Menu' as any))
   update(@Param('id') id: string, @Body() updateMenuDto: CreateMenuDto) {
     return this.menusService.update(id, updateMenuDto);
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Menu' as any))
   remove(@Param('id') id: string) {
     return this.menusService.remove(id);
   }

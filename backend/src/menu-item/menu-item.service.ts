@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { ReorderMenuItemsDto } from './dto/reorder-menu-item.dto';
 
 @Injectable()
 export class MenuItemService {
@@ -59,5 +60,22 @@ export class MenuItemService {
     return this.prisma.menuItem.delete({
       where: { id },
     });
+  }
+
+  async reorder(reorderDto: ReorderMenuItemsDto) {
+    const { items } = reorderDto;
+
+    // Executa as atualizações em lote de forma atômica usando uma transação do Prisma
+    return this.prisma.$transaction(
+      items.map((item) =>
+        this.prisma.menuItem.update({
+          where: { id: item.id },
+          data: {
+            order: item.order,
+            parentId: item.parentId, // Atualiza também caso o item tenha mudado de submenu/pai
+          },
+        }),
+      ),
+    );
   }
 }
