@@ -24,7 +24,6 @@ export class MenusService {
             category: true,
             parent: true,
             children: true,
-            menu: true,
           },
           orderBy: { order: 'asc' },
         },
