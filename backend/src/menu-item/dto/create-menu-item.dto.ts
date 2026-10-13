@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsNumber,
 } from 'class-validator';
+import { ExactlyOneOf } from '../../common/decorators/exactly-one-of.decorator';
 
 export class CreateMenuItemDto {
   @IsString()
@@ -44,8 +45,8 @@ export class CreateMenuItemDto {
   @IsOptional()
   parentId?: string;
 
-  // ✅ menuId DEVE ser obrigatório
   @IsUUID()
   @IsNotEmpty()
+  @ExactlyOneOf(['pageId', 'categoryId', 'url'])
   menuId!: string;
 }
