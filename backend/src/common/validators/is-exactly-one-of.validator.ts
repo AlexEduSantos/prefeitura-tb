@@ -7,7 +7,8 @@ import {
 @ValidatorConstraint({ name: 'MenuItemDestination', async: false })
 export class MenuItemDestinationConstraint implements ValidatorConstraintInterface {
   validate(_: any, args: ValidationArguments): boolean {
-    const [fields] = args.constraints as [string[]];
+    // Correção: args.constraints já é o array de campos ['pageId', 'categoryId', 'url']
+    const fields = args.constraints as string[];
     const object = args.object as Record<string, any>;
 
     const filled = fields.filter((field) => {
