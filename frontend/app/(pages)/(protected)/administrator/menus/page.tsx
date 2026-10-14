@@ -1,6 +1,6 @@
 "use client";
 
-import { MenusManager } from "@/components/menu-manager";
+import MenusList from "@/components/menus-manager";
 import { PainelHeader } from "@/components/painel-header";
 
 export default function MenuPage() {
@@ -8,7 +8,7 @@ export default function MenuPage() {
     <>
       <PainelHeader title="Menus" />
       <div className="p-2">
-        <MenusManager />
+        <MenusList />
       </div>
     </>
   );

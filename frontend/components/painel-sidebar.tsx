@@ -84,9 +84,19 @@ export function PainelSidebar() {
       ],
     },
     {
-      title: "Páginas",
+      title: "Navegação",
       icon: FileText,
-      href: "/administrator/pages",
+      href: "#",
+      subItems: [
+        {
+          title: "Páginas",
+          href: "/administrator/pages",
+        },
+        {
+          title: "Menus",
+          href: "/administrator/menus",
+        },
+      ],
     },
     {
       title: "Configurações",
