@@ -1,66 +1,58 @@
-import Image from "next/image";
+"use client";
 import Link from "next/link";
 import { FacebookIcon } from "../icons/facebook-icon";
 import { InstagramIcon } from "../icons/instagram-icon";
 import { YoutubeIcon } from "../icons/youtube-icon";
-import DynamicIcon from "../icons/dynamic-icon";
+import { useRouter } from "next/navigation";
+import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 
 export function Footer() {
+  const router = useRouter();
+  const menuId = "efc07819-7131-46ed-9322-0fe352c9b92e";
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+
   return (
     <footer className="w-full gradient-primary text-primary-foreground py-8 space-y-8">
       <div className="w-full max-w-7xl mx-auto px-4 flex flex-col gap-2 items-center text-center">
         <div className="grid grid-cols-1 md:grid-cols-5 items-start gap-8 font-light text-sm pb-8 border-b border-border/30">
-          <div className="text-left w-full col-span-1 space-y-2">
-            <h4 className="font-semibold">Prefeitura de Telêmaco Borba</h4>
-            <p>Nossa Histório</p>
-            <p>Equipe de Governo</p>
-            <p>Secretarias</p>
-            <p>Conselhos</p>
-            <p>Ouvidoria</p>
-          </div>
-          <div className="text-left w-full col-span-1 space-y-2">
-            <h4 className="font-semibold">Serviços para o Cidadão</h4>
-            <p>Casa e Moradia</p>
-            <p>Inventivo Cultural</p>
-            <p>Concursos</p>
-            <p>PSS</p>
-            <p>Saúde</p>
-            <p>Estágios</p>
-            <p>Certidões e Guias</p>
-            <p>Protocolo</p>
-            <p>Cursos</p>
-            <p>Vagas de Trabalho</p>
-            <p>NF Eletrônica</p>
-            <p>Obituário</p>
-          </div>
-          <div className="text-left w-full col-span-1 space-y-2">
-            <h4 className="font-semibold">Serviços para as Enpresas</h4>
-            <p>Abertura de Empresa</p>
-            <p>Alvará, Certidões e Licenças</p>
-            <p>Cadastro</p>
-            <p>Impostos e Taxas</p>
-            <p>Licitações e Fornecedores</p>
-            <p>Consultas, Declarações e Normas</p>
-            <p>Legislação</p>
-          </div>
-          <div className="text-left w-full col-span-1 space-y-2">
-            <h4 className="font-semibold">Serviços para o Servidor</h4>
-            <p>Portal do Servidor</p>
-            <p>PCCV - Estatuto</p>
-            <p>Laudos Técnicos - SST</p>
-            <p>Capacitação</p>
-            <p>Manuais e Procedimentos</p>
-            <p>Suporte Técnico</p>
-            <p>Webmail</p>
-            <p>Ponto Eletrônico</p>
-          </div>
-          <div className="text-left w-full col-span-1 space-y-2">
-            <h4 className="font-medium">Acontece na Cidade</h4>
-            <p>Notícias</p>
-            <p>Portal da Legislação</p>
-            <p>Ata de Registro de Preços</p>
-            <p>Download</p>
-          </div>
+          {menu?.items.map((item) => (
+            <div
+              key={item.id}
+              className="text-left w-full col-span-1 space-y-2"
+            >
+              <h4 className="font-semibold border-b border-white/30 pb-1">
+                {item.label}
+              </h4>
+              {item.children?.map((child) => {
+                const isExternal = isExternalLink(child);
+                const href = resolveMenuItemHref(child);
+                return isExternal ? (
+                  <a
+                    key={child.id}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex gap-1 items-center group/item space-x-1"
+                  >
+                    <p className="hover:font-semibold hover:tracking-widest transition-all">
+                      {child.label}
+                    </p>
+                  </a>
+                ) : (
+                  <Link
+                    key={child.id}
+                    href={href}
+                    className="flex gap-1 items-center group/item space-x-1"
+                  >
+                    <p className="hover:font-semibold hover:tracking-widest transition-all">
+                      {child.label}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </div>
         <div className="flex xl:flex-row flex-col items-center justify-between w-full font-light text-sm gap-2">
           <div className="flex sm:gap-4 gap-2 sm:flex-row flex-col">
