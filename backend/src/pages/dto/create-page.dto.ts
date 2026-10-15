@@ -25,6 +25,6 @@ export class CreatePageDto {
   organizationId?: string;
 
   @IsString()
-  @IsNotEmpty()
-  userId!: string;
+  @IsOptional()
+  userId?: string;
 }

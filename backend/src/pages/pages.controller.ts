@@ -56,6 +56,8 @@ export class PagesController {
   @UseGuards(SessionGuard)
   @Post()
   async create(@Body() createPageDto: CreatePageDto, @Request() req: any) {
+    const userId =
+      req.session?.user?.id || req.user?.id || req.session?.passport?.user;
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
     // Validação ABAC na Criação:
@@ -66,7 +68,7 @@ export class PagesController {
       );
     }
 
-    return this.pagesService.create(createPageDto);
+    return this.pagesService.create(createPageDto, userId);
   }
 
   @UseGuards(SessionGuard)

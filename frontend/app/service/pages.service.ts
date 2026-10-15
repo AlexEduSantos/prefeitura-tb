@@ -52,8 +52,12 @@ export class PagesService {
   }
 
   static async updatePage(id: string, data: any) {
+    if (!id || id.trim() === "") {
+      throw new Error("ID da página é obrigatório para atualização.");
+    }
+
     const response = await fetch(`${API_URL}/pages/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

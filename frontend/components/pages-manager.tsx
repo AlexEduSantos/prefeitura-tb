@@ -50,152 +50,24 @@ import {
 import { NewPageModal } from "./new-page-modal";
 import { ViewPageModal } from "./view-page-modal";
 
-export const columns: ColumnDef<IPage>[] = [
-  {
-    accessorKey: "published",
-    header: "Estado",
-    cell: ({ row, table }) => {
-      const published = row.original.published;
-      const meta = table.options.meta as any;
-
-      const handlePublishedChange = () => {
-        meta?.changePublished?.mutate({
-          id: row.original.id,
-          published: !published,
-        });
-      };
-
-      return (
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 cursor-pointer stroke-1"
-            onClick={handlePublishedChange}
-            title={published ? "Despublicar" : "Publicar"}
-            type="button"
-          >
-            {published ? (
-              <CheckCircle className="h-4 w-4 text-green-500" />
-            ) : (
-              <XCircleIcon className="h-4 w-4 text-red-500" />
-            )}
-          </Button>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "title",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Nome
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="font-medium px-4">{row.getValue("title")}</div>
-    ),
-  },
-  {
-    accessorKey: "slug",
-    header: "Caminho",
-    cell: ({ row }) => (
-      <div className="font-medium text-muted-foreground">
-        {row.getValue("slug")}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "organization",
-    header: "Secretaria / Órgão",
-    cell: ({ row }) => {
-      const page = row.original as any;
-      const orgName = page.organization?.name;
-      const spaceSlug = page.space?.slug ? `/${page.space.slug}` : "/";
-
-      return (
-        <div className="flex flex-col">
-          <span className="font-medium text-foreground">
-            {orgName || "Nenhuma"}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            Espaço: {spaceSlug}
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    id: "Ações",
-    header: "Ações",
-    cell: ({ row, table }) => {
-      const meta = table.options.meta as any;
-
-      return (
-        <div className="flex items-center gap-2 w-10">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 cursor-pointer"
-            title="Ver"
-            onClick={() => meta?.handleOpenView(row.original.id)}
-          >
-            <EyeIcon className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 cursor-pointer"
-            title="Editar"
-            onClick={() => meta?.handleOpenEdit(row.original.id)}
-          >
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 cursor-pointer"
-            title="Deletar"
-            onClick={() => {
-              if (confirm("Tem certeza que deseja deletar esta página?")) {
-                meta?.deletePage?.mutate(row.original.id);
-              }
-            }}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-  },
-];
-
 export function PageManager() {
   const {
+    pages,
     isLoadingPage,
     isErrorPage,
     errorPage,
     isOpenNewPageModal,
     isOpenViewModal,
     setIsOpenViewModal,
-    title,
-    setTitle,
-    slug,
-    setSlug,
     modalMode,
+    columns,
     table,
     page,
     isLoadingPageById,
     handleSubmitPage,
     handleOpenCreate,
     handleCloseNewPageModal,
-  } = usePagesViewModel(columns);
+  } = usePagesViewModel();
 
   if (isLoadingPage) return <div>Carregando...</div>;
   if (isErrorPage)
@@ -304,52 +176,58 @@ export function PageManager() {
       </div>
       {/* Table */}
       <div className="rounded-lg border overflow-hidden">
-        <Table>
-          <TableHeader className="bg-white ">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
+        {pages && pages.length ? (
+          <Table>
+            <TableHeader className="bg-white ">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
                   ))}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Nenhuma página encontrada.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    Nenhuma página encontrada.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="flex items-center justify-center h-24">
+            <p>Nenhuma página encontrada.</p>
+          </div>
+        )}
       </div>
       {/* Pagination */}
       <div className="flex items-center justify-end px-2">

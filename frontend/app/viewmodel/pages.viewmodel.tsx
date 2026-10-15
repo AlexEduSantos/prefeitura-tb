@@ -16,6 +16,15 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowUpDown,
+  CheckCircle,
+  EyeIcon,
+  Pencil,
+  Trash,
+  XCircleIcon,
+} from "lucide-react";
 
 export function usePagesViewModel() {
   // ── UI State ────────────────────────────────────────────────────────────────
@@ -112,9 +121,15 @@ export function usePagesViewModel() {
           setIsOpenNewPageModal(false);
           setTitle("");
           setSlug("");
+          setId("");
         },
       });
     } else {
+      if (!id || id.trim() === "") {
+        toast.error("ID da página inválido para edição.");
+        return;
+      }
+
       updatePageMutation.mutate(
         { id, data: data as any },
         {
@@ -122,6 +137,7 @@ export function usePagesViewModel() {
             setIsOpenNewPageModal(false);
             setTitle("");
             setSlug("");
+            setId("");
           },
         },
       );
@@ -154,10 +170,136 @@ export function usePagesViewModel() {
     setSlug("");
   };
 
+  const columns: ColumnDef<IPage>[] = [
+    {
+      accessorKey: "published",
+      header: "Estado",
+      cell: ({ row, table }) => {
+        const published = row.original.published;
+        const meta = table.options.meta as any;
+
+        const handlePublishedChange = () => {
+          meta?.changePublished?.mutate({
+            id: row.original.id,
+            published: !published,
+          });
+        };
+
+        return (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 cursor-pointer stroke-1"
+              onClick={handlePublishedChange}
+              title={published ? "Despublicar" : "Publicar"}
+              type="button"
+            >
+              {published ? (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              ) : (
+                <XCircleIcon className="h-4 w-4 text-red-500" />
+              )}
+            </Button>
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "title",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Nome
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="font-medium px-4">{row.getValue("title")}</div>
+      ),
+    },
+    {
+      accessorKey: "slug",
+      header: "Caminho",
+      cell: ({ row }) => (
+        <div className="font-medium text-muted-foreground">
+          {row.getValue("slug")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "organization",
+      header: "Secretaria / Órgão",
+      cell: ({ row }) => {
+        const page = row.original as any;
+        const orgName = page.organization?.name;
+        const spaceSlug = page.space?.slug ? `/${page.space.slug}` : "/";
+
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium text-foreground">
+              {orgName || "Nenhuma"}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Espaço: {spaceSlug}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      id: "Ações",
+      header: "Ações",
+      cell: ({ row, table }) => {
+        const meta = table.options.meta as any;
+
+        return (
+          <div className="flex items-center gap-2 w-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 cursor-pointer"
+              title="Ver"
+              onClick={() => meta?.handleOpenView(row.original.id)}
+            >
+              <EyeIcon className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 cursor-pointer"
+              title="Editar"
+              onClick={() => meta?.handleOpenEdit(row.original.id)}
+            >
+              <Pencil className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 cursor-pointer"
+              title="Deletar"
+              onClick={() => {
+                if (confirm("Tem certeza que deseja deletar esta página?")) {
+                  meta?.deletePage?.mutate(row.original.id);
+                }
+              }}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
   // ── Table ────────────────────────────────────────────────────────────────────
   const table = useReactTable<IPage>({
     data: getPagesListQuery.data || [],
-    columns: [],
+    columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -216,6 +358,7 @@ export function usePagesViewModel() {
     setModalMode,
 
     // Table
+    columns,
     table,
 
     // Handlers

@@ -8,9 +8,16 @@ import { Page } from '../generated/prisma/client';
 export class PagesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(createPageDto: CreatePageDto): Promise<Page> {
+  async create(createPageDto: CreatePageDto, userId?: string): Promise<Page> {
+    const finalUserId = userId || createPageDto.userId;
+    if (!finalUserId) {
+      throw new Error('Usuário autenticado não encontrado para criar a página.');
+    }
     return this.prisma.page.create({
-      data: createPageDto,
+      data: {
+        ...createPageDto,
+        userId: finalUserId,
+      },
     });
   }
 

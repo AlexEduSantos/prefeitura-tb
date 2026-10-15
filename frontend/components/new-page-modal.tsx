@@ -26,6 +26,7 @@ import { useState, useEffect, useMemo } from "react";
 import type { Overrides } from "@puckeditor/core";
 import { CustomHeader } from "./puck/custom-header";
 import { CustomDrawerItem } from "./puck/custom-drawer-item";
+import { generateSlug } from "@/lib/slug-utils";
 
 interface NewPageModalProps {
   isOpen: boolean;
@@ -60,6 +61,7 @@ export function NewPageModal({
   // Estados centralizados no modal
   const [title, setTitle] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [puckData, setPuckData] = useState<any>({});
   const [selectedOrgId, setSelectedOrgId] = useState<string>("");
   const [selectedSpaceId, setSelectedSpaceId] = useState<string>("");
@@ -76,12 +78,14 @@ export function NewPageModal({
       if (mode === "create") {
         setTitle("");
         setSlug("");
+        setIsSlugManuallyEdited(false);
         setPuckData({});
         setSelectedOrgId("");
         setSelectedSpaceId("");
       } else {
         setTitle(initialData?.title ?? "");
         setSlug(initialData?.slug ?? "");
+        setIsSlugManuallyEdited(true);
         setPuckData(initialData?.content ?? {});
         setSelectedOrgId(initialData?.organizationId ?? "");
         setSelectedSpaceId(initialData?.spaceId ?? "");
@@ -89,9 +93,26 @@ export function NewPageModal({
     }
   }, [isOpen, mode, initialData]);
 
+  const handleTitleChange = (newTitle: string) => {
+    setTitle(newTitle);
+    if (!isSlugManuallyEdited) {
+      setSlug(generateSlug(newTitle));
+    }
+  };
+
+  const handleSlugChange = (rawSlug: string) => {
+    setIsSlugManuallyEdited(true);
+    setSlug(generateSlug(rawSlug));
+  };
+
   const handleCreate = () => {
     if (!title) {
       alert("Por favor, preencha o Nome da página.");
+      return;
+    }
+    const finalSlug = slug.trim() || generateSlug(title);
+    if (!finalSlug) {
+      alert("Por favor, defina um Caminho (slug) válido para a página.");
       return;
     }
     if (!selectedOrgId) {
@@ -100,7 +121,7 @@ export function NewPageModal({
     }
     onSubmit({
       title,
-      slug,
+      slug: finalSlug,
       content: puckData,
       organizationId: selectedOrgId,
       spaceId: selectedSpaceId || null,
@@ -191,15 +212,25 @@ export function NewPageModal({
         </DialogHeader>
 
         <div className="flex flex-col gap-4 overflow-hidden flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Campo agora gerencia o próprio estado (não recarrega o Puck à toa) */}
             <div className="space-y-1">
               <Label htmlFor="title">Nome</Label>
               <Input
                 id="title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => handleTitleChange(e.target.value)}
                 placeholder="Ex: Inscrições Cursos Técnicos"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="slug">Caminho (slug)</Label>
+              <Input
+                id="slug"
+                value={slug}
+                onChange={(e) => handleSlugChange(e.target.value)}
+                placeholder="Ex: inscricoes-cursos-tecnicos"
               />
             </div>
 
