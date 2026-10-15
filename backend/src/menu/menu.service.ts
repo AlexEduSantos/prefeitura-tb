@@ -69,27 +69,27 @@ export class MenusService {
   }
 
   async findOne(id: string) {
-    const menu = await this.prisma.menu.findUnique({
-      where: { id },
+    const menu = await this.prisma.menu.findFirst({
+      where: { id, active: true },
       include: {
         space: true,
         organization: true,
         items: {
+          where: { visible: true },
+          orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
           include: {
-            page: true,
+            page: { include: { space: { select: { slug: true } } } },
             category: true,
-            parent: true,
-            children: true,
-            menu: true,
           },
-          orderBy: { order: 'asc' },
         },
       },
     });
 
+    if (!menu) return null;
+
     return {
       ...menu,
-      items: this.buildTree(menu!.items),
+      items: this.buildTree(menu.items),
     };
   }
 
