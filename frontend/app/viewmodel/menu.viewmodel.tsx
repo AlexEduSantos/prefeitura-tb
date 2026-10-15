@@ -228,3 +228,16 @@ export function useMenu() {
     setSearchQuery,
   };
 }
+
+export function useMenuOnly(id: string) {
+  const {
+    data: menu,
+    isLoading: isLoadingMenu,
+    isError: isErrorMenu,
+  } = useQuery({
+    queryKey: ["menus", id],
+    queryFn: () => MenuService.getMenu(id),
+    enabled: !!id,
+  });
+  return { menu, isLoadingMenu, isErrorMenu };
+}

@@ -25,7 +25,7 @@ export class MenuService {
     field,
     value,
   }: {
-    field: "space" | "organization" | "location";
+    field: "space" | "organization" | "location" | "title";
     value: string;
   }): Promise<IMenu[]> {
     const response = await fetch(`${API_URL}/menus/${field}/${value}`, {
