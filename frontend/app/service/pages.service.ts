@@ -107,4 +107,41 @@ export class PagesService {
 
     return response.json();
   }
+
+  static async getPublicRootPage(slug: string): Promise<IPage> {
+    const response = await fetch(`${API_URL}/pages/public/root/${slug}`, {
+      headers: { "Content-Type": "application/json" },
+      // ⚠️ NÃO mandar credentials: "include" aqui
+    });
+
+    if (response.status === 404) {
+      throw new Error("NOT_FOUND");
+    }
+    if (!response.ok) {
+      throw new Error("Erro ao buscar página");
+    }
+
+    return response.json();
+  }
+
+  static async getPublicSpacePage(
+    spaceSlug: string,
+    slug: string,
+  ): Promise<IPage> {
+    const response = await fetch(
+      `${API_URL}/pages/public/${spaceSlug}/${slug}`,
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+
+    if (response.status === 404) {
+      throw new Error("NOT_FOUND");
+    }
+    if (!response.ok) {
+      throw new Error("Erro ao buscar página");
+    }
+
+    return response.json();
+  }
 }
