@@ -1,4 +1,5 @@
 "use client";
+
 import {
   LayoutDashboard,
   FileText,
@@ -7,6 +8,9 @@ import {
   SquareArrowOutUpLeft,
   TestTube2,
   ImageIcon,
+  FileChartColumn,
+  NavigationIcon,
+  LucideIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -20,7 +24,6 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   SidebarRail,
-  SidebarTrigger,
   useSidebar,
 } from "./ui/sidebar";
 import Image from "next/image";
@@ -29,7 +32,19 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useUserViewModel } from "@/app/viewmodel/user.viewmodel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { title } from "process";
+import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+
+// Mapa de ícones: liga a string do banco ao componente real do lucide-react
+const ICON_MAP: Record<string, LucideIcon> = {
+  LayoutDashboard,
+  FileText,
+  Settings,
+  PaperclipIcon,
+  TestTube2,
+  ImageIcon,
+  FileChartColumn,
+  NavigationIcon,
+};
 
 export function PainelSidebar() {
   const pathname = usePathname();
@@ -37,97 +52,11 @@ export function PainelSidebar() {
 
   const { user, isLoadingUser } = useUserViewModel();
 
-  if (isLoadingUser) return <div>Loading...</div>;
+  const menuId = "3792187b-4426-4ff7-a726-a49e70673ed2";
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
-  const painelMenu = [
-    { title: "Início", icon: LayoutDashboard, href: "/administrator" },
-    {
-      title: "Artigos",
-      icon: FileText,
-      href: "/administrator/articles",
-      subItems: [
-        {
-          title: "Novo Artigo",
-          href: "/administrator/articles/new",
-        },
-        {
-          title: "Categorias",
-          href: "/administrator/articles/categories",
-        },
-      ],
-    },
-    {
-      title: "Multimídia",
-      icon: PaperclipIcon,
-      href: "#",
-      subItems: [
-        {
-          title: "Arquivos",
-          href: "/administrator/media",
-        },
-        {
-          title: "Galerias",
-          href: "/administrator/galleries",
-        },
-        {
-          title: "Pop-ups",
-          href: "/administrator/popups",
-        },
-        {
-          title: "Destaques",
-          href: "/administrator/stories",
-        },
-        {
-          title: "Serviços",
-          href: "/administrator/services",
-        },
-      ],
-    },
-    {
-      title: "Navegação",
-      icon: FileText,
-      href: "#",
-      subItems: [
-        {
-          title: "Páginas",
-          href: "/administrator/pages",
-        },
-        {
-          title: "Menus",
-          href: "/administrator/menus",
-        },
-      ],
-    },
-    {
-      title: "Configurações",
-      icon: Settings,
-      href: "#",
-      subItems: [
-        {
-          title: "Dados da Prefeitura",
-          href: "/administrator/settings/information",
-        },
-        {
-          title: "Tema e Cores",
-          href: "/administrator/settings/theme",
-        },
-        {
-          title: "Usuários",
-          href: "/administrator/settings/users",
-        },
-      ],
-    },
-    {
-      title: "Relatórios",
-      icon: FileText,
-      href: "/administrator/reports",
-    },
-    {
-      title: "Página de Teste",
-      icon: TestTube2,
-      href: "/administrator/test",
-    },
-  ];
+  if (isLoadingUser || isLoadingMenu) return <div>Loading...</div>;
+  if (isErrorMenu || !menu) return <div>Erro ao carregar o menu.</div>;
 
   return (
     <Sidebar collapsible="icon" className="border-r border-zinc-200">
@@ -147,20 +76,26 @@ export function PainelSidebar() {
           />
         </Link>
       </SidebarHeader>
+
       <SidebarContent className="px-2">
         <SidebarMenu className="gap-2">
-          {painelMenu.map((item) => {
+          {menu.items.map((item) => {
+            // Se você quiser validar rotas ativas pelo banco, pode usar item.url
             const isActive =
-              pathname === item.href ||
-              (item.href !== "/administrator" &&
-                pathname.startsWith(item.href));
+              item.url &&
+              (pathname === item.url ||
+                (item.url !== "/administrator" &&
+                  pathname.startsWith(item.url)));
+
+            // Pega o ícone do mapa (se não achar, usa um padrão)
+            const Icon = item.icon ? ICON_MAP[item.icon] : null;
 
             return (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={item.title}
-                  isActive={isActive}
+                  tooltip={item.label}
+                  isActive={!!isActive}
                   className={cn(
                     "h-12 rounded-md transition-all duration-200 group",
                     state === "expanded" ? "px-4" : "justify-center p-0",
@@ -170,21 +105,23 @@ export function PainelSidebar() {
                   )}
                 >
                   <Link
-                    href={item.href}
+                    href={item.url || "#"}
                     className={cn(
                       "flex items-center justify-between w-full",
                       state === "expanded" ? "gap-3" : "justify-center gap-0",
                     )}
                   >
                     <div className="flex items-center gap-3">
-                      <item.icon
-                        className={cn(
-                          "w-5 h-5 shrink-0",
-                          isActive
-                            ? "text-primary"
-                            : "text-accent-foreground group-hover:text-zinc-900",
-                        )}
-                      />
+                      {Icon && (
+                        <Icon
+                          className={cn(
+                            "w-5 h-5 shrink-0",
+                            isActive
+                              ? "text-primary"
+                              : "text-accent-foreground group-hover:text-zinc-900",
+                          )}
+                        />
+                      )}
                       {state === "expanded" && (
                         <span
                           className={cn(
@@ -194,53 +131,57 @@ export function PainelSidebar() {
                               : "",
                           )}
                         >
-                          {item.title}
+                          {item.label}
                         </span>
                       )}
                     </div>
                   </Link>
                 </SidebarMenuButton>
 
-                {item.subItems && state === "expanded" && (
-                  <SidebarMenuSub>
-                    {item.subItems.map((subItem) => {
-                      const isSubActive = pathname === subItem.href;
-                      return (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton
-                            asChild
-                            className={`${
-                              isSubActive
-                                ? "bg-transparent! text-primary!"
-                                : "hover:bg-muted rounded-sm"
-                            }`}
-                            isActive={isSubActive}
-                          >
-                            <Link href={subItem.href}>
-                              <span
-                                className={`bg-primary rounded-full transition-all duration-200 ${
-                                  isSubActive ? "h-1.5 w-1.5" : "h-0 w-0"
-                                }`}
-                              />
-                              {subItem.title}
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      );
-                    })}
-                  </SidebarMenuSub>
-                )}
+                {/* Subitens */}
+                {item.children &&
+                  item.children.length > 0 &&
+                  state === "expanded" && (
+                    <SidebarMenuSub>
+                      {item.children.map((subItem) => {
+                        const isSubActive = pathname === subItem.url;
+                        return (
+                          <SidebarMenuSubItem key={subItem.id}>
+                            <SidebarMenuSubButton
+                              asChild
+                              className={`${
+                                isSubActive
+                                  ? "bg-transparent! text-primary!"
+                                  : "hover:bg-muted rounded-sm"
+                              }`}
+                              isActive={isSubActive}
+                            >
+                              <Link href={subItem.url || "#"}>
+                                <span
+                                  className={`bg-primary rounded-full transition-all duration-200 ${
+                                    isSubActive ? "h-1.5 w-1.5" : "h-0 w-0"
+                                  }`}
+                                />
+                                {subItem.label}
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        );
+                      })}
+                    </SidebarMenuSub>
+                  )}
               </SidebarMenuItem>
             );
           })}
         </SidebarMenu>
       </SidebarContent>
+
       <SidebarFooter className="flex flex-col gap-4">
         <SidebarMenu className="gap-2">
-          <SidebarMenuItem key="settings">
+          <SidebarMenuItem key="visit-site">
             <SidebarMenuButton
               asChild
-              tooltip="Settings"
+              tooltip="Visitar Site"
               className={cn(
                 "h-12 transition-all duration-200 group",
                 state === "expanded" ? "px-4" : "justify-center p-0",
@@ -280,16 +221,18 @@ export function PainelSidebar() {
             >
               <Avatar>
                 <AvatarImage src={user?.avatar} />
-                <AvatarFallback>{user?.name.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
               </Avatar>
-              <div className="flex flex-col">
-                <span className="text-sm font-medium truncate">
-                  {user?.name}
-                </span>
-                <span className="text-xs text-muted-foreground truncate">
-                  {user?.email}
-                </span>
-              </div>
+              {state === "expanded" && (
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium truncate">
+                    {user?.name}
+                  </span>
+                  <span className="text-xs text-muted-foreground truncate">
+                    {user?.email}
+                  </span>
+                </div>
+              )}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
