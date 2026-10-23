@@ -20,3 +20,10 @@ export interface IServices {
   userId: string;
   user: IUser;
 }
+
+export interface IMetaService {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}

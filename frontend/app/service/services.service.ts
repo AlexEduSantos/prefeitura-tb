@@ -22,6 +22,27 @@ export class ServicesService {
     return response.json();
   }
 
+  static async getPublicServicesList(params?: {
+    page?: number;
+    limit?: number;
+    title?: string;
+  }) {
+    const query = new URLSearchParams();
+    if (params?.page) query.append("page", String(params.page));
+    if (params?.limit) query.append("limit", String(params.limit));
+    if (params?.title) query.append("title", params.title.trim());
+
+    // ✅ Aponta para a nova rota pública
+    const url = `${API_URL}/public?${query.toString()}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      // Removi o credentials: "include", pois é público
+    });
+    if (!response.ok) throw new Error("Erro ao buscar serviços");
+    return response.json();
+  }
+
   static async getServiceById(id: string) {
     const response = await fetch(`${API_URL}/${id}`, {
       method: "GET",

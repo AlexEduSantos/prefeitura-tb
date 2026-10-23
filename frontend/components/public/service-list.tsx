@@ -1,9 +1,12 @@
 "use client";
 import { IServices } from "@/app/type/services";
-import { useServices } from "@/app/viewmodel/services.viewmodel";
+import {
+  usePublicServices,
+  useServices,
+} from "@/app/viewmodel/services.viewmodel";
 import Image from "next/image";
 import { Input } from "../ui/input";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -65,7 +68,14 @@ function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full"
         />
-        <Search className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        {search.length > 0 ? (
+          <X
+            className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground cursor-pointer"
+            onClick={() => setSearch("")}
+          />
+        ) : (
+          <Search className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        )}
       </div>
       <div className="flex items-center gap-2">
         <Select
@@ -119,9 +129,11 @@ function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
 
 export function ServicesList() {
   const { services, isLoadingServices, limit, setLimit, search, setSearch } =
-    useServices();
+    usePublicServices();
 
   if (isLoadingServices) return <>Carregando...</>;
+
+  const { services: dataServices, meta: metaServices } = services || {};
 
   return (
     <section className="flex flex-col gap-4">
@@ -133,7 +145,7 @@ export function ServicesList() {
         setSearch={setSearch}
       />
       <div className="grid grid-cols-4 gap-4">
-        {services.map((service: IServices) => (
+        {dataServices?.map((service: IServices) => (
           <ServiceItem key={service.id} service={service} />
         ))}
       </div>

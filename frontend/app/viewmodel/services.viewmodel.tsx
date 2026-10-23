@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ServicesService } from "../service/services.service";
 import { IServices } from "../type/services";
@@ -22,6 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImageVisualizer } from "@/components/image-visualizer";
 import { IMedia } from "../type/media";
 import { Switch } from "@/components/ui/switch";
+import useDebounce from "@/hooks/use-debounce";
 
 export function useServices() {
   const queryClient = useQueryClient();
@@ -384,5 +385,40 @@ export function useServices() {
     setColumnVisibility,
     rowSelection,
     setRowSelection,
+  };
+}
+
+export function usePublicServices() {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState("");
+  const [activeSearch, setActiveSearch] = useState("");
+
+  const debouncedSearch = useDebounce(search, 1000);
+
+  const servicesQuery = useQuery({
+    queryKey: ["services", page, limit, debouncedSearch],
+    queryFn: () =>
+      ServicesService.getPublicServicesList({
+        page,
+        limit,
+        title: debouncedSearch,
+      }),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    services: servicesQuery.data,
+    isLoadingServices: servicesQuery.isLoading,
+    isErrorServices: servicesQuery.isError,
+    errorServices: servicesQuery.error,
+    isSuccessServices: servicesQuery.isSuccess,
+    refetchServices: servicesQuery.refetch,
+    page,
+    setPage,
+    limit,
+    setLimit,
+    search,
+    setSearch,
   };
 }

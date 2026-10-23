@@ -1,19 +1,21 @@
 "use client";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { useServices } from "@/app/viewmodel/services.viewmodel";
+import { usePublicServices } from "@/app/viewmodel/services.viewmodel";
 import { IServices } from "@/app/type/services";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export function ServicesBlock() {
-  const { services, isLoadingServices } = useServices();
+  const { services, isLoadingServices } = usePublicServices();
   const router = useRouter();
 
   if (isLoadingServices) return <>Carregando...</>;
 
+  const { services: dataServices, meta: metaServices } = services || {};
+
   // 6 serviços em destaque ordenados por mais recente
-  const featuredServices = services
+  const featuredServices = dataServices
     .filter((service: IServices) => service.featured)
     .sort((a: IServices, b: IServices) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();

@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-services.dto';
 import { UpdateServiceDto } from './dto/update-serviecs.dto';
 import { Services } from '../generated/prisma/client';
+import { FindServicesDto } from './dto/find-services.dto';
+import { ServicesWhereInput } from '../generated/prisma/models';
 
 @Injectable()
 export class ServicesService {
@@ -22,6 +24,47 @@ export class ServicesService {
         user: { select: { name: true, avatar: true } },
       },
     });
+  }
+
+  async findAllPublic(page?: string, limit?: string, title?: string) {
+    const parsedPage = Math.max(1, parseInt(page as string, 10) || 1);
+    const parsedLimit = Math.max(1, parseInt(limit as string, 10) || 10);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const where: any = {};
+    if (title && title.trim() !== '') {
+      where.title = {
+        contains: title.trim(),
+        mode: 'insensitive',
+      };
+    }
+
+    const [services, total] = await Promise.all([
+      this.prisma.services.findMany({
+        where,
+        skip,
+        take: parsedLimit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          organization: true,
+          image: true,
+          user: { select: { name: true, avatar: true } },
+        },
+      }),
+      this.prisma.services.count({
+        where,
+      }),
+    ]);
+
+    return {
+      services,
+      meta: {
+        page: parsedPage,
+        limit: parsedLimit,
+        total,
+        totalPages: Math.ceil(total / parsedLimit),
+      },
+    };
   }
 
   findOne(id: string) {

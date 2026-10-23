@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -24,6 +25,15 @@ export class ServiceController {
   @Get()
   async findAll() {
     return this.serviceService.findAll();
+  }
+
+  @Get('public')
+  async findPublic(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('title') title: string,
+  ) {
+    return this.serviceService.findAllPublic(page, limit, title);
   }
 
   @Get(':id')
