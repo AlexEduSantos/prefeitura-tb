@@ -5,6 +5,7 @@ export interface IPage {
   title: string;
   slug: string;
   content: any;
+  description?: string;
   published: boolean;
   spaceId?: string | null;
   space?: ISpace | null;

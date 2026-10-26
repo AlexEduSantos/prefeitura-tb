@@ -9,6 +9,10 @@ export class CreatePageDto {
   @IsNotEmpty()
   slug!: string;
 
+  @IsString()
+  @IsOptional()
+  description?: string;
+
   @IsNotEmpty()
   content: any; // Estrutura em formato JSON do Page Builder
 

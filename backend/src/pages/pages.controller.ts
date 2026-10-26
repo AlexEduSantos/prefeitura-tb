@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   ForbiddenException,
+  Query,
 } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
@@ -29,6 +30,11 @@ export class PagesController {
   @Get()
   async findAll() {
     return this.pagesService.findAll();
+  }
+
+  @Get('public')
+  async findPublic(@Query('search') search: string) {
+    return this.pagesService.findPublicPages(search);
   }
 
   // Qualquer um (Público) pode visualizar os detalhes de uma página por ID

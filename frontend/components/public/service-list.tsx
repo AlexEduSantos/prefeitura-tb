@@ -25,11 +25,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
+import { SearchBar } from "../search-bar";
 
 interface ServiceItemProps {
   service: IServices;
 }
-function ServiceItem({ service }: ServiceItemProps) {
+export function ServiceItem({ service }: ServiceItemProps) {
   return (
     <article
       key={service.id}
@@ -61,22 +62,18 @@ interface ToolbarProps {
 function Toolbar({ limit, setLimit, search, setSearch }: ToolbarProps) {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-      <div className="flex-1 w-full sm:w-auto relative">
-        <Input
-          placeholder="Buscar por título..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full"
-        />
-        {search.length > 0 ? (
-          <X
-            className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground cursor-pointer"
-            onClick={() => setSearch("")}
-          />
-        ) : (
-          <Search className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        )}
-      </div>
+      <SearchBar
+        initialValue={search}
+        placeholder="O que você procura?"
+        className="w-full"
+        onClear={() => {
+          setSearch("");
+        }}
+        onSearch={(term) => {
+          setSearch(term);
+        }}
+        searchAsYouType={true}
+      />
       <div className="flex items-center gap-2">
         <Select
           value={String(limit)}

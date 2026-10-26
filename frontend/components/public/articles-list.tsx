@@ -26,7 +26,7 @@ import {
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 
-function ArticleCard({ article }: { article: any }) {
+export function ArticleCard({ article }: { article: any }) {
   const router = useRouter();
 
   return (

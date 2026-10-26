@@ -11,7 +11,9 @@ export class PagesService {
   async create(createPageDto: CreatePageDto, userId?: string): Promise<Page> {
     const finalUserId = userId || createPageDto.userId;
     if (!finalUserId) {
-      throw new Error('Usuário autenticado não encontrado para criar a página.');
+      throw new Error(
+        'Usuário autenticado não encontrado para criar a página.',
+      );
     }
     return this.prisma.page.create({
       data: {
@@ -76,6 +78,30 @@ export class PagesService {
     }
 
     return page;
+  }
+
+  async findPublicPages(search?: string) {
+    const where: any = {
+      published: true,
+    };
+
+    if (search && search.trim() !== '') {
+      where.OR = [
+        { title: { contains: search.trim(), mode: 'insensitive' } },
+        { slug: { contains: search.trim(), mode: 'insensitive' } },
+      ];
+    }
+
+    return this.prisma.page.findMany({
+      where,
+      include: {
+        space: true,
+        organization: true,
+        user: {
+          select: { name: true, username: true, avatar: true, email: true },
+        },
+      },
+    });
   }
 
   async update(id: string, updatePageDto: UpdatePageDto): Promise<Page> {

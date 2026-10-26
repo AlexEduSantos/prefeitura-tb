@@ -164,11 +164,12 @@ model Session {
 }
 
 model Page {
-  id        String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  slug      String
-  content   Json
-  published Boolean @default(false)
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String
+  slug        String
+  content     Json
+  description String?
+  published   Boolean @default(false)
 
   // Roteamento: /[spaceSlug]/[slug] ou /[slug] se spaceId for null
   spaceId String? @db.Uuid

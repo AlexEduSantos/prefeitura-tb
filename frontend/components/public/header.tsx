@@ -1,22 +1,7 @@
 "use client";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Contrast,
-  MenuIcon,
-  Search,
-  SearchIcon,
-  X,
-  ZoomIn,
-  ZoomOut,
-} from "lucide-react";
+import { Contrast, Search, SearchIcon, X, ZoomIn, ZoomOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
@@ -24,26 +9,38 @@ import { YoutubeIcon } from "../icons/youtube-icon";
 import { InstagramIcon } from "../icons/instagram-icon";
 import { FacebookIcon } from "../icons/facebook-icon";
 import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../ui/navigation-menu";
+import { NavigationMenu, NavigationMenuList } from "../ui/navigation-menu";
 import { MenuNavItem } from "./menu-nav-item";
 import { Skeleton } from "../ui/skeleton";
 import { Label } from "../ui/label";
 import Link from "next/link";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
-import { IMenuItem } from "@/app/type/menu";
 import { MobileHeader } from "./mobile-header";
 
 function DesktopBarTop() {
-  const router = useRouter();
   const menuId = "a80c8356-9cfc-4998-8b5c-c81f395f6dcd";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+
+  if (isLoadingMenu) {
+    return (
+      <div className="w-full flex items-center justify-center h-8 bg-primary text-primary-foreground">
+        <div className="w-full max-w-7xl mx-auto px-4 flex items-center justify-between text-xs">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-6 w-48" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isErrorMenu) {
+    return (
+      <div className="w-full flex items-center justify-center h-8 bg-primary text-primary-foreground">
+        <div className="w-full max-w-7xl mx-auto px-4 flex items-center justify-between text-xs">
+          <p className="text-white">Erro ao carregar o menu</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex items-center justify-center h-8 bg-primary text-primary-foreground">
@@ -133,6 +130,28 @@ function DesktopHeader() {
   const menuId = "dec03c06-aa22-4ceb-9dc0-38d445671d68";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
+  const [query, setQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!query.trim()) return;
+    document.body.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        setQuery("");
+        setOpenSearch(false);
+      }
+      if (e.key === "Enter") {
+        router.push(`/pesquisa?q=${encodeURIComponent(query.trim())}`);
+        setOpenSearch(false);
+      }
+    });
+
+    // Redireciona para a página de pesquisa
+    router.push(`/pesquisa?q=${encodeURIComponent(query.trim())}`);
+    setQuery("");
+    setOpenSearch(false);
+  };
+
   return (
     <div className="w-full">
       {/* Barra superior */}
@@ -206,13 +225,16 @@ function DesktopHeader() {
                 <div className="relative w-full h-full">
                   <Input
                     id="search"
-                    type="text"
-                    placeholder="Digite aqui sua pesquisa"
+                    type="search"
+                    placeholder="O que você procura?"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
                     className="rounded-lg text-sm w-full focus-visible:ring-primary focus-visible:border-primary focus-visible:ring-0 placeholder:font-normal"
                   />
                   <Button
                     variant="ghost"
                     className="absolute right-2 top-1/2 -translate-y-1/2 size-5 text-primary"
+                    onClick={handleSearch}
                   >
                     <SearchIcon />
                   </Button>

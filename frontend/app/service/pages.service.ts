@@ -19,6 +19,28 @@ export class PagesService {
     return response.json();
   }
 
+  static async getPublicPages(search?: string) {
+    const params = new URLSearchParams();
+    if (search && search.trim()) {
+      params.append("search", search.trim());
+    }
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    const url = `${API_URL}/pages/public${queryString}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar páginas");
+    }
+
+    return response.json();
+  }
+
   static async getPage(id: string) {
     const response = await fetch(`${API_URL}/pages/${id}`, {
       headers: {

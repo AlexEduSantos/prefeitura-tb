@@ -157,6 +157,7 @@ export const PageScalarFieldEnum = {
   title: 'title',
   slug: 'slug',
   content: 'content',
+  description: 'description',
   published: 'published',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
@@ -466,6 +467,7 @@ export const PageOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
+  description: 'description',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
   userId: 'userId'
