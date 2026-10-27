@@ -27,8 +27,8 @@ export class OrganizationsController {
   }
 
   @Get('tree')
-  async findTree() {
-    return this.organizationsService.findTree();
+  async findTree(@Query('includeInactive') includeInactive?: string) {
+    return this.organizationsService.findTree(includeInactive || 'active');
   }
 
   @Get(':id')
@@ -63,5 +63,22 @@ export class OrganizationsController {
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Organization' as any))
   async remove(@Param('id') id: string) {
     return this.organizationsService.remove(id);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/activate')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Organization' as any))
+  async softDelete(@Param('id') id: string) {
+    return this.organizationsService.activate(id);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/change-parent')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Organization' as any))
+  async changeParent(
+    @Param('id') id: string,
+    @Body('parentId') parentId: string | null,
+  ) {
+    return this.organizationsService.changeParent(id, parentId);
   }
 }

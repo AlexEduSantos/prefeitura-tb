@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { getAllDescendantOrgIds } from '../common/utils/organization-hierarchy.util';
+import {
+  getAllAncestorOrgIds,
+  getAllDescendantOrgIds,
+} from '../common/utils/organization-hierarchy.util';
 
 @Injectable()
 export class OrganizationsService {
@@ -30,16 +33,40 @@ export class OrganizationsService {
     });
   }
 
-  async findTree() {
+  async findTree(includeInactive: string) {
+    let onlyVisible: boolean | undefined = undefined;
+
+    if (includeInactive === 'all') {
+      return this.prisma.organization.findMany({
+        where: { parentId: null },
+        include: {
+          defaultSpace: true,
+          children: {
+            include: {
+              defaultSpace: true,
+              children: true,
+            },
+          },
+        },
+        orderBy: { title: 'asc' },
+      });
+    } else if (includeInactive === 'active') {
+      onlyVisible = true;
+    } else if (includeInactive === 'inactive') {
+      onlyVisible = false;
+    }
     // Retorna as organizações de nível raiz com seus filhos recursivos
     return this.prisma.organization.findMany({
-      where: { parentId: null, active: true },
+      where: { parentId: null, active: onlyVisible },
       include: {
         defaultSpace: true,
         children: {
+          where: { active: onlyVisible },
           include: {
             defaultSpace: true,
-            children: true,
+            children: {
+              where: { active: onlyVisible },
+            },
           },
         },
       },
@@ -66,6 +93,10 @@ export class OrganizationsService {
     return getAllDescendantOrgIds(this.prisma, id);
   }
 
+  async getAncestorIds(id: string): Promise<string[]> {
+    return getAllAncestorOrgIds(this.prisma, id);
+  }
+
   async update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
     await this.findOne(id);
     return this.prisma.organization.update({
@@ -80,9 +111,45 @@ export class OrganizationsService {
 
   async remove(id: string) {
     await this.findOne(id);
+    return this.prisma.organization.delete({
+      where: { id },
+    });
+  }
+
+  async activate(id: string) {
+    const org = await this.prisma.organization.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        active: true,
+      },
+    });
+
+    if (!org) {
+      throw new NotFoundException(`Organização com ID ${id} não encontrada.`);
+    }
+
     return this.prisma.organization.update({
       where: { id },
-      data: { active: false },
+      data: { active: !org.active },
+    });
+  }
+
+  async changeParent(id: string, parentId: string | null) {
+    const org = await this.prisma.organization.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!org) {
+      throw new NotFoundException(`Organização com ID ${id} não encontrada.`);
+    }
+
+    return this.prisma.organization.update({
+      where: { id },
+      data: { parentId },
     });
   }
 }

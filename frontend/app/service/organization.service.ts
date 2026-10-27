@@ -17,11 +17,14 @@ export class OrganizationService {
     return response.json();
   }
 
-  static async getTree(): Promise<IOrganization[]> {
-    const response = await fetch(`${API_URL}/organizations/tree`, {
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
+  static async getTree(includeInactive?: string): Promise<IOrganization[]> {
+    const response = await fetch(
+      `${API_URL}/organizations/tree?includeInactive=${includeInactive || "active"}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      },
+    );
     if (!response.ok)
       throw new Error("Erro ao buscar organograma de organizações");
     return response.json();
@@ -63,6 +66,20 @@ export class OrganizationService {
     if (!response.ok) throw new Error("Erro ao remover organização");
     return response.json();
   }
+
+  static async changeParent(
+    id: string,
+    parentId: string | null,
+  ): Promise<IOrganization> {
+    const response = await fetch(`${API_URL}/organizations/${id}/change-parent`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ parentId }),
+    });
+    if (!response.ok) throw new Error("Erro ao alterar vinculação hierárquica");
+    return response.json();
+  }
 }
 
 export class SpaceService {
@@ -92,6 +109,27 @@ export class SpaceService {
       body: JSON.stringify(data),
     });
     if (!response.ok) throw new Error("Erro ao criar espaço");
+    return response.json();
+  }
+
+  static async deleteSpace(id: string): Promise<ISpace> {
+    const response = await fetch(`${API_URL}/spaces/${id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Erro ao remover espaço");
+    return response.json();
+  }
+
+  static async updateSpace(id: string, data: Partial<ISpace>): Promise<ISpace> {
+    const response = await fetch(`${API_URL}/spaces/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar espaço");
     return response.json();
   }
 }

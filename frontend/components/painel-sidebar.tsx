@@ -11,6 +11,7 @@ import {
   FileChartColumn,
   NavigationIcon,
   LucideIcon,
+  GraphHubIcon,
 } from "lucide-react";
 import {
   Sidebar,
@@ -44,6 +45,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   ImageIcon,
   FileChartColumn,
   NavigationIcon,
+  GraphHubIcon,
 };
 
 export function PainelSidebar() {
