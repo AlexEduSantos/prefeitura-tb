@@ -9,6 +9,25 @@ import {
 import { IOrganization, ISpace, ICategory } from "../type/organization";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  PencilIcon,
+  TrashIcon,
+} from "lucide-react";
+import { format } from "date-fns";
 
 const EMPTY_ARRAY: any[] = [];
 
@@ -216,5 +235,199 @@ export function useOrganizationViewModel() {
     handleSubmitModal,
     modalMode,
     parentOrg,
+  };
+}
+
+export function useSpace() {
+  const [openModal, setOpenModal] = useState(false);
+  const [initialData, setInitialData] = useState<Partial<ISpace> | null>(null);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+
+  const { spaces, deleteSpace, updateSpace, createSpace } =
+    useOrganizationViewModel();
+
+  const columns: ColumnDef<ISpace>[] = [
+    {
+      accessorKey: "title",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Título
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="h-4 w-4" />
+          )}
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: "Descrição",
+      cell: ({ row }) => {
+        const description = row.getValue("description") as string;
+        return (
+          <span className="text-sm text-muted-foreground max-w-80! line-clamp-1">
+            {description}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "slug",
+      header: "Caminho",
+      cell: ({ row }) => {
+        const slug = row.getValue("slug") as string;
+        return <span className="text-sm text-muted-foreground">{slug}</span>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Criado em
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="h-4 w-4" />
+          )}
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const date = row.getValue("createdAt") as string;
+        return (
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(date), "dd/MM/yyyy")}
+          </span>
+        );
+      },
+    },
+    {
+      accessorKey: "updatedAt",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          className="p-0 hover:bg-transparent"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Atualizado em
+          {column.getIsSorted() && column.getIsSorted() === "asc" ? (
+            <ArrowDownIcon className="h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="h-4 w-4" />
+          )}
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const date = row.getValue("updatedAt") as string;
+        return (
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(date), "dd/MM/yyyy")}
+          </span>
+        );
+      },
+    },
+    {
+      id: "actions",
+      header: "Ações",
+      cell: ({ row }) => {
+        const space = row.original;
+        return (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="icon-sm"
+              onClick={() => {
+                handleEditSpace(space);
+              }}
+            >
+              <PencilIcon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              onClick={() => deleteSpace(space.id)}
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    title: true,
+    slug: true,
+    description: true,
+    createdAt: true,
+    updatedAt: true,
+    actions: true,
+  });
+  const [rowSelection, setRowSelection] = useState({});
+
+  const table = useReactTable({
+    data: spaces,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
+
+  const handleAddSpace = () => {
+    setModalMode("create");
+    setOpenModal(true);
+    setInitialData(null);
+  };
+
+  const handleEditSpace = (space: ISpace) => {
+    setModalMode("edit");
+    setInitialData(space);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setTimeout(() => {
+      setInitialData(null);
+    }, 300);
+  };
+
+  return {
+    columns,
+    table,
+    openModal,
+    setOpenModal,
+    initialData,
+    setInitialData,
+    modalMode,
+    setModalMode,
+    handleAddSpace,
+    handleEditSpace,
+    handleCloseModal,
+    // 👇 Adicione estas três linhas:
+    createSpace,
+    updateSpace,
+    deleteSpace,
   };
 }
