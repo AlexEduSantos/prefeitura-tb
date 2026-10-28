@@ -5,6 +5,7 @@ import {
   MinLength,
   IsUUID,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 export class RegisterDto {
@@ -22,6 +23,10 @@ export class RegisterDto {
   @IsUUID()
   @IsOptional()
   organizationId?: string; // UUID de uma Organization existente no banco
+
+  @IsBoolean()
+  @IsOptional()
+  active?: boolean;
 
   @IsString()
   @IsNotEmpty()

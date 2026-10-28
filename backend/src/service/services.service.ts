@@ -3,8 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-services.dto';
 import { UpdateServiceDto } from './dto/update-serviecs.dto';
 import { Services } from '../generated/prisma/client';
-import { FindServicesDto } from './dto/find-services.dto';
-import { ServicesWhereInput } from '../generated/prisma/models';
 
 @Injectable()
 export class ServicesService {

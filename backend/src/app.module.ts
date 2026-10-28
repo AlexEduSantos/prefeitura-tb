@@ -22,6 +22,7 @@ import { StoryModule } from './story/story.module';
 import { ObserveModule } from './observe';
 import { MenuModule } from './menu/menu.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { MenuItemModule } from './menu-item/menu-item.module';
       serviceId: 'site-prefeitura',
     }),
     MenuItemModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

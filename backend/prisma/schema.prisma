@@ -135,6 +135,7 @@ model User {
   password String
   avatar   String?
   phone    String?
+  active   Boolean  @default(true)
   role     UserRole @default(USER)
 
   // Vínculo organizacional (1:1)
