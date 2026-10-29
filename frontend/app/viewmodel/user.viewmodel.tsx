@@ -217,7 +217,11 @@ export function useUser() {
       ),
       cell: ({ row }) => {
         const name = row.getValue("name") as string;
+<<<<<<< HEAD
         return <span className="text-sm">{name}</span>;
+=======
+        return <span className="text-sm text-muted-foreground">{name}</span>;
+>>>>>>> d3cbb8f519955fb6bf6c66e8b751cb9440c57fdc
       },
     },
     {
