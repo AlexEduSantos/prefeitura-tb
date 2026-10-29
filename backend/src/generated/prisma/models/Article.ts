@@ -969,10 +969,6 @@ export type EnumArticleStatusFieldUpdateOperationsInput = {
   set?: $Enums.ArticleStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type ArticleUpdatetagsInput = {
   set?: string[]
   push?: string | string[]

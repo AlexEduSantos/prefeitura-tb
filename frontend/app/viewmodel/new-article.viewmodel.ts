@@ -6,8 +6,8 @@ import { IArticle } from "../type/article";
 import { ArticleViewModel } from "./article.viewmodel";
 import { useRouter } from "next/navigation";
 import { useOrganizationViewModel } from "./organization.viewmodel";
-import { useUserViewModel } from "./user.viewmodel";
 import { IGallery } from "../type/gallery";
+import { useProfileViewModel } from "./user.viewmodel";
 
 export interface NewArticleFormState {
   title: string;
@@ -55,7 +55,7 @@ export function useNewArticleViewModel(
 ) {
   const router = useRouter();
   const { createArticle, updateArticle } = ArticleViewModel();
-  const { user } = useUserViewModel();
+  const { profile } = useProfileViewModel();
   const {
     organizations,
     isLoadingOrganizations,
@@ -80,7 +80,7 @@ export function useNewArticleViewModel(
     slug: initialData?.slug || "",
     type: initialData?.type || "article",
     featured: initialData?.featured || false,
-    author: initialData?.author?.name || user?.name || "Usuário Atual",
+    author: initialData?.author?.name || profile?.name || "Usuário Atual",
     editor: initialData?.editor?.name || "",
     seoTitle: initialData?.seoTitle || "",
     seoDescription: initialData?.seoDescription || "",
@@ -173,8 +173,8 @@ export function useNewArticleViewModel(
       galleryId: (form.gallery?.id ?? null) as any,
 
       featured: form.featured,
-      authorId: user?.id,
-      editorId: user?.id,
+      authorId: profile?.id,
+      editorId: profile?.id,
 
       seoTitle: form.seoTitle || undefined,
       seoDescription: form.seoDescription || undefined,

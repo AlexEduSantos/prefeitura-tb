@@ -23,6 +23,7 @@ import { ObserveModule } from './observe';
 import { MenuModule } from './menu/menu.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
 import { UserModule } from './user/user.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UserModule } from './user/user.module';
         port: parseInt(process.env.REDIS_PORT || '6379', 10),
       },
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     PrismaModule,
     CaslModule,
