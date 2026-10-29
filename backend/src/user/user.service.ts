@@ -23,6 +23,11 @@ export class UserService {
         updatedAt: true,
         password: false,
         organizationId: true,
+        organization: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   }
@@ -40,8 +45,16 @@ export class UserService {
         active: true,
         createdAt: true,
         updatedAt: true,
-        password: false,
+        lastLogin: true,
         organizationId: true,
+        // O password já fica de fora automaticamente porque você não colocou true
+
+        // ✅ Usando select aninhado para a organização no lugar do include
+        organization: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   }
@@ -60,8 +73,14 @@ export class UserService {
         active: true,
         createdAt: true,
         updatedAt: true,
+        lastLogin: true,
         password: false,
         organizationId: true,
+        organization: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   }
@@ -81,8 +100,14 @@ export class UserService {
         active: true,
         createdAt: true,
         updatedAt: true,
+        lastLogin: true,
         password: false,
         organizationId: true,
+        organization: {
+          select: {
+            title: true,
+          },
+        },
       },
     });
   }

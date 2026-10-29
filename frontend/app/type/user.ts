@@ -7,9 +7,11 @@ export interface IUser {
   email: string;
   avatar: string;
   phone: string;
+  active: boolean;
   organizationId?: string;
   organization?: IOrganization;
   createdAt: string;
   updatedAt: string;
+  lastLogin: string;
   role?: "admin" | "journalist" | "secretary";
 }

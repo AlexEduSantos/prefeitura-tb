@@ -16,25 +16,34 @@ import { AuthService } from './auth.service';
 import { SessionGuard } from './session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { User } from '../generated/prisma/client';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   @UseGuards(AuthGuard('local'))
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Request() req: ExpressRequest, @Body() loginDto: LoginDto) {
+  async login(@Request() req: ExpressRequest) {
+    const user = req.user as User;
+
     return new Promise((resolve, reject) => {
-      req.login(req.user as User, (err: Error) => {
-        if (err) {
-          return reject(err);
-        }
+      req.login(user, (err: Error) => {
+        if (err) return reject(err);
+
         req.session.save((err: Error) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(req.user);
+          if (err) return reject(err);
+
+          // ✅ Dispara o evento em background e NÃO espera (sem await)
+          // O 'login.success' é o nome do evento, e o user.id é o payload.
+          this.eventEmitter.emit('login.success', user.id, { async: true });
+
+          // ✅ Resolve a Promise imediatamente, o login já está pronto.
+          resolve(user);
         });
       });
     });

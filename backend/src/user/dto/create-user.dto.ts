@@ -5,6 +5,8 @@ import {
   MinLength,
   IsUUID,
   IsBoolean,
+  IsEnum,
+  ValidateIf,
 } from 'class-validator';
 import { UserRole } from '../../generated/prisma/enums';
 
@@ -28,7 +30,8 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  phone?: string;
+  @ValidateIf((_, val) => val !== null)
+  phone?: string | null;
 
   @IsBoolean()
   @IsOptional()
@@ -38,7 +41,6 @@ export class CreateUserDto {
   @IsUUID()
   organizationId!: string;
 
-  @IsString()
-  @IsUUID()
+  @IsEnum(UserRole)
   role!: UserRole;
 }

@@ -31,7 +31,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { useUserViewModel } from "@/app/viewmodel/user.viewmodel";
+import { useProfileViewModel } from "@/app/viewmodel/user.viewmodel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
 
@@ -52,12 +52,12 @@ export function PainelSidebar() {
   const pathname = usePathname();
   const { state } = useSidebar();
 
-  const { user, isLoadingUser } = useUserViewModel();
+  const { profile, isLoadingProfile } = useProfileViewModel();
 
   const menuId = "3792187b-4426-4ff7-a726-a49e70673ed2";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
-  if (isLoadingUser || isLoadingMenu) return <div>Loading...</div>;
+  if (isLoadingProfile || isLoadingMenu) return <div>Loading...</div>;
   if (isErrorMenu || !menu) return <div>Erro ao carregar o menu.</div>;
 
   return (
@@ -222,16 +222,18 @@ export function PainelSidebar() {
               )}
             >
               <Avatar>
-                <AvatarImage src={user?.avatar} />
-                <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+                <AvatarImage src={profile?.avatar} />
+                <AvatarFallback>
+                  {profile?.name?.charAt(0) || "U"}
+                </AvatarFallback>
               </Avatar>
               {state === "expanded" && (
                 <div className="flex flex-col">
                   <span className="text-sm font-medium truncate">
-                    {user?.name}
+                    {profile?.name}
                   </span>
                   <span className="text-xs text-muted-foreground truncate">
-                    {user?.email}
+                    {profile?.email}
                   </span>
                 </div>
               )}
