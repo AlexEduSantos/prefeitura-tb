@@ -24,6 +24,7 @@ import { MenuModule } from './menu/menu.module';
 import { MenuItemModule } from './menu-item/menu-item.module';
 import { UserModule } from './user/user.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     }),
     MenuItemModule,
     UserModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

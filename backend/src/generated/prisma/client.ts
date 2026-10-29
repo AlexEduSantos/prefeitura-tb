@@ -124,3 +124,8 @@ export type Menu = Prisma.MenuModel
  * 
  */
 export type MenuItem = Prisma.MenuItemModel
+/**
+ * Model SiteSettings
+ * 
+ */
+export type SiteSettings = Prisma.SiteSettingsModel

@@ -17,6 +17,7 @@ import {
   Organization,
   Page,
   Popups,
+  SiteSettings,
   Services,
   Space,
   Stories,
@@ -42,6 +43,7 @@ export type Subjects =
   | 'Services'
   | 'Stories'
   | 'StoryItem'
+  | 'SiteSettings'
   | Article
   | Page
   | Media
@@ -55,7 +57,8 @@ export type Subjects =
   | GalleryMedia
   | Popups
   | Services
-  | Stories;
+  | Stories
+  | SiteSettings;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 

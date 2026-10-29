@@ -502,3 +502,36 @@ model MenuItem {
   @@index([menuId, parentId, order])
   @@map("menu_item")
 }
+
+model SiteSettings {
+  id              String  @id @default("singleton") @db.VarChar(20) // Força ser único
+  siteName        String  @default("Prefeitura Municipal")
+  siteDescription String? // Para SEO (meta description)
+
+  // Identidade Visual
+  logoUrl                  String? // URL da imagem no MinIO
+  faviconUrl               String? // URL do favicon
+  primaryColor             String  @default("#1e3a8a") // Hex da cor principal
+  primaryForegroundColor   String? @default("#ffffff")
+  secondaryColor           String  @default("#f59e0b") // Hex da cor secundária
+  secondaryForegroundColor String? @default("#000000")
+  themeColors              Json? // Objeto com outras cores (ex: { "header": "#...", "footer": "#..." })
+
+  // Endereço e Contato
+  addressStreet String?
+  addressNumber String?
+  addressCity   String? @default("Telêmaco Borba")
+  addressState  String? @default("PR")
+  addressZip    String?
+  phone         String?
+  email         String?
+  workingHours  String?
+  visits        Int     @default(0)
+
+  // Redes Sociais
+  socialLinks Json? // ex: { "facebook": "url", "instagram": "url" }
+
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}

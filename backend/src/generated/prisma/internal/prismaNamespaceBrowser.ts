@@ -67,7 +67,8 @@ export const ModelName = {
   Stories: 'Stories',
   StoriesItem: 'StoriesItem',
   Menu: 'Menu',
-  MenuItem: 'MenuItem'
+  MenuItem: 'MenuItem',
+  SiteSettings: 'SiteSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -372,6 +373,32 @@ export const MenuItemScalarFieldEnum = {
 export type MenuItemScalarFieldEnum = (typeof MenuItemScalarFieldEnum)[keyof typeof MenuItemScalarFieldEnum]
 
 
+export const SiteSettingsScalarFieldEnum = {
+  id: 'id',
+  siteName: 'siteName',
+  siteDescription: 'siteDescription',
+  logoUrl: 'logoUrl',
+  faviconUrl: 'faviconUrl',
+  primaryColor: 'primaryColor',
+  primaryForegroundColor: 'primaryForegroundColor',
+  secondaryColor: 'secondaryColor',
+  secondaryForegroundColor: 'secondaryForegroundColor',
+  themeColors: 'themeColors',
+  addressStreet: 'addressStreet',
+  addressNumber: 'addressNumber',
+  addressCity: 'addressCity',
+  addressState: 'addressState',
+  addressZip: 'addressZip',
+  phone: 'phone',
+  email: 'email',
+  workingHours: 'workingHours',
+  socialLinks: 'socialLinks',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -385,6 +412,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -622,4 +657,27 @@ export const MenuItemOrderByRelevanceFieldEnum = {
 } as const
 
 export type MenuItemOrderByRelevanceFieldEnum = (typeof MenuItemOrderByRelevanceFieldEnum)[keyof typeof MenuItemOrderByRelevanceFieldEnum]
+
+
+export const SiteSettingsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  siteName: 'siteName',
+  siteDescription: 'siteDescription',
+  logoUrl: 'logoUrl',
+  faviconUrl: 'faviconUrl',
+  primaryColor: 'primaryColor',
+  primaryForegroundColor: 'primaryForegroundColor',
+  secondaryColor: 'secondaryColor',
+  secondaryForegroundColor: 'secondaryForegroundColor',
+  addressStreet: 'addressStreet',
+  addressNumber: 'addressNumber',
+  addressCity: 'addressCity',
+  addressState: 'addressState',
+  addressZip: 'addressZip',
+  phone: 'phone',
+  email: 'email',
+  workingHours: 'workingHours'
+} as const
+
+export type SiteSettingsOrderByRelevanceFieldEnum = (typeof SiteSettingsOrderByRelevanceFieldEnum)[keyof typeof SiteSettingsOrderByRelevanceFieldEnum]
 
