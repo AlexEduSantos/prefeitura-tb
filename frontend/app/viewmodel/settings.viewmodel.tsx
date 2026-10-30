@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SettingsService } from "../service/settings.service";
 import { ISiteSettings } from "../type/settings";
@@ -10,6 +10,9 @@ import { ISiteSettings } from "../type/settings";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export function useSettings() {
+  const [openModal, setOpenModal] = useState(false);
+  const [formData, setFormData] = useState<Partial<ISiteSettings>>({});
+
   const queryClient = useQueryClient();
 
   const { data: settings, isLoading } = useQuery<ISiteSettings>({
@@ -26,7 +29,15 @@ export function useSettings() {
       // mas o CSS moderno aceita Hex direto em variáveis.
       // Aqui usamos as variáveis padrão do shadcn (--primary, --secondary)
       root.style.setProperty("--primary", settings.primaryColor);
+      root.style.setProperty(
+        "--primary-foreground",
+        settings.primaryForegroundColor,
+      );
       root.style.setProperty("--secondary", settings.secondaryColor);
+      root.style.setProperty(
+        "--secondary-foreground",
+        settings.secondaryForegroundColor,
+      );
 
       // Atualiza o título da aba do navegador
       document.title = settings.siteName;
@@ -43,10 +54,22 @@ export function useSettings() {
     onError: (error: any) => toast.error(error.message),
   });
 
+  const setField = <K extends keyof ISiteSettings>(
+    key: K,
+    value: ISiteSettings[K],
+  ) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
   return {
     settings,
     isLoading,
     updateSettings: updateSettingsMutation.mutate,
     isUpdating: updateSettingsMutation.isPending,
+    openModal,
+    setOpenModal,
+    setField,
+    formData,
+    setFormData,
   };
 }

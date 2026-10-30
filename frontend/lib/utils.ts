@@ -15,3 +15,6 @@ export const sortByDateDesc = <T extends { createdAt: string }>(
     return dateB - dateA;
   });
 };
+
+export const getMediaUrl = (media: string) =>
+  `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media}`;

@@ -16,10 +16,13 @@ import { Label } from "../ui/label";
 import Link from "next/link";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { MobileHeader } from "./mobile-header";
+import { useSettings } from "@/app/viewmodel/settings.viewmodel";
 
 function DesktopBarTop() {
   const menuId = "a80c8356-9cfc-4998-8b5c-c81f395f6dcd";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+
+  useSettings();
 
   if (isLoadingMenu) {
     return (

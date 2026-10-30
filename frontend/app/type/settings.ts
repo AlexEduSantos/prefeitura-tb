@@ -6,9 +6,9 @@ export interface ISiteSettings {
   logoUrl?: string;
   faviconUrl?: string;
   primaryColor: string;
-  primaryForegroundColor?: string;
+  primaryForegroundColor: string;
   secondaryColor: string;
-  secondaryForegroundColor?: string;
+  secondaryForegroundColor: string;
   themeColors?: JSON | null;
 
   addressStreet?: string;

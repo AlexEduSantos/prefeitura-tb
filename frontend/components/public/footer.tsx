@@ -13,8 +13,8 @@ export function Footer() {
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
   return (
-    <footer className="w-full gradient-primary text-primary-foreground py-8 space-y-8">
-      <div className="w-full max-w-7xl mx-auto px-4 flex flex-col gap-2 items-center text-center">
+    <footer className="w-full bg-linear-to-t from-primary to-secondary py-8 space-y-8">
+      <div className="w-full max-w-7xl mx-auto px-4 flex flex-col gap-2 items-center text-center text-primary-foreground">
         <div className="grid grid-cols-1 md:grid-cols-5 items-start gap-8 font-light text-sm pb-8 border-b border-border/30">
           {menu?.items.map((item) => (
             <div
@@ -67,7 +67,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="w-full flex md:flex-row flex-col items-center justify-center">
+      <div className="w-full flex md:flex-row flex-col items-center justify-center text-primary-foreground">
         <p className="text-xs font-light">
           © 2026 | Praça Horácio Klabin, 34 - Centro - Telêmaco Borba - PR - Cep
           84267-000

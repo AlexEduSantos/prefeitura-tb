@@ -23,3 +23,5 @@ TODO: (Search Engine) - Criar um motor de busca que indexe todo o conteúdo do s
 TODO: Adicionar verificação de slug ao criar novo artigo, se já houver algum artigo com mesmo slug, adicionar um número ao final do slug, ex: "noticia-1".
 
 FEAT: Botão de visualizar matéria dentro da página de artigos
+
+TODO: aviso de tamanho de imagem selecionada, se não for compatível com o local aparece um aviso antes de salvar.
