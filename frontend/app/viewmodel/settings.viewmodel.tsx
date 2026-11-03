@@ -63,7 +63,7 @@ export function useSettings() {
 
   return {
     settings,
-    isLoading,
+    isLoadingSettings: isLoading,
     updateSettings: updateSettingsMutation.mutate,
     isUpdating: updateSettingsMutation.isPending,
     openModal,

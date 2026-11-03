@@ -33,6 +33,8 @@ import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
 import { IMenuItem } from "@/app/type/menu";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { cn } from "@/lib/utils";
+import { useSettings } from "@/app/viewmodel/settings.viewmodel";
+import Image from "next/image";
 
 interface MobileMenuItemProps {
   item: IMenuItem;
@@ -190,8 +192,12 @@ export function MobileHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
+  const { settings, isLoadingSettings } = useSettings();
+
   const menuId = "dec03c06-aa22-4ceb-9dc0-38d445671d68";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+
+  const hasLogoUrl = settings?.logoUrl ? settings?.logoUrl : "/logo.png";
 
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -222,10 +228,16 @@ export function MobileHeader() {
           onClick={() => router.push("/")}
           className="focus:outline-none max-w-60 text-left cursor-pointer"
         >
-          <img
-            src="/logo.png"
-            alt="Prefeitura de Telêmaco Borba"
-            className="h-full w-auto object-contain"
+          <Image
+            src={hasLogoUrl}
+            alt={`Logo - ${settings?.siteName}`}
+            width={532}
+            height={112}
+            loading="eager"
+            unoptimized
+            priority
+            sizes="(min-width: 1024px) 200px, 48px"
+            className="object-contain transition-all duration-300 object-left"
           />
         </button>
 

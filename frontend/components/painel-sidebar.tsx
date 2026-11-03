@@ -34,6 +34,7 @@ import { usePathname } from "next/navigation";
 import { useProfileViewModel } from "@/app/viewmodel/user.viewmodel";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+import { useSettings } from "@/app/viewmodel/settings.viewmodel";
 
 // Mapa de ícones: liga a string do banco ao componente real do lucide-react
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -57,21 +58,32 @@ export function PainelSidebar() {
   const menuId = "3792187b-4426-4ff7-a726-a49e70673ed2";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
-  if (isLoadingProfile || isLoadingMenu) return <div>Loading...</div>;
+  const { settings, isLoadingSettings } = useSettings();
+
+  if (isLoadingProfile || isLoadingMenu || isLoadingSettings)
+    return <div>Loading...</div>;
   if (isErrorMenu || !menu) return <div>Erro ao carregar o menu.</div>;
+
+  const hasLogoUrl = settings?.logoUrl ? settings?.logoUrl : "/logo.png";
+  const hasFavicon = settings?.faviconUrl
+    ? settings?.faviconUrl
+    : "/favicon.png";
+
+  console.log(hasLogoUrl);
 
   return (
     <Sidebar collapsible="icon" className="border-r border-zinc-200">
       <SidebarHeader className={` ${state === "collapsed" ? "p-2" : "p-4"}`}>
         <Link
           href="/administrator"
-          className="flex items-center justify-center relative h-12 w-full"
+          className="flex items-center justify-center relative h-12 w-full transition-all duration-300"
         >
           <Image
-            src={state === "collapsed" ? "/favicon.ico" : "/logo.png"}
-            alt="Logo - Prefeitura de Telêmaco Borba"
+            src={state === "collapsed" ? hasFavicon : hasLogoUrl}
+            alt={`Logo - ${settings?.siteName}`}
             fill
             loading="eager"
+            unoptimized
             priority
             sizes="(min-width: 1024px) 200px, 48px"
             className="object-contain transition-all duration-300"

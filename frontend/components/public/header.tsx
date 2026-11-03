@@ -17,12 +17,11 @@ import Link from "next/link";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { MobileHeader } from "./mobile-header";
 import { useSettings } from "@/app/viewmodel/settings.viewmodel";
+import Image from "next/image";
 
 function DesktopBarTop() {
   const menuId = "a80c8356-9cfc-4998-8b5c-c81f395f6dcd";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
-
-  useSettings();
 
   if (isLoadingMenu) {
     return (
@@ -132,6 +131,7 @@ function DesktopHeader() {
   const router = useRouter();
   const menuId = "dec03c06-aa22-4ceb-9dc0-38d445671d68";
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+  const { settings, isLoadingSettings } = useSettings();
 
   const [query, setQuery] = useState("");
 
@@ -155,6 +155,8 @@ function DesktopHeader() {
     setOpenSearch(false);
   };
 
+  const hasLogoUrl = settings?.logoUrl ? settings?.logoUrl : "/logo.png";
+
   return (
     <div className="w-full">
       {/* Barra superior */}
@@ -163,12 +165,26 @@ function DesktopHeader() {
       {/* Header principal */}
       <div className="w-full flex items-center justify-center h-36 bg-white shadow">
         <div className="w-full max-w-7xl mx-auto px-4 flex items-center justify-between">
-          <div
-            className="lg:w-1/2 w-1/3 cursor-pointer transition-all duration-500"
-            onClick={() => router.push("/")}
-          >
-            <img src="/logo.png" alt="Prefeitura de Telêmaco Borba" />
-          </div>
+          {isLoadingSettings ? (
+            <Skeleton className="w-full h-full" />
+          ) : (
+            <Link
+              href={"/"}
+              className="lg:max-w-1/2 max-w-1/3 w-full cursor-pointer transition-all duration-500 relative h-fit"
+            >
+              <Image
+                src={hasLogoUrl}
+                alt={`Logo - ${settings?.siteName}`}
+                width={532}
+                height={112}
+                loading="eager"
+                unoptimized
+                priority
+                sizes="(min-width: 1024px) 200px, 48px"
+                className="object-contain transition-all duration-300 object-left"
+              />
+            </Link>
+          )}
 
           <div className="w-1/2 sm:flex hidden gap-4 items-center justify-end text-primary font-semibold relative">
             {isLoadingMenu && (

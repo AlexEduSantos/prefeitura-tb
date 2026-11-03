@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         port: "3001",
         pathname: "/**",
       },
+      {
+        protocol: "http", // ou "https" se for produção
+        hostname: "localhost", // ou o IP/domínio do seu backend
+        port: "3001", // A porta do seu backend
+        pathname: "/media/**", // O caminho das suas imagens
+      },
     ],
   },
 };

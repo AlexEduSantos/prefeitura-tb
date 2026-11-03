@@ -24,7 +24,7 @@ import { getMediaUrl } from "@/lib/utils";
 export function SettingsManager() {
   const {
     settings,
-    isLoading,
+    isLoadingSettings,
     updateSettings,
     isUpdating,
     openModal,
@@ -64,7 +64,7 @@ export function SettingsManager() {
     setMediaPickerTarget(null);
   };
 
-  if (isLoading) {
+  if (isLoadingSettings) {
     return (
       <div className="flex h-64 items-center justify-center">
         <Loader2 className="size-8 animate-spin text-primary" />
