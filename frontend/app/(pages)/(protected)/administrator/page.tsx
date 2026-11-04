@@ -1,9 +1,11 @@
 "use client";
 
+import { AnalyticsCard } from "@/components/public/init-analytics-card";
+
 export default function AdministratorHome() {
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      <h1>Página administrativa</h1>
+    <div className="w-full flex flex-col items-center justify-center p-2">
+      <AnalyticsCard />
     </div>
   );
 }

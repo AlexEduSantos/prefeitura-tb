@@ -73,6 +73,22 @@ services:
       - pmtb-network
     command: npm run start:dev
 
+  umami:
+    image: docker.umami.is/umami-software/umami:postgresql-latest
+    container_name: pmtb-umami
+    ports:
+      - "3002:3000" # Expõe na porta 3002 para não conflitar com seu backend (3001)
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/umami
+      DATABASE_TYPE: postgresql
+      APP_SECRET: "yORxH7q/rG+U0ZKPkMyKzRi05GOlZISTZcyPeJyuirI=" # Ex: openssl rand -hex 32
+      DISABLE_TELEMETRY: 1
+    depends_on:
+      - db
+    networks:
+      - pmtb-network
+    restart: unless-stopped
+
   # frontend:
   #   build:
   #     context: ./frontend
