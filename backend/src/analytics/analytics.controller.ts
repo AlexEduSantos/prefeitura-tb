@@ -10,7 +10,6 @@ export class AnalyticsController {
     @Query('initDate') initDate?: string,
     @Query('finalDate') finalDate?: string,
   ) {
-    // Passa as datas (que vêm como string) para o service
     return this.analyticsService.getSummaryStats(initDate, finalDate);
   }
 
@@ -26,6 +25,21 @@ export class AnalyticsController {
       finalDate,
       unit,
       timezone,
+    );
+  }
+
+  @Get('top-news')
+  async getTopNews(
+    @Query('range') range?: 'day' | 'week' | 'month' | 'year' | 'all',
+    @Query('initDate') initDate?: string,
+    @Query('finalDate') finalDate?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.analyticsService.getTopNews(
+      range,
+      initDate,
+      finalDate,
+      limit ? parseInt(limit, 10) : 5,
     );
   }
 }
