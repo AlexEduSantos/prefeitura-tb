@@ -1,6 +1,4 @@
 "use client";
-import { ChevronRight } from "lucide-react";
-import { Button } from "../ui/button";
 import { ArticleViewModel } from "@/app/viewmodel/article.viewmodel";
 import Image from "next/image";
 import { sortByDateDesc } from "@/lib/utils";
@@ -8,6 +6,7 @@ import { Skeleton } from "../ui/skeleton"; // Assumindo que você tem um compone
 import { useMemo } from "react";
 import { IMedia } from "@/app/type/media";
 import { useRouter } from "next/navigation";
+import { BlockHeader } from "./block-header";
 
 // Componente para o loader da imagem
 function ArticleImage({ coverData, alt }: { coverData: IMedia; alt: string }) {
@@ -85,7 +84,6 @@ function SmallArticleCard({ article }: { article: any }) {
 
 // Componente principal
 export function ArticlesBlock() {
-  const router = useRouter();
   const { article, isLoadingArticle, isErrorArticle } = ArticleViewModel();
 
   // Memoizar os artigos processados
@@ -137,21 +135,11 @@ export function ArticlesBlock() {
   return (
     <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
       {/* Cabeçalho */}
-      <div className="w-full flex items-center gap-2">
-        <span className="h-5 w-1 bg-primary rounded-full" />
-        <h3 className="uppercase text-nowrap tracking-widest text-sm">
-          Últimas Notícias
-        </h3>
-        <span className="w-full h-px bg-muted-foreground/20 rounded-full" />
-        <Button
-          variant="ghost"
-          className="text-xs text-primary text-nowrap hover:font-semibold hover:scale-105 hover:text-primary group transition-all duration-300 px-0 cursor-pointer"
-          onClick={() => router.push("/noticias")}
-        >
-          Todas as notícias
-          <ChevronRight />
-        </Button>
-      </div>
+      <BlockHeader
+        title="Últimas Notícias"
+        route="/noticias"
+        button="Todas as notícias"
+      />
 
       {/* Conteúdo */}
       <div className="w-full flex sm:flex-row flex-col gap-2 sm:gap-4">

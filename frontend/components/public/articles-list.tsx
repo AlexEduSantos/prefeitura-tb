@@ -10,12 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { ChevronDown, PlusIcon, Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { Button } from "../ui/button";
-import { useState } from "react";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -51,7 +49,7 @@ export function ArticleCard({ article }: { article: any }) {
         <div className="text-xs text-gray-200 mb-1 uppercase tracking-wider font-medium">
           {article.categories[0].title}
         </div>
-        <h3 className="text-white text-lg font-bold leading-snug line-clamp-2 group-hover:text-blue-300 transition-colors">
+        <h3 className="text-white text-lg font-bold leading-snug line-clamp-2 group-hover:tracking-wide transition-all">
           {article.title}
         </h3>
       </div>
@@ -186,7 +184,7 @@ export default function PublicArticlesList() {
           setSearch={setSearch}
           openCreateStoryModal={() => {}}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 h-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 h-full">
           {article.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}

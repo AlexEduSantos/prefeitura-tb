@@ -1,10 +1,9 @@
 "use client";
-import { ChevronRight } from "lucide-react";
-import { Button } from "../ui/button";
 import { usePublicServices } from "@/app/viewmodel/services.viewmodel";
 import { IServices } from "@/app/type/services";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { BlockHeader } from "./block-header";
 
 export function ServicesBlock() {
   const { services, isLoadingServices } = usePublicServices();
@@ -24,21 +23,13 @@ export function ServicesBlock() {
 
   return (
     <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
-      <div className="w-full flex items-center gap-2">
-        <span className="h-5 w-1 bg-primary rounded-full" />
-        <h3 className="uppercase text-nowrap tracking-widest text-sm">
-          Serviços em Destaque
-        </h3>
-        <span className="w-full h-px bg-muted-foreground/20 rounded-full" />
-        <Button
-          variant="ghost"
-          className="text-xs text-primary text-nowrap hover:font-semibold hover:scale-105 hover:text-primary group transition-all duration-300 px-0 cursor-pointer"
-          onClick={() => router.push("/servicos")}
-        >
-          Todos os serviços
-          <ChevronRight />
-        </Button>
-      </div>
+      {/* Cabeçalho */}
+      <BlockHeader
+        title="Serviços em Destaque"
+        route="/servicos"
+        button="Todas os serviços"
+      />
+
       <div className="w-full grid md:grid-cols-3 grid-cols-2 md:grid-rows-2 grid-rows-3 gap-2 sm:gap-4">
         {!featuredServices.length && (
           <div>Não foi possível obter os serviços.</div>

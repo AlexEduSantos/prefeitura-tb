@@ -123,15 +123,15 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
         {/* Share buttons */}
         <div className="grid sm:grid-cols-5 sm:grid-rows-1 grid-cols-3 grid-rows-2 gap-2">
           <Button
-            variant={"secondary"}
-            className="flex gap-2 flex-1 group text-muted-foreground hover:bg-blue-600 hover:text-white transition-all duration-100 cursor-pointer"
+            variant={"outline"}
+            className="flex gap-2 flex-1 group text-muted-foreground hover:bg-blue-600 hover:border-none hover:scale-105 hover:text-white transition-all duration-100 cursor-pointer"
           >
             <FacebookIcon className="w-4 h-4 fill-blue-600 group-hover:fill-white" />{" "}
             Facebook
           </Button>
           <Button
-            variant={"secondary"}
-            className="flex gap-2 flex-1 group text-muted-foreground hover:bg-green-600 hover:text-white transition-all duration-100 cursor-pointer"
+            variant={"outline"}
+            className="flex gap-2 flex-1 group text-muted-foreground hover:bg-green-600 hover:border-none hover:scale-105 hover:text-white transition-all duration-100 cursor-pointer"
           >
             <DynamicIcon
               src="/icons/whatsapp.svg"
@@ -140,21 +140,21 @@ export default function ArticleViewer({ slug }: ArticleViewerProps) {
             Whatsapp
           </Button>
           <Button
-            variant={"secondary"}
-            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white transition-all duration-100 cursor-pointer text-muted-foreground"
+            variant={"outline"}
+            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white hover:border-none hover:scale-105 transition-all duration-100 cursor-pointer text-muted-foreground"
           >
             <Mail className="text-primary group-hover:text-white" /> Email
           </Button>
           <Button
-            variant={"secondary"}
-            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white transition-all duration-100 cursor-pointer text-muted-foreground"
+            variant={"outline"}
+            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white hover:border-none hover:scale-105 transition-all duration-100 cursor-pointer text-muted-foreground"
           >
             <Link2Icon className="text-primary group-hover:text-white" /> Copiar
             link
           </Button>
           <Button
-            variant={"secondary"}
-            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white transition-all duration-100 cursor-pointer text-muted-foreground"
+            variant={"outline"}
+            className="flex gap-2 flex-1 group hover:bg-primary hover:text-white transition-all hover:border-none hover:scale-105 duration-100 cursor-pointer text-muted-foreground"
           >
             <Printer className="text-primary group-hover:text-white" /> Imprimir
           </Button>
