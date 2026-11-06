@@ -1,11 +1,3 @@
-/**
- * Copyright (c) Meta Platforms, Inc. and affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- *
- */
-
 import type { JSX } from "react";
 
 import { calculateZoomLevel } from "@lexical/utils";
@@ -153,7 +145,7 @@ export default function ColorPicker({
         ))}
       </div>
       <MoveWrapper
-        className="relative w-full h-[150px] rounded-md overflow-hidden cursor-crosshair touch-none select-none"
+        className="relative w-full h-38 rounded-md overflow-hidden cursor-crosshair touch-none select-none"
         style={{
           backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)`,
           backgroundImage:
@@ -422,20 +414,23 @@ export function DropdownColorPicker({
   icon: React.ElementType;
   title?: string;
 }) {
+  const isText = title === "Cor do Texto";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild disabled={disabled}>
         <Button
           variant="ghost"
-          className="aspect-square rounded-lg p-1.5 hover:bg-accent"
+          style={isText ? {} : { background: color }}
+          className={`aspect-square rounded-lgp-1.5 hover:bg-accent ${!isText && color !== "#fff" ? "text-white" : "text-black"}`}
           title={title}
           aria-label={title}
         >
-          <Icon size={18} />
+          <Icon size={18} style={{ color: isText ? color : "" }} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="p-0 border-0 bg-transparent shadow-none w-[214px]"
+        className="p-0 border-0 bg-transparent shadow-none w-54"
         sideOffset={5}
       >
         <div className="bg-card border border-border shadow-md rounded-lg overflow-hidden">

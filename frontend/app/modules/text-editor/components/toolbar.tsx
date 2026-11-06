@@ -179,6 +179,7 @@ function FontDropDown({
       >
         <Button
           variant="outline"
+          type="button"
           className="text-start flex items-center justify-start overflow-x-clip text-wrap truncate px-2 "
         >
           <TypeIcon />
@@ -727,6 +728,7 @@ export function ToolbarPlugin() {
         className={`${btnBase} ${btnInactive} mr-0.5`}
         aria-label="Desfazer"
         title="Desfazer (Ctrl+Z)"
+        type="button"
       >
         <Undo size={18} />
       </button>
@@ -736,6 +738,7 @@ export function ToolbarPlugin() {
         className={`${btnBase} ${btnInactive}`}
         aria-label="Refazer"
         title="Refazer (Ctrl+Y)"
+        type="button"
       >
         <Redo size={18} />
       </button>
@@ -763,6 +766,7 @@ export function ToolbarPlugin() {
           aria-label="Negrito"
           aria-pressed={isBold}
           title="Negrito (Ctrl+B)"
+          type="button"
         >
           <Bold size={18} />
         </button>
@@ -771,6 +775,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} mr-0.5 ${isItalic ? btnActive : btnInactive}`}
           aria-label="Itálico"
           aria-pressed={isItalic}
+          type="button"
           title="Itálico (Ctrl+I)"
         >
           <Italic size={18} />
@@ -783,6 +788,7 @@ export function ToolbarPlugin() {
           aria-label="Sublinhado"
           aria-pressed={isUnderline}
           title="Sublinhado (Ctrl+U)"
+          type="button"
         >
           <Underline size={18} />
         </button>
@@ -792,6 +798,7 @@ export function ToolbarPlugin() {
           aria-label="Inserir Link"
           aria-pressed={isLink}
           title="Link (Ctrl+K)"
+          type="button"
         >
           <LinkIcon size={18} />
         </button>
@@ -802,6 +809,7 @@ export function ToolbarPlugin() {
               className={`${btnBase} ${btnInactive}`}
               aria-label="Mais Formatações"
               title="Mais Formatações"
+              type="button"
             >
               <TextInitialIcon size={18} />
               <ChevronDown size={14} className="ml-1 opacity-50" />
@@ -839,10 +847,6 @@ export function ToolbarPlugin() {
               <Superscript size={16} className="mr-2" />
               Sobrescrito
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={clearFormatting}>
-              <Eraser size={16} className="mr-2" />
-              Limpar Formatação
-            </DropdownMenuItem>
             <div className="h-px bg-border my-1" />
             <DropdownMenuItem
               onClick={() => applyStyleText({ "text-transform": "lowercase" })}
@@ -870,6 +874,7 @@ export function ToolbarPlugin() {
               className={`${btnBase} ${btnInactive}`}
               aria-label="Alinhamento"
               title="Alinhamento"
+              type="button"
             >
               {elementFormat === "center" ? (
                 <AlignCenter size={18} />
@@ -934,6 +939,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Recortar"
           title="Recortar"
+          type="button"
         >
           <Scissors size={18} />
         </button>
@@ -942,6 +948,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Copiar"
           title="Copiar"
+          type="button"
         >
           <Copy size={18} />
         </button>
@@ -950,6 +957,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Colar"
           title="Colar"
+          type="button"
         >
           <ClipboardPaste size={18} />
         </button>
@@ -958,6 +966,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Colar como Texto"
           title="Colar como Texto"
+          type="button"
         >
           <FileText size={18} />
         </button>
@@ -971,6 +980,7 @@ export function ToolbarPlugin() {
           <button
             className={`${btnBase} ${btnInactive} mr-0.5`}
             aria-label="Inserir"
+            type="button"
             title="Inserir Objeto"
           >
             <Plus size={18} />
@@ -1122,6 +1132,7 @@ export function ToolbarPlugin() {
             aria-label="Espaçamento entre Letras"
             title="Espaçamento entre Letras"
             disabled={!isEditable}
+            type="button"
           >
             <MoveHorizontal size={18} />
             <ChevronDown size={14} className="ml-1 opacity-50" />
@@ -1163,6 +1174,7 @@ export function ToolbarPlugin() {
             aria-label="Espaçamento entre Parágrafos"
             title="Espaçamento entre Parágrafos"
             disabled={!isEditable}
+            type="button"
           >
             <TextQuote size={18} />
             <ChevronDown size={14} className="ml-1 opacity-50" />
@@ -1199,6 +1211,7 @@ export function ToolbarPlugin() {
             aria-label="Altura de Linha"
             title="Altura de Linha"
             disabled={!isEditable}
+            type="button"
           >
             <AlignVerticalJustifyStart size={18} />
             <ChevronDown size={14} className="ml-1 opacity-50" />
@@ -1239,6 +1252,7 @@ export function ToolbarPlugin() {
           aria-label="Lista Não Ordenada"
           aria-pressed={isBulletList}
           title="Lista Não Ordenada"
+          type="button"
         >
           <List size={18} />
         </button>
@@ -1248,6 +1262,7 @@ export function ToolbarPlugin() {
           aria-label="Lista Ordenada"
           aria-pressed={isOrderedList}
           title="Lista Ordenada (Numérica)"
+          type="button"
         >
           <ListOrdered size={18} />
         </button>
@@ -1264,6 +1279,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Diminuir Recuo"
           title="Diminuir Recuo"
+          type="button"
         >
           <OutdentIcon size={18} />
         </button>
@@ -1274,6 +1290,7 @@ export function ToolbarPlugin() {
           className={`${btnBase} ${btnInactive}`}
           aria-label="Aumentar Recuo"
           title="Aumentar Recuo"
+          type="button"
         >
           <IndentIcon size={18} />
         </button>
@@ -1288,6 +1305,7 @@ export function ToolbarPlugin() {
           size="sm"
           onClick={handlePrint}
           title="Imprimir"
+          type="button"
           className="h-8 w-8 p-0 text-muted-foreground hover:bg-accent rounded-lg"
         >
           <Printer size={16} />
@@ -1295,6 +1313,7 @@ export function ToolbarPlugin() {
 
         <Button
           variant="ghost"
+          type="button"
           size="sm"
           onClick={() => {
             if (
@@ -1309,6 +1328,16 @@ export function ToolbarPlugin() {
           className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-lg"
         >
           <Trash2 size={16} />
+        </Button>
+        <Button
+          variant="ghost"
+          type="button"
+          size="sm"
+          onClick={clearFormatting}
+          title="Limpar formatação"
+          className="h-8 w-8 cursor-pointer p-0 text-destructive/50 hover:text-destructive/50 hover:border-destructive/10 hover:bg-transparent rounded-lg"
+        >
+          <Eraser size={16} className="" />
         </Button>
       </div>
     </div>
