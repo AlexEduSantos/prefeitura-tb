@@ -30,3 +30,6 @@ O componente da parte pública de exibição dos artigos precisa ser corrigido.
 
 [15/09/2026 - 16:00]
 [x] Article-block atualizado com animações e rotas. Criados os componentes articles-list, article e article-body-visualizer para auxiliar na organização e visualização das notícias.
+
+[06/11/2026]
+Finalizado os cards do dashboard, ajustado para o editor de texto acessar o modal de seleção de imagens, corrigido alguns botões da toolbar do editor de texto, corrigido visualizador de artigos para suportar imagens vindas do banco de dados.
