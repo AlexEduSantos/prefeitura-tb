@@ -185,7 +185,7 @@ function FontDropDown({
           {value}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-h-[300px] overflow-y-auto">
+      <DropdownMenuContent className="max-h-75 overflow-y-auto">
         {FONT_FAMILY_OPTIONS.map(([optionLabel, optionValue]) => (
           <DropdownMenuItem
             key={optionValue}
@@ -409,8 +409,6 @@ export function ToolbarPlugin() {
   // Estado de Alinhamento de bloco
   const [elementFormat, setElementFormat] = useState<ElementFormatType>("left");
 
-
-
   // Estados de Espaçamento
   const [letterSpacing, setLetterSpacing] = useState<string>("normal");
   const [lineHeight, setLineHeight] = useState<string>("normal");
@@ -419,14 +417,6 @@ export function ToolbarPlugin() {
   // Estados de Lista
   const [isBulletList, setIsBulletList] = useState(false);
   const [isOrderedList, setIsOrderedList] = useState(false);
-
-  // Estados do Modal de Imagem
-  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
-  const [imagePosition, setImagePosition] = useState<ImagePosition>("block");
-  const [imageWidth, setImageWidth] = useState("100%");
-  const [imageHeight, setImageHeight] = useState("");
-  const [imageTitle, setImageTitle] = useState("");
-  const [imageAlt, setImageAlt] = useState("Imagem de exemplo");
 
   // Funções de Área de Transferência
   const handleCut = useCallback(async () => {
@@ -1009,7 +999,11 @@ export function ToolbarPlugin() {
             <FoldVertical size={16} className="mr-2" />
             Container Retrátil
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setIsImageDialogOpen(true)}>
+          <DropdownMenuItem
+            onClick={() =>
+              editor.dispatchCommand(INSERT_IMAGE_COMMAND, undefined)
+            }
+          >
             <ImageIcon size={16} className="mr-2" />
             Imagem
           </DropdownMenuItem>
@@ -1061,173 +1055,6 @@ export function ToolbarPlugin() {
                   includeHeaders: false,
                 });
                 setIsTableDialogOpen(false);
-              }}
-            >
-              Inserir
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de Inserção de Imagem */}
-      <Dialog
-        open={isImageDialogOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            // Reseta o modal ao fechar
-            setImagePosition("block");
-            setImageWidth("100%");
-            setImageHeight("");
-            setImageTitle("");
-            setImageAlt("Imagem de exemplo");
-          }
-          setIsImageDialogOpen(open);
-        }}
-      >
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Inserir Imagem</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            {/* Preview */}
-            <div className="border border-border rounded-md overflow-hidden bg-muted">
-              <img
-                src="/example.png"
-                alt="Pré-visualização"
-                className="w-full h-36 object-cover"
-              />
-            </div>
-
-            {/* Seletor de posicionamento */}
-            <div>
-              <p className="text-sm font-medium mb-2">Posicionamento</p>
-              <div className="grid grid-cols-3 gap-2">
-                {(
-                  [
-                    {
-                      value: "block",
-                      label: "Bloco",
-                      desc: "Linha inteira",
-                      emoji: "🖼️",
-                    },
-                    {
-                      value: "left",
-                      label: "Esquerda",
-                      desc: "Texto à direita",
-                      emoji: "↤🖼️",
-                    },
-                    {
-                      value: "right",
-                      label: "Direita",
-                      desc: "Texto à esquerda",
-                      emoji: "🖼️↦",
-                    },
-                  ] as {
-                    value: ImagePosition;
-                    label: string;
-                    desc: string;
-                    emoji: string;
-                  }[]
-                ).map(({ value, label, desc, emoji }) => (
-                  <button
-                    key={value}
-                    onClick={() => {
-                      setImagePosition(value);
-                      // Define largura padrão ao trocar de modo
-                      setImageWidth(value === "block" ? "100%" : "40%");
-                    }}
-                    className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 text-sm transition-colors ${
-                      imagePosition === value
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border hover:border-accent-foreground/30"
-                    }`}
-                  >
-                    <span className="text-lg">{emoji}</span>
-                    <span className="font-medium">{label}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {desc}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Dimensões */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <label className="text-sm font-medium">Largura</label>
-                <Input
-                  value={imageWidth}
-                  onChange={(e) => setImageWidth(e.target.value)}
-                  placeholder="ex: 400px ou 60%"
-                  className="h-8"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-sm font-medium">
-                  Altura{" "}
-                  <span className="text-muted-foreground font-normal">
-                    (opcional)
-                  </span>
-                </label>
-                <Input
-                  value={imageHeight}
-                  onChange={(e) => setImageHeight(e.target.value)}
-                  placeholder="ex: 300px (auto)"
-                  className="h-8"
-                />
-              </div>
-            </div>
-
-            {/* Título e descrição */}
-            <div className="space-y-1">
-              <label className="text-sm font-medium">
-                Título{" "}
-                <span className="text-muted-foreground font-normal">
-                  (opcional)
-                </span>
-              </label>
-              <Input
-                value={imageTitle}
-                onChange={(e) => setImageTitle(e.target.value)}
-                placeholder="Legenda da imagem"
-                className="h-8"
-              />
-            </div>
-            <div className="space-y-1">
-              <label className="text-sm font-medium">
-                Descrição / Alt{" "}
-                <span className="text-muted-foreground font-normal">
-                  (acessibilidade)
-                </span>
-              </label>
-              <Input
-                value={imageAlt}
-                onChange={(e) => setImageAlt(e.target.value)}
-                placeholder="Texto alternativo para leitores de tela"
-                className="h-8"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsImageDialogOpen(false)}
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={() => {
-                editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                  src: "/example.png",
-                  alt: imageAlt || "Imagem de exemplo",
-                  title: imageTitle,
-                  description: "",
-                  width: imageWidth || "100%",
-                  height: imageHeight,
-                  position: imagePosition,
-                });
-                setIsImageDialogOpen(false);
               }}
             >
               Inserir
