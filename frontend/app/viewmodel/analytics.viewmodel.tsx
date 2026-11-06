@@ -54,3 +54,22 @@ export function UseTopNews(initialRange: TopNewsRange = "week") {
     refetch: topNewsQuery.refetch,
   };
 }
+
+export function UseTopPages(initialRange: TopNewsRange = "week") {
+  const [range, setRange] = useState<TopNewsRange>(initialRange);
+
+  const topPagesQuery = useQuery({
+    queryKey: ["topPages", range],
+    queryFn: () => AnalyticsService.getTopPages({ range, limit: 5 }),
+  });
+
+  return {
+    range,
+    setRange,
+    topPages: topPagesQuery.data || [],
+    isLoading: topPagesQuery.isLoading,
+    isFetching: topPagesQuery.isFetching,
+    isError: topPagesQuery.isError,
+    refetch: topPagesQuery.refetch,
+  };
+}

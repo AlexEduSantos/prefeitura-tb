@@ -42,4 +42,19 @@ export class AnalyticsController {
       limit ? parseInt(limit, 10) : 5,
     );
   }
+
+  @Get('top-pages')
+  async getTopPages(
+    @Query('range') range?: 'day' | 'week' | 'month' | 'year' | 'all',
+    @Query('initDate') initDate?: string,
+    @Query('finalDate') finalDate?: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.analyticsService.getTopPages(
+      range,
+      initDate,
+      finalDate,
+      limit ? parseInt(limit, 10) : 5,
+    );
+  }
 }

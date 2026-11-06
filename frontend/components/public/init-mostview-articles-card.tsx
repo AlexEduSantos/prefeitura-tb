@@ -15,24 +15,9 @@ import { UseTopNews } from "@/app/viewmodel/analytics.viewmodel";
 import { TopNewsRange } from "@/app/type/analytics";
 import { Table, TableBody, TableCell, TableRow } from "../ui/table";
 
-const getRankBadgeClass = (index: number) => {
-  switch (index) {
-    case 0:
-      return "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30";
-    case 1:
-      return "bg-slate-400/15 text-slate-600 dark:text-slate-300 border-slate-400/30";
-    case 2:
-      return "bg-amber-700/15 text-amber-700 dark:text-amber-500 border-amber-700/30";
-    default:
-      return "bg-muted text-muted-foreground border-border/40";
-  }
-};
-
 export function MostViewArticlesCard() {
   const { range, setRange, topNews, isLoading, isFetching, isError, refetch } =
     UseTopNews("week");
-
-  console.log(topNews);
 
   return (
     <Card className="w-full shadow-xs">
@@ -176,11 +161,15 @@ export function MostViewArticlesCard() {
                             <Eye className="h-3.5 w-3.5 opacity-80" />
                             {article.views.toLocaleString("pt-BR")}
                           </span>
-                          {article.visitors !== undefined && article.visitors > 0 && (
-                            <span className="text-[11px] text-muted-foreground whitespace-nowrap">
-                              {article.visitors} {article.visitors === 1 ? "visitante" : "visitantes"}
-                            </span>
-                          )}
+                          {article.visitors !== undefined &&
+                            article.visitors > 0 && (
+                              <span className="text-[11px] text-muted-foreground whitespace-nowrap">
+                                {article.visitors}{" "}
+                                {article.visitors === 1
+                                  ? "visitante"
+                                  : "visitantes"}
+                              </span>
+                            )}
                         </div>
                       </TableCell>
 

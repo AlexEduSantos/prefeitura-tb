@@ -23,6 +23,16 @@ export interface TopNewsItem {
   coverUrl: string | null;
 }
 
+export interface TopPageItem {
+  id: string | null;
+  title: string;
+  path: string;
+  slug: string;
+  views: number;
+  visitors: number;
+  updatedAt: Date | null;
+}
+
 @Injectable()
 export class AnalyticsService {
   private token: string | null = null;
@@ -324,6 +334,223 @@ export class AnalyticsService {
       console.error('Erro ao buscar top news do Umami:', error);
       throw new InternalServerErrorException(
         'Não foi possível carregar as notícias mais visualizadas.',
+      );
+    }
+  }
+
+  /**
+   * Retorna as páginas mais visitadas no período selecionado,
+   * excluindo notícias e rotas internas/administrativas, e confrontando
+   * com os registros da tabela `page` no banco de dados.
+   */
+  async getTopPages(
+    range: 'day' | 'week' | 'month' | 'year' | 'all' = 'week',
+    initDate?: string,
+    finalDate?: string,
+    limit = 5,
+  ): Promise<TopPageItem[]> {
+    const now = Date.now();
+    let startAt: number;
+
+    if (initDate && !isNaN(new Date(initDate).getTime())) {
+      startAt = new Date(initDate).getTime();
+    } else {
+      switch (range) {
+        case 'day':
+          startAt = now - 24 * 60 * 60 * 1000;
+          break;
+        case 'week':
+          startAt = now - 7 * 24 * 60 * 60 * 1000;
+          break;
+        case 'month':
+          startAt = now - 30 * 24 * 60 * 60 * 1000;
+          break;
+        case 'year':
+          startAt = now - 365 * 24 * 60 * 60 * 1000;
+          break;
+        case 'all':
+          startAt = 0;
+          break;
+        default:
+          startAt = now - 7 * 24 * 60 * 60 * 1000;
+          break;
+      }
+    }
+
+    const endAt =
+      finalDate && !isNaN(new Date(finalDate).getTime())
+        ? new Date(finalDate).getTime()
+        : now;
+
+    const expandedUrl = `${process.env.UMAMI_API_URL}/api/websites/${process.env.UMAMI_WEBSITE_ID}/metrics/expanded?type=path&startAt=${startAt}&endAt=${endAt}&limit=500`;
+    const standardUrl = `${process.env.UMAMI_API_URL}/api/websites/${process.env.UMAMI_WEBSITE_ID}/metrics?type=path&startAt=${startAt}&endAt=${endAt}&limit=500`;
+
+    try {
+      let token = await this.getAuthToken();
+
+      let response = await fetch(expandedUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401) {
+        token = await this.getAuthToken(true);
+        response = await fetch(expandedUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      if (!response.ok && response.status === 404) {
+        response = await fetch(standardUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          `Umami API error: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      const data = await response.json();
+
+      // Agrupa visualizações e visitantes por caminho limpo
+      const viewsByPath = new Map<
+        string,
+        { views: number; visitors: number; slug: string }
+      >();
+
+      if (Array.isArray(data)) {
+        for (const item of data) {
+          const rawPath = item?.name || item?.x;
+          if (!rawPath || typeof rawPath !== 'string') continue;
+
+          // Limpa query params e hashes
+          const cleanPath = rawPath.split('?')[0].split('#')[0].trim();
+          if (!cleanPath) continue;
+
+          // Normaliza path para começar com /
+          const normalizedPath = cleanPath.startsWith('/')
+            ? cleanPath
+            : `/${cleanPath}`;
+
+          // Exclui a página inicial (/ ou /home)
+          if (normalizedPath === '/' || normalizedPath === '/home') {
+            continue;
+          }
+
+          // Exclui notícias
+          if (
+            normalizedPath.startsWith('/noticias') ||
+            normalizedPath.startsWith('/noticia')
+          ) {
+            continue;
+          }
+
+          // Exclui rotas administrativas e internas do sistema
+          if (
+            normalizedPath.startsWith('/administrator') ||
+            normalizedPath === '/login' ||
+            normalizedPath.startsWith('/login/') ||
+            normalizedPath === '/error' ||
+            normalizedPath.startsWith('/api') ||
+            normalizedPath.startsWith('/_next')
+          ) {
+            continue;
+          }
+
+          // Extrai o slug da página
+          const slug = normalizedPath.replace(/^\/+|\/+$/g, '');
+          if (!slug || slug === 'home') {
+            continue;
+          }
+
+          const pageviews = Number(item.pageviews) || Number(item.y) || 0;
+          const visitors = Number(item.visitors) || Number(item.y) || 0;
+
+          const current = viewsByPath.get(normalizedPath) || {
+            views: 0,
+            visitors: 0,
+            slug,
+          };
+
+          viewsByPath.set(normalizedPath, {
+            views: current.views + pageviews,
+            visitors: current.visitors + visitors,
+            slug,
+          });
+        }
+      }
+
+      // Ordena por visualizações de forma decrescente
+      const sortedEntries = Array.from(viewsByPath.entries())
+        .sort((a, b) => b[1].views - a[1].views)
+        .slice(0, limit);
+
+      if (sortedEntries.length === 0) {
+        return [];
+      }
+
+      // Slugs para buscar na tabela page
+      const slugsToQuery = sortedEntries.map(([_, v]) => v.slug);
+
+      // Consulta no banco de dados para confrontar com a tabela page
+      const pages = await this.prisma.page.findMany({
+        where: {
+          slug: { in: slugsToQuery },
+        },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          updatedAt: true,
+          space: {
+            select: {
+              slug: true,
+            },
+          },
+        },
+      });
+
+      // Mapeia páginas por slug e também por space/slug
+      const pageMap = new Map<string, any>();
+      for (const page of pages) {
+        pageMap.set(page.slug, page);
+        if (page.space?.slug) {
+          pageMap.set(`${page.space.slug}/${page.slug}`, page);
+        }
+      }
+
+      return sortedEntries.map(([path, metrics]) => {
+        const page = pageMap.get(metrics.slug);
+
+        const title =
+          page?.title ||
+          metrics.slug
+            .split('/')
+            .pop()!
+            .replace(/-/g, ' ')
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+
+        return {
+          id: page?.id || null,
+          title,
+          path,
+          slug: metrics.slug,
+          views: metrics.views,
+          visitors: metrics.visitors,
+          updatedAt: page?.updatedAt || null,
+        };
+      });
+    } catch (error) {
+      console.error('Erro ao buscar top pages do Umami:', error);
+      throw new InternalServerErrorException(
+        'Não foi possível carregar as páginas mais visitadas.',
       );
     }
   }

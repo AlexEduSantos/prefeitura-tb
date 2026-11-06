@@ -14,3 +14,13 @@ export interface ITopNewsItem {
   publicationDate: string | null;
   coverUrl: string | null;
 }
+
+export interface ITopPageItem {
+  id: string | null;
+  title: string;
+  path: string;
+  slug: string;
+  views: number;
+  visitors?: number;
+  updatedAt?: string | null;
+}
