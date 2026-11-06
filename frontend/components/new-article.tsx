@@ -31,6 +31,8 @@ import { GalleryPickerModal } from "./gallery-picker-modal";
 import { IGallery } from "@/app/type/gallery";
 import { Carousel } from "./carousel";
 import Image from "next/image";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 // Dados de Exemplo para Tipo
 const CATEGORIES = [
@@ -112,6 +114,8 @@ export default function MateriaForm({
 
   const getGallery = form.gallery;
 
+  const router = useRouter();
+
   return (
     <>
       <form
@@ -119,27 +123,24 @@ export default function MateriaForm({
         className="flex flex-col gap-2 max-w-[90%] mx-auto"
       >
         <Tabs defaultValue="conteudo" className="">
-          <TabsList className="flex gap-2 w-full border bg-card">
+          <TabsList className="flex gap-2 w-full bg-card">
             <TabsTrigger
               value="conteudo"
-              className="relative group data-[state=active]:bg-transparent!"
+              className="data-[state=active]:bg-transparent! data-[state=active]:font-semibold!"
             >
               Conteúdo e Mídia
-              <span className="absolute bottom-0 translate-x-1/2 left-0 h-0.5 w-0 bg-primary transition-all duration-200 group-data-[state=active]:w-[50%]" />
             </TabsTrigger>
             <TabsTrigger
               value="publicacao"
-              className="relative group data-[state=active]:bg-transparent!"
+              className="data-[state=active]:bg-transparent! data-[state=active]:font-semibold!"
             >
               Publicação
-              <span className="absolute bottom-0 translate-x-1/2 left-0 h-0.5 w-0 bg-primary transition-all duration-200 group-data-[state=active]:w-[50%]" />
             </TabsTrigger>
             <TabsTrigger
               value="seo"
-              className="relative group data-[state=active]:bg-transparent!"
+              className="data-[state=active]:bg-transparent! data-[state=active]:font-semibold!"
             >
               SEO
-              <span className="absolute bottom-0 translate-x-1/2 left-0 h-0.5 w-0 bg-primary transition-all duration-200 group-data-[state=active]:w-[50%]" />
             </TabsTrigger>
           </TabsList>
 
@@ -493,7 +494,7 @@ export default function MateriaForm({
                       Destaque
                     </Label>
                   </div>
-                  <div className="flex items-center gap-3">
+                  {/* <div className="flex items-center gap-3">
                     <Switch
                       id="comments"
                       checked={form.allowComments}
@@ -502,7 +503,7 @@ export default function MateriaForm({
                     <Label htmlFor="comments" className="cursor-pointer">
                       Permitir Comentários
                     </Label>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -531,6 +532,46 @@ export default function MateriaForm({
                   />
                 </div>
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-2">
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-medium">Data de Criação</Label>
+                  <Input
+                    type="text"
+                    readOnly
+                    className="bg-muted"
+                    value={
+                      initialData
+                        ? format(
+                            new Date(initialData.createdAt),
+                            "dd/MM/yyyy 'às' H:mm",
+                          )
+                        : new Date().toDateString()
+                    }
+                    onChange={(e) =>
+                      setField("publicationDate", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="font-medium">Data de Edição</Label>
+                  <Input
+                    type="text"
+                    readOnly
+                    className="bg-muted text-muted-foreground placeholder:text-muted-foreground"
+                    value={
+                      initialData
+                        ? format(
+                            new Date(initialData.updatedAt),
+                            "dd/MM/yyyy 'às' H:mm",
+                          )
+                        : "--"
+                    }
+                    onChange={(e) =>
+                      setField("publicationDate", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
             </fieldset>
 
             <fieldset className="flex flex-col gap-5 border border-border rounded-xl p-6">
@@ -540,7 +581,7 @@ export default function MateriaForm({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="flex flex-col gap-1.5">
                   <Label className="font-medium">
-                    Data de Publicação{" "}
+                    Data de Publicação
                     <span className="text-muted-foreground font-normal">
                       (opcional)
                     </span>
@@ -558,7 +599,7 @@ export default function MateriaForm({
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <Label className="font-medium">
-                    Data de Expiração{" "}
+                    Data de Expiração
                     <span className="text-muted-foreground font-normal">
                       (opcional)
                     </span>
@@ -651,12 +692,18 @@ export default function MateriaForm({
         </Tabs>
 
         <div className="flex justify-end gap-3 pb-12 mt-4">
-          <Button type="button" variant="outline">
+          <Button
+            type="reset"
+            variant="outline"
+            onClick={() => router.push("/administrator/articles")}
+          >
             Cancelar
           </Button>
-          <Button type="button" variant="outline" onClick={handleSaveDraft}>
-            Salvar Rascunho
-          </Button>
+          {!initialData && (
+            <Button type="button" variant="outline" onClick={handleSaveDraft}>
+              Salvar Rascunho
+            </Button>
+          )}
           <Button type="submit">
             {initialData ? "Atualizar Matéria" : "Salvar e Publicar"}
           </Button>

@@ -64,7 +64,7 @@ export function useNewArticleViewModel(
   } = useOrganizationViewModel();
 
   // Toggles de visibilidade (UI)
-  const [hasHeadline, setHasHeadline] = useState(false);
+  const [hasHeadline, setHasHeadline] = useState(true);
 
   // Modais de Mídia
   const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
