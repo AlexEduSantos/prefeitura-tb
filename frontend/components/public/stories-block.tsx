@@ -4,24 +4,26 @@ import { useStories } from "@/app/viewmodel/stories.viewmodel";
 import Image from "next/image";
 import { StoriesViewer } from "../stories-viewer";
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { BlockHeader } from "./block-header";
+import { Skeleton } from "../ui/skeleton";
 
 export default function StoriesBlock() {
   const [viewingStory, setViewingStory] = useState<IStories | null>(null);
   const [openModel, setOpenModel] = useState(false);
 
-  const router = useRouter();
-
-  const { storiesQuery: stories } = useStories();
+  const { storiesQuery: stories, isLoadingStories } = useStories();
 
   const imageLoader = (src: string) => {
     return `${process.env.NEXT_PUBLIC_API_URL}/media/file/${src}`;
   };
 
+  if (isLoadingStories) return <Skeleton className="w-full min-h-20" />;
+
+  if (!stories || stories.data.length === 0) return <></>;
+
   return (
-    <section className="w-full max-w-7xl mx-auto">
+    <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
+      <BlockHeader title="destaques" route="#" button="" />
       <div className="w-full flex gap-8 items-center justify-start">
         {stories?.data.map((story: IStories) => (
           <div
@@ -32,7 +34,7 @@ export default function StoriesBlock() {
               setOpenModel(true);
             }}
           >
-            <div className="w-24 h-24 bg-white rounded-full border-4 border-background ring-2 ring-primary relative overflow-hidden">
+            <div className="w-16 h-16 sm:w-24 sm:h-24 transition-all duration-200 bg-white rounded-full border-4 border-background ring-2 ring-primary relative overflow-hidden">
               <Image
                 loader={() => imageLoader(story.cover.key)}
                 src={story.cover.key}

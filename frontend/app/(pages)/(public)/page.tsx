@@ -9,7 +9,7 @@ export default function Home() {
     <main className="flex flex-col gap-4 py-2">
       {/* <Search /> */}
       <MainCarousel />
-      {/* <StoriesBlock /> */}
+      <StoriesBlock />
       <ArticlesBlock />
       <ServicesBlock />
     </main>

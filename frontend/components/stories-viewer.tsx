@@ -72,15 +72,15 @@ export function StoriesViewer({
     stories?.items && stories.items.length > 0
       ? stories.items
       : stories?.cover
-      ? [
-          {
-            id: `cover-${stories.id}`,
-            caption: stories.description || stories.title,
-            media: stories.cover,
-            isCoverFallback: true,
-          } as any,
-        ]
-      : [];
+        ? [
+            {
+              id: `cover-${stories.id}`,
+              caption: stories.description || stories.title,
+              media: stories.cover,
+              isCoverFallback: true,
+            } as any,
+          ]
+        : [];
 
   const totalItems = items.length;
   const currentItem = items[currentIndex];
@@ -283,7 +283,8 @@ export function StoriesViewer({
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartYRef.current === null || touchStartXRef.current === null) return;
+    if (touchStartYRef.current === null || touchStartXRef.current === null)
+      return;
     const endY = e.changedTouches[0].clientY;
     const endX = e.changedTouches[0].clientX;
     const deltaY = touchStartYRef.current - endY; // positivo se subiu
@@ -354,7 +355,7 @@ export function StoriesViewer({
           handleClose();
         }}
         aria-label="Fechar stories"
-        className="cursor-pointer absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white/90 hover:text-white backdrop-blur transition shadow-md hover:scale-105 active:scale-95"
+        className="cursor-pointer sm:block hidden absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white/90 hover:text-white backdrop-blur transition shadow-md hover:scale-105 active:scale-95"
       >
         <X className="w-6 h-6" />
       </button>
