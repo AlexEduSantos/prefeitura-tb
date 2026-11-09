@@ -4,9 +4,7 @@ TODO: (Relatórios) - Adicionar relatórios de estatísticas do site. Deve conte
 
 TODO: (API Documentation) - Adicionar documentação da API na área administrativa.
 
-TODO: (Logs Viewer) - Adicionar função de logs. Apenas usuário administrador pode visualizar logs. Deve contér informações de toda a atividade dos usuários no sistema. Implementar a auditoria de aplicação primeiro (interceptor + AuditService + BullMQ para não bloquear request) — funciona hoje, sem Kafka/Debezium. Quando a infraestrutura de busca (CDC + Kafka) estiver rodando, adicionar o segundo consumer Kafka que enriquece a auditoria com before/after e cobre alterações fora do fluxo.
-
-FIX: reordenação de itens de destaque não funciona.
+TODO: (Logs Viewer) - Adicionar função de logs. Apenas usuário administrador pode visualizar logs. Deve conter informações de toda a atividade dos usuários no sistema. Implementar a auditoria de aplicação primeiro (interceptor + AuditService + BullMQ para não bloquear request) — funciona hoje, sem Kafka/Debezium. Quando a infraestrutura de busca (CDC + Kafka) estiver rodando, adicionar o segundo consumer Kafka que enriquece a auditoria com before/after e cobre alterações fora do fluxo.
 
 FEAT: Botão de visualizar matéria dentro da página de artigos
 

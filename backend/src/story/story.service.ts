@@ -24,6 +24,7 @@ export class StoryService {
       // Conecta à mídia existente
       media: { connect: { id: item.mediaId } },
       caption: item.caption,
+      link: item.link,
       publishedDate: item.publishedDate ? new Date(item.publishedDate) : null,
       expirationDate: item.expirationDate
         ? new Date(item.expirationDate)
@@ -138,6 +139,7 @@ export class StoryService {
     const itemsToCreate = items?.map((item) => ({
       media: { connect: { id: item.mediaId } },
       caption: item.caption,
+      link: item.link,
       publishedDate: item.publishedDate ? new Date(item.publishedDate) : null,
       expirationDate: item.expirationDate
         ? new Date(item.expirationDate)
@@ -180,6 +182,7 @@ export class StoryService {
       storyId,
       order,
       caption: createStoryItemDto.caption,
+      link: createStoryItemDto.link,
       mediaId: createStoryItemDto.mediaId,
       publishedDate: createStoryItemDto.publishedDate
         ? new Date(createStoryItemDto.publishedDate)
@@ -242,6 +245,8 @@ export class StoryService {
     const data: any = {};
     if (updateStoryItemDto.caption !== undefined)
       data.caption = updateStoryItemDto.caption;
+    if (updateStoryItemDto.link !== undefined)
+      data.link = updateStoryItemDto.link;
     if (updateStoryItemDto.mediaId !== undefined)
       data.mediaId = updateStoryItemDto.mediaId;
     if (updateStoryItemDto.publishedDate !== undefined) {

@@ -2033,6 +2033,7 @@ export const StoriesItemScalarFieldEnum = {
   id: 'id',
   order: 'order',
   caption: 'caption',
+  link: 'link',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   publishedDate: 'publishedDate',
@@ -2097,6 +2098,7 @@ export const SiteSettingsScalarFieldEnum = {
   phone: 'phone',
   email: 'email',
   workingHours: 'workingHours',
+  visits: 'visits',
   socialLinks: 'socialLinks',
   updatedAt: 'updatedAt'
 } as const
@@ -2331,6 +2333,7 @@ export type StoriesOrderByRelevanceFieldEnum = (typeof StoriesOrderByRelevanceFi
 export const StoriesItemOrderByRelevanceFieldEnum = {
   id: 'id',
   caption: 'caption',
+  link: 'link',
   storyId: 'storyId',
   mediaId: 'mediaId'
 } as const

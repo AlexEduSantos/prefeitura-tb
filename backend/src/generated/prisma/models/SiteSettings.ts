@@ -20,8 +20,18 @@ export type SiteSettingsModel = runtime.Types.Result.DefaultSelection<Prisma.$Si
 
 export type AggregateSiteSettings = {
   _count: SiteSettingsCountAggregateOutputType | null
+  _avg: SiteSettingsAvgAggregateOutputType | null
+  _sum: SiteSettingsSumAggregateOutputType | null
   _min: SiteSettingsMinAggregateOutputType | null
   _max: SiteSettingsMaxAggregateOutputType | null
+}
+
+export type SiteSettingsAvgAggregateOutputType = {
+  visits: number | null
+}
+
+export type SiteSettingsSumAggregateOutputType = {
+  visits: number | null
 }
 
 export type SiteSettingsMinAggregateOutputType = {
@@ -42,6 +52,7 @@ export type SiteSettingsMinAggregateOutputType = {
   phone: string | null
   email: string | null
   workingHours: string | null
+  visits: number | null
   updatedAt: Date | null
 }
 
@@ -63,6 +74,7 @@ export type SiteSettingsMaxAggregateOutputType = {
   phone: string | null
   email: string | null
   workingHours: string | null
+  visits: number | null
   updatedAt: Date | null
 }
 
@@ -85,11 +97,20 @@ export type SiteSettingsCountAggregateOutputType = {
   phone: number
   email: number
   workingHours: number
+  visits: number
   socialLinks: number
   updatedAt: number
   _all: number
 }
 
+
+export type SiteSettingsAvgAggregateInputType = {
+  visits?: true
+}
+
+export type SiteSettingsSumAggregateInputType = {
+  visits?: true
+}
 
 export type SiteSettingsMinAggregateInputType = {
   id?: true
@@ -109,6 +130,7 @@ export type SiteSettingsMinAggregateInputType = {
   phone?: true
   email?: true
   workingHours?: true
+  visits?: true
   updatedAt?: true
 }
 
@@ -130,6 +152,7 @@ export type SiteSettingsMaxAggregateInputType = {
   phone?: true
   email?: true
   workingHours?: true
+  visits?: true
   updatedAt?: true
 }
 
@@ -152,6 +175,7 @@ export type SiteSettingsCountAggregateInputType = {
   phone?: true
   email?: true
   workingHours?: true
+  visits?: true
   socialLinks?: true
   updatedAt?: true
   _all?: true
@@ -195,6 +219,18 @@ export type SiteSettingsAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SiteSettingsAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SiteSettingsSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SiteSettingsMinAggregateInputType
@@ -225,6 +261,8 @@ export type SiteSettingsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: SiteSettingsCountAggregateInputType | true
+  _avg?: SiteSettingsAvgAggregateInputType
+  _sum?: SiteSettingsSumAggregateInputType
   _min?: SiteSettingsMinAggregateInputType
   _max?: SiteSettingsMaxAggregateInputType
 }
@@ -248,9 +286,12 @@ export type SiteSettingsGroupByOutputType = {
   phone: string | null
   email: string | null
   workingHours: string | null
+  visits: number
   socialLinks: runtime.JsonValue | null
   updatedAt: Date
   _count: SiteSettingsCountAggregateOutputType | null
+  _avg: SiteSettingsAvgAggregateOutputType | null
+  _sum: SiteSettingsSumAggregateOutputType | null
   _min: SiteSettingsMinAggregateOutputType | null
   _max: SiteSettingsMaxAggregateOutputType | null
 }
@@ -292,6 +333,7 @@ export type SiteSettingsWhereInput = {
   phone?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
   email?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
   workingHours?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
+  visits?: Prisma.IntFilter<"SiteSettings"> | number
   socialLinks?: Prisma.JsonNullableFilter<"SiteSettings">
   updatedAt?: Prisma.DateTimeFilter<"SiteSettings"> | Date | string
 }
@@ -315,6 +357,7 @@ export type SiteSettingsOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
+  visits?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _relevance?: Prisma.SiteSettingsOrderByRelevanceInput
@@ -342,6 +385,7 @@ export type SiteSettingsWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
   email?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
   workingHours?: Prisma.StringNullableFilter<"SiteSettings"> | string | null
+  visits?: Prisma.IntFilter<"SiteSettings"> | number
   socialLinks?: Prisma.JsonNullableFilter<"SiteSettings">
   updatedAt?: Prisma.DateTimeFilter<"SiteSettings"> | Date | string
 }, "id">
@@ -365,11 +409,14 @@ export type SiteSettingsOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   workingHours?: Prisma.SortOrderInput | Prisma.SortOrder
+  visits?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SiteSettingsCountOrderByAggregateInput
+  _avg?: Prisma.SiteSettingsAvgOrderByAggregateInput
   _max?: Prisma.SiteSettingsMaxOrderByAggregateInput
   _min?: Prisma.SiteSettingsMinOrderByAggregateInput
+  _sum?: Prisma.SiteSettingsSumOrderByAggregateInput
 }
 
 export type SiteSettingsScalarWhereWithAggregatesInput = {
@@ -394,6 +441,7 @@ export type SiteSettingsScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
   workingHours?: Prisma.StringNullableWithAggregatesFilter<"SiteSettings"> | string | null
+  visits?: Prisma.IntWithAggregatesFilter<"SiteSettings"> | number
   socialLinks?: Prisma.JsonNullableWithAggregatesFilter<"SiteSettings">
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
 }
@@ -417,6 +465,7 @@ export type SiteSettingsCreateInput = {
   phone?: string | null
   email?: string | null
   workingHours?: string | null
+  visits?: number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Date | string
 }
@@ -440,6 +489,7 @@ export type SiteSettingsUncheckedCreateInput = {
   phone?: string | null
   email?: string | null
   workingHours?: string | null
+  visits?: number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Date | string
 }
@@ -463,6 +513,7 @@ export type SiteSettingsUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visits?: Prisma.IntFieldUpdateOperationsInput | number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -486,6 +537,7 @@ export type SiteSettingsUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visits?: Prisma.IntFieldUpdateOperationsInput | number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -509,6 +561,7 @@ export type SiteSettingsCreateManyInput = {
   phone?: string | null
   email?: string | null
   workingHours?: string | null
+  visits?: number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Date | string
 }
@@ -532,6 +585,7 @@ export type SiteSettingsUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visits?: Prisma.IntFieldUpdateOperationsInput | number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -555,6 +609,7 @@ export type SiteSettingsUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   workingHours?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  visits?: Prisma.IntFieldUpdateOperationsInput | number
   socialLinks?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -584,8 +639,13 @@ export type SiteSettingsCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
+  visits?: Prisma.SortOrder
   socialLinks?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SiteSettingsAvgOrderByAggregateInput = {
+  visits?: Prisma.SortOrder
 }
 
 export type SiteSettingsMaxOrderByAggregateInput = {
@@ -606,6 +666,7 @@ export type SiteSettingsMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
+  visits?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
@@ -627,7 +688,12 @@ export type SiteSettingsMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   workingHours?: Prisma.SortOrder
+  visits?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type SiteSettingsSumOrderByAggregateInput = {
+  visits?: Prisma.SortOrder
 }
 
 
@@ -651,6 +717,7 @@ export type SiteSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   phone?: boolean
   email?: boolean
   workingHours?: boolean
+  visits?: boolean
   socialLinks?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["siteSettings"]>
@@ -674,6 +741,7 @@ export type SiteSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   phone?: boolean
   email?: boolean
   workingHours?: boolean
+  visits?: boolean
   socialLinks?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["siteSettings"]>
@@ -697,6 +765,7 @@ export type SiteSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   phone?: boolean
   email?: boolean
   workingHours?: boolean
+  visits?: boolean
   socialLinks?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["siteSettings"]>
@@ -720,11 +789,12 @@ export type SiteSettingsSelectScalar = {
   phone?: boolean
   email?: boolean
   workingHours?: boolean
+  visits?: boolean
   socialLinks?: boolean
   updatedAt?: boolean
 }
 
-export type SiteSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siteName" | "siteDescription" | "logoUrl" | "faviconUrl" | "primaryColor" | "primaryForegroundColor" | "secondaryColor" | "secondaryForegroundColor" | "themeColors" | "addressStreet" | "addressNumber" | "addressCity" | "addressState" | "addressZip" | "phone" | "email" | "workingHours" | "socialLinks" | "updatedAt", ExtArgs["result"]["siteSettings"]>
+export type SiteSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "siteName" | "siteDescription" | "logoUrl" | "faviconUrl" | "primaryColor" | "primaryForegroundColor" | "secondaryColor" | "secondaryForegroundColor" | "themeColors" | "addressStreet" | "addressNumber" | "addressCity" | "addressState" | "addressZip" | "phone" | "email" | "workingHours" | "visits" | "socialLinks" | "updatedAt", ExtArgs["result"]["siteSettings"]>
 
 export type $SiteSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SiteSettings"
@@ -748,6 +818,7 @@ export type $SiteSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     phone: string | null
     email: string | null
     workingHours: string | null
+    visits: number
     socialLinks: runtime.JsonValue | null
     updatedAt: Date
   }, ExtArgs["result"]["siteSettings"]>
@@ -1191,6 +1262,7 @@ export interface SiteSettingsFieldRefs {
   readonly phone: Prisma.FieldRef<"SiteSettings", 'String'>
   readonly email: Prisma.FieldRef<"SiteSettings", 'String'>
   readonly workingHours: Prisma.FieldRef<"SiteSettings", 'String'>
+  readonly visits: Prisma.FieldRef<"SiteSettings", 'Int'>
   readonly socialLinks: Prisma.FieldRef<"SiteSettings", 'Json'>
   readonly updatedAt: Prisma.FieldRef<"SiteSettings", 'DateTime'>
 }

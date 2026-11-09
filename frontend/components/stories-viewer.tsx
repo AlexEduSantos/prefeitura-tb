@@ -7,6 +7,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   Pause,
   Play,
   Volume2,
@@ -32,11 +33,15 @@ export function StoriesViewer({
 }: StoriesViewerProps) {
   const [mounted, setMounted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isManualPaused, setIsManualPaused] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+
+  const isPaused = isManualPaused || isHolding;
 
   // Barra de progresso do item atual (DOM direto para 60fps sem engasgos)
   const activeProgressBarRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Refs de controle de tempo e estado
   const currentIndexRef = useRef(0);
@@ -45,6 +50,12 @@ export function StoriesViewer({
   const elapsedRef = useRef<number>(0);
   const animationFrameRef = useRef<number | null>(null);
   const onCloseRef = useRef(onClose);
+
+  // Refs de controle do toque / clique e gesto swipe
+  const pressTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pressStartRef = useRef<number>(0);
+  const isLongPressRef = useRef<boolean>(false);
+  const pointerStartPosRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   // Sincroniza refs para acesso imediato sem re-trigger desnecessário
   onCloseRef.current = onClose;
@@ -83,6 +94,10 @@ export function StoriesViewer({
 
   const handleClose = useCallback(() => {
     stopAnimation();
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
     startTimeRef.current = null;
     elapsedRef.current = 0;
     if (activeProgressBarRef.current) {
@@ -125,17 +140,40 @@ export function StoriesViewer({
     });
   }, [stopAnimation]);
 
+  // Abertura segura de links externos
+  const handleOpenLink = useCallback(() => {
+    if (!currentItem?.link) return;
+    setIsManualPaused(true);
+    let target = currentItem.link.trim();
+    if (!target.startsWith("http://") && !target.startsWith("https://")) {
+      target = `https://${target}`;
+    }
+    window.open(target, "_blank", "noopener,noreferrer");
+  }, [currentItem?.link]);
+
   // Reset do índice e estados quando abrir novo story
   useEffect(() => {
     if (open) {
       setCurrentIndex(0);
-      setIsPaused(false);
+      setIsManualPaused(false);
+      setIsHolding(false);
       startTimeRef.current = null;
       elapsedRef.current = 0;
     } else {
       stopAnimation();
     }
   }, [open, stories?.id, stopAnimation]);
+
+  // Controle de reprodução de vídeo sincronizado com a pausa
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPaused) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play().catch(() => {});
+      }
+    }
+  }, [isPaused, currentIndex]);
 
   // Loop de animação contínua e suave da barra de progresso
   useEffect(() => {
@@ -178,6 +216,86 @@ export function StoriesViewer({
     };
   }, [open, currentIndex, duration, totalItems, handleNext, stopAnimation]);
 
+  // Handlers para clique, swipe-up e pressão longa (> 500ms pausa, não avança/retrocede)
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    pressStartRef.current = Date.now();
+    isLongPressRef.current = false;
+    pointerStartPosRef.current = { x: e.clientX, y: e.clientY };
+
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+    }
+
+    pressTimerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      setIsHolding(true);
+    }, 500);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent, action: "prev" | "next") => {
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
+
+    const elapsed = Date.now() - pressStartRef.current;
+    const wasLong = isLongPressRef.current || elapsed >= 500;
+
+    setIsHolding(false);
+
+    // Detecção de arrasto de baixo para cima (bottom-to-top swipe)
+    const deltaY = pointerStartPosRef.current.y - e.clientY; // positivo = subiu
+    const deltaX = Math.abs(e.clientX - pointerStartPosRef.current.x);
+
+    // Se arrastou para cima pelo menos 50px e o movimento foi vertical
+    if (deltaY > 50 && deltaY > deltaX && currentItem?.link) {
+      handleOpenLink();
+      return;
+    }
+
+    // Se NÃO foi long press nem swipe, dispara navegação normal
+    if (!wasLong) {
+      if (action === "prev") {
+        handlePrev();
+      } else {
+        handleNext();
+      }
+    }
+  };
+
+  const handlePointerCancel = () => {
+    if (pressTimerRef.current) {
+      clearTimeout(pressTimerRef.current);
+      pressTimerRef.current = null;
+    }
+    setIsHolding(false);
+    isLongPressRef.current = false;
+  };
+
+  // Suporte adicional a swipe touch direto no container
+  const touchStartYRef = useRef<number | null>(null);
+  const touchStartXRef = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartYRef.current = e.touches[0].clientY;
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartYRef.current === null || touchStartXRef.current === null) return;
+    const endY = e.changedTouches[0].clientY;
+    const endX = e.changedTouches[0].clientX;
+    const deltaY = touchStartYRef.current - endY; // positivo se subiu
+    const deltaX = Math.abs(touchStartXRef.current - endX);
+
+    if (deltaY > 50 && deltaY > deltaX && currentItem?.link) {
+      handleOpenLink();
+    }
+    touchStartYRef.current = null;
+    touchStartXRef.current = null;
+  };
+
   // Atalhos de teclado (Escape, setas, barra de espaço)
   useEffect(() => {
     if (!open) return;
@@ -191,7 +309,7 @@ export function StoriesViewer({
         handlePrev();
       } else if (e.key === " ") {
         e.preventDefault();
-        setIsPaused((prev) => !prev);
+        setIsManualPaused((prev) => !prev);
       }
     };
 
@@ -225,10 +343,16 @@ export function StoriesViewer({
     currentItem?.media?.key?.match(/\.(mp4|webm|mov|ogg)$/i);
 
   const content = (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md select-none transition-all">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md select-none transition-all cursor-pointer"
+    >
       {/* Botão de Fechar Geral no Canto Superior Direito */}
       <button
-        onClick={handleClose}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleClose();
+        }}
         aria-label="Fechar stories"
         className="cursor-pointer absolute top-4 right-4 z-50 p-2.5 rounded-full bg-black/40 hover:bg-black/70 text-white/90 hover:text-white backdrop-blur transition shadow-md hover:scale-105 active:scale-95"
       >
@@ -265,34 +389,30 @@ export function StoriesViewer({
 
       {/* Container Principal do Story (Estilo Mobile / Meta Stories) */}
       <div
-        className="relative w-full h-full sm:h-[92vh] sm:max-h-225 sm:w-auto sm:aspect-9/16 sm:rounded-2xl overflow-hidden bg-zinc-950 flex flex-col justify-between shadow-2xl ring-1 ring-white/10"
-        onMouseDown={() => setIsPaused(true)}
-        onMouseUp={() => setIsPaused(false)}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        className="relative w-full h-full sm:h-[92vh] sm:max-h-225 sm:w-auto sm:aspect-9/16 sm:rounded-2xl overflow-hidden bg-zinc-950 flex flex-col justify-between shadow-2xl ring-1 ring-white/10 cursor-default"
       >
-        {/* Áreas de Clique para Navegação Rápida (Esquerda / Direita) */}
+        {/* Áreas de Toque/Clique para Navegação: Esquerda (50%) e Direita (50%) */}
         <div className="absolute inset-0 z-20 flex">
+          {/* Metade Esquerda: Retroceder */}
           <div
-            className="w-1/3 h-full cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePrev();
-            }}
+            className="w-1/2 h-full cursor-pointer touch-none select-none"
+            onPointerDown={handlePointerDown}
+            onPointerUp={(e) => handlePointerUp(e, "prev")}
+            onPointerLeave={handlePointerCancel}
+            onPointerCancel={handlePointerCancel}
+            aria-label="Story anterior"
           />
+          {/* Metade Direita: Avançar */}
           <div
-            className="w-1/3 h-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsPaused((p) => !p);
-            }}
-          />
-          <div
-            className="w-1/3 h-full cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleNext();
-            }}
+            className="w-1/2 h-full cursor-pointer touch-none select-none"
+            onPointerDown={handlePointerDown}
+            onPointerUp={(e) => handlePointerUp(e, "next")}
+            onPointerLeave={handlePointerCancel}
+            onPointerCancel={handlePointerCancel}
+            aria-label="Próximo story"
           />
         </div>
 
@@ -351,13 +471,16 @@ export function StoriesViewer({
 
             {/* Ações do Topo */}
             <div className="flex items-center gap-1">
+              {/* Botão Toggle Pausar/Continuar */}
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIsPaused((prev) => !prev);
+                  setIsManualPaused((prev) => !prev);
                 }}
                 className="p-1.5 rounded-full hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
                 title={isPaused ? "Continuar" : "Pausar"}
+                aria-label={isPaused ? "Continuar" : "Pausar"}
               >
                 {isPaused ? (
                   <Play className="w-4 h-4 fill-white" />
@@ -368,12 +491,14 @@ export function StoriesViewer({
 
               {isVideo && (
                 <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsMuted((prev) => !prev);
                   }}
                   className="p-1.5 rounded-full hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer"
                   title={isMuted ? "Ativar som" : "Desativar som"}
+                  aria-label={isMuted ? "Ativar som" : "Desativar som"}
                 >
                   {isMuted ? (
                     <VolumeX className="w-4 h-4" />
@@ -384,12 +509,14 @@ export function StoriesViewer({
               )}
 
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClose();
                 }}
                 className="p-1.5 rounded-full hover:bg-white/20 text-white/90 hover:text-white transition cursor-pointer sm:hidden"
                 title="Fechar"
+                aria-label="Fechar"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -402,6 +529,7 @@ export function StoriesViewer({
           {currentMediaUrl ? (
             isVideo ? (
               <video
+                ref={videoRef}
                 src={currentMediaUrl}
                 autoPlay
                 playsInline
@@ -430,12 +558,47 @@ export function StoriesViewer({
           )}
         </div>
 
-        {/* Rodapé: Legenda / Caption */}
-        {currentItem?.caption ? (
-          <div className="relative z-30 p-4 bg-linear-to-t from-black/90 via-black/50 to-transparent pointer-events-auto">
-            <p className="text-white text-sm text-center line-clamp-3 drop-shadow">
-              {currentItem.caption}
-            </p>
+        {/* Rodapé: Legenda e Botão de Link */}
+        {currentItem?.caption || currentItem?.link ? (
+          <div className="relative z-30 p-4 pt-8 bg-linear-to-t from-black/95 via-black/60 to-transparent flex flex-col items-center gap-2 pointer-events-auto">
+            {currentItem?.caption && (
+              <p className="text-white text-sm text-center line-clamp-3 drop-shadow px-2">
+                {currentItem.caption}
+              </p>
+            )}
+
+            {currentItem?.link && (
+              <div className="flex flex-col items-center justify-center pt-1">
+                {/* Botão Desktop com ChevronUp */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenLink();
+                  }}
+                  className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 hover:bg-white/35 active:scale-95 text-white text-xs font-semibold backdrop-blur-md transition shadow cursor-pointer border border-white/20"
+                  title="Abrir link"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                  <span>Acessar link</span>
+                </button>
+
+                {/* Indicador Mobile com ChevronUp (Arrastar para cima) */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOpenLink();
+                  }}
+                  className="sm:hidden flex flex-col items-center text-white/90 hover:text-white transition active:scale-95 cursor-pointer pb-1"
+                >
+                  <ChevronUp className="w-5 h-5 animate-bounce stroke-2" />
+                  <span className="text-[11px] font-medium tracking-wide drop-shadow">
+                    Arraste para cima
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="h-6 pointer-events-none" />

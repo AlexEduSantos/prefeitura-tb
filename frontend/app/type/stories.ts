@@ -17,7 +17,8 @@ export interface IStories {
 export interface IStoriesItem {
   id: string;
   order: number;
-  caption: string;
+  caption?: string | null;
+  link?: string | null;
   createdAt: Date;
   updatedAt: Date;
 

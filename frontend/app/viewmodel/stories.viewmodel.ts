@@ -53,6 +53,19 @@ export function useStories() {
     },
   });
 
+  // Atualizar Story
+  const updateStoryMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<IStories> }) =>
+      StoriesService.updateStories(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
+      toast.success("Destaque atualizado com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar destaque");
+    },
+  });
+
   // Deletar Story
   const deleteStoryMutation = useMutation({
     mutationFn: (id: string) => StoriesService.deleteStories(id),
@@ -83,6 +96,24 @@ export function useStories() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Erro ao adicionar item");
+    },
+  });
+
+  // Atualizar Item
+  const updateStoryItemMutation = useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<IStoriesItem>;
+    }) => StoriesService.updateStoriesItem(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
+      toast.success("Item atualizado com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Erro ao atualizar item");
     },
   });
 
@@ -187,8 +218,10 @@ export function useStories() {
     storyToDelete,
 
     createStoryMutation,
+    updateStoryMutation,
     deleteStoryMutation,
     createStoryItemMutation,
+    updateStoryItemMutation,
     deleteStoryItemMutation,
     updateOrderMutation,
 

@@ -423,6 +423,7 @@ model StoriesItem {
   id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   order          Int       @default(0)
   caption        String?
+  link           String?
   createdAt      DateTime  @default(now()) @db.Timestamp
   updatedAt      DateTime  @updatedAt @db.Timestamp
   publishedDate  DateTime?

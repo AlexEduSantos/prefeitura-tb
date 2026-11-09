@@ -17,6 +17,10 @@ export class CreateStoryItemDto {
   @IsOptional()
   caption?: string;
 
+  @IsString()
+  @IsOptional()
+  link?: string;
+
   @IsUUID()
   @IsNotEmpty()
   mediaId!: string;

@@ -140,6 +140,19 @@ export class StoryController {
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch('items/order')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'StoryItem'))
+  async updateStoryItemOrder(@Body('ids') ids: string[], @Request() req: any) {
+    const user = req.user;
+    if (user.role !== UserRole.ADMIN) {
+      throw new ForbiddenException(
+        'Você não tem permissão para editar a ordem dos itens de destaque.',
+      );
+    }
+    return this.storyService.updateOrderStoryItems(ids);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Patch('items/:id')
   @CheckPolicies((ability) => ability.can(Action.Update, 'StoryItem'))
   async updateStoryItem(
@@ -154,19 +167,6 @@ export class StoryController {
       );
     }
     return this.storyService.updateStoryItem(id, updateStoryItemDto);
-  }
-
-  @UseGuards(SessionGuard, PoliciesGuard)
-  @Patch('items/order')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'StoryItem'))
-  async updateStoryItemOrder(@Body('ids') ids: string[], @Request() req: any) {
-    const user = req.user;
-    if (user.role !== UserRole.ADMIN) {
-      throw new ForbiddenException(
-        'Você não tem permissão para editar a ordem dos itens de destaque.',
-      );
-    }
-    return this.storyService.updateOrderStoryItems(ids);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
