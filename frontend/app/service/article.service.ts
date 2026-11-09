@@ -3,6 +3,40 @@ import { IArticle } from "../type/article";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export class ArticleService {
+  /**
+   * Busca artigos para o painel administrativo:
+   * Retorna todos os artigos menos os excluídos por padrão (ou filtra por status específico).
+   */
+  static async getAdminArticles(
+    search?: string,
+    status?: string
+  ): Promise<IArticle[]> {
+    const params = new URLSearchParams();
+    if (search && search.trim()) {
+      params.append("search", search.trim());
+    }
+    if (status && status.trim()) {
+      params.append("status", status.trim());
+    }
+    const queryString = params.toString() ? `?${params.toString()}` : "";
+    const response = await fetch(`${API_URL}/articles/admin${queryString}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar artigos administrativos");
+    }
+
+    return response.json();
+  }
+
+  /**
+   * Busca pública de artigos:
+   * Retorna apenas artigos com status 'publicado' e vigentes.
+   */
   static async getArticles(search?: string): Promise<IArticle[]> {
     const params = new URLSearchParams();
     if (search && search.trim()) {

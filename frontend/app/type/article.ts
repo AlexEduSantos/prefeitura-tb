@@ -2,16 +2,24 @@ import { IGallery } from "./gallery";
 import { IMedia } from "./media";
 import { IUser } from "./user";
 
+export type ArticleStatusType =
+  | "rascunho"
+  | "programado"
+  | "publicado"
+  | "arquivado"
+  | "expirado"
+  | "excluido";
+
 export interface IArticle {
   id: string;
   title: string;
   headline?: string;
   coverId?: string;
   cover?: IMedia;
-  body: string;
+  body: any;
   slug: string;
   type: string;
-  status: string;
+  status: ArticleStatusType | string;
   publicationDate?: string;
   expirationDate?: string;
   featured: boolean;

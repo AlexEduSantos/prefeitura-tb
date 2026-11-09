@@ -14,6 +14,7 @@ import {
 // Sugiro criar um enum correspondente
 export enum ArticleStatusEnum {
   rascunho = 'rascunho',
+  programado = 'programado',
   publicado = 'publicado',
   arquivado = 'arquivado',
   expirado = 'expirado',

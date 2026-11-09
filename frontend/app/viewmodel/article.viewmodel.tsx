@@ -22,9 +22,11 @@ import {
   Search,
   ChevronDown,
   ClockAlertIcon,
+  CalendarClock,
   ArchiveIcon,
   Edit,
   PlusIcon,
+  EyeIcon,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -54,8 +56,8 @@ export function ArticleViewModel() {
   const queryClient = useQueryClient();
 
   const articleQuery = useQuery({
-    queryKey: ["article", activeSearch],
-    queryFn: () => ArticleService.getArticles(activeSearch),
+    queryKey: ["article-admin", activeSearch],
+    queryFn: () => ArticleService.getAdminArticles(activeSearch),
   });
 
   // Table state
@@ -69,6 +71,7 @@ export function ArticleViewModel() {
   const createArticleMutation = useMutation({
     mutationFn: (data: Partial<IArticle>) => ArticleService.createArticle(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article-admin"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
   });
@@ -77,6 +80,7 @@ export function ArticleViewModel() {
     mutationFn: ({ id, data }: { id: string; data: Partial<IArticle> }) =>
       ArticleService.updateArticle(id, data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article-admin"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
   });
@@ -84,6 +88,7 @@ export function ArticleViewModel() {
   const deleteArticleMutation = useMutation({
     mutationFn: (id: string) => ArticleService.deleteArticle(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article-admin"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
   });
@@ -92,6 +97,7 @@ export function ArticleViewModel() {
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       ArticleService.changeStatus(id, status),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article-admin"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
   });
@@ -100,6 +106,7 @@ export function ArticleViewModel() {
     mutationFn: ({ id, featured }: { id: string; featured: boolean }) =>
       ArticleService.changeFeatured(id, featured),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["article-admin"] });
       queryClient.invalidateQueries({ queryKey: ["article"] });
     },
   });
@@ -150,6 +157,22 @@ export function ArticleViewModel() {
           const status = row.original.status;
           const featured = row.original.featured;
           const meta = table.options.meta as any;
+          const statusTitle = () => {
+            switch (status?.toLowerCase()) {
+              case "programado":
+                return "Programado";
+              case "publicado":
+                return "Publicado";
+              case "excluido":
+                return "Excluído";
+              case "rascunho":
+                return "Rascunho";
+              case "arquivado":
+                return "Arquivado";
+              case "expirado":
+                return "Expirado";
+            }
+          };
 
           const handleStatusChange = (newStatus: string) => {
             meta?.changeStatus({ id: row.original.id, status: newStatus });
@@ -161,6 +184,8 @@ export function ArticleViewModel() {
 
           const getStatusIcon = (status: string) => {
             switch (status?.toLowerCase()) {
+              case "programado":
+                return <CalendarClock className="h-4 w-4 text-sky-500" />;
               case "publicado":
                 return <CheckCircle className="h-4 w-4 text-green-500" />;
               case "excluido":
@@ -182,13 +207,7 @@ export function ArticleViewModel() {
                     size="icon"
                     type="button"
                     className="h-8 w-8 cursor-pointer stroke-1"
-                    title={
-                      status === "publicado"
-                        ? "Publicado"
-                        : status === "rascunho"
-                          ? "Rascunho"
-                          : "Excluído"
-                    }
+                    title={statusTitle()}
                   >
                     {getStatusIcon(status)}
                   </Button>
@@ -200,6 +219,11 @@ export function ArticleViewModel() {
                     value={status}
                     onValueChange={handleStatusChange}
                   >
+                    {status !== "programado" && (
+                      <DropdownMenuRadioItem value="programado">
+                        Programar
+                      </DropdownMenuRadioItem>
+                    )}
                     {status !== "publicado" && (
                       <DropdownMenuRadioItem value="publicado">
                         Publicar
@@ -318,21 +342,48 @@ export function ArticleViewModel() {
         accessorKey: "categories",
         header: "Categoria",
         filterFn: (row, columnId, value) => {
-          const categories = row.getValue(columnId) as { name: string }[];
-          const search = value.toLowerCase();
-          return categories.some((c) => c.name.toLowerCase().includes(search));
+          if (!value) return true;
+          const categories = row.getValue(columnId) as Array<{
+            id?: string;
+            title?: string;
+            slug?: string;
+          }>;
+          if (!Array.isArray(categories) || categories.length === 0)
+            return false;
+          const search = String(value).toLowerCase().trim();
+          return categories.some((c) => {
+            if (!c) return false;
+            return (
+              c.id === value ||
+              c.slug?.toLowerCase() === search ||
+              c.title?.toLowerCase().includes(search)
+            );
+          });
         },
         cell: ({ row }) => {
           const categories = row.original.categories;
-          return <div>{categories?.map((c) => c.name).join(", ")}</div>;
+          return <div>{categories?.map((c) => c.title).join(", ") || "-"}</div>;
         },
       },
       {
         accessorKey: "actions",
-        header: "Ações",
+        header: ({ column }) => {
+          return <div className="text-right mr-6">Ações</div>;
+        },
         cell: ({ row, table }) => {
           return (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 justify-end">
+              {row.original.status === "publicado" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer stroke-1"
+                  onClick={() => window.open(`/noticias/${row.original.slug}`)}
+                  title="Visualizar"
+                >
+                  <EyeIcon className="h-4 w-4" />
+                </Button>
+              )}
               <Button
                 variant="ghost"
                 size="icon"

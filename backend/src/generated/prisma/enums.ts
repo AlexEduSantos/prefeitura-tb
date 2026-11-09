@@ -11,6 +11,7 @@
 
 export const ArticleStatus = {
   rascunho: 'rascunho',
+  programado: 'programado',
   publicado: 'publicado',
   arquivado: 'arquivado',
   expirado: 'expirado',

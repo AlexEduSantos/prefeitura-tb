@@ -21,7 +21,26 @@ import { CheckPolicies } from '../casl/check-policies.decorator';
 export class ArticlesController {
   constructor(private readonly articlesService: ArticlesService) {}
 
-  // Qualquer um (Público) pode listar os artigos
+  // Listagem ADMINISTRATIVA (Dashboard) - Traz todos os artigos menos os excluídos por padrão
+  // DEVE ser declarada ANTES de @Get(':slug') para evitar captura de rota!
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Get('admin')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Article'))
+  async findAllAdmin(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('category') category?: string,
+    @Query('organizationId') organizationId?: string,
+  ) {
+    return this.articlesService.findAllAdmin(
+      search,
+      status,
+      category,
+      organizationId,
+    );
+  }
+
+  // Qualquer um (Público) pode listar artigos publicados e vigentes
   @Get()
   async findAll(
     @Query('search') search?: string,
@@ -31,18 +50,19 @@ export class ArticlesController {
     return this.articlesService.findAll(search, category, organizationId);
   }
 
-  // Qualquer um (Público) pode visualizar os detalhes de um artigo
-  @Get(':slug')
-  async findOne(@Param('slug') slug: string) {
-    return this.articlesService.findOne(slug);
-  }
-
+  // Busca por ID (Painel Admin)
   @Get('id/:id')
   async findOneById(@Param('id') id: string) {
     return this.articlesService.findOneById(id);
   }
 
-  // Operações de Mutação exigem sessão ativa e autorização do CASL (Admin ou Publisher/Jornalista)
+  // Qualquer um (Público) pode visualizar os detalhes de um artigo publicado
+  @Get(':slug')
+  async findOne(@Param('slug') slug: string) {
+    return this.articlesService.findOne(slug);
+  }
+
+  // Operações de Mutação exigem sessão ativa e autorização do CASL
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
   @CheckPolicies((ability) => ability.can(Action.Create, 'Article'))
