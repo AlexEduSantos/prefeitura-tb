@@ -71,7 +71,7 @@ export function MainCarousel() {
   return (
     <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">
       <div
-        className="w-full h-50 md:h-96 aspect-video rounded-lg overflow-hidden relative bg-muted/20 group shadow ring-1 ring-border/10 "
+        className="w-full h-24 sm:h-46 lg:h-96 aspect-video rounded-lg overflow-hidden relative bg-muted/20 group shadow ring-1 ring-border/10 "
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
