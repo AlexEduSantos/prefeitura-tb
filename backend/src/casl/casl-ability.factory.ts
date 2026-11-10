@@ -14,6 +14,7 @@ import {
   Media,
   Menu,
   MenuItem,
+  OfficialGazette,
   Organization,
   Page,
   Popups,
@@ -44,6 +45,7 @@ export type Subjects =
   | 'Stories'
   | 'StoryItem'
   | 'SiteSettings'
+  | 'OfficialGazette'
   | Article
   | Page
   | Media
@@ -58,7 +60,8 @@ export type Subjects =
   | Popups
   | Services
   | Stories
-  | SiteSettings;
+  | SiteSettings
+  | OfficialGazette;
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 
@@ -72,12 +75,13 @@ export class CaslAbilityFactory {
     // ==========================================
     // 1. Qualquer um (Público)
     // ==========================================
-    // Acesso livre no Portal para leitura de Articles, Pages, Organizations, Spaces e Categories
+    // Acesso livre no Portal para leitura de Articles, Pages, Organizations, Spaces, Categories e OfficialGazette
     can(Action.Read, 'Article');
     can(Action.Read, 'Page');
     can(Action.Read, 'Organization');
     can(Action.Read, 'Space');
     can(Action.Read, 'Category');
+    can(Action.Read, 'OfficialGazette');
 
     // Se o usuário não estiver autenticado, retorna as regras públicas
     if (!user) {
@@ -101,13 +105,14 @@ export class CaslAbilityFactory {
     }
 
     // ==========================================
-    // 3. Publisher (Jornalista)
+    // 3. Publisher (Jornalista / Publicador Oficial)
     // ==========================================
     else if (user.role === UserRole.PUBLISHER) {
-      // Escrita global em notícias: gerenciar Article, Media e Category
+      // Escrita global em notícias, mídias e diário oficial
       can(Action.Manage, 'Article');
       can(Action.Manage, 'Media');
       can(Action.Manage, 'Category');
+      can(Action.Manage, 'OfficialGazette');
     }
 
     // ==========================================

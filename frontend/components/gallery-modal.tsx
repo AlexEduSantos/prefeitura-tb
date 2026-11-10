@@ -319,6 +319,7 @@ export function GalleryModal({
           onClose={() => setIsMediaPickerOpen(false)}
           onSelect={handleMediaSelect}
           multiple={true}
+          targetPreset="gallery"
         />
       </>
     );

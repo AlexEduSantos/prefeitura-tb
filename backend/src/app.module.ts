@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,7 +10,6 @@ import { CaslModule } from './casl/casl.module';
 import { PagesModule } from './pages/pages.module';
 import { ArticlesModule } from './articles/articles.module';
 import { MediaModule } from './media/media.module';
-
 import { OrganizationsModule } from './organizations/organizations.module';
 import { SpacesModule } from './spaces/spaces.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -17,7 +17,6 @@ import { BullModule } from '@nestjs/bullmq';
 import { GalleriesModule } from './galleries/galleries.module';
 import { GalleryMediaModule } from './gallery-media/gallery-media.module';
 import { PopupsModule } from './popups/popups.module';
-import { ServicesService } from './service/services.service';
 import { ServicesModule } from './service/services.module';
 import { StoryModule } from './story/story.module';
 import { ObserveModule } from './observe';
@@ -27,6 +26,9 @@ import { UserModule } from './user/user.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SettingsModule } from './settings/settings.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AuditModule } from './audit/audit.module';
+import { AuditInterceptor } from './audit/audit.interceptor';
+import { OfficialGazetteModule } from './official-gazette/official-gazette.module';
 
 @Module({
   imports: [
@@ -62,8 +64,17 @@ import { AnalyticsModule } from './analytics/analytics.module';
     UserModule,
     SettingsModule,
     AnalyticsModule,
+    AuditModule,
+    OfficialGazetteModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+  ],
 })
 export class AppModule {}

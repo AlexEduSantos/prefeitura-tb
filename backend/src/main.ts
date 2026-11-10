@@ -9,6 +9,7 @@ import { Pool } from 'pg';
 import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -52,6 +53,20 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaClientExceptionFilter());
 
   app.useGlobalPipes(new ValidationPipe());
+
+  const config = new DocumentBuilder()
+    .setTitle('API Portal da Prefeitura')
+    .setDescription(
+      'Documentação interativa da API do Portal da Prefeitura (Notícias, Mídias, Stories, Galerias, Menus e Administração)',
+    )
+    .setVersion('1.0')
+    .addCookieAuth('connect.sid')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document, {
+    customSiteTitle: 'Documentação da API - Prefeitura',
+  });
 
   await app.listen(process.env.PORT ?? 3001);
 }

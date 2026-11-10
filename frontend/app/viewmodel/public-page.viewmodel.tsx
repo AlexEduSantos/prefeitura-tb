@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { PagesService } from "../service/pages.service";
-import { IPage } from "../type/page";
+import { IPage } from "../type/pages";
 
 interface UsePublicPageOptions {
   spaceSlug?: string | null;

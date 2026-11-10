@@ -6,7 +6,7 @@ import { Skeleton } from "../ui/skeleton";
 import { IArticle } from "@/app/type/article";
 import { IServices } from "@/app/type/services";
 import { ServiceItem } from "./service-list";
-import { IPage } from "@/app/type/page";
+import { IPage } from "@/app/type/pages";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { extractTextFromLexical } from "@/lib/lexical-utils";

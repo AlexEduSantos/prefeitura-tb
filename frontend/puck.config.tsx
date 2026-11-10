@@ -74,7 +74,7 @@ const TipTapEditor = ({
           Link
         </button>
       </div>
-      <div className="p-3 min-h-[120px] prose prose-sm max-w-none cursor-text">
+      <div className="p-3 min-h-30 prose prose-sm max-w-none cursor-text">
         <EditorContent editor={editor} />
       </div>
     </div>
@@ -648,16 +648,16 @@ export const config: Config<Props> = {
 
         return (
           <div className={`grid ${gridClass} ${gapMap[gap]} w-full py-4`}>
-            <div className="min-h-[100px] border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
+            <div className="min-h-25 border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
               <DropZone zone="col-1" />
             </div>
             {hasCol2 && (
-              <div className="min-h-[100px] border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
+              <div className="min-h-25 border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
                 <DropZone zone="col-2" />
               </div>
             )}
             {hasCol3 && (
-              <div className="min-h-[100px] border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
+              <div className="min-h-25 border border-transparent hover:border-dashed hover:border-muted-foreground/50 rounded p-1 transition-colors">
                 <DropZone zone="col-3" />
               </div>
             )}
@@ -877,10 +877,10 @@ export const config: Config<Props> = {
         overlayColor,
       }) => (
         <div
-          className="relative w-full min-h-[400px] flex items-center justify-center rounded-xl overflow-hidden my-6"
+          className="relative w-full min-h-100 flex items-center justify-center rounded-xl overflow-hidden my-6"
           style={{
             backgroundImage: `url(${backgroundImage})`,
-            backgroundtamanho: "cover",
+            backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >

@@ -253,6 +253,9 @@ export type UserWhereInput = {
   pages?: Prisma.PageListRelationFilter
   articleAuthor?: Prisma.ArticleListRelationFilter
   articleEditor?: Prisma.ArticleListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
+  officialGazettesCreator?: Prisma.OfficialGazetteListRelationFilter
+  officialGazettesEditor?: Prisma.OfficialGazetteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -276,6 +279,9 @@ export type UserOrderByWithRelationInput = {
   pages?: Prisma.PageOrderByRelationAggregateInput
   articleAuthor?: Prisma.ArticleOrderByRelationAggregateInput
   articleEditor?: Prisma.ArticleOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  officialGazettesCreator?: Prisma.OfficialGazetteOrderByRelationAggregateInput
+  officialGazettesEditor?: Prisma.OfficialGazetteOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -303,6 +309,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.PageListRelationFilter
   articleAuthor?: Prisma.ArticleListRelationFilter
   articleEditor?: Prisma.ArticleListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
+  officialGazettesCreator?: Prisma.OfficialGazetteListRelationFilter
+  officialGazettesEditor?: Prisma.OfficialGazetteListRelationFilter
 }, "id" | "id" | "username" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -363,6 +372,9 @@ export type UserCreateInput = {
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -385,6 +397,9 @@ export type UserUncheckedCreateInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUpdateInput = {
@@ -407,6 +422,9 @@ export type UserUpdateInput = {
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -429,6 +447,9 @@ export type UserUncheckedUpdateInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -688,6 +709,52 @@ export type UserUpdateOneRequiredWithoutServicesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutServicesInput, Prisma.UserUpdateWithoutServicesInput>, Prisma.UserUncheckedUpdateWithoutServicesInput>
 }
 
+export type UserCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.UserUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type UserCreateNestedOneWithoutOfficialGazettesCreatorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesCreatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOfficialGazettesCreatorInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutOfficialGazettesEditorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesEditorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOfficialGazettesEditorInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOfficialGazettesCreatorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesCreatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOfficialGazettesCreatorInput
+  upsert?: Prisma.UserUpsertWithoutOfficialGazettesCreatorInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOfficialGazettesCreatorInput, Prisma.UserUpdateWithoutOfficialGazettesCreatorInput>, Prisma.UserUncheckedUpdateWithoutOfficialGazettesCreatorInput>
+}
+
+export type UserUpdateOneWithoutOfficialGazettesEditorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesEditorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOfficialGazettesEditorInput
+  upsert?: Prisma.UserUpsertWithoutOfficialGazettesEditorInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOfficialGazettesEditorInput, Prisma.UserUpdateWithoutOfficialGazettesEditorInput>, Prisma.UserUncheckedUpdateWithoutOfficialGazettesEditorInput>
+}
+
 export type UserCreateWithoutOrganizationInput = {
   id?: string
   username: string
@@ -707,6 +774,9 @@ export type UserCreateWithoutOrganizationInput = {
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -728,6 +798,9 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -794,6 +867,9 @@ export type UserCreateWithoutPagesInput = {
   services?: Prisma.ServicesCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutPagesInput = {
@@ -815,6 +891,9 @@ export type UserUncheckedCreateWithoutPagesInput = {
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutPagesInput = {
@@ -852,6 +931,9 @@ export type UserUpdateWithoutPagesInput = {
   services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPagesInput = {
@@ -873,6 +955,9 @@ export type UserUncheckedUpdateWithoutPagesInput = {
   services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateWithoutArticleAuthorInput = {
@@ -894,6 +979,9 @@ export type UserCreateWithoutArticleAuthorInput = {
   services?: Prisma.ServicesCreateNestedManyWithoutUserInput
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutArticleAuthorInput = {
@@ -915,6 +1003,9 @@ export type UserUncheckedCreateWithoutArticleAuthorInput = {
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutArticleAuthorInput = {
@@ -941,6 +1032,9 @@ export type UserCreateWithoutArticleEditorInput = {
   services?: Prisma.ServicesCreateNestedManyWithoutUserInput
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutArticleEditorInput = {
@@ -962,6 +1056,9 @@ export type UserUncheckedCreateWithoutArticleEditorInput = {
   services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutArticleEditorInput = {
@@ -999,6 +1096,9 @@ export type UserUpdateWithoutArticleAuthorInput = {
   services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutArticleAuthorInput = {
@@ -1020,6 +1120,9 @@ export type UserUncheckedUpdateWithoutArticleAuthorInput = {
   services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUpsertWithoutArticleEditorInput = {
@@ -1052,6 +1155,9 @@ export type UserUpdateWithoutArticleEditorInput = {
   services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutArticleEditorInput = {
@@ -1073,6 +1179,9 @@ export type UserUncheckedUpdateWithoutArticleEditorInput = {
   services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateWithoutGalleriesInput = {
@@ -1094,6 +1203,9 @@ export type UserCreateWithoutGalleriesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutGalleriesInput = {
@@ -1115,6 +1227,9 @@ export type UserUncheckedCreateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutGalleriesInput = {
@@ -1152,6 +1267,9 @@ export type UserUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGalleriesInput = {
@@ -1173,6 +1291,9 @@ export type UserUncheckedUpdateWithoutGalleriesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateWithoutPopupsInput = {
@@ -1194,6 +1315,9 @@ export type UserCreateWithoutPopupsInput = {
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutPopupsInput = {
@@ -1215,6 +1339,9 @@ export type UserUncheckedCreateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutPopupsInput = {
@@ -1252,6 +1379,9 @@ export type UserUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPopupsInput = {
@@ -1273,6 +1403,9 @@ export type UserUncheckedUpdateWithoutPopupsInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserCreateWithoutServicesInput = {
@@ -1294,6 +1427,9 @@ export type UserCreateWithoutServicesInput = {
   pages?: Prisma.PageCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserUncheckedCreateWithoutServicesInput = {
@@ -1315,6 +1451,9 @@ export type UserUncheckedCreateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
   articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
   articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
 }
 
 export type UserCreateOrConnectWithoutServicesInput = {
@@ -1352,6 +1491,9 @@ export type UserUpdateWithoutServicesInput = {
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutServicesInput = {
@@ -1373,6 +1515,345 @@ export type UserUncheckedUpdateWithoutServicesInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutAuditLogsInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  galleries?: Prisma.GalleriesCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type UserUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuditLogsInput, Prisma.UserUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuditLogsInput, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type UserUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+  galleries?: Prisma.GalleriesUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserCreateWithoutOfficialGazettesCreatorInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  galleries?: Prisma.GalleriesCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesEditor?: Prisma.OfficialGazetteCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserUncheckedCreateWithoutOfficialGazettesCreatorInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutUpdatedByInput
+}
+
+export type UserCreateOrConnectWithoutOfficialGazettesCreatorInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesCreatorInput>
+}
+
+export type UserCreateWithoutOfficialGazettesEditorInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  organization?: Prisma.OrganizationCreateNestedOneWithoutUsersInput
+  galleries?: Prisma.GalleriesCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserUncheckedCreateWithoutOfficialGazettesEditorInput = {
+  id?: string
+  username: string
+  name: string
+  email: string
+  password: string
+  avatar?: string | null
+  phone?: string | null
+  active?: boolean
+  role?: $Enums.UserRole
+  organizationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLogin?: Date | string | null
+  galleries?: Prisma.GalleriesUncheckedCreateNestedManyWithoutUserInput
+  popups?: Prisma.PopupsUncheckedCreateNestedManyWithoutUserInput
+  services?: Prisma.ServicesUncheckedCreateNestedManyWithoutUserInput
+  pages?: Prisma.PageUncheckedCreateNestedManyWithoutUserInput
+  articleAuthor?: Prisma.ArticleUncheckedCreateNestedManyWithoutAuthorInput
+  articleEditor?: Prisma.ArticleUncheckedCreateNestedManyWithoutEditorInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedCreateNestedManyWithoutCreatedByInput
+}
+
+export type UserCreateOrConnectWithoutOfficialGazettesEditorInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesEditorInput>
+}
+
+export type UserUpsertWithoutOfficialGazettesCreatorInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedUpdateWithoutOfficialGazettesCreatorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesCreatorInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOfficialGazettesCreatorInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOfficialGazettesCreatorInput, Prisma.UserUncheckedUpdateWithoutOfficialGazettesCreatorInput>
+}
+
+export type UserUpdateWithoutOfficialGazettesCreatorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+  galleries?: Prisma.GalleriesUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOfficialGazettesCreatorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
+}
+
+export type UserUpsertWithoutOfficialGazettesEditorInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedUpdateWithoutOfficialGazettesEditorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedCreateWithoutOfficialGazettesEditorInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOfficialGazettesEditorInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOfficialGazettesEditorInput, Prisma.UserUncheckedUpdateWithoutOfficialGazettesEditorInput>
+}
+
+export type UserUpdateWithoutOfficialGazettesEditorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  organization?: Prisma.OrganizationUpdateOneWithoutUsersNestedInput
+  galleries?: Prisma.GalleriesUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOfficialGazettesEditorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  galleries?: Prisma.GalleriesUncheckedUpdateManyWithoutUserNestedInput
+  popups?: Prisma.PopupsUncheckedUpdateManyWithoutUserNestedInput
+  services?: Prisma.ServicesUncheckedUpdateManyWithoutUserNestedInput
+  pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
+  articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
+  articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyOrganizationInput = {
@@ -1409,6 +1890,9 @@ export type UserUpdateWithoutOrganizationInput = {
   pages?: Prisma.PageUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -1430,6 +1914,9 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   pages?: Prisma.PageUncheckedUpdateManyWithoutUserNestedInput
   articleAuthor?: Prisma.ArticleUncheckedUpdateManyWithoutAuthorNestedInput
   articleEditor?: Prisma.ArticleUncheckedUpdateManyWithoutEditorNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  officialGazettesCreator?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutCreatedByNestedInput
+  officialGazettesEditor?: Prisma.OfficialGazetteUncheckedUpdateManyWithoutUpdatedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutOrganizationInput = {
@@ -1459,6 +1946,9 @@ export type UserCountOutputType = {
   pages: number
   articleAuthor: number
   articleEditor: number
+  auditLogs: number
+  officialGazettesCreator: number
+  officialGazettesEditor: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1468,6 +1958,9 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   pages?: boolean | UserCountOutputTypeCountPagesArgs
   articleAuthor?: boolean | UserCountOutputTypeCountArticleAuthorArgs
   articleEditor?: boolean | UserCountOutputTypeCountArticleEditorArgs
+  auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  officialGazettesCreator?: boolean | UserCountOutputTypeCountOfficialGazettesCreatorArgs
+  officialGazettesEditor?: boolean | UserCountOutputTypeCountOfficialGazettesEditorArgs
 }
 
 /**
@@ -1522,6 +2015,27 @@ export type UserCountOutputTypeCountArticleEditorArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ArticleWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOfficialGazettesCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OfficialGazetteWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOfficialGazettesEditorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OfficialGazetteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1544,6 +2058,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   pages?: boolean | Prisma.User$pagesArgs<ExtArgs>
   articleAuthor?: boolean | Prisma.User$articleAuthorArgs<ExtArgs>
   articleEditor?: boolean | Prisma.User$articleEditorArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  officialGazettesCreator?: boolean | Prisma.User$officialGazettesCreatorArgs<ExtArgs>
+  officialGazettesEditor?: boolean | Prisma.User$officialGazettesEditorArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1606,6 +2123,9 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pages?: boolean | Prisma.User$pagesArgs<ExtArgs>
   articleAuthor?: boolean | Prisma.User$articleAuthorArgs<ExtArgs>
   articleEditor?: boolean | Prisma.User$articleEditorArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  officialGazettesCreator?: boolean | Prisma.User$officialGazettesCreatorArgs<ExtArgs>
+  officialGazettesEditor?: boolean | Prisma.User$officialGazettesEditorArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1625,6 +2145,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     pages: Prisma.$PagePayload<ExtArgs>[]
     articleAuthor: Prisma.$ArticlePayload<ExtArgs>[]
     articleEditor: Prisma.$ArticlePayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    officialGazettesCreator: Prisma.$OfficialGazettePayload<ExtArgs>[]
+    officialGazettesEditor: Prisma.$OfficialGazettePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2041,6 +2564,9 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   pages<T extends Prisma.User$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articleAuthor<T extends Prisma.User$articleAuthorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$articleAuthorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articleEditor<T extends Prisma.User$articleEditorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$articleEditorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  officialGazettesCreator<T extends Prisma.User$officialGazettesCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$officialGazettesCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficialGazettePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  officialGazettesEditor<T extends Prisma.User$officialGazettesEditorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$officialGazettesEditorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfficialGazettePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2644,6 +3170,78 @@ export type User$articleEditorArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ArticleScalarFieldEnum | Prisma.ArticleScalarFieldEnum[]
+}
+
+/**
+ * User.auditLogs
+ */
+export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.officialGazettesCreator
+ */
+export type User$officialGazettesCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OfficialGazette
+   */
+  select?: Prisma.OfficialGazetteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OfficialGazette
+   */
+  omit?: Prisma.OfficialGazetteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfficialGazetteInclude<ExtArgs> | null
+  where?: Prisma.OfficialGazetteWhereInput
+  orderBy?: Prisma.OfficialGazetteOrderByWithRelationInput | Prisma.OfficialGazetteOrderByWithRelationInput[]
+  cursor?: Prisma.OfficialGazetteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OfficialGazetteScalarFieldEnum | Prisma.OfficialGazetteScalarFieldEnum[]
+}
+
+/**
+ * User.officialGazettesEditor
+ */
+export type User$officialGazettesEditorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OfficialGazette
+   */
+  select?: Prisma.OfficialGazetteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OfficialGazette
+   */
+  omit?: Prisma.OfficialGazetteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfficialGazetteInclude<ExtArgs> | null
+  where?: Prisma.OfficialGazetteWhereInput
+  orderBy?: Prisma.OfficialGazetteOrderByWithRelationInput | Prisma.OfficialGazetteOrderByWithRelationInput[]
+  cursor?: Prisma.OfficialGazetteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OfficialGazetteScalarFieldEnum | Prisma.OfficialGazetteScalarFieldEnum[]
 }
 
 /**

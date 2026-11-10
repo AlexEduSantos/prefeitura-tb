@@ -12,11 +12,16 @@ import { FolderCard } from "./folder-card";
 import { FileItem } from "./file-item";
 import { Card } from "./ui/card";
 import {
+  CheckSquare2,
   FilterIcon,
   FolderPlusIcon,
+  Loader2,
   PlusIcon,
   SearchIcon,
+  Square,
+  Trash2Icon,
   Undo2Icon,
+  X,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -30,11 +35,24 @@ import {
 import { MediaUploadModal } from "./media-upload-modal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Label } from "./ui/label";
+import { Badge } from "./ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 import { useFolders } from "@/app/viewmodel/folders.viewmodel";
 import {
   useMediaList,
   useMediaViewModel,
 } from "@/app/viewmodel/media.viewmodel";
+import { toast } from "sonner";
 
 export interface MediaExplorerProps {
   selectedItems: any[];
@@ -44,6 +62,7 @@ export interface MediaExplorerProps {
   showSearch?: boolean;
   extraHeaderActions?: React.ReactNode;
   containerClassName?: string;
+  enableBulkDelete?: boolean;
 }
 
 export function MediaExplorer({
@@ -54,6 +73,7 @@ export function MediaExplorer({
   showSearch = false,
   extraHeaderActions,
   containerClassName = "flex flex-col gap-4",
+  enableBulkDelete = false,
 }: MediaExplorerProps) {
   const [pathStack, setPathStack] = useState<string[]>([]);
   const [pagination, setPagination] = useState({
@@ -62,6 +82,7 @@ export function MediaExplorer({
     sort: "asc" as "asc" | "desc",
   });
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const currentPath = pathStack.join("/");
 
   const { data, isLoading } = useMediaList(
@@ -71,7 +92,7 @@ export function MediaExplorer({
     pagination.perPage,
   );
 
-  const { refetchMedia } = useMediaViewModel();
+  const { refetchMedia, massDeleteMedia, isMassDeleting } = useMediaViewModel();
 
   const {
     isFolderModalOpen,
@@ -105,13 +126,57 @@ export function MediaExplorer({
     onSelectionChange([]);
   };
 
+  const handleToggleSelectAll = () => {
+    if (!data?.files || data.files.length === 0) return;
+    const allFiles = data.files;
+    const allCurrentSelected = allFiles.every((f: any) =>
+      selectedItems.some((item) => item.id === f.id),
+    );
+
+    if (allCurrentSelected) {
+      onSelectionChange(
+        selectedItems.filter(
+          (item) => !allFiles.some((f: any) => f.id === item.id),
+        ),
+      );
+    } else {
+      const remaining = allFiles.filter(
+        (f: any) => !selectedItems.some((item) => item.id === f.id),
+      );
+      onSelectionChange([...selectedItems, ...remaining]);
+    }
+  };
+
+  const handleConfirmMassDelete = () => {
+    const ids = selectedItems.map((item) => item.id);
+    massDeleteMedia(ids, {
+      onSuccess: () => {
+        toast.success(
+          `${ids.length} ${ids.length === 1 ? "arquivo excluído" : "arquivos excluídos"} com sucesso!`,
+        );
+        onSelectionChange([]);
+        refetchMedia();
+        setIsDeleteDialogOpen(false);
+      },
+      onError: () => {
+        toast.error("Erro ao excluir arquivos selecionados");
+      },
+    });
+  };
+
+  const isAllCurrentSelected =
+    Boolean(data?.files?.length) &&
+    data.files.every((f: any) =>
+      selectedItems.some((item) => item.id === f.id),
+    );
+
   return (
     <div className={containerClassName}>
       <section className="flex flex-col w-full h-fit gap-2">
         {showSearch ? (
           <>
             {/* Toolbar */}
-            <div className="flex gap-2 w-full flex-wrap">
+            <div className="flex gap-2 w-full flex-wrap items-center">
               <Button onClick={() => setIsUploadModalOpen(true)}>
                 <PlusIcon />
                 Enviar Arquivo
@@ -126,6 +191,27 @@ export function MediaExplorer({
               >
                 <FolderPlusIcon /> Nova Pasta
               </Button>
+
+              {multiple && enableBulkDelete && (data?.files?.length ?? 0) > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={handleToggleSelectAll}
+                  className="gap-1.5"
+                >
+                  {isAllCurrentSelected ? (
+                    <>
+                      <Square className="h-4 w-4" />
+                      Desmarcar Todos
+                    </>
+                  ) : (
+                    <>
+                      <CheckSquare2 className="h-4 w-4" />
+                      Selecionar Todos
+                    </>
+                  )}
+                </Button>
+              )}
+
               {extraHeaderActions}
             </div>
 
@@ -180,10 +266,10 @@ export function MediaExplorer({
             </div>
           </>
         ) : (
-          <div className=" flex flex-wrap gap-2 w-full">
-            <div className="flex gap-2 w-full">
+          <div className="flex flex-wrap gap-2 w-full">
+            <div className="flex gap-2 w-full flex-wrap">
               <Button
-                className="min-w-[50%] flex-1"
+                className="min-w-[45%] flex-1"
                 onClick={() => setIsUploadModalOpen(true)}
               >
                 <PlusIcon />
@@ -191,11 +277,30 @@ export function MediaExplorer({
               </Button>
               <Button
                 variant="outline"
-                className="min-w-[50%] flex-1"
+                className="min-w-[45%] flex-1"
                 onClick={() => setIsFolderModalOpen(true)}
               >
                 <FolderPlusIcon /> Nova Pasta
               </Button>
+              {multiple && enableBulkDelete && (data?.files?.length ?? 0) > 0 && (
+                <Button
+                  variant="outline"
+                  onClick={handleToggleSelectAll}
+                  className="gap-1.5"
+                >
+                  {isAllCurrentSelected ? (
+                    <>
+                      <Square className="h-4 w-4" />
+                      Desmarcar Todos
+                    </>
+                  ) : (
+                    <>
+                      <CheckSquare2 className="h-4 w-4" />
+                      Selecionar Todos
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
             <div className="w-full flex gap-2">
               <Button variant="outline" className="bg-card font-normal flex-1">
@@ -345,6 +450,88 @@ export function MediaExplorer({
           />
         ))}
       </section>
+
+      {/* Barra Flutuante de Ações em Massa */}
+      {enableBulkDelete && selectedItems.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-card/95 backdrop-blur-md border shadow-2xl px-5 py-3 rounded-2xl animate-in slide-in-from-bottom-5 duration-200">
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="secondary"
+              className="px-2.5 py-0.5 text-xs font-semibold"
+            >
+              {selectedItems.length}
+            </Badge>
+            <span className="text-sm font-medium">
+              {selectedItems.length === 1
+                ? "arquivo selecionado"
+                : "arquivos selecionados"}
+            </span>
+          </div>
+
+          <div className="h-4 w-px bg-border" />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs h-8 px-2.5 text-muted-foreground hover:text-foreground"
+            onClick={() => onSelectionChange([])}
+          >
+            <X className="h-3.5 w-3.5 mr-1" />
+            Desmarcar
+          </Button>
+
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          >
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="h-8 gap-1.5 shadow-sm"
+              >
+                <Trash2Icon className="h-3.5 w-3.5" />
+                Excluir Selecionados
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Excluir arquivos selecionados?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Você está prestes a excluir permanentemente{" "}
+                  <strong>
+                    {selectedItems.length}{" "}
+                    {selectedItems.length === 1 ? "arquivo" : "arquivos"}
+                  </strong>
+                  . Esta ação não poderá ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isMassDeleting}>
+                  Cancelar
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleConfirmMassDelete();
+                  }}
+                  disabled={isMassDeleting}
+                >
+                  {isMassDeleting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-1.5 animate-spin" />
+                      Excluindo...
+                    </>
+                  ) : (
+                    "Confirmar Exclusão"
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
 
       <MediaUploadModal
         isOpen={isUploadModalOpen}

@@ -401,7 +401,9 @@ export const ModelName = {
   StoriesItem: 'StoriesItem',
   Menu: 'Menu',
   MenuItem: 'MenuItem',
-  SiteSettings: 'SiteSettings'
+  SiteSettings: 'SiteSettings',
+  AuditLog: 'AuditLog',
+  OfficialGazette: 'OfficialGazette'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -417,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "space" | "category" | "user" | "session" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem" | "menu" | "menuItem" | "siteSettings"
+    modelProps: "organization" | "space" | "category" | "user" | "session" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem" | "menu" | "menuItem" | "siteSettings" | "auditLog" | "officialGazette"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1753,6 +1755,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AuditLog: {
+      payload: Prisma.$AuditLogPayload<ExtArgs>
+      fields: Prisma.AuditLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuditLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuditLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AuditLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuditLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        findMany: {
+          args: Prisma.AuditLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        create: {
+          args: Prisma.AuditLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        createMany: {
+          args: Prisma.AuditLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuditLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AuditLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        update: {
+          args: Prisma.AuditLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuditLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuditLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuditLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuditLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuditLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AuditLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuditLog>
+        }
+        groupBy: {
+          args: Prisma.AuditLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuditLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuditLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    OfficialGazette: {
+      payload: Prisma.$OfficialGazettePayload<ExtArgs>
+      fields: Prisma.OfficialGazetteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfficialGazetteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfficialGazetteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        findFirst: {
+          args: Prisma.OfficialGazetteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfficialGazetteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        findMany: {
+          args: Prisma.OfficialGazetteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>[]
+        }
+        create: {
+          args: Prisma.OfficialGazetteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        createMany: {
+          args: Prisma.OfficialGazetteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfficialGazetteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>[]
+        }
+        delete: {
+          args: Prisma.OfficialGazetteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        update: {
+          args: Prisma.OfficialGazetteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        deleteMany: {
+          args: Prisma.OfficialGazetteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfficialGazetteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfficialGazetteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>[]
+        }
+        upsert: {
+          args: Prisma.OfficialGazetteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfficialGazettePayload>
+        }
+        aggregate: {
+          args: Prisma.OfficialGazetteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfficialGazette>
+        }
+        groupBy: {
+          args: Prisma.OfficialGazetteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficialGazetteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfficialGazetteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfficialGazetteCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2106,6 +2256,40 @@ export const SiteSettingsScalarFieldEnum = {
 export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  details: 'details',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const OfficialGazetteScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  edition: 'edition',
+  description: 'description',
+  publicationDate: 'publicationDate',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
+  pageCount: 'pageCount',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfficialGazetteScalarFieldEnum = (typeof OfficialGazetteScalarFieldEnum)[keyof typeof OfficialGazetteScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2388,6 +2572,33 @@ export const SiteSettingsOrderByRelevanceFieldEnum = {
 } as const
 
 export type SiteSettingsOrderByRelevanceFieldEnum = (typeof SiteSettingsOrderByRelevanceFieldEnum)[keyof typeof SiteSettingsOrderByRelevanceFieldEnum]
+
+
+export const AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  ip: 'ip',
+  userAgent: 'userAgent'
+} as const
+
+export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const OfficialGazetteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  edition: 'edition',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
+} as const
+
+export type OfficialGazetteOrderByRelevanceFieldEnum = (typeof OfficialGazetteOrderByRelevanceFieldEnum)[keyof typeof OfficialGazetteOrderByRelevanceFieldEnum]
 
 
 
@@ -2712,6 +2923,8 @@ export type GlobalOmitConfig = {
   menu?: Prisma.MenuOmit
   menuItem?: Prisma.MenuItemOmit
   siteSettings?: Prisma.SiteSettingsOmit
+  auditLog?: Prisma.AuditLogOmit
+  officialGazette?: Prisma.OfficialGazetteOmit
 }
 
 /* Types for Logging */

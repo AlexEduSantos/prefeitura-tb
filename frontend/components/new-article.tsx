@@ -716,6 +716,7 @@ export default function MateriaForm({
         onClose={() => setIsCoverModalOpen(false)}
         onSelect={(media) => setField("cover", media as IMedia)}
         multiple={false}
+        targetPreset="article-cover"
       />
 
       <GalleryPickerModal

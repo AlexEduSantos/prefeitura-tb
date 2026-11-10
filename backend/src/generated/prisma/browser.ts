@@ -107,3 +107,13 @@ export type MenuItem = Prisma.MenuItemModel
  * 
  */
 export type SiteSettings = Prisma.SiteSettingsModel
+/**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model OfficialGazette
+ * 
+ */
+export type OfficialGazette = Prisma.OfficialGazetteModel

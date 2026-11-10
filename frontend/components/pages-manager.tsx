@@ -1,7 +1,7 @@
 "use client";
 import { usePagesViewModel } from "@/app/viewmodel/pages.viewmodel";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { IPage } from "@/app/type/page";
+import { IPage } from "@/app/type/pages";
 import { Tabs, TabsList } from "./ui/tabs";
 import {
   Table,

@@ -1,44 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function proxy(request: NextRequest) {
-  const sessionCookie = request.cookies.get("connect.sid");
-  const protectedPaths = [
-    "/administrator",
-    "/administrator/articles",
-    "/administrator/articles/*",
-    "/administrator/media",
-    "/administrator/media/*",
-    "/administrator/pages",
-    "/administrator/pages/*",
-    "/administrator/settings",
-    "/administrator/settings/*",
-    "/administrator/reports",
-    "/administrator/reports/*",
-  ];
+  const { pathname } = request.nextUrl;
+  const isProtectedRoute = pathname.startsWith("/administrator");
 
-  const isProtectedRoute = protectedPaths.includes(request.nextUrl.pathname);
+  // Se a rota for protegida, verificar autenticação e sessão ativa
+  if (isProtectedRoute) {
+    const sessionCookie = request.cookies.get("connect.sid");
 
-  // Se não há cookie e a rota é protegida, redirecionar.
-  if (!sessionCookie && isProtectedRoute) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+    // Se não há cookie e a rota é protegida, redirecionar para o login
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
 
-  // Se há um cookie, validar a sessão no backend.
-  if (sessionCookie) {
+    // Se há um cookie, validar a sessão no backend
     try {
-      const response = await fetch("http://localhost:3001/auth/profile", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+      const response = await fetch(`${apiUrl}/auth/profile`, {
         method: "GET",
         headers: {
           Cookie: `connect.sid=${sessionCookie.value}`,
         },
       });
 
-      // Se a sessão não for válida (401, 403), redirecione.
+      // Se a sessão não for válida (401, 403), redirecione para o login
       if (!response.ok) {
         return NextResponse.redirect(new URL("/login", request.url));
       }
     } catch (error) {
-      // Caso o backend esteja inacessível, redirecione para uma página de erro.
+      // Caso o backend esteja inacessível, redirecione para uma página de erro
       console.error("Erro ao validar sessão:", error);
       return NextResponse.redirect(new URL("/error", request.url));
     }

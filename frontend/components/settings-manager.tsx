@@ -477,6 +477,7 @@ export function SettingsManager() {
         onClose={() => setMediaPickerTarget(null)}
         onSelect={handleMediaSelect}
         multiple={false}
+        targetPreset="avatar"
       />
     </div>
   );

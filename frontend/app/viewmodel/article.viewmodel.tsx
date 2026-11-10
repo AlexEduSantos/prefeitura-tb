@@ -295,7 +295,11 @@ export function ArticleViewModel() {
         accessorKey: "author",
         header: "Autor",
         cell: ({ row }) => {
-          return <div>{row.original.author?.name}</div>;
+          return (
+            <div className="text-muted-foreground font-mono">
+              {row.original.author?.name}
+            </div>
+          );
         },
       },
       {
@@ -318,7 +322,11 @@ export function ArticleViewModel() {
           const formatted = dateStr
             ? format(new Date(dateStr), "dd/MM/yyyy - HH:mm")
             : "-";
-          return <div className="px-4">{formatted}</div>;
+          return (
+            <div className="px-4 text-muted-foreground font-mono">
+              {formatted}
+            </div>
+          );
         },
       },
       {
@@ -334,7 +342,9 @@ export function ArticleViewModel() {
           };
           const rawType = row.getValue("type") as string;
           return (
-            <div className="capitalize">{typeMap[rawType] || rawType}</div>
+            <div className="capitalize text-muted-foreground font-mono">
+              {typeMap[rawType] || rawType}
+            </div>
           );
         },
       },
@@ -362,7 +372,11 @@ export function ArticleViewModel() {
         },
         cell: ({ row }) => {
           const categories = row.original.categories;
-          return <div>{categories?.map((c) => c.title).join(", ") || "-"}</div>;
+          return (
+            <div className="text-muted-foreground font-mono">
+              {categories?.map((c) => c.title).join(", ") || "-"}
+            </div>
+          );
         },
       },
       {
@@ -391,10 +405,12 @@ export function ArticleViewModel() {
                 onClick={() =>
                   (table.options.meta as any)?.onEdit(row.original.id)
                 }
+                title="Editar"
               >
                 <Edit className="h-4 w-4" />
               </Button>
               <Button
+                title="Excluir"
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 cursor-pointer stroke-1"

@@ -152,8 +152,11 @@ model User {
   services  Services[]
   pages     Page[]
 
-  articleAuthor Article[] @relation("articleAuthor")
-  articleEditor Article[] @relation("articleEditor")
+  articleAuthor           Article[]         @relation("articleAuthor")
+  articleEditor           Article[]         @relation("articleEditor")
+  auditLogs               AuditLog[]
+  officialGazettesCreator OfficialGazette[] @relation("GazetteCreator") // usuário criador
+  officialGazettesEditor  OfficialGazette[] @relation("GazetteUpdater") // usuário editor
 
   @@map("user")
 }
@@ -536,4 +539,56 @@ model SiteSettings {
   updatedAt DateTime @updatedAt
 
   @@map("site_settings")
+}
+
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?  @db.Uuid
+  userEmail String?
+  action    String
+  entity    String
+  entityId  String?
+  details   Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now()) @db.Timestamp
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entity])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model OfficialGazette {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  // Identificação Básica
+  title       String // Ex: "Boletim Oficial nº 1542/2026"
+  edition     String? // Ex: "1542" (Útil para separar do título, se necessário)
+  description String? // Resumo do que contém nesta edição
+
+  // Datas e Prazos (Crucial para validade jurídica)
+  publicationDate DateTime @db.Date // A data que consta no documento
+
+  // Arquivos
+  fileUrl   String // URL do PDF no MinIO
+  fileSize  Int? // Tamanho em bytes (útil para exibir "Download 2.5MB")
+  pageCount Int? // Número de páginas
+
+  // Controle de Auditoria (Quem fez o quê)
+  createdById String @db.Uuid
+  createdBy   User   @relation("GazetteCreator", fields: [createdById], references: [id])
+
+  updatedById String? @db.Uuid
+  updatedBy   User?   @relation("GazetteUpdater", fields: [updatedById], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@index([publicationDate(sort: Desc)])
+  @@index([title])
+  @@map("official_gazette")
 }

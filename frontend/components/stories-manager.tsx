@@ -1027,6 +1027,7 @@ export function StoriesManager() {
         onClose={() => setCoverPickerOpen(false)}
         onSelect={handleCoverSelect}
         multiple={false}
+        targetPreset="story"
       />
 
       {/* Media Picker para capa (edição) */}
@@ -1035,6 +1036,7 @@ export function StoriesManager() {
         onClose={() => setEditCoverPickerOpen(false)}
         onSelect={handleEditCoverSelect}
         multiple={false}
+        targetPreset="story"
       />
 
       {/* Media Picker para novo item */}
@@ -1043,6 +1045,7 @@ export function StoriesManager() {
         onClose={() => setCreateItemMediaPickerOpen(false)}
         onSelect={handleCreateItemSelectMedia}
         multiple={false}
+        targetPreset="story"
       />
 
       {/* Media Picker para editar item */}
@@ -1051,6 +1054,7 @@ export function StoriesManager() {
         onClose={() => setEditItemMediaPickerOpen(false)}
         onSelect={handleEditItemSelectMedia}
         multiple={false}
+        targetPreset="story"
       />
 
       {/* Alert Dialog para confirmação */}

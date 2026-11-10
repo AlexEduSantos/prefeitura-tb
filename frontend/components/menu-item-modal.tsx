@@ -1,7 +1,7 @@
 "use client";
 
 import { IMenuItem } from "@/app/type/menu";
-import { IPage } from "@/app/type/page";
+import { IPage } from "@/app/type/pages";
 import { ICategory } from "@/app/type/organization";
 import {
   Dialog,

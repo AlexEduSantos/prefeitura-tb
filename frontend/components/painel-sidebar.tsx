@@ -12,6 +12,12 @@ import {
   NavigationIcon,
   LucideIcon,
   GraphHubIcon,
+  Code2,
+  ShieldCheck,
+  ExternalLink,
+  BookOpen,
+  ScrollText,
+  Newspaper,
 } from "lucide-react";
 import {
   Sidebar,
@@ -47,6 +53,9 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileChartColumn,
   NavigationIcon,
   GraphHubIcon,
+  BookOpen,
+  ScrollText,
+  Newspaper,
 };
 
 export function PainelSidebar() {
@@ -60,6 +69,8 @@ export function PainelSidebar() {
 
   const { settings, isLoadingSettings } = useSettings();
 
+  const swaggerDocsUrl = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/api/docs`;
+
   if (isLoadingProfile || isLoadingMenu || isLoadingSettings)
     return <div>Loading...</div>;
   if (isErrorMenu || !menu) return <div>Erro ao carregar o menu.</div>;
@@ -68,8 +79,6 @@ export function PainelSidebar() {
   const hasFavicon = settings?.faviconUrl
     ? settings?.faviconUrl
     : "/favicon.png";
-
-  console.log(hasLogoUrl);
 
   return (
     <Sidebar collapsible="icon" className="border-r border-zinc-200">
@@ -94,15 +103,13 @@ export function PainelSidebar() {
       <SidebarContent className="px-2">
         <SidebarMenu className="gap-2">
           {menu.items.map((item) => {
-            // Se você quiser validar rotas ativas pelo banco, pode usar item.url
             const isActive =
               item.url &&
               (pathname === item.url ||
                 (item.url !== "/administrator" &&
                   pathname.startsWith(item.url)));
 
-            // Pega o ícone do mapa (se não achar, usa um padrão)
-            const Icon = item.icon ? ICON_MAP[item.icon] : null;
+            const Icon = (item.icon && ICON_MAP[item.icon]) ? ICON_MAP[item.icon] : FileText;
 
             return (
               <SidebarMenuItem key={item.id}>
@@ -192,6 +199,93 @@ export function PainelSidebar() {
 
       <SidebarFooter className="flex flex-col gap-4">
         <SidebarMenu className="gap-2">
+          {/* Logs de Auditoria */}
+          <SidebarMenuItem key="audit-logs">
+            <SidebarMenuButton
+              asChild
+              tooltip="Auditoria e Logs"
+              isActive={pathname === "/administrator/logs"}
+              className={cn(
+                "h-12 transition-all duration-200 group",
+                state === "expanded" ? "px-4" : "justify-center p-0",
+                pathname === "/administrator/logs"
+                  ? "bg-card! border-primary border text-primary-foreground hover:bg-card/90 shadow-md"
+                  : "text-zinc-600 hover:bg-zinc-100",
+              )}
+            >
+              <Link
+                href="/administrator/logs"
+                className={cn(
+                  "flex items-center",
+                  state === "expanded"
+                    ? "w-full gap-3"
+                    : "justify-center gap-0",
+                )}
+              >
+                <ShieldCheck
+                  className={cn(
+                    "w-5 h-5 shrink-0",
+                    pathname === "/administrator/logs"
+                      ? "text-primary"
+                      : "text-zinc-500 group-hover:text-zinc-900",
+                  )}
+                />
+                {state === "expanded" && (
+                  <span
+                    className={cn(
+                      "font-medium",
+                      pathname === "/administrator/logs"
+                        ? "text-primary font-semibold"
+                        : "text-zinc-500 group-hover:text-zinc-900",
+                    )}
+                  >
+                    Auditoria e Logs
+                  </span>
+                )}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          {/* Documentação da API (Abre direto em nova aba) */}
+          <SidebarMenuItem key="api-docs">
+            <SidebarMenuButton
+              asChild
+              tooltip="Documentação da API (abre em nova aba)"
+              className={cn(
+                "h-12 transition-all duration-200 group text-zinc-600 hover:bg-zinc-100",
+                state === "expanded" ? "px-4" : "justify-center p-0",
+              )}
+            >
+              <a
+                href={swaggerDocsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  "flex items-center justify-between",
+                  state === "expanded" ? "w-full gap-3" : "justify-center gap-0",
+                )}
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <Code2
+                    className={cn(
+                      "w-5 h-5 shrink-0",
+                      "text-zinc-500 group-hover:text-zinc-900",
+                    )}
+                  />
+                  {state === "expanded" && (
+                    <span className="font-medium text-zinc-500 group-hover:text-zinc-900 truncate">
+                      Docs da API
+                    </span>
+                  )}
+                </div>
+                {state === "expanded" && (
+                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 shrink-0" />
+                )}
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          {/* Visitar Site */}
           <SidebarMenuItem key="visit-site">
             <SidebarMenuButton
               asChild
@@ -225,6 +319,7 @@ export function PainelSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+
         <SidebarMenu>
           <SidebarMenuItem className="flex gap-2 items-center">
             <SidebarMenuButton

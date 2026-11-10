@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { Render } from "@puckeditor/core";
 import { config } from "@/puck.config";
 import { Skeleton } from "./ui/skeleton";
-import { IPage } from "@/app/type/page";
+import { IPage } from "@/app/type/pages";
 
 interface ViewPageModalProps {
   isOpen: boolean;
@@ -25,12 +25,12 @@ export function ViewPageModal({
         <DialogContent className="min-w-[90%] max-h-[95vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>
-              <Skeleton className="h-[20px] w-[200px]" />
+              <Skeleton className="h-5 w-50" />
             </DialogTitle>
           </DialogHeader>
           <div className="flex-1 overflow-auto border border-border rounded-xl bg-white mt-4 relative">
             <div className="flex items-center justify-center h-full min-h-[50vh] text-muted-foreground">
-              <Skeleton className="h-[20px] w-[200px]" />
+              <Skeleton className="h-5 w-50" />
             </div>
           </div>
         </DialogContent>

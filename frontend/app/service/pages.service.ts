@@ -1,4 +1,4 @@
-import { IPage } from "../type/page";
+import { IPage } from "../type/pages";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 

@@ -68,7 +68,9 @@ export const ModelName = {
   StoriesItem: 'StoriesItem',
   Menu: 'Menu',
   MenuItem: 'MenuItem',
-  SiteSettings: 'SiteSettings'
+  SiteSettings: 'SiteSettings',
+  AuditLog: 'AuditLog',
+  OfficialGazette: 'OfficialGazette'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,6 +403,40 @@ export const SiteSettingsScalarFieldEnum = {
 export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
 
 
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  details: 'details',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const OfficialGazetteScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  edition: 'edition',
+  description: 'description',
+  publicationDate: 'publicationDate',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
+  pageCount: 'pageCount',
+  createdById: 'createdById',
+  updatedById: 'updatedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfficialGazetteScalarFieldEnum = (typeof OfficialGazetteScalarFieldEnum)[keyof typeof OfficialGazetteScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -683,4 +719,31 @@ export const SiteSettingsOrderByRelevanceFieldEnum = {
 } as const
 
 export type SiteSettingsOrderByRelevanceFieldEnum = (typeof SiteSettingsOrderByRelevanceFieldEnum)[keyof typeof SiteSettingsOrderByRelevanceFieldEnum]
+
+
+export const AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  userEmail: 'userEmail',
+  action: 'action',
+  entity: 'entity',
+  entityId: 'entityId',
+  ip: 'ip',
+  userAgent: 'userAgent'
+} as const
+
+export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+export const OfficialGazetteOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  edition: 'edition',
+  description: 'description',
+  fileUrl: 'fileUrl',
+  createdById: 'createdById',
+  updatedById: 'updatedById'
+} as const
+
+export type OfficialGazetteOrderByRelevanceFieldEnum = (typeof OfficialGazetteOrderByRelevanceFieldEnum)[keyof typeof OfficialGazetteOrderByRelevanceFieldEnum]
 

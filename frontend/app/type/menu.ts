@@ -1,5 +1,5 @@
 import { ICategory, IOrganization, ISpace } from "./organization";
-import { IPage } from "./page";
+import { IPage } from "./pages";
 
 export type IMenu = {
   id: string;
@@ -19,20 +19,21 @@ export type IMenu = {
 export type IMenuItem = {
   id: string;
   label: string;
-  description: string;
-  icon: string;
-  visible: boolean;
+  path?: string | null;
+  url?: string | null;
+  icon?: string | null;
+  description?: string | null;
+  visible?: boolean;
   order: number;
+  openInNewTab: boolean;
+  active: boolean;
   parentId: string | null;
-  parent: IMenuItem | null;
-  children: IMenuItem[] | null;
-  categoryId: string | null;
-  category: ICategory | null;
-  url: string | null;
+  menuId: string;
   pageId: string | null;
   page: IPage | null;
-  menuId: string;
-  menu: IMenu;
+  categoryId: string | null;
+  category: ICategory | null;
   createdAt: Date;
   updatedAt: Date;
+  children: IMenuItem[];
 };
