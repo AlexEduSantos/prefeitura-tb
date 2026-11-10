@@ -23,6 +23,14 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "../ui/breadcrumb";
 
 export function ArticleCard({ article }: { article: any }) {
   const router = useRouter();
@@ -176,6 +184,24 @@ export default function PublicArticlesList() {
   return (
     <>
       <section className="h-screen p-4 space-y-4 w-full max-w-7xl mx-auto">
+        {/* Breadcrumb */}
+        <Breadcrumb>
+          <BreadcrumbList className="text-xs">
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Início</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="max-w-50 line-clamp-1 text-primary">
+                Notícias
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        {/* Title */}
+        <h2 className="text-3xl font-bold w-fit"> Notícias</h2>
+
         {/* Toolbar */}
         <Toolbar
           limit={limit}
