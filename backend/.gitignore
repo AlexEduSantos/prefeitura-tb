@@ -15,9 +15,15 @@ lerna-debug.log*
 # OS
 .DS_Store
 
+# typescript
+.tsbuildinfo
+
 # Tests
 /coverage
 /.nyc_output
+
+# Scripts
+/src/scripts
 
 # IDEs and editors
 /.idea
