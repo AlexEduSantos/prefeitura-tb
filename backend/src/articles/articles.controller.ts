@@ -46,8 +46,24 @@ export class ArticlesController {
     @Query('search') search?: string,
     @Query('category') category?: string,
     @Query('organizationId') organizationId?: string,
+    @Query('type') type?: string,
+    @Query('authorId') authorId?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('sortOrder') sortOrder?: 'asc' | 'desc',
   ) {
-    return this.articlesService.findAll(search, category, organizationId);
+    return this.articlesService.findAll(
+      search,
+      category,
+      organizationId,
+      type,
+      authorId,
+      startDate,
+      endDate,
+      sortBy,
+      sortOrder,
+    );
   }
 
   // Busca por ID (Painel Admin)

@@ -70,8 +70,52 @@ export class ArticlesService {
     search?: string,
     categorySlug?: string,
     organizationId?: string,
+    type?: string,
+    authorId?: string,
+    startDate?: string,
+    endDate?: string,
+    sortBy?: string,
+    sortOrder: 'asc' | 'desc' = 'desc',
   ) {
     const now = new Date();
+    const isUuid = (val: string) =>
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        val,
+      );
+
+    const dateFilter: any = {};
+    if (startDate) {
+      const start = new Date(startDate);
+      if (!isNaN(start.getTime())) {
+        start.setHours(0, 0, 0, 0);
+        dateFilter.gte = start;
+      }
+    }
+    if (endDate) {
+      const end = new Date(endDate);
+      if (!isNaN(end.getTime())) {
+        end.setHours(23, 59, 59, 999);
+        dateFilter.lte = end;
+      }
+    }
+
+    let orderByClause: any = { createdAt: 'desc' };
+    if (sortBy === 'title') {
+      orderByClause = { title: sortOrder };
+    } else if (sortBy === 'date') {
+      orderByClause = [
+        { publicationDate: sortOrder },
+        { createdAt: sortOrder },
+      ];
+    } else if (search) {
+      orderByClause = {
+        _relevance: {
+          fields: ['title'],
+          search: search,
+          sort: 'desc',
+        },
+      };
+    }
 
     const articles = await this.prisma.article.findMany({
       include: {
@@ -93,17 +137,26 @@ export class ArticlesService {
       },
       where: {
         status: 'publicado',
-        OR: [
-          { publicationDate: null },
-          { publicationDate: { lte: now } },
-        ],
+        OR: [{ publicationDate: null }, { publicationDate: { lte: now } }],
         AND: [
           {
-            OR: [
-              { expirationDate: null },
-              { expirationDate: { gt: now } },
-            ],
+            OR: [{ expirationDate: null }, { expirationDate: { gt: now } }],
           },
+          ...(Object.keys(dateFilter).length > 0
+            ? [
+                {
+                  OR: [
+                    { publicationDate: dateFilter },
+                    {
+                      AND: [
+                        { publicationDate: null },
+                        { createdAt: dateFilter },
+                      ],
+                    },
+                  ],
+                },
+              ]
+            : []),
         ],
         ...(search
           ? {
@@ -116,23 +169,17 @@ export class ArticlesService {
         ...(categorySlug
           ? {
               categories: {
-                some: {
-                  slug: categorySlug,
-                },
+                some: isUuid(categorySlug)
+                  ? { OR: [{ id: categorySlug }, { slug: categorySlug }] }
+                  : { slug: categorySlug },
               },
             }
           : {}),
         ...(organizationId ? { organizationId } : {}),
+        ...(type ? { type } : {}),
+        ...(authorId && isUuid(authorId) ? { authorId } : {}),
       },
-      orderBy: search
-        ? {
-            _relevance: {
-              fields: ['title'],
-              search: search,
-              sort: 'desc',
-            },
-          }
-        : { createdAt: 'desc' },
+      orderBy: orderByClause,
     });
 
     return articles;

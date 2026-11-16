@@ -264,7 +264,11 @@ function SmallArticleCard({ article }: { article: any }) {
 
 // Componente principal
 export function ArticlesBlock() {
-  const { article, isLoadingArticle, isErrorArticle } = ArticleViewModel();
+  const {
+    publicArticles: article,
+    isLoadingPublicArticles: isLoadingArticle,
+    isErrorPublicArticles: isErrorArticle,
+  } = ArticleViewModel();
 
   // Memoizar os artigos processados
   const { featuredArticle, recentArticles, hasSidebar } = useMemo(() => {

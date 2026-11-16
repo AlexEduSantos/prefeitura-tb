@@ -37,10 +37,32 @@ export class ArticleService {
    * Busca pública de artigos:
    * Retorna apenas artigos com status 'publicado' e vigentes.
    */
-  static async getArticles(search?: string): Promise<IArticle[]> {
+  static async getArticles(
+    searchOrFilters?:
+      | string
+      | {
+          search?: string;
+          category?: string;
+          organizationId?: string;
+          type?: string;
+          authorId?: string;
+          startDate?: string;
+          endDate?: string;
+          sortBy?: string;
+          sortOrder?: "asc" | "desc";
+        }
+  ): Promise<IArticle[]> {
     const params = new URLSearchParams();
-    if (search && search.trim()) {
-      params.append("search", search.trim());
+    if (typeof searchOrFilters === "string") {
+      if (searchOrFilters.trim()) {
+        params.append("search", searchOrFilters.trim());
+      }
+    } else if (searchOrFilters && typeof searchOrFilters === "object") {
+      Object.entries(searchOrFilters).forEach(([key, value]) => {
+        if (value && String(value).trim()) {
+          params.append(key, String(value).trim());
+        }
+      });
     }
     const queryString = params.toString() ? `?${params.toString()}` : "";
     const response = await fetch(`${API_URL}/articles${queryString}`, {
