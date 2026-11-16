@@ -113,7 +113,6 @@ export class MediaService {
   }
 
   static async massDeleteMedia(ids: string[]) {
-    console.log(ids);
     const response = await fetch(`${API_URL}/media`, {
       method: "DELETE",
       headers: {

@@ -25,8 +25,6 @@ export default function TestPage() {
 
   const { services: dataServices, meta: metaServices } = services || {};
 
-  console.log(metaServices, dataServices);
-
   return (
     <div>
       <PainelHeader title="Teste" />

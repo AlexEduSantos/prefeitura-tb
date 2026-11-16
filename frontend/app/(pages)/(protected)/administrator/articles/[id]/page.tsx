@@ -8,8 +8,6 @@ export default function EditArticlePage() {
   const params = useParams();
   const id = params.id as string;
 
-  console.log(id);
-
   const { article, isLoading, isError } = useArticleById(id);
 
   if (isLoading) {

@@ -55,7 +55,6 @@ export function SettingsManager() {
     const selected = Array.isArray(media) ? media[0] : media;
     if (!selected) return;
     const mediaUrl = getMediaUrl(selected.key) || "";
-    console.log(mediaUrl);
     if (mediaPickerTarget === "logo") {
       setFormData((prev) => ({ ...prev, logoUrl: mediaUrl }));
     } else if (mediaPickerTarget === "favicon") {
