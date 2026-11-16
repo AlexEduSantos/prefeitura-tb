@@ -56,13 +56,9 @@ export class UpdateArticleDto {
   @IsOptional()
   featured?: boolean;
 
-  @IsString()
+  @IsUUID()
   @IsOptional()
-  author?: string;
-
-  @IsString()
-  @IsOptional()
-  editor?: string;
+  editorId?: string;
 
   @IsString()
   @IsOptional()

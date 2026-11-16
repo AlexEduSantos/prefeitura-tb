@@ -295,7 +295,12 @@ export class ArticlesService {
     id: string,
     updateArticleDto: UpdateArticleDto,
   ): Promise<Article> {
-    const { categoryIds, ...rest } = updateArticleDto;
+    const {
+      categoryIds,
+      authorId: _authorId,
+      author: _author,
+      ...rest
+    } = updateArticleDto as any;
     const formattedData: any = { ...rest };
 
     const currentArticle = await this.findOneById(id);

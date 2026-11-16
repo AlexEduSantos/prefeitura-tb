@@ -186,8 +186,9 @@ export function useNewArticleViewModel(
       galleryId: (form.gallery?.id ?? null) as any,
 
       featured: form.featured,
-      authorId: profile?.id,
-      editorId: profile?.id,
+      ...(initialData?.id
+        ? { editorId: profile?.id }
+        : { authorId: profile?.id }),
 
       seoTitle: form.seoTitle || undefined,
       seoDescription: form.seoDescription || undefined,
