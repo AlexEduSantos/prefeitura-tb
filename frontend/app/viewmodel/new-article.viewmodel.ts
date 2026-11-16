@@ -143,11 +143,24 @@ export function useNewArticleViewModel(
   };
 
   const saveArticle = (status: "draft" | "published") => {
+    const initialPubDateFormatted = initialData?.publicationDate
+      ? new Date(initialData.publicationDate).toISOString().slice(0, 16)
+      : "";
+
     // Validação de datas
     const now = new Date();
-    if (form.publicationDate && new Date(form.publicationDate) < now) {
-      alert("A data de publicação não pode ser anterior ao horário atual.");
-      return;
+    if (form.publicationDate) {
+      const pubDate = new Date(form.publicationDate);
+      const isPast = pubDate < now;
+      const hasInitialPubDate = Boolean(initialData?.publicationDate);
+      const isChanged = form.publicationDate !== initialPubDateFormatted;
+
+      // Se o artigo já possuir data de publicação anterior à atual,
+      // só valida se o usuário alterou o valor.
+      if (isPast && (!hasInitialPubDate || isChanged)) {
+        alert("A data de publicação não pode ser anterior ao horário atual.");
+        return;
+      }
     }
     if (form.expirationDate && new Date(form.expirationDate) < now) {
       alert("A data de expiração não pode ser anterior ao horário atual.");
@@ -190,10 +203,18 @@ export function useNewArticleViewModel(
     };
 
     if (hasHeadline && form.headline) payload.headline = form.headline;
-    if (form.publicationDate)
-      payload.publicationDate = new Date(
-        form.publicationDate,
-      ).toISOString() as any;
+    if (form.publicationDate) {
+      if (
+        initialData?.publicationDate &&
+        form.publicationDate === initialPubDateFormatted
+      ) {
+        payload.publicationDate = initialData.publicationDate as any;
+      } else {
+        payload.publicationDate = new Date(
+          form.publicationDate,
+        ).toISOString() as any;
+      }
+    }
     if (form.expirationDate)
       payload.expirationDate = new Date(
         form.expirationDate,

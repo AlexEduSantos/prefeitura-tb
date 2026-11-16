@@ -341,7 +341,7 @@ export function ArticlesBlock() {
         </div>
         {/* Artigo em destaque */}
 
-        {featuredArticle && (
+        {hasSidebar && (
           <div className="w-full sm:w-1/4 grid sm:grid-rows-3 sm:grid-cols-1 grid-cols-3 gap-2 sm:gap-4">
             {featuredArticle.map((article: IArticle) => (
               <SmallArticleCard article={article} key={article.id} />

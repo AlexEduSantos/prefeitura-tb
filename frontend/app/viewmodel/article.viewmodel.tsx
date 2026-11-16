@@ -288,7 +288,9 @@ export function ArticleViewModel() {
           );
         },
         cell: ({ row }) => (
-          <div className="font-medium px-4">{row.getValue("title")}</div>
+          <div className="font-medium px-4 max-w-120 text-wrap line-clamp-2">
+            {row.getValue("title")}
+          </div>
         ),
       },
       {
