@@ -6,15 +6,25 @@ import { ObserveInstrument } from './observe';
 import session from 'express-session';
 import passport from 'passport';
 import { Pool } from 'pg';
+import helmet from 'helmet';
 import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { validateEnv } from './common/config/env.validation';
 
 async function bootstrap() {
+  const env = validateEnv(process.env);
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     instrument: ObserveInstrument,
   });
+
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    }),
+  );
 
   // Servir arquivos do volume de uploads do Docker no endpoint /uploads
   app.useStaticAssets('/app/uploads', {
@@ -30,15 +40,8 @@ async function bootstrap() {
 
   const pgSession = require('connect-pg-simple')(session);
   const pgPool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: env.DATABASE_URL,
   });
-
-  const sessionSecret = process.env.SESSION_SECRET;
-  if (!sessionSecret || sessionSecret.length < 64) {
-    throw new Error(
-      'Configuração inválida: SESSION_SECRET deve estar definida no ambiente e possuir no mínimo 64 caracteres.',
-    );
-  }
 
   app.use(
     session({
@@ -46,10 +49,13 @@ async function bootstrap() {
         pool: pgPool,
         tableName: 'session',
       }),
-      secret: sessionSecret,
+      secret: env.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: env.NODE_ENV === 'production',
         maxAge: 8 * 60 * 60 * 1000, // 8 horas
       },
     }),

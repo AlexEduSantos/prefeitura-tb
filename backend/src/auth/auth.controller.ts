@@ -5,13 +5,18 @@ import {
   Body,
   UseGuards,
   Request,
+  Res,
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import type { Request as ExpressRequest } from 'express';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { AuthService } from './auth.service';
 import { SessionGuard } from './session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
@@ -27,7 +32,8 @@ export class AuthController {
     private eventEmitter: EventEmitter2,
   ) {}
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(ThrottlerGuard, AuthGuard('local'))
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Request() req: ExpressRequest) {
@@ -60,14 +66,27 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Request() req) {
+  async logout(
+    @Request() req: any,
+    @Res({ passthrough: true }) res?: ExpressResponse,
+  ) {
     return new Promise((resolve, reject) => {
       req.logout((err: Error) => {
         if (err) {
           return reject(err);
         }
-        // Retorna uma resposta de sucesso após o logout
-        resolve({ message: 'Logout bem-sucedido.' });
+        if (req.session && typeof req.session.destroy === 'function') {
+          req.session.destroy((destroyErr: Error) => {
+            if (destroyErr) {
+              return reject(destroyErr);
+            }
+            res?.clearCookie?.('connect.sid');
+            resolve({ message: 'Logout bem-sucedido.' });
+          });
+        } else {
+          res?.clearCookie?.('connect.sid');
+          resolve({ message: 'Logout bem-sucedido.' });
+        }
       });
     });
   }

@@ -1,7 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { MenuWhereInput } from '../generated/prisma/models';
+
+export const ALLOWED_MENU_FILTER_FIELDS = [
+  'id',
+  'title',
+  'location',
+  'spaceId',
+  'organizationId',
+  'active',
+] as const;
 
 @Injectable()
 export class MenusService {
@@ -94,9 +103,15 @@ export class MenusService {
   }
 
   async findBy(field: string, value: string) {
+    if (!ALLOWED_MENU_FILTER_FIELDS.includes(field as any)) {
+      throw new BadRequestException(`Campo de filtro não permitido: ${field}`);
+    }
+
+    const filterValue = field === 'active' ? value === 'true' : value;
+
     const menus = await this.prisma.menu.findMany({
       where: {
-        [field]: value,
+        [field]: filterValue,
       } as MenuWhereInput,
       include: {
         space: true,

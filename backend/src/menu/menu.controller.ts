@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Post,
@@ -8,7 +9,10 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { MenusService } from './menu.service';
+import {
+  ALLOWED_MENU_FILTER_FIELDS,
+  MenusService,
+} from './menu.service';
 import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
@@ -39,6 +43,9 @@ export class MenusController {
 
   @Get('by/:field/:value')
   findBy(@Param('field') field: string, @Param('value') value: string) {
+    if (!ALLOWED_MENU_FILTER_FIELDS.includes(field as any)) {
+      throw new BadRequestException(`Campo de filtro não permitido: ${field}`);
+    }
     return this.menusService.findBy(field, value);
   }
 

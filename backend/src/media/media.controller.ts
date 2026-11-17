@@ -27,10 +27,28 @@ import { SessionGuard } from '../auth/session.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 import { Action } from '../casl/action.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as fs from 'fs';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import type { Request, Response } from 'express';
 import { DeleteMediaDto } from './dto/delete-media.dto';
+
+export const videoDiskStorage = diskStorage({
+  destination: (_req, _file, cb) => {
+    const tmpDir = '/app/uploads/tmp';
+    try {
+      fs.mkdirSync(tmpDir, { recursive: true });
+      cb(null, tmpDir);
+    } catch (err) {
+      cb(err as Error, tmpDir);
+    }
+  },
+  filename: (_req, _file, cb) => {
+    const uniqueName = `${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
+    cb(null, uniqueName);
+  },
+});
 
 @Controller('media')
 export class MediaController {
@@ -196,6 +214,7 @@ export class MediaController {
   @CheckPolicies((ability) => ability.can(Action.Create, 'Media'))
   @UseInterceptors(
     FileInterceptor('file', {
+      storage: videoDiskStorage,
       limits: { fileSize: 50 * 1024 * 1024 },
       fileFilter: (req, file, cb) => {
         const allowed = [
@@ -216,7 +235,8 @@ export class MediaController {
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const tempFilePath = await this.mediaService.saveTempFile(file.buffer);
+    const tempFilePath =
+      file.path || (await this.mediaService.saveTempFile(file.buffer));
     const media = await this.mediaService.createPending(
       createMediaDto,
       'video',

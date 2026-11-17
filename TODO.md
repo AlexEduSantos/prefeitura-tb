@@ -25,23 +25,23 @@ Estas são as falhas mais graves. Elas devem ser resolvidas antes de qualquer no
 
 Itens para evitar abusos e preparar o servidor para produção.
 
-[ ] Configurar cookies com httpOnly: true, sameSite: 'lax' e secure: true (em produção).
-[ ] Corrigir o logout para destruir a sessão no banco (req.session.destroy()) e limpar o cookie.
-[ ] Implementar Rate Limiting (@nestjs/throttler) para o /auth/login (ex: 5 tentativas por minuto).
-[ ] Correção de Injeção de Coluna:
-[ ] Criar uma allowlist de campos permitidos no MenuController (GET /menus/by/:field/:value).
-[ ] Isolamento de Rede Docker:
-[ ] Remover o mapeamento externo de portas do PostgreSQL, Redis e MinIO no docker-compose.yml.
-[ ] Adicionar senha ao Redis.
-[ ] Limpeza de Dependências (Supply Chain):
-[ ] Remover @ffmpeg-installer/ffmpeg e instalar o FFmpeg via apk add ffmpeg no Dockerfile.
-[ ] Remover do package.json backend: @nestjs/elasticsearch, kafkajs, @nestjs/microservices, @nestjs/websockets.
-[ ] Remover do package.json frontend: socket.io-client.
-[ ] Correção de Upload de Vídeo (OOM):
-[ ] Alterar o FileInterceptor para usar diskStorage em vez do MemoryStorage na rota POST /media/video.
-[ ] Adicionar Helmet e Validação de Env:
-[ ] Instalar e configurar o helmet no NestJS.
-[ ] Validar as variáveis de ambiente com Zod na inicialização do backend.
+- [x] Configurar cookies com httpOnly: true, sameSite: 'lax' e secure: true (em produção).
+- [x] Corrigir o logout para destruir a sessão no banco (req.session.destroy()) e limpar o cookie.
+- [x] Implementar Rate Limiting (@nestjs/throttler) para o /auth/login (ex: 5 tentativas por minuto).
+- [x] Correção de Injeção de Coluna:
+- [x] Criar uma allowlist de campos permitidos no MenuController (GET /menus/by/:field/:value).
+- [x] Isolamento de Rede Docker:
+- [x] Remover o mapeamento externo de portas do PostgreSQL, Redis e MinIO no docker-compose.yml.
+- [x] Adicionar senha ao Redis.
+- [x] Limpeza de Dependências (Supply Chain):
+- [x] Remover @ffmpeg-installer/ffmpeg e instalar o FFmpeg via apk add ffmpeg no Dockerfile.
+- [x] Remover do package.json backend: @nestjs/elasticsearch, kafkajs, @nestjs/microservices, @nestjs/websockets.
+- [x] Remover do package.json frontend: socket.io-client.
+- [x] Correção de Upload de Vídeo (OOM):
+- [x] Alterar o FileInterceptor para usar diskStorage em vez do MemoryStorage na rota POST /media/video.
+- [x] Adicionar Helmet e Validação de Env:
+- [x] Instalar e configurar o helmet no NestJS.
+- [x] Validar as variáveis de ambiente com Zod na inicialização do backend.
 
 ## FASE 3: Débitos Arquiteturais e Performance
 
