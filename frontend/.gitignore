@@ -25,7 +25,8 @@
 .DS_Store
 *.pem
 
-# tests (versionados para CI/Vitest)
+# tests (versionados para CI/Vitest; coleção Bruno local ignorada)
+/test/SIte Prefeitura/
 
 # debug
 npm-debug.log*
