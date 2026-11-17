@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test.describe("Portal Público — Acessibilidade e Listagem de Notícias", () => {
   test("deve exibir barra de acessibilidade eMAG, alternar alto contraste, fonte e carregar VLibras", async ({
@@ -54,5 +55,16 @@ test.describe("Portal Público — Acessibilidade e Listagem de Notícias", () =
     await expect(
       page.getByPlaceholder("Buscar notícias por título ou subtítulo..."),
     ).toBeVisible();
+  });
+
+  test("deve validar regras de acessibilidade WCAG 2.1 AA e atributos ARIA com @axe-core/playwright", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "best-practice"])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
   });
 });

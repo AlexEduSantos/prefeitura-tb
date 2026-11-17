@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '../generated/prisma/client';
 import { CreateOfficialGazetteDto } from './dto/create-official-gazette.dto';
 import { UpdateOfficialGazetteDto } from './dto/update-official-gazette.dto';
 import { QueryOfficialGazetteDto } from './dto/query-official-gazette.dto';
@@ -24,6 +25,7 @@ export class OfficialGazetteService {
         fileUrl: createDto.fileUrl,
         fileSize: createDto.fileSize || null,
         pageCount: createDto.pageCount || null,
+        contentText: createDto.contentText || null,
         createdById: userId,
       },
       include: {
@@ -43,10 +45,14 @@ export class OfficialGazetteService {
    * Atualização de uma edição existente.
    * Vincula o usuário editor (ADMIN ou PUBLISHER).
    */
-  async update(id: string, updateDto: UpdateOfficialGazetteDto, userId: string) {
+  async update(
+    id: string,
+    updateDto: UpdateOfficialGazetteDto,
+    userId: string,
+  ) {
     await this.ensureExists(id);
 
-    const data: any = {
+    const data: Prisma.OfficialGazetteUncheckedUpdateInput = {
       ...updateDto,
       updatedById: userId,
     };
@@ -91,7 +97,10 @@ export class OfficialGazetteService {
 
   async searchByFullText(term: string): Promise<string[]> {
     const cleanTerm = term.trim();
-    if (!cleanTerm || typeof (this.prisma as any).$queryRaw !== 'function') {
+    const prismaWithRaw = this.prisma as unknown as {
+      $queryRaw?: PrismaService['$queryRaw'];
+    };
+    if (!cleanTerm || typeof prismaWithRaw.$queryRaw !== 'function') {
       return [];
     }
 
@@ -101,12 +110,12 @@ export class OfficialGazetteService {
         FROM "official_gazette"
         WHERE to_tsvector(
           'portuguese',
-          coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '')
+          coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '') || ' ' || coalesce("contentText", '')
         ) @@ plainto_tsquery('portuguese', ${cleanTerm})
         ORDER BY ts_rank(
           to_tsvector(
             'portuguese',
-            coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '')
+            coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '') || ' ' || coalesce("contentText", '')
           ),
           plainto_tsquery('portuguese', ${cleanTerm})
         ) DESC
@@ -245,7 +254,9 @@ export class OfficialGazetteService {
     });
 
     if (!gazette) {
-      throw new NotFoundException(`Boletim oficial com ID "${id}" não encontrado.`);
+      throw new NotFoundException(
+        `Boletim oficial com ID "${id}" não encontrado.`,
+      );
     }
 
     return gazette;
@@ -258,7 +269,9 @@ export class OfficialGazetteService {
     });
 
     if (!exists) {
-      throw new NotFoundException(`Boletim oficial com ID "${id}" não encontrado.`);
+      throw new NotFoundException(
+        `Boletim oficial com ID "${id}" não encontrado.`,
+      );
     }
     return exists;
   }
@@ -266,8 +279,8 @@ export class OfficialGazetteService {
   private buildWhereClause(
     query: QueryOfficialGazetteDto,
     ftsIds: string[] = [],
-  ) {
-    const where: any = {};
+  ): Prisma.OfficialGazetteWhereInput {
+    const where: Prisma.OfficialGazetteWhereInput = {};
 
     // Busca por termo no título, descrição ou edição (inclui Full-Text Search tsvector)
     if (query.search?.trim()) {
@@ -305,18 +318,18 @@ export class OfficialGazetteService {
         };
       }
     } else if (query.startDate || query.endDate) {
-      where.publicationDate = {};
+      const dateFilter: Prisma.DateTimeFilter = {};
       if (query.startDate) {
-        where.publicationDate.gte = new Date(query.startDate);
+        dateFilter.gte = new Date(query.startDate);
       }
       if (query.endDate) {
         const end = new Date(query.endDate);
         end.setHours(23, 59, 59, 999);
-        where.publicationDate.lte = end;
+        dateFilter.lte = end;
       }
+      where.publicationDate = dateFilter;
     }
 
     return where;
   }
 }
-

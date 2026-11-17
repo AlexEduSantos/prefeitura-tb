@@ -33,12 +33,15 @@ export class CreateOfficialGazetteDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Data de publicação impressa/oficial do documento (YYYY-MM-DD ou ISO)',
+    description:
+      'Data de publicação impressa/oficial do documento (YYYY-MM-DD ou ISO)',
     example: '2026-11-10',
   })
   @IsDateString(
     {},
-    { message: 'A data de publicação deve estar em formato válido (YYYY-MM-DD)' },
+    {
+      message: 'A data de publicação deve estar em formato válido (YYYY-MM-DD)',
+    },
   )
   @IsNotEmpty({ message: 'A data de publicação é obrigatória' })
   publicationDate!: string;
@@ -66,4 +69,11 @@ export class CreateOfficialGazetteDto {
   @IsNumber()
   @IsOptional()
   pageCount?: number;
+
+  @ApiPropertyOptional({
+    description: 'Texto extraído do PDF para indexação Full-Text Search',
+  })
+  @IsString()
+  @IsOptional()
+  contentText?: string;
 }

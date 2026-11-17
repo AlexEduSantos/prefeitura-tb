@@ -84,16 +84,16 @@ Melhorias de produto e auditoria para o futuro.
 
 ## Indexação de PDFs do Diário Oficial:
 
-[] Extrair texto dos PDFs no MediaProcessor (usando pdf-parse) e salvar em coluna tsvector para busca dentro do conteúdo.
+[x] Extrair texto dos PDFs no MediaProcessor (usando pdf-parse) e salvar em coluna tsvector para busca dentro do conteúdo.
 
 ## Streaming de Vídeo (HLS):
 
-[] Usar o FFmpeg nativo para gerar versões H.264/MP4 ou .m3u8 em background.
+[x] Usar o FFmpeg nativo para gerar versões H.264/MP4 ou .m3u8 em background.
 
 ## Acessibilidade e Testes:
 
-[] Integrar @axe-core/playwright no E2E para validar contraste e ARIA.
-[] Criar a suíte de testes unitários Vitest no frontend (./test/\*_/_.test.{ts,tsx}).
+[x] Integrar @axe-core/playwright no E2E para validar contraste e ARIA.
+[x] Criar a suíte de testes unitários Vitest no frontend (./test/\*_/_.test.{ts,tsx}).
 
 # Orientações Para refatoração
 

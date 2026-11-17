@@ -250,10 +250,11 @@ model Media {
   url         String?
   fileSize    Int?
   mimeType    String?
-  width       Int?
-  height      Int?
-  tags        String[]
-  status      MediaStatus @default(pending)
+  width         Int?
+  height        Int?
+  tags          String[]
+  extractedText String?     @db.Text
+  status        MediaStatus @default(pending)
   createdAt   DateTime    @default(now()) @db.Timestamp
   updatedAt   DateTime    @updatedAt @db.Timestamp
 
@@ -574,9 +575,10 @@ model OfficialGazette {
   publicationDate DateTime @db.Date // A data que consta no documento
 
   // Arquivos
-  fileUrl   String // URL do PDF no MinIO
-  fileSize  Int? // Tamanho em bytes (útil para exibir "Download 2.5MB")
-  pageCount Int? // Número de páginas
+  fileUrl     String // URL do PDF no MinIO
+  fileSize    Int? // Tamanho em bytes (útil para exibir "Download 2.5MB")
+  pageCount   Int? // Número de páginas
+  contentText String? @db.Text // Texto extraído do PDF para Full-Text Search
 
   // Controle de Auditoria (Quem fez o quê)
   createdById String @db.Uuid
