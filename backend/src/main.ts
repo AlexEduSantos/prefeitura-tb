@@ -26,11 +26,6 @@ async function bootstrap() {
     }),
   );
 
-  // Servir arquivos do volume de uploads do Docker no endpoint /uploads
-  app.useStaticAssets('/app/uploads', {
-    prefix: '/uploads/',
-  });
-
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',
     credentials: true,

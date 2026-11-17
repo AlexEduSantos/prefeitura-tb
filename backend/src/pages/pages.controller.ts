@@ -29,8 +29,13 @@ export class PagesController {
   // Listagem administrativa de páginas (requer sessão)
   @UseGuards(SessionGuard)
   @Get()
-  async findAll() {
-    return this.pagesService.findAll();
+  async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('skip') skip?: string,
+    @Query('take') take?: string,
+  ) {
+    return this.pagesService.findAll({ page, limit, skip, take });
   }
 
   @Get('public')

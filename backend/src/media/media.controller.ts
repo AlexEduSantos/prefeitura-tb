@@ -29,6 +29,8 @@ import { Action } from '../casl/action.enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import type { Request, Response } from 'express';
@@ -36,7 +38,7 @@ import { DeleteMediaDto } from './dto/delete-media.dto';
 
 export const videoDiskStorage = diskStorage({
   destination: (_req, _file, cb) => {
-    const tmpDir = '/app/uploads/tmp';
+    const tmpDir = join(tmpdir(), 'pmtb-uploads', 'tmp');
     try {
       fs.mkdirSync(tmpDir, { recursive: true });
       cb(null, tmpDir);
@@ -102,6 +104,17 @@ export class MediaController {
     } catch (err) {
       return res.status(404).json({ message: 'Arquivo não encontrado' });
     }
+  }
+
+  @Get('presigned/*path')
+  async getPresignedUrl(@Param('path') path: string | string[]) {
+    const rawPath = Array.isArray(path) ? path.join('/') : path;
+    const key = decodeURIComponent(rawPath);
+    if (!key) {
+      throw new BadRequestException('Chave do arquivo não fornecida');
+    }
+    const url = await this.mediaService.getPresignedUrl(key);
+    return { url };
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -248,8 +261,13 @@ export class MediaController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
-  findAll() {
-    return this.mediaService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('skip') skip?: string,
+    @Query('take') take?: string,
+  ) {
+    return this.mediaService.findAll({ page, limit, skip, take });
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)

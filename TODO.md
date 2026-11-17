@@ -47,13 +47,13 @@ Itens para evitar abusos e preparar o servidor para produção.
 
 Melhorias para garantir que o sistema não fique lento conforme a prefeitura publica mais conteúdo.
 
-[ ] Corrigir Acoplamento MinIO/Backend:
-[ ] Remover o volume compartilhado bucket_data entre o MinIO e o backend no docker-compose.
-[ ] Forçar todo acesso a arquivos a passar pela API S3 ou URLs pré-assinadas.
-[ ] Implementar Paginação Server-Side:
-[ ] Adicionar skip e take obrigatórios nas rotas GET /articles/admin, GET /pages e GET /media.
-[ ] Adicionar Cache com Redis:
-[ ] Implementar cache para rotas de leitura frequente (GET /menus, GET /settings, GET /pages/public/\*) com invalidação nas mutações.
+- [x] Corrigir Acoplamento MinIO/Backend:
+- [x] Remover o volume compartilhado bucket_data entre o MinIO e o backend no docker-compose.
+- [x] Forçar todo acesso a arquivos a passar pela API S3 ou URLs pré-assinadas.
+- [x] Implementar Paginação Server-Side:
+- [x] Adicionar skip e take obrigatórios nas rotas GET /articles/admin, GET /pages e GET /media.
+- [x] Adicionar Cache com Redis:
+- [x] Implementar cache para rotas de leitura frequente (GET /menus, GET /settings, GET /pages/public/\*) com invalidação nas mutações.
 
 ## FASE 4: Novas Funcionalidades e Observabilidade
 

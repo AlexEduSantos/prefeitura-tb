@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Optional } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { MenuWhereInput } from '../generated/prisma/models';
+import { RedisCacheService } from '../common/cache/redis-cache.service';
 
 export const ALLOWED_MENU_FILTER_FIELDS = [
   'id',
@@ -14,39 +15,50 @@ export const ALLOWED_MENU_FILTER_FIELDS = [
 
 @Injectable()
 export class MenusService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Optional() private readonly cacheService?: RedisCacheService,
+  ) {}
 
   async create(createMenuDto: CreateMenuDto) {
-    return this.prisma.menu.create({
+    const created = await this.prisma.menu.create({
       data: createMenuDto,
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return created;
   }
 
   async findAll() {
-    const menus = await this.prisma.menu.findMany({
-      include: {
-        space: true,
-        organization: true,
-        items: {
-          where: { visible: true },
-          orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
-          include: {
-            page: {
-              include: {
-                space: { select: { slug: true } },
+    const fetchMenus = async () => {
+      const menus = await this.prisma.menu.findMany({
+        include: {
+          space: true,
+          organization: true,
+          items: {
+            where: { visible: true },
+            orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
+            include: {
+              page: {
+                include: {
+                  space: { select: { slug: true } },
+                },
               },
+              category: true,
             },
-            category: true,
           },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+        orderBy: { createdAt: 'desc' },
+      });
 
-    return menus.map((menu) => ({
-      ...menu,
-      items: this.buildTree(menu.items),
-    }));
+      return menus.map((menu) => ({
+        ...menu,
+        items: this.buildTree(menu.items),
+      }));
+    };
+
+    return this.cacheService
+      ? this.cacheService.getOrSet('cache:menus:all', fetchMenus)
+      : fetchMenus();
   }
 
   /**
@@ -78,28 +90,34 @@ export class MenusService {
   }
 
   async findOne(id: string) {
-    const menu = await this.prisma.menu.findFirst({
-      where: { id, active: true },
-      include: {
-        space: true,
-        organization: true,
-        items: {
-          where: { visible: true },
-          orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
-          include: {
-            page: { include: { space: { select: { slug: true } } } },
-            category: true,
+    const fetchMenu = async () => {
+      const menu = await this.prisma.menu.findFirst({
+        where: { id, active: true },
+        include: {
+          space: true,
+          organization: true,
+          items: {
+            where: { visible: true },
+            orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
+            include: {
+              page: { include: { space: { select: { slug: true } } } },
+              category: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!menu) return null;
+      if (!menu) return null;
 
-    return {
-      ...menu,
-      items: this.buildTree(menu.items),
+      return {
+        ...menu,
+        items: this.buildTree(menu.items),
+      };
     };
+
+    return this.cacheService
+      ? this.cacheService.getOrSet(`cache:menus:one:${id}`, fetchMenu)
+      : fetchMenu();
   }
 
   async findBy(field: string, value: string) {
@@ -109,43 +127,56 @@ export class MenusService {
 
     const filterValue = field === 'active' ? value === 'true' : value;
 
-    const menus = await this.prisma.menu.findMany({
-      where: {
-        [field]: filterValue,
-      } as MenuWhereInput,
-      include: {
-        space: true,
-        organization: true,
-        items: {
-          include: {
-            page: true,
-            category: true,
-            parent: true,
-            children: true,
-            menu: true,
+    const fetchMenus = async () => {
+      const menus = await this.prisma.menu.findMany({
+        where: {
+          [field]: filterValue,
+        } as MenuWhereInput,
+        include: {
+          space: true,
+          organization: true,
+          items: {
+            include: {
+              page: true,
+              category: true,
+              parent: true,
+              children: true,
+              menu: true,
+            },
+            orderBy: { order: 'asc' },
           },
-          orderBy: { order: 'asc' },
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+        orderBy: { createdAt: 'desc' },
+      });
 
-    return menus.map((menu) => ({
-      ...menu,
-      items: this.buildTree(menu.items),
-    }));
+      return menus.map((menu) => ({
+        ...menu,
+        items: this.buildTree(menu.items),
+      }));
+    };
+
+    return this.cacheService
+      ? this.cacheService.getOrSet(
+          `cache:menus:by:${field}:${value}`,
+          fetchMenus,
+        )
+      : fetchMenus();
   }
 
   async update(id: string, updateMenuDto: CreateMenuDto) {
-    return this.prisma.menu.update({
+    const updated = await this.prisma.menu.update({
       where: { id },
       data: updateMenuDto,
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return updated;
   }
 
   async remove(id: string) {
-    return this.prisma.menu.delete({
+    const deleted = await this.prisma.menu.delete({
       where: { id },
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return deleted;
   }
 }

@@ -3,6 +3,10 @@ import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Article } from '../generated/prisma/client';
+import {
+  PaginationInput,
+  resolvePagination,
+} from '../common/utils/pagination';
 
 @Injectable()
 export class ArticlesService {
@@ -199,10 +203,12 @@ export class ArticlesService {
     status?: string,
     categorySlug?: string,
     organizationId?: string,
+    pagination?: PaginationInput,
   ) {
     const statusWhere: any = status
       ? status
       : { not: 'excluido' };
+    const { skip, take } = resolvePagination(pagination);
 
     const articles = await this.prisma.article.findMany({
       include: {
@@ -243,6 +249,8 @@ export class ArticlesService {
           : {}),
         ...(organizationId ? { organizationId } : {}),
       },
+      skip,
+      take,
       orderBy: search
         ? {
             _relevance: {

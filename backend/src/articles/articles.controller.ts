@@ -31,12 +31,17 @@ export class ArticlesController {
     @Query('status') status?: string,
     @Query('category') category?: string,
     @Query('organizationId') organizationId?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('skip') skip?: string,
+    @Query('take') take?: string,
   ) {
     return this.articlesService.findAllAdmin(
       search,
       status,
       category,
       organizationId,
+      { page, limit, skip, take },
     );
   }
 

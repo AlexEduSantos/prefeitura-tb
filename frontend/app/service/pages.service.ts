@@ -3,8 +3,17 @@ import { IPage } from "../type/pages";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export class PagesService {
-  static async getPagesList(page?: number, limit?: number, sort?: string) {
-    const url = `${API_URL}/pages?page=${page}&limit=${limit}&sort=${sort}`;
+  static async getPagesList(
+    page: number = 1,
+    limit: number = 50,
+    sort: string = "desc",
+  ) {
+    const params = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      sort,
+    });
+    const url = `${API_URL}/pages?${params.toString()}`;
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

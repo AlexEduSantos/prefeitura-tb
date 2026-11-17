@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateMediaDto } from './dto/create-media.dto';
 import { UpdateMediaDto } from './dto/update-media.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { tmpdir } from 'os';
 import { join } from 'path';
 import * as fs from 'fs/promises';
 import sharp from 'sharp';
@@ -19,6 +20,10 @@ import { ConfigService } from '@nestjs/config';
 import { Media } from '../generated/prisma/client';
 import { detectFileTypeFromBuffer } from '../common/utils/file-type-detector';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
+import {
+  PaginationInput,
+  resolvePagination,
+} from '../common/utils/pagination';
 
 export function sanitizeFilename(title: string): string {
   return title
@@ -33,7 +38,7 @@ export function sanitizeFilename(title: string): string {
 
 @Injectable()
 export class MediaService {
-  private readonly uploadBasePath = '/app/uploads';
+  private readonly uploadBasePath = join(tmpdir(), 'pmtb-uploads');
   private readonly s3Client: S3Client;
   private readonly bucketName: string;
 
@@ -137,17 +142,10 @@ export class MediaService {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
-    const uploadDir = join(this.uploadBasePath, 'images', relativeDir);
-
-    try {
-      await fs.access(uploadDir);
-    } catch {
-      await fs.mkdir(uploadDir, { recursive: true });
-    }
 
     const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'image';
     const fileName = `${sanitizedTitle}-${Date.now()}.webp`;
-    const filePath = join(uploadDir, fileName);
+    const key = `images/${relativeDir}/${fileName}`;
 
     let transformer = sharp(file.buffer).webp({ quality: 80 });
 
@@ -159,19 +157,21 @@ export class MediaService {
       });
     }
 
-    await transformer.toFile(filePath);
+    const finalBuffer = await transformer.toBuffer();
+    const finalMetadata = await sharp(finalBuffer).metadata();
 
-    const finalMetadata = await sharp(filePath).metadata();
+    await this.uploadToS3(key, finalBuffer, 'image/webp');
 
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/images/${relativeDir}/${fileName}`,
-        fileSize: (await fs.stat(filePath)).size,
+        key,
+        fileSize: finalBuffer.length,
         type: 'image',
         mimeType: 'image/webp',
         width: finalMetadata.width,
         height: finalMetadata.height,
+        status: 'ready',
       },
     });
   }
@@ -189,27 +189,21 @@ export class MediaService {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
-    const uploadDir = join(this.uploadBasePath, 'documents', relativeDir);
-
-    try {
-      await fs.access(uploadDir);
-    } catch {
-      await fs.mkdir(uploadDir, { recursive: true });
-    }
 
     const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'document';
     const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
-    const filePath = join(uploadDir, fileName);
+    const key = `documents/${relativeDir}/${fileName}`;
 
-    await fs.writeFile(filePath, file.buffer);
+    await this.uploadToS3(key, file.buffer, type.mime);
 
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/documents/${relativeDir}/${fileName}`,
-        fileSize: (await fs.stat(filePath)).size,
+        key,
+        fileSize: file.buffer.length,
         type: 'document',
         mimeType: type.mime,
+        status: 'ready',
       },
     });
   }
@@ -227,33 +221,32 @@ export class MediaService {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
-    const uploadDir = join(this.uploadBasePath, 'videos', relativeDir);
-
-    try {
-      await fs.access(uploadDir);
-    } catch {
-      await fs.mkdir(uploadDir, { recursive: true });
-    }
 
     const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'video';
     const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
-    const filePath = join(uploadDir, fileName);
+    const key = `videos/${relativeDir}/${fileName}`;
 
-    await fs.writeFile(filePath, file.buffer);
+    await this.uploadToS3(key, file.buffer, type.mime);
 
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
-        url: `http://localhost:3001/uploads/videos/${relativeDir}/${fileName}`,
-        fileSize: (await fs.stat(filePath)).size,
+        key,
+        fileSize: file.buffer.length,
         type: 'video',
         mimeType: type.mime,
+        status: 'ready',
       },
     });
   }
 
-  async findAll(): Promise<Media[]> {
-    return this.prisma.media.findMany();
+  async findAll(pagination?: PaginationInput): Promise<Media[]> {
+    const { skip, take } = resolvePagination(pagination);
+    return this.prisma.media.findMany({
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   async findOne(id: string): Promise<Media> {

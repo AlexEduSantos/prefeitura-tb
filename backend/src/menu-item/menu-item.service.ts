@@ -1,20 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReorderMenuItemsDto } from './dto/reorder-menu-item.dto';
+import { RedisCacheService } from '../common/cache/redis-cache.service';
 
 @Injectable()
 export class MenuItemService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly cacheService?: RedisCacheService,
+  ) {}
 
-  create(menuId: string, createMenuItemDto: CreateMenuItemDto) {
-    return this.prisma.menuItem.create({
+  async create(menuId: string, createMenuItemDto: CreateMenuItemDto) {
+    const created = await this.prisma.menuItem.create({
       data: {
         ...createMenuItemDto,
         menuId,
       },
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return created;
   }
 
   findAll() {
@@ -42,8 +48,8 @@ export class MenuItemService {
     });
   }
 
-  update(id: string, updateMenuItemDto: UpdateMenuItemDto) {
-    return this.prisma.menuItem.update({
+  async update(id: string, updateMenuItemDto: UpdateMenuItemDto) {
+    const updated = await this.prisma.menuItem.update({
       where: { id },
       data: updateMenuItemDto,
       include: {
@@ -54,19 +60,23 @@ export class MenuItemService {
         children: true,
       },
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return updated;
   }
 
-  remove(id: string) {
-    return this.prisma.menuItem.delete({
+  async remove(id: string) {
+    const deleted = await this.prisma.menuItem.delete({
       where: { id },
     });
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return deleted;
   }
 
   async reorder(reorderDto: ReorderMenuItemsDto) {
     const { items } = reorderDto;
 
     // Executa as atualizações em lote de forma atômica usando uma transação do Prisma
-    return this.prisma.$transaction(
+    const result = await this.prisma.$transaction(
       items.map((item) =>
         this.prisma.menuItem.update({
           where: { id: item.id },
@@ -77,5 +87,7 @@ export class MenuItemService {
         }),
       ),
     );
+    await this.cacheService?.invalidateByPrefix('cache:menus');
+    return result;
   }
 }

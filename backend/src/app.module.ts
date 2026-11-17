@@ -30,10 +30,12 @@ import { AuditModule } from './audit/audit.module';
 import { AuditInterceptor } from './audit/audit.interceptor';
 import { OfficialGazetteModule } from './official-gazette/official-gazette.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { RedisCacheModule } from './common/cache/redis-cache.module';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
+    RedisCacheModule,
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       connection: {
