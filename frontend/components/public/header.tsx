@@ -8,7 +8,7 @@ import { useState } from "react";
 import { YoutubeIcon } from "../icons/youtube-icon";
 import { InstagramIcon } from "../icons/instagram-icon";
 import { FacebookIcon } from "../icons/facebook-icon";
-import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+import { useMenuByLocation } from "@/app/viewmodel/menu.viewmodel";
 import { NavigationMenu, NavigationMenuList } from "../ui/navigation-menu";
 import { MenuNavItem } from "./menu-nav-item";
 import { Skeleton } from "../ui/skeleton";
@@ -20,8 +20,10 @@ import { useSettings } from "@/app/viewmodel/settings.viewmodel";
 import Image from "next/image";
 
 function DesktopBarTop() {
-  const menuId = "a80c8356-9cfc-4998-8b5c-c81f395f6dcd";
-  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuByLocation(
+    "header",
+    "Barra Superior",
+  );
 
   if (isLoadingMenu) {
     return (
@@ -129,8 +131,10 @@ function DesktopBarTop() {
 function DesktopHeader() {
   const [openSearch, setOpenSearch] = useState(false);
   const router = useRouter();
-  const menuId = "dec03c06-aa22-4ceb-9dc0-38d445671d68";
-  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuByLocation(
+    "header",
+    "Principal",
+  );
   const { settings, isLoadingSettings } = useSettings();
 
   const [query, setQuery] = useState("");
@@ -272,7 +276,7 @@ function DesktopHeader() {
   );
 }
 
-export default function header() {
+export default function Header() {
   const isMobile = useIsMobile();
   if (isMobile) {
     return <MobileHeader />;

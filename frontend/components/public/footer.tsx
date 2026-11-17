@@ -4,13 +4,15 @@ import { FacebookIcon } from "../icons/facebook-icon";
 import { InstagramIcon } from "../icons/instagram-icon";
 import { YoutubeIcon } from "../icons/youtube-icon";
 import { useRouter } from "next/navigation";
-import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+import { useMenuByLocation } from "@/app/viewmodel/menu.viewmodel";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 
 export function Footer() {
   const router = useRouter();
-  const menuId = "efc07819-7131-46ed-9322-0fe352c9b92e";
-  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuByLocation(
+    "footer",
+    "Rodapé",
+  );
 
   return (
     <footer

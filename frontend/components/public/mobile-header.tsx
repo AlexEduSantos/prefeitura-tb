@@ -29,7 +29,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import { useMenuOnly } from "@/app/viewmodel/menu.viewmodel";
+import { useMenuByLocation } from "@/app/viewmodel/menu.viewmodel";
 import { IMenuItem } from "@/app/type/menu";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { cn } from "@/lib/utils";
@@ -194,8 +194,10 @@ export function MobileHeader() {
 
   const { settings, isLoadingSettings } = useSettings();
 
-  const menuId = "dec03c06-aa22-4ceb-9dc0-38d445671d68";
-  const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
+  const { menu, isLoadingMenu, isErrorMenu } = useMenuByLocation(
+    "header",
+    "Principal",
+  );
 
   const hasLogoUrl = settings?.logoUrl ? settings?.logoUrl : "/logo.png";
 

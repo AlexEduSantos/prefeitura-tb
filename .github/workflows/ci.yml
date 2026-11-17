@@ -1,0 +1,105 @@
+name: CI/CD — Portal Municipal
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  backend:
+    name: Backend — Typecheck, Tests & Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar Prisma Client
+        run: npx prisma generate
+
+      - name: Verificação de tipos (tsc --noEmit)
+        run: npx tsc --noEmit
+
+      - name: Executar testes unitários (Vitest)
+        run: npx vitest run
+
+      - name: Auditoria de dependências de produção (npm audit)
+        run: npm audit --omit=dev --audit-level=high
+
+  frontend:
+    name: Frontend — Typecheck, Vitest, Playwright & Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Verificação de tipos (tsc --noEmit)
+        run: pnpm exec tsc --noEmit
+
+      - name: Testes unitários (Vitest)
+        run: pnpm exec vitest run
+
+      - name: Build Next.js
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
+
+      - name: Instalar navegadores Playwright e executar E2E
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm exec playwright test --list
+
+      - name: Auditoria de dependências (pnpm audit)
+        run: pnpm audit --prod --audit-level=critical
+
+  security-scan:
+    name: Trivy — Vulnerability & Misconfiguration Scan
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build imagem Docker do Backend para varredura
+        run: docker build -t pmtb-backend:ci ./backend
+
+      - name: Executar Trivy (Filesystem + IaC)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+
+      - name: Executar Trivy (Container Image Backend)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: pmtb-backend:ci
+          format: table
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true

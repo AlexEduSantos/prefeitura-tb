@@ -45,8 +45,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Menu cadastrado com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao cadastrar menu!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao cadastrar menu!", { description: error.message }),
   });
 
   const updateMenuMutation = useMutation({
@@ -56,8 +56,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Menu atualizado com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao atualizar menu!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao atualizar menu!", { description: error.message }),
   });
 
   const deleteMenuMutation = useMutation({
@@ -66,8 +66,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Menu excluído com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao excluir menu!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao excluir menu!", { description: error.message }),
   });
 
   // ─── Mutations - Menu Item ─────────────────────────────────────────────
@@ -83,8 +83,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Item cadastrado com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao cadastrar item!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao cadastrar item!", { description: error.message }),
   });
 
   const updateMenuItemMutation = useMutation({
@@ -94,8 +94,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Item atualizado com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao atualizar item!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao atualizar item!", { description: error.message }),
   });
 
   const deleteMenuItemMutation = useMutation({
@@ -104,8 +104,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Item excluído com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao excluir item!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao excluir item!", { description: error.message }),
   });
 
   const reorderMenuItemsMutation = useMutation({
@@ -120,8 +120,8 @@ export function useMenu() {
       queryClient.invalidateQueries({ queryKey: ["menus"] });
       toast.success("Itens reordenados com sucesso!");
     },
-    onError: (error: any) =>
-      toast.error("Erro ao reordenar itens!", error.message),
+    onError: (error: Error) =>
+      toast.error("Erro ao reordenar itens!", { description: error.message }),
   });
 
   // ─── Handlers - Menu ───────────────────────────────────────────────────
@@ -239,5 +239,35 @@ export function useMenuOnly(id: string) {
     queryFn: () => MenuService.getMenu(id),
     enabled: !!id,
   });
+  return { menu, isLoadingMenu, isErrorMenu };
+}
+
+export function useMenuByLocation(
+  location: "header" | "footer" | "sidebar" | "mobile",
+  preferredTitle?: string,
+) {
+  const {
+    data: menus,
+    isLoading: isLoadingMenu,
+    isError: isErrorMenu,
+  } = useQuery({
+    queryKey: ["menus", "location", location],
+    queryFn: () =>
+      MenuService.getMenuByField({ field: "location", value: location }),
+    enabled: !!location,
+  });
+
+  const activeMenus = (menus || []).filter((m) => m.active !== false);
+  const pool = activeMenus.length > 0 ? activeMenus : menus || [];
+
+  let menu: IMenu | undefined;
+  if (preferredTitle) {
+    const target = preferredTitle.trim().toLowerCase();
+    menu = pool.find((m) => m.title?.trim().toLowerCase() === target);
+  }
+  if (!menu) {
+    menu = pool[0];
+  }
+
   return { menu, isLoadingMenu, isErrorMenu };
 }

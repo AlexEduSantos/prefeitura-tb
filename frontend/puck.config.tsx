@@ -1,82 +1,138 @@
 import type { Config } from "@puckeditor/core";
 import { DropZone } from "@puckeditor/core";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
-import React, { useState } from "react";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
+import {
+  $createParagraphNode,
+  $createTextNode,
+  $getRoot,
+  $getSelection,
+  $isRangeSelection,
+  FORMAT_TEXT_COMMAND,
+} from "lexical";
+import React, { useEffect, useState } from "react";
 
-// --- TipTap Editor Field ---
-const TipTapEditor = ({
+// --- Lexical Editor Toolbar ---
+const LexicalToolbar = () => {
+  const [editor] = useLexicalComposerContext();
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+
+  useEffect(() => {
+    return editor.registerUpdateListener(({ editorState }) => {
+      editorState.read(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+          setIsBold(selection.hasFormat("bold"));
+          setIsItalic(selection.hasFormat("italic"));
+        }
+      });
+    });
+  }, [editor]);
+
+  return (
+    <div className="bg-muted p-1 border-b border-border flex gap-1 flex-wrap">
+      <button
+        type="button"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
+        className={`px-2 py-1 text-sm font-semibold rounded ${
+          isBold ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+        }`}
+      >
+        B
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
+        className={`px-2 py-1 text-sm italic rounded ${
+          isItalic ? "bg-primary text-primary-foreground" : "hover:bg-secondary"
+        }`}
+      >
+        I
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          const url = window.prompt("URL");
+          if (url === null) return;
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, url || null);
+        }}
+        className="px-2 py-1 text-sm rounded hover:bg-secondary"
+      >
+        Link
+      </button>
+    </div>
+  );
+};
+
+// --- Lexical Editor Field ---
+const LexicalRichTextEditor = ({
   value,
   onChange,
 }: {
   value: string;
   onChange: (val: string) => void;
 }) => {
-  const editor = useEditor({
-    extensions: [StarterKit, Link.configure({ openOnClick: false })],
-    content: value,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-  });
+  const initialText = React.useMemo(() => {
+    if (!value) return "";
+    return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  }, []);
 
-  if (!editor) return null;
+  const initialConfig = React.useMemo(
+    () => ({
+      namespace: "PuckTextBlock",
+      nodes: [LinkNode],
+      onError: (error: Error) => {
+        console.error(error);
+      },
+      editorState: () => {
+        const root = $getRoot();
+        root.clear();
+        const paragraph = $createParagraphNode();
+        if (initialText) {
+          paragraph.append($createTextNode(initialText));
+        }
+        root.append(paragraph);
+      },
+    }),
+    [initialText],
+  );
 
   return (
     <div className="border border-border rounded-md overflow-hidden flex flex-col bg-background">
-      <div className="bg-muted p-1 border-b border-border flex gap-1 flex-wrap">
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-2 py-1 text-sm font-semibold rounded ${
-            editor.isActive("bold")
-              ? "bg-primary text-primary-foreground"
-              : "hover:bg-secondary"
-          }`}
-        >
-          B
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-2 py-1 text-sm italic rounded ${
-            editor.isActive("italic")
-              ? "bg-primary text-primary-foreground"
-              : "hover:bg-secondary"
-          }`}
-        >
-          I
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            const previousUrl = editor.getAttributes("link").href;
-            const url = window.prompt("URL", previousUrl);
-            if (url === null) return;
-            if (url === "") {
-              editor.chain().focus().extendMarkRange("link").unsetLink().run();
-              return;
+      <LexicalComposer initialConfig={initialConfig}>
+        <LexicalToolbar />
+        <div className="p-3 min-h-30 prose prose-sm max-w-none cursor-text relative">
+          <RichTextPlugin
+            contentEditable={
+              <ContentEditable className="outline-none min-h-24" />
             }
-            editor
-              .chain()
-              .focus()
-              .extendMarkRange("link")
-              .setLink({ href: url })
-              .run();
-          }}
-          className={`px-2 py-1 text-sm rounded ${
-            editor.isActive("link")
-              ? "bg-primary text-primary-foreground"
-              : "hover:bg-secondary"
-          }`}
-        >
-          Link
-        </button>
-      </div>
-      <div className="p-3 min-h-30 prose prose-sm max-w-none cursor-text">
-        <EditorContent editor={editor} />
-      </div>
+            placeholder={
+              <div className="text-muted-foreground text-sm pointer-events-none">
+                Escreva seu texto aqui...
+              </div>
+            }
+            ErrorBoundary={LexicalErrorBoundary}
+          />
+          <HistoryPlugin />
+          <LinkPlugin />
+          <OnChangePlugin
+            onChange={(_editorState, editor) => {
+              const html = editor.getRootElement()?.innerHTML;
+              if (html !== undefined) {
+                onChange(html);
+              }
+            }}
+          />
+        </div>
+      </LexicalComposer>
     </div>
   );
 };
@@ -190,6 +246,70 @@ function getYouTubeEmbedUrl(
   return `https://www.youtube.com/embed/${id}${query}`;
 }
 
+const PuckImageBlock = ({
+  url,
+  alt,
+  caption,
+  alinhamento,
+  width,
+  shadow,
+  lightbox,
+}: Props["Imagem"]) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const alinhamentoClass =
+    alinhamento === "left"
+      ? "justify-start"
+      : alinhamento === "right"
+        ? "justify-end"
+        : "justify-center";
+
+  const widthMap = {
+    "25%": "max-w-[25%]",
+    "50%": "max-w-[50%]",
+    "75%": "max-w-[75%]",
+    "100%": "max-w-full",
+  };
+
+  const imgContent = (
+    <figure className={`flex flex-col w-full py-4 ${alinhamentoClass}`}>
+      <div
+        className={`overflow-hidden rounded-lg ${widthMap[width] || "max-w-full"} ${shadow ? "shadow-lg" : ""}`}
+      >
+        <img
+          src={url}
+          alt={alt}
+          loading="lazy"
+          className={`w-full h-auto object-cover ${lightbox ? "cursor-pointer hover:opacity-90 transition-opacity" : ""}`}
+          onClick={() => lightbox && setIsOpen(true)}
+        />
+        {caption && (
+          <figcaption className="text-sm text-muted-foreground text-center mt-2 italic">
+            {caption}
+          </figcaption>
+        )}
+      </div>
+    </figure>
+  );
+
+  return (
+    <>
+      {imgContent}
+      {lightbox && isOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setIsOpen(false)}
+        >
+          <img
+            src={url}
+            alt={alt}
+            className="max-w-full max-h-[90vh] object-contain rounded-md"
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
 export const config: Config<Props> = {
   components: {
     Título: {
@@ -268,7 +388,7 @@ export const config: Config<Props> = {
         content: {
           type: "custom",
           render: ({ value, onChange }) => (
-            <TipTapEditor value={value} onChange={onChange} />
+            <LexicalRichTextEditor value={value} onChange={onChange} />
           ),
         },
         alinhamento: {
@@ -365,61 +485,7 @@ export const config: Config<Props> = {
         shadow: false,
         lightbox: false,
       },
-      render: ({ url, alt, caption, alinhamento, width, shadow, lightbox }) => {
-        const [isOpen, setIsOpen] = useState(false);
-        const alinhamentoClass =
-          alinhamento === "left"
-            ? "justify-start"
-            : alinhamento === "right"
-              ? "justify-end"
-              : "justify-center";
-
-        const widthMap = {
-          "25%": "max-w-[25%]",
-          "50%": "max-w-[50%]",
-          "75%": "max-w-[75%]",
-          "100%": "max-w-full",
-        };
-
-        const imgContent = (
-          <figure className={`flex flex-col w-full py-4 ${alinhamentoClass}`}>
-            <div
-              className={`overflow-hidden rounded-lg ${widthMap[width] || "max-w-full"} ${shadow ? "shadow-lg" : ""}`}
-            >
-              <img
-                src={url}
-                alt={alt}
-                loading="lazy"
-                className={`w-full h-auto object-cover ${lightbox ? "cursor-pointer hover:opacity-90 transition-opacity" : ""}`}
-                onClick={() => lightbox && setIsOpen(true)}
-              />
-              {caption && (
-                <figcaption className="text-sm text-muted-foreground text-center mt-2 italic">
-                  {caption}
-                </figcaption>
-              )}
-            </div>
-          </figure>
-        );
-
-        return (
-          <>
-            {imgContent}
-            {lightbox && isOpen && (
-              <div
-                className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
-                onClick={() => setIsOpen(false)}
-              >
-                <img
-                  src={url}
-                  alt={alt}
-                  className="max-w-full max-h-[90vh] object-contain rounded-md"
-                />
-              </div>
-            )}
-          </>
-        );
-      },
+      render: (props) => <PuckImageBlock {...props} />,
     },
     Tabela: {
       fields: {
@@ -782,7 +848,7 @@ export const config: Config<Props> = {
       },
       render: ({ quote, author, source }) => (
         <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 italic text-muted-foreground bg-muted/20 rounded-r-lg">
-          <p className="text-lg mb-2">"{quote}"</p>
+          <p className="text-lg mb-2">&ldquo;{quote}&rdquo;</p>
           <footer className="text-sm font-semibold text-foreground">
             — {author}{" "}
             {source && (
@@ -1048,7 +1114,7 @@ export const config: Config<Props> = {
       defaultProps: {
         location: "São Paulo, SP, Brasil",
         height: "400px",
-        zoom: 14 as any,
+        zoom: 14,
       },
       render: ({ location, height, zoom }) => {
         const encodedQuery = encodeURIComponent(location);

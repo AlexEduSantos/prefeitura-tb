@@ -58,25 +58,25 @@ Melhorias para deixar o código mais limpo e evitar problemas futuros de manuten
 
 ## Eliminar Editores Redundantes:
 
-[] Remover o TipTap do projeto (ou o Lexical), consolidando o editor.
+[x] Remover o TipTap do projeto (ou o Lexical), consolidando o editor.
 
 ## Eliminar Hardcodes de Menu:
 
-[] Remover UUIDs fixos do header.tsx e footer.tsx e consultar os menus via GET /menus/by/location/....
+[x] Remover UUIDs fixos do header.tsx e footer.tsx e consultar os menus via GET /menus/by/location/....
 
 ## Eliminar Hardcode do Umami:
 
-[] Trocar a URL fixa http://localhost:3002 e o website-id no layout.tsx por variáveis NEXT*PUBLIC_UMAMI*\*.
+[x] Trocar a URL fixa http://localhost:3002 e o website-id no layout.tsx por variáveis NEXT*PUBLIC_UMAMI*\*.
 
 ## Unificar e Automatizar o Full-Text Search:
 
-[] Mover o fulltext-search.sql para uma migration oficial do Prisma.
-[] Criar o endpoint global /search (ocupando o diretório backend/src/search).
+[x] Mover o fulltext-search.sql para uma migration oficial do Prisma.
+[x] Criar o endpoint global /search (ocupando o diretório backend/src/search).
 
 ## Finalizar Pipeline CI/CD:
 
-[] Configurar GitHub Actions/GitLab CI para rodar tsc --noEmit, vitest, playwright, npm audit e varredura de containers com Trivy.
-[] Configurar Husky + lint-staged localmente.
+[x] Configurar GitHub Actions/GitLab CI para rodar tsc --noEmit, vitest, playwright, npm audit e varredura de containers com Trivy.
+[x] Configurar Husky + lint-staged localmente.
 
 # FASE 4: Evolução e Funcionalidades (Pós-Lançamento)
 

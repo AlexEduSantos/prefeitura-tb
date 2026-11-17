@@ -25,13 +25,16 @@ export class MenuService {
     field,
     value,
   }: {
-    field: "space" | "organization" | "location" | "title";
+    field: "spaceId" | "organizationId" | "location" | "title" | "id" | "active";
     value: string;
   }): Promise<IMenu[]> {
-    const response = await fetch(`${API_URL}/menus/${field}/${value}`, {
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${API_URL}/menus/by/${encodeURIComponent(field)}/${encodeURIComponent(value)}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      },
+    );
     if (!response.ok) throw new Error("Erro ao buscar menu");
     return response.json();
   }

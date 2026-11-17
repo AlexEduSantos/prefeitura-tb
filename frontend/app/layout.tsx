@@ -22,17 +22,27 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
+  const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+  const umamiScriptSrc = umamiUrl
+    ? umamiUrl.endsWith(".js")
+      ? umamiUrl
+      : `${umamiUrl.replace(/\/$/, "")}/script.js`
+    : undefined;
+
   return (
     <html lang="pt-BR" className={`${inter.variable} antialiased`}>
       <body className="h-svh flex flex-col">
         <Providers>{children}</Providers>
         <Toaster />
-        <Script
-          async
-          defer
-          data-website-id="2d337f2d-c590-4975-8e88-d27d7bebd0e1" // Cole o UUID gerado
-          src="http://localhost:3002/script.js" // Aponte para o seu container
-        />
+        {umamiScriptSrc && umamiWebsiteId ? (
+          <Script
+            async
+            defer
+            data-website-id={umamiWebsiteId}
+            src={umamiScriptSrc}
+          />
+        ) : null}
       </body>
     </html>
   );

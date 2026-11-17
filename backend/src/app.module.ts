@@ -35,6 +35,7 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
 import { TelemetryModule } from './common/telemetry/telemetry.module';
 import { BackupModule } from './backup/backup.module';
+import { SearchModule } from './search/search.module';
 import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.middleware';
 
 @Module({
@@ -83,6 +84,7 @@ import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.m
     AuditModule,
     OfficialGazetteModule,
     BackupModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [

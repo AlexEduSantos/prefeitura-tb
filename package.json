@@ -1,0 +1,14 @@
+{
+  "name": "portal-prefeitura-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "test:backend": "npm --prefix backend test",
+    "test:frontend": "pnpm --dir frontend test"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  }
+}

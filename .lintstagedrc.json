@@ -1,0 +1,8 @@
+{
+  "backend/src/**/*.ts": [
+    "node scripts/run-lint.mjs backend"
+  ],
+  "frontend/**/*.{ts,tsx}": [
+    "node scripts/run-lint.mjs frontend"
+  ]
+}

@@ -1,8 +1,16 @@
 import { BadRequestException, Injectable, Optional } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
-import { MenuWhereInput } from '../generated/prisma/models';
 import { RedisCacheService } from '../common/cache/redis-cache.service';
+
+interface MenuTreeItemInput {
+  id: string;
+  parentId?: string | null;
+}
+
+type MenuTreeNode<T extends MenuTreeItemInput> = T & {
+  children: Array<MenuTreeNode<T>>;
+};
 
 export const ALLOWED_MENU_FILTER_FIELDS = [
   'id',
@@ -67,9 +75,11 @@ export class MenusService {
    * - Itens com `parentId` null (ou apontando para item inexistente) viram raízes.
    * - A ordem é preservada conforme vieram do banco.
    */
-  private buildTree(items: any[]): any[] {
-    const map = new Map<string, any>();
-    const roots: any[] = [];
+  private buildTree<T extends MenuTreeItemInput>(
+    items: T[],
+  ): Array<MenuTreeNode<T>> {
+    const map = new Map<string, MenuTreeNode<T>>();
+    const roots: Array<MenuTreeNode<T>> = [];
 
     // 1ª passada: cria uma cópia de cada item com `children: []`
     for (const item of items) {
@@ -131,19 +141,20 @@ export class MenusService {
       const menus = await this.prisma.menu.findMany({
         where: {
           [field]: filterValue,
-        } as MenuWhereInput,
+        },
         include: {
           space: true,
           organization: true,
           items: {
+            where: { visible: true },
+            orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
             include: {
-              page: true,
+              page: { include: { space: { select: { slug: true } } } },
               category: true,
               parent: true,
               children: true,
               menu: true,
             },
-            orderBy: { order: 'asc' },
           },
         },
         orderBy: { createdAt: 'desc' },
