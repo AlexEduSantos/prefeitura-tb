@@ -65,7 +65,7 @@ export class PopupsService {
         organization: true,
         space: true,
         image: true,
-        user: true,
+        user: { select: { name: true, avatar: true } },
       },
     });
   }

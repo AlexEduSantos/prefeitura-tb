@@ -1,77 +1,99 @@
-TO-DO:
+TO-DO 2.0: Pré-Produção e Correções Residuais
 
-# Refatoração e Blindagem do Portal
+# FASE 1: Quick Wins (Bloqueadores de Produção)
 
-## FASE 1: Segurança e Correções Críticas
+Correções rápidas que impedem o deploy imediato ou representam falhas críticas de segurança.
 
-Estas são as falhas mais graves. Elas devem ser resolvidas antes de qualquer novo desenvolvimento.
+## Patch Crítico de Dependências (Next.js e Sharp):
 
-- [x] Restringir a rota de registro (/auth/register):
-- [x] Adicionar SessionGuard e PoliciesGuard para que apenas Administradores possam criar novos usuários.
-- [x] Bloquear Mass Assignment (Prisma):
-- [x] Adicionar whitelist: true, forbidNonWhitelisted: true e transform: true no ValidationPipe global no main.ts.
-- [x] Auditar serviços (User, Pages, Popups) para garantir que não estão repassando o ...dto cru para o data do Prisma, ou que os DTOs estão bem definidos.
-- [x] Proteger Variáveis de Ambiente:
-- [x] Remover o fallback 'super-secret-key' do express-session.
-- [x] Exigir que SESSION_SECRET seja uma chave forte de 64 caracteres no .env.
-- [x] Mover chaves expostas (OBSERVE_APP_SECRET, UMAMI_API_KEY, S3_SECRET_KEY) do docker-compose.yml e .env para um gerenciador de segredos ou variáveis do servidor.
-- [x] Proteger Endpoints Expostos (Admin e Rascunhos):
-- [x] Sanitizar Retorno de Dados Pessoais (LGPD):
-- [x] Nas queries públicas de ArticlesService e PagesService, alterar include: { author: true } para select: { name: true, avatar: true } (remover e-mail, username e role).
-- [x] Prevenir Stored XSS em Mídias:
-- [x] Adicionar X-Content-Type-Options: nosniff e Content-Security-Policy: sandbox no endpoint GET /media/file/path.
+[x] Atualizar next e eslint-config-next para >= 16.4.1 (mitiga RCEs críticos).
+[x] Atualizar sharp para ^0.35.5 (mitiga CVEs de processamento de imagem).
+[x] Atualizar prisma e @prisma/client para >= 7.10.1.
 
-## FASE 2: Hardening e Infraestrutura
+## Sanar Vazamentos e Dependências Órfãs:
 
-Itens para evitar abusos e preparar o servidor para produção.
+[x] Mover shadcn de dependencies para devDependencies no frontend (reduz 118 alertas).
+[x] Remover fluent-ffmpeg do backend.
+[x] Adicionar ioredis explicitamente nas dependencies do backend.
 
-- [x] Configurar cookies com httpOnly: true, sameSite: 'lax' e secure: true (em produção).
-- [x] Corrigir o logout para destruir a sessão no banco (req.session.destroy()) e limpar o cookie.
-- [x] Implementar Rate Limiting (@nestjs/throttler) para o /auth/login (ex: 5 tentativas por minuto).
-- [x] Correção de Injeção de Coluna:
-- [x] Criar uma allowlist de campos permitidos no MenuController (GET /menus/by/:field/:value).
-- [x] Isolamento de Rede Docker:
-- [x] Remover o mapeamento externo de portas do PostgreSQL, Redis e MinIO no docker-compose.yml.
-- [x] Adicionar senha ao Redis.
-- [x] Limpeza de Dependências (Supply Chain):
-- [x] Remover @ffmpeg-installer/ffmpeg e instalar o FFmpeg via apk add ffmpeg no Dockerfile.
-- [x] Remover do package.json backend: @nestjs/elasticsearch, kafkajs, @nestjs/microservices, @nestjs/websockets.
-- [x] Remover do package.json frontend: socket.io-client.
-- [x] Correção de Upload de Vídeo (OOM):
-- [x] Alterar o FileInterceptor para usar diskStorage em vez do MemoryStorage na rota POST /media/video.
-- [x] Adicionar Helmet e Validação de Env:
-- [x] Instalar e configurar o helmet no NestJS.
-- [x] Validar as variáveis de ambiente com Zod na inicialização do backend.
+## Proteger o Bull Board (/admin/queues):
 
-## FASE 3: Débitos Arquiteturais e Performance
+[x] Adicionar middleware Express exigindo ADMIN (o PoliciesGuard não cobre rotas Express puras).
 
-Melhorias para garantir que o sistema não fique lento conforme a prefeitura publica mais conteúdo.
+## Corrigir Vazamento de PII em GET /popups:
 
-- [x] Corrigir Acoplamento MinIO/Backend:
-- [x] Remover o volume compartilhado bucket_data entre o MinIO e o backend no docker-compose.
-- [x] Forçar todo acesso a arquivos a passar pela API S3 ou URLs pré-assinadas.
-- [x] Implementar Paginação Server-Side:
-- [x] Adicionar skip e take obrigatórios nas rotas GET /articles/admin, GET /pages e GET /media.
-- [x] Adicionar Cache com Redis:
-- [x] Implementar cache para rotas de leitura frequente (GET /menus, GET /settings, GET /pages/public/\*) com invalidação nas mutações.
+[x] Alterar PopupsService.findAll() de user: true para select: { name: true, avatar: true }.
 
-## FASE 4: Novas Funcionalidades e Observabilidade
+## Ajustar Infraestrutura Docker (Linux e Rede):
 
-Ferramentas para melhorar a operação e a experiência do cidadão.
+[x] Adicionar app.set('trust proxy', 1); no main.ts (evita quebra de cookies HTTPS e bloqueio global do Throttler).
+[x] Renomear backend/dockerfile para Dockerfile (case-sensitive no Linux).
+[x] Corrigir o healthcheck do MinIO (curl -f http://localhost:9000/minio/health/live).
+[x] Rodar docker compose down && docker compose up -d --build para aplicar o isolamento de portas e senha do Redis.
 
-- [x] Monitoramento e Operação:
-- [x] Instalar e configurar o Bull Board no NestJS para monitorar as filas de mídia visualmente.
-- [x] Configurar o Sentry (ou OpenTelemetry) para rastreamento de erros no backend e frontend.
-- [x] Criar rotina de backup automatizado (dump do PostgreSQL + sincronização do MinIO).
-- [x] Acessibilidade e Qualidade (eMAG/WCAG):
-- [x] Integrar o widget VLibras no portal público.
-- [x] Criar barra de acessibilidade (alto contraste, controle de fonte).
-- [x] Implementar atalhos de teclado (Alt+1, Alt+2, etc).
-- [x] Adicionar Playwright para testes E2E no frontend.
-- [x] Melhorias de Busca:
-- [x] Implementar o Full-Text Search (tsvector) no PostgreSQL para as notícias e Diário Oficial (para buscar dentro do texto).
-- [x] CDN / Proxy Reverso:
-- [x] Configurar Cloudflare (ou Nginx/Traefik) para cache de borda e WAF na frente do frontend.
+# FASE 2: Hardening e Segurança Contínua
+
+Medidas para blindar o sistema contra ataques e garantir integridade dos dados.
+
+## Validação de Magic Bytes em Uploads:
+
+[] Validar os primeiros bytes dos arquivos em uploadDocument e uploadVideo antes de retornar 202 Accepted.
+
+## Proteção CSRF:
+
+[] Implementar csrf-csrf (Double Submit Cookie) para rotas de mutação (POST/PATCH/DELETE).
+
+## Autenticação Reforçada:
+
+[] Adicionar suporte a Login Único Gov.br (OAuth2/OIDC).
+[] Implementar 2FA/TOTP (otplib) obrigatório para ADMIN e PUBLISHER.
+
+## Tipagem CASL:
+
+[] Remover 'Admin' as any e adicionar o Subject formal no casl-ability.factory.ts.
+
+# FASE 3: Débitos Arquiteturais e Refatoração
+
+Melhorias para deixar o código mais limpo e evitar problemas futuros de manutenção.
+
+## Eliminar Editores Redundantes:
+
+[] Remover o TipTap do projeto (ou o Lexical), consolidando o editor.
+
+## Eliminar Hardcodes de Menu:
+
+[] Remover UUIDs fixos do header.tsx e footer.tsx e consultar os menus via GET /menus/by/location/....
+
+## Eliminar Hardcode do Umami:
+
+[] Trocar a URL fixa http://localhost:3002 e o website-id no layout.tsx por variáveis NEXT*PUBLIC_UMAMI*\*.
+
+## Unificar e Automatizar o Full-Text Search:
+
+[] Mover o fulltext-search.sql para uma migration oficial do Prisma.
+[] Criar o endpoint global /search (ocupando o diretório backend/src/search).
+
+## Finalizar Pipeline CI/CD:
+
+[] Configurar GitHub Actions/GitLab CI para rodar tsc --noEmit, vitest, playwright, npm audit e varredura de containers com Trivy.
+[] Configurar Husky + lint-staged localmente.
+
+# FASE 4: Evolução e Funcionalidades (Pós-Lançamento)
+
+Melhorias de produto e auditoria para o futuro.
+
+## Indexação de PDFs do Diário Oficial:
+
+[] Extrair texto dos PDFs no MediaProcessor (usando pdf-parse) e salvar em coluna tsvector para busca dentro do conteúdo.
+
+## Streaming de Vídeo (HLS):
+
+[] Usar o FFmpeg nativo para gerar versões H.264/MP4 ou .m3u8 em background.
+
+## Acessibilidade e Testes:
+
+[] Integrar @axe-core/playwright no E2E para validar contraste e ARIA.
+[] Criar a suíte de testes unitários Vitest no frontend (./test/\*_/_.test.{ts,tsx}).
 
 # Orientações Para refatoração
 

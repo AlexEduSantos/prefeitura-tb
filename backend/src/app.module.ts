@@ -35,6 +35,7 @@ import { BullBoardModule } from '@bull-board/nestjs';
 import { ExpressAdapter } from '@bull-board/express';
 import { TelemetryModule } from './common/telemetry/telemetry.module';
 import { BackupModule } from './backup/backup.module';
+import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.middleware';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { BackupModule } from './backup/backup.module';
     BullBoardModule.forRoot({
       route: '/admin/queues',
       adapter: ExpressAdapter,
+      middleware: bullBoardAdminMiddleware,
     }),
     EventEmitterModule.forRoot(),
     AuthModule,
