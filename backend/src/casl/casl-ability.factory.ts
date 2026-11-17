@@ -29,6 +29,8 @@ import {
 // Os Subjects permitidos
 export type Subjects =
   | 'all'
+  | 'Admin'
+  | 'AuditLog'
   | 'Article'
   | 'Page'
   | 'Media'

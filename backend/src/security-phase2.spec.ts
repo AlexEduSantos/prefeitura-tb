@@ -3,6 +3,9 @@ import { BadRequestException } from '@nestjs/common';
 import { GUARDS_METADATA } from '@nestjs/common/constants';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { describe, it, expect, vi } from 'vitest';
+import { writeFileSync, unlinkSync, existsSync } from 'fs';
+import { join } from 'path';
+import { tmpdir } from 'os';
 import { validateEnv } from './common/config/env.validation';
 import { AuthController } from './auth/auth.controller';
 import { MenusController } from './menu/menu.controller';
@@ -157,27 +160,42 @@ describe('Fase 2: Hardening e Infraestrutura', () => {
         { add: addQueueMock } as any,
       );
 
+      const tempMp4Path = join(tmpdir(), `test-upload-video-${Date.now()}.mp4`);
+      writeFileSync(
+        tempMp4Path,
+        Buffer.from([
+          0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70, 0x69, 0x73, 0x6f,
+          0x6d,
+        ]),
+      );
+
       const diskFileMock = {
-        path: '/app/uploads/tmp/1700000000-12345',
+        path: tempMp4Path,
         mimetype: 'video/mp4',
       } as Express.Multer.File;
 
-      const result = await controller.uploadVideo(
-        { title: 'Vídeo Institucional' } as any,
-        diskFileMock,
-      );
+      try {
+        const result = await controller.uploadVideo(
+          { title: 'Vídeo Institucional' } as any,
+          diskFileMock,
+        );
 
-      expect(saveTempFileMock).not.toHaveBeenCalled();
-      expect(createPendingMock).toHaveBeenCalledWith(
-        { title: 'Vídeo Institucional' },
-        'video',
-        'video/mp4',
-      );
-      expect(addQueueMock).toHaveBeenCalledWith('optimize', {
-        mediaId: 'media-video-1',
-        tempFilePath: '/app/uploads/tmp/1700000000-12345',
-      });
-      expect(result).toEqual({ id: 'media-video-1' });
+        expect(saveTempFileMock).not.toHaveBeenCalled();
+        expect(createPendingMock).toHaveBeenCalledWith(
+          { title: 'Vídeo Institucional' },
+          'video',
+          'video/mp4',
+        );
+        expect(addQueueMock).toHaveBeenCalledWith('optimize', {
+          mediaId: 'media-video-1',
+          tempFilePath: tempMp4Path,
+        });
+        expect(result).toEqual({ id: 'media-video-1' });
+      } finally {
+        if (existsSync(tempMp4Path)) {
+          unlinkSync(tempMp4Path);
+        }
+      }
     });
   });
 });

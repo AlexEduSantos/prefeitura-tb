@@ -23,7 +23,7 @@ export class MenuItemController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post('create/:menuId')
-  @CheckPolicies((ability) => ability.can(Action.Create, 'MenuItem' as any))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'MenuItem'))
   create(
     @Param('menuId') menuId: string,
     @Body() createMenuItemDto: CreateMenuItemDto,
@@ -33,7 +33,7 @@ export class MenuItemController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch('reorder')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'MenuItem' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'MenuItem'))
   reorder(@Body() reorderMenuItemsDto: ReorderMenuItemsDto) {
     return this.menuItemService.reorder(reorderMenuItemsDto);
   }
@@ -50,7 +50,7 @@ export class MenuItemController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'MenuItem' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'MenuItem'))
   update(
     @Param('id') id: string,
     @Body() updateMenuItemDto: UpdateMenuItemDto,
@@ -60,7 +60,7 @@ export class MenuItemController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'MenuItem' as any))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'MenuItem'))
   remove(@Param('id') id: string) {
     return this.menuItemService.remove(id);
   }

@@ -8,6 +8,8 @@ import { SessionSerializer } from './session.serializer';
 import { PrismaModule } from '../prisma/prisma.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { UserActivityListener } from '../common/listeners/UserActivityService';
+import { GovBrOAuthService } from './govbr-oauth.service';
+import { TotpService } from './totp.service';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { UserActivityListener } from '../common/listeners/UserActivityService';
     SessionSerializer,
     SessionGuard,
     UserActivityListener,
+    GovBrOAuthService,
+    TotpService,
   ],
-  exports: [SessionGuard],
+  exports: [SessionGuard, GovBrOAuthService, TotpService],
 })
 export class AuthModule {}

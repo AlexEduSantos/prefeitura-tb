@@ -35,6 +35,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import type { Request, Response } from 'express';
 import { DeleteMediaDto } from './dto/delete-media.dto';
+import { validateFileMagicBytes } from '../common/utils/file-type-detector';
 
 export const videoDiskStorage = diskStorage({
   destination: (_req, _file, cb) => {
@@ -211,11 +212,12 @@ export class MediaController {
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    const detected = await validateFileMagicBytes(file, 'document');
     const tempFilePath = await this.mediaService.saveTempFile(file.buffer);
     const media = await this.mediaService.createPending(
       createMediaDto,
       'document',
-      file.mimetype,
+      detected.mime,
     );
     await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
     return media;
@@ -248,12 +250,13 @@ export class MediaController {
     @Body() createMediaDto: CreateMediaDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    const detected = await validateFileMagicBytes(file, 'video');
     const tempFilePath =
       file.path || (await this.mediaService.saveTempFile(file.buffer));
     const media = await this.mediaService.createPending(
       createMediaDto,
       'video',
-      file.mimetype,
+      detected.mime,
     );
     await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
     return media;

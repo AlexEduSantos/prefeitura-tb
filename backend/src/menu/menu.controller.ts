@@ -26,7 +26,7 @@ export class MenusController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.Create, 'Menu' as any))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Menu'))
   create(@Body() createMenuDto: CreateMenuDto) {
     return this.menusService.create(createMenuDto);
   }
@@ -51,14 +51,14 @@ export class MenusController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'Menu' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Menu'))
   update(@Param('id') id: string, @Body() updateMenuDto: CreateMenuDto) {
     return this.menusService.update(id, updateMenuDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Menu' as any))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Menu'))
   remove(@Param('id') id: string) {
     return this.menusService.remove(id);
   }

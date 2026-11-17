@@ -1,8 +1,14 @@
 // src/common/utils/file-type-detector.ts
+import { BadRequestException } from '@nestjs/common';
+import * as fs from 'fs/promises';
+
 export interface FileTypeResult {
   ext: string;
   mime: string;
 }
+
+const ALLOWED_DOCUMENT_EXTS = new Set(['pdf', 'doc', 'docx', 'xlsx']);
+const ALLOWED_VIDEO_EXTS = new Set(['mp4', 'webm', 'ogg', 'mov', 'mkv']);
 
 /**
  * Detecta o tipo de arquivo a partir do buffer usando bytes mágicos.
@@ -10,6 +16,7 @@ export interface FileTypeResult {
  */
 export function detectFileTypeFromBuffer(
   buffer: Buffer,
+  declaredMime?: string,
 ): FileTypeResult | null {
   // Verifica se é imagem
   // JPEG
@@ -91,7 +98,7 @@ export function detectFileTypeFromBuffer(
   ) {
     return { ext: 'doc', mime: 'application/msword' };
   }
-  // DOCX / XLSX / PPTX (Office Open XML) - verifica ZIP e depois [Content_Types].xml
+  // DOCX / XLSX / PPTX (Office Open XML - container ZIP)
   if (
     buffer.length >= 4 &&
     buffer[0] === 0x50 &&
@@ -99,29 +106,35 @@ export function detectFileTypeFromBuffer(
     buffer[2] === 0x03 &&
     buffer[3] === 0x04
   ) {
-    // Podemos tentar identificar pelo nome do arquivo, mas vamos retornar um genérico
-    // e o front-end pode usar a extensão original. Vamos retornar como zip.
-    // Mas para diferenciar, podemos verificar se há '[Content_Types].xml' no zip.
-    // Para simplificar, retornamos um tipo genérico e depois validamos pela extensão.
-    // Vamos retornar como 'docx' por padrão, mas recomendamos usar a extensão do nome do arquivo.
-    // Uma abordagem mais robusta seria ler o conteúdo do ZIP, mas aqui vamos apenas retornar 'zip'.
-    // Vamos retornar null para esses casos, e o código usará a extensão original.
-    return null; // ou retornar { ext: 'zip', mime: 'application/zip' }
+    if (
+      declaredMime ===
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      declaredMime?.includes('spreadsheetml')
+    ) {
+      return {
+        ext: 'xlsx',
+        mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      };
+    }
+    return {
+      ext: 'docx',
+      mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    };
   }
 
   // Vídeos
-  // MP4
+  // ISO Base Media / MP4 / QuickTime ('ftyp' nos bytes 4..7)
   if (
     buffer.length >= 12 &&
     buffer[4] === 0x66 &&
     buffer[5] === 0x74 &&
     buffer[6] === 0x79 &&
-    buffer[7] === 0x70 &&
-    buffer[8] === 0x69 &&
-    buffer[9] === 0x73 &&
-    buffer[10] === 0x6f &&
-    buffer[11] === 0x6d
+    buffer[7] === 0x70
   ) {
+    const brand = buffer.subarray(8, 12).toString('ascii');
+    if (brand === 'qt  ') {
+      return { ext: 'mov', mime: 'video/quicktime' };
+    }
     return { ext: 'mp4', mime: 'video/mp4' };
   }
   // WebM
@@ -159,6 +172,46 @@ export function detectFileTypeFromBuffer(
 
   // Outros: txt, etc.
   return null;
+}
+
+export async function validateFileMagicBytes(
+  file: { buffer?: Buffer; path?: string; mimetype?: string } | undefined,
+  category: 'document' | 'video',
+): Promise<FileTypeResult> {
+  if (!file) {
+    throw new BadRequestException('Nenhum arquivo enviado.');
+  }
+
+  let headerBuffer: Buffer;
+  if (file.buffer && file.buffer.length > 0) {
+    headerBuffer = file.buffer.subarray(0, 64);
+  } else if (file.path) {
+    const handle = await fs.open(file.path, 'r');
+    try {
+      const slice = Buffer.alloc(64);
+      const { bytesRead } = await handle.read(slice, 0, 64, 0);
+      headerBuffer = slice.subarray(0, bytesRead);
+    } finally {
+      await handle.close();
+    }
+  } else {
+    throw new BadRequestException('Arquivo vazio ou ilegível.');
+  }
+
+  const detected = detectFileTypeFromBuffer(headerBuffer, file.mimetype);
+  const allowedExts =
+    category === 'document' ? ALLOWED_DOCUMENT_EXTS : ALLOWED_VIDEO_EXTS;
+
+  if (!detected || !allowedExts.has(detected.ext)) {
+    if (file.path) {
+      await fs.unlink(file.path).catch(() => undefined);
+    }
+    throw new BadRequestException(
+      'Assinatura binária (magic bytes) inválida para o arquivo enviado',
+    );
+  }
+
+  return detected;
 }
 
 /**

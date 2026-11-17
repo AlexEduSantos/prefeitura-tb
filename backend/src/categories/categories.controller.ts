@@ -42,14 +42,14 @@ export class CategoriesController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.Create, 'Category' as any))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Category'))
   async create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoriesService.create(createCategoryDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'Category' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Category'))
   async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -59,7 +59,7 @@ export class CategoriesController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Category' as any))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Category'))
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(id);
   }

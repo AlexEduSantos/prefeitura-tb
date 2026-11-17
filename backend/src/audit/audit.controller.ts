@@ -20,7 +20,7 @@ export class AuditController {
   constructor(private readonly auditService: AuditService) {}
 
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin'))
   @ApiOperation({
     summary: 'Listar registros de auditoria com paginação e filtros',
   })
@@ -29,7 +29,7 @@ export class AuditController {
   }
 
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin'))
   @ApiOperation({ summary: 'Obter detalhes de um log de auditoria por ID' })
   findOne(@Param('id') id: string) {
     return this.auditService.findOne(id);

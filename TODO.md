@@ -37,20 +37,20 @@ Medidas para blindar o sistema contra ataques e garantir integridade dos dados.
 
 ## Validação de Magic Bytes em Uploads:
 
-[] Validar os primeiros bytes dos arquivos em uploadDocument e uploadVideo antes de retornar 202 Accepted.
+[x] Validar os primeiros bytes dos arquivos em uploadDocument e uploadVideo antes de retornar 202 Accepted.
 
 ## Proteção CSRF:
 
-[] Implementar csrf-csrf (Double Submit Cookie) para rotas de mutação (POST/PATCH/DELETE).
+[x] Implementar csrf-csrf (Double Submit Cookie) para rotas de mutação (POST/PATCH/DELETE).
 
 ## Autenticação Reforçada:
 
-[] Adicionar suporte a Login Único Gov.br (OAuth2/OIDC).
-[] Implementar 2FA/TOTP (otplib) obrigatório para ADMIN e PUBLISHER.
+[x] Adicionar suporte a Login Único Gov.br (OAuth2/OIDC).
+[x] Implementar 2FA/TOTP (otplib) obrigatório para ADMIN e PUBLISHER.
 
 ## Tipagem CASL:
 
-[] Remover 'Admin' as any e adicionar o Subject formal no casl-ability.factory.ts.
+[x] Remover 'Admin' as any e adicionar o Subject formal no casl-ability.factory.ts.
 
 # FASE 3: Débitos Arquiteturais e Refatoração
 

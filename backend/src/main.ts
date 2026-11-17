@@ -14,6 +14,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { validateEnv } from './common/config/env.validation';
 import { TelemetryService } from './common/telemetry/telemetry.service';
 import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.middleware';
+import { csrfProtectionMiddleware } from './common/middleware/csrf.middleware';
 
 async function bootstrap() {
   const env = validateEnv(process.env);
@@ -62,6 +63,7 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(csrfProtectionMiddleware);
   app.use('/admin/queues', bullBoardAdminMiddleware);
   const telemetryService = app.get(TelemetryService, { strict: false });
   app.useGlobalFilters(new PrismaClientExceptionFilter(telemetryService));

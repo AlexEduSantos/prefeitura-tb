@@ -37,14 +37,14 @@ export class SpacesController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.Create, 'Space' as any))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Space'))
   async create(@Body() createSpaceDto: CreateSpaceDto) {
     return this.spacesService.create(createSpaceDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'Space' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Space'))
   async update(
     @Param('id') id: string,
     @Body() updateSpaceDto: UpdateSpaceDto,
@@ -54,7 +54,7 @@ export class SpacesController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Space' as any))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Space'))
   async remove(@Param('id') id: string) {
     return this.spacesService.remove(id);
   }

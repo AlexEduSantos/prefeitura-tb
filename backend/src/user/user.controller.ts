@@ -22,35 +22,35 @@ export class UserController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
-  @CheckPolicies((ability) => ability.can(Action.Create, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Admin'))
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
-  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin'))
   findAll() {
     return this.userService.findAll();
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get(':id')
-  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Admin'))
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
-  @CheckPolicies((ability) => ability.can(Action.Update, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Admin'))
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Admin' as any))
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Admin'))
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
