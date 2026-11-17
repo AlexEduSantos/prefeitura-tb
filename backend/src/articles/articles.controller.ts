@@ -67,7 +67,9 @@ export class ArticlesController {
   }
 
   // Busca por ID (Painel Admin)
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('id/:id')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Article'))
   async findOneById(@Param('id') id: string) {
     return this.articlesService.findOneById(id);
   }

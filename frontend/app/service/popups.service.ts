@@ -33,14 +33,29 @@ export class PopupsService {
     return response.json();
   }
 
+  private static sanitizePopupPayload(popup: Partial<IPopups>) {
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      image: _image,
+      user: _user,
+      organization: _organization,
+      space: _space,
+      ...allowed
+    } = popup as any;
+    return allowed;
+  }
+
   static async createPopups(popup: Partial<IPopups>): Promise<IPopups> {
+    const payload = this.sanitizePopupPayload(popup);
     const response = await fetch(`${API_URL}/popups`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(popup),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -54,13 +69,14 @@ export class PopupsService {
     id: string,
     popup: Partial<IPopups>,
   ): Promise<IPopups> {
+    const payload = this.sanitizePopupPayload(popup);
     const response = await fetch(`${API_URL}/popups/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(popup),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {

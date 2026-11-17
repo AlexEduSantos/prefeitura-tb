@@ -66,6 +66,8 @@ export class MediaController {
       }
 
       const s3Response = await this.mediaService.getS3Object(key);
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('Content-Security-Policy', 'sandbox');
       res.setHeader(
         'Content-Type',
         s3Response.ContentType || 'application/octet-stream',
@@ -84,6 +86,7 @@ export class MediaController {
     }
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('list/*prefix')
   async listFiles(
     @Param('prefix') prefix: string = '',
@@ -223,26 +226,31 @@ export class MediaController {
     return media;
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
   findAll() {
     return this.mediaService.findAll();
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.mediaService.findOne(id);
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('images')
   findImages() {
     return this.mediaService.findImages();
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('documents')
   findDocuments() {
     return this.mediaService.findDocuments();
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('videos')
   findVideos() {
     return this.mediaService.findVideos();

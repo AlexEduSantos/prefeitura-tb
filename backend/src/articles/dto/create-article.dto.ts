@@ -9,6 +9,7 @@ import {
   IsUUID,
   IsEnum,
   IsJSON,
+  ValidateIf,
 } from 'class-validator';
 
 // Sugiro criar um enum correspondente
@@ -30,9 +31,10 @@ export class CreateArticleDto {
   @IsOptional()
   headline?: string;
 
-  @IsUUID()
   @IsOptional()
-  organizationId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsUUID()
+  organizationId?: string | null;
 
   @IsArray()
   @IsUUID('4', { each: true })
@@ -103,9 +105,10 @@ export class CreateArticleDto {
   @IsOptional()
   visibility?: string;
 
-  @IsUUID()
   @IsOptional()
-  galleryId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsUUID()
+  galleryId?: string | null;
 
   @IsString()
   @IsOptional()

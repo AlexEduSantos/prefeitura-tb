@@ -26,7 +26,8 @@ export class PagesController {
     private readonly caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  // Qualquer um (Público) pode visualizar a lista de páginas
+  // Listagem administrativa de páginas (requer sessão)
+  @UseGuards(SessionGuard)
   @Get()
   async findAll() {
     return this.pagesService.findAll();
@@ -37,7 +38,8 @@ export class PagesController {
     return this.pagesService.findPublicPages(search);
   }
 
-  // Qualquer um (Público) pode visualizar os detalhes de uma página por ID
+  // Detalhes administrativos de uma página por ID (requer sessão)
+  @UseGuards(SessionGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.pagesService.findOne(id);

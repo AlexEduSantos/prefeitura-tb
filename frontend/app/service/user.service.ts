@@ -33,13 +33,26 @@ export class UserService {
     return response.json();
   }
 
+  private static sanitizeUserPayload(data: Partial<IUser>) {
+    const {
+      id: _id,
+      createdAt: _createdAt,
+      updatedAt: _updatedAt,
+      lastLogin: _lastLogin,
+      organization: _organization,
+      ...allowed
+    } = data as any;
+    return allowed;
+  }
+
   static async createUser(data: Partial<IUser>): Promise<IUser> {
+    const payload = this.sanitizeUserPayload(data);
     const response = await fetch(`${API_URL}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
       credentials: "include",
     });
 
@@ -51,12 +64,13 @@ export class UserService {
   }
 
   static async updateUser(id: string, data: Partial<IUser>) {
+    const payload = this.sanitizeUserPayload(data);
     const response = await fetch(`${API_URL}/user/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
       credentials: "include",
     });
 

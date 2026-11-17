@@ -122,8 +122,12 @@ export class ArticlesService {
         organization: true,
         categories: true,
         cover: true,
-        author: true,
-        editor: true,
+        author: {
+          select: { id: true, name: true, avatar: true },
+        },
+        editor: {
+          select: { id: true, name: true, avatar: true },
+        },
         gallery: {
           include: {
             slides: {
@@ -281,8 +285,12 @@ export class ArticlesService {
         organization: true,
         categories: true,
         cover: true,
-        author: true,
-        editor: true,
+        author: {
+          select: { id: true, name: true, avatar: true },
+        },
+        editor: {
+          select: { id: true, name: true, avatar: true },
+        },
         gallery: {
           include: {
             slides: {

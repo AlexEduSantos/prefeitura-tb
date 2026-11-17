@@ -12,15 +12,46 @@ export class PopupsService {
     createPopupDto: CreatePopupDto,
     userId: string,
   ): Promise<Popups> {
+    const {
+      title,
+      imageId,
+      link,
+      active,
+      displayTime,
+      status,
+      type,
+      position,
+      closeButton,
+      priority,
+      publicationDate,
+      expirationDate,
+      organizationId,
+      spaceId,
+    } = createPopupDto;
+
     const data: any = {
-      ...createPopupDto,
+      title,
+      imageId,
       userId,
+      ...(link !== undefined && { link }),
+      ...(active !== undefined && { active }),
+      ...(displayTime !== undefined && { displayTime }),
+      ...(status !== undefined && { status }),
+      ...(type !== undefined && { type }),
+      ...(position !== undefined && { position }),
+      ...(closeButton !== undefined && { closeButton }),
+      ...(priority !== undefined && { priority }),
+      ...(organizationId !== undefined && {
+        organizationId: organizationId || null,
+      }),
+      ...(spaceId !== undefined && { spaceId: spaceId || null }),
     };
-    if (createPopupDto.publicationDate) {
-      data.publicationDate = new Date(createPopupDto.publicationDate);
+
+    if (publicationDate) {
+      data.publicationDate = new Date(publicationDate);
     }
-    if (createPopupDto.expirationDate) {
-      data.expirationDate = new Date(createPopupDto.expirationDate);
+    if (expirationDate) {
+      data.expirationDate = new Date(expirationDate);
     }
 
     return this.prisma.popups.create({

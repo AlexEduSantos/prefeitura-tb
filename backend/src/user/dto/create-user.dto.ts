@@ -37,9 +37,10 @@ export class CreateUserDto {
   @IsOptional()
   active?: boolean;
 
-  @IsString()
+  @IsOptional()
+  @ValidateIf((_, val) => val !== null && val !== '')
   @IsUUID()
-  organizationId!: string;
+  organizationId?: string | null;
 
   @IsEnum(UserRole)
   role!: UserRole;

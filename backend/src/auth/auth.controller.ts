@@ -15,6 +15,8 @@ import type { Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { SessionGuard } from './session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
+import { CheckPolicies } from '../casl/check-policies.decorator';
+import { Action } from '../casl/action.enum';
 import { User } from '../generated/prisma/client';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
@@ -49,7 +51,9 @@ export class AuthController {
     });
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Post('register')
+  @CheckPolicies((ability) => ability.can(Action.Create, 'User'))
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }

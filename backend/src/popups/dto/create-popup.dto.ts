@@ -6,6 +6,7 @@ import {
   IsUUID,
   IsEnum,
   IsDateString,
+  ValidateIf,
 } from 'class-validator';
 import { PopupStatus, PopupType } from '../../generated/prisma/enums';
 
@@ -57,13 +58,17 @@ export class CreatePopupDto {
   expirationDate?: string;
 
   @IsOptional()
+  @ValidateIf((_, val) => val !== null && val !== '')
   @IsUUID()
-  organizationId?: string;
+  organizationId?: string | null;
 
   @IsOptional()
+  @ValidateIf((_, val) => val !== null && val !== '')
   @IsUUID()
-  spaceId?: string;
+  spaceId?: string | null;
 
+  @IsOptional()
+  @ValidateIf((_, val) => val !== null && val !== '')
   @IsUUID()
-  userId!: string;
+  userId?: string;
 }

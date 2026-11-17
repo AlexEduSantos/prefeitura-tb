@@ -6,6 +6,7 @@ import {
   IsDateString,
   IsInt,
   IsUUID,
+  ValidateIf,
 } from 'class-validator';
 
 export class UpdateArticleDto {
@@ -17,9 +18,10 @@ export class UpdateArticleDto {
   @IsOptional()
   headline?: string;
 
-  @IsUUID()
   @IsOptional()
-  organizationId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsUUID()
+  organizationId?: string | null;
 
   @IsArray()
   @IsOptional()
@@ -28,6 +30,16 @@ export class UpdateArticleDto {
   @IsString()
   @IsOptional()
   cover?: string;
+
+  @IsOptional()
+  @ValidateIf((_, val) => val !== null)
+  @IsUUID()
+  coverId?: string | null;
+
+  @IsOptional()
+  @ValidateIf((_, val) => val !== null)
+  @IsUUID()
+  galleryId?: string | null;
 
   @IsOptional()
   body?: any;

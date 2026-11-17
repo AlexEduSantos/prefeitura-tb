@@ -5,9 +5,9 @@ services:
     command: >
       postgres
     environment:
-      POSTGRES_USER: ${DB_USER:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
-      POSTGRES_DB: ${DB_NAME:-pmtb}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -29,8 +29,8 @@ services:
     image: minio/minio:latest
     container_name: pmtb-minio
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -51,15 +51,23 @@ services:
       dockerfile: Dockerfile
     container_name: pmtb-backend
     environment:
-      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-pmtb}?schema=public
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
       REDIS_HOST: redis
       REDIS_PORT: 6379
       PORT: 3001
+      SESSION_SECRET: ${SESSION_SECRET}
       S3_ENDPOINT: http://minio:9000
-      S3_ACCESS_KEY: minioadmin
-      S3_SECRET_KEY: minioadmin
-      S3_BUCKET: prefeitura
-      S3_REGION: us-east-1
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: ${S3_BUCKET:-prefeitura}
+      S3_REGION: ${S3_REGION:-us-east-1}
+      OBSERVE_APP_KEY: ${OBSERVE_APP_KEY}
+      OBSERVE_APP_SECRET: ${OBSERVE_APP_SECRET}
+      UMAMI_API_URL: ${UMAMI_API_URL:-http://umami:3000}
+      UMAMI_API_KEY: ${UMAMI_API_KEY}
+      UMAMI_WEBSITE_ID: ${UMAMI_WEBSITE_ID}
+      UMAMI_USERNAME: ${UMAMI_USERNAME}
+      UMAMI_PASSWORD: ${UMAMI_PASSWORD}
     ports:
       - "3001:3001"
     depends_on:
@@ -79,9 +87,9 @@ services:
     ports:
       - "3002:3000" # Expõe na porta 3002 para não conflitar com seu backend (3001)
     environment:
-      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/umami
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/umami
       DATABASE_TYPE: postgresql
-      APP_SECRET: "yORxH7q/rG+U0ZKPkMyKzRi05GOlZISTZcyPeJyuirI=" # Ex: openssl rand -hex 32
+      APP_SECRET: ${UMAMI_APP_SECRET}
       DISABLE_TELEMETRY: 1
     depends_on:
       - db

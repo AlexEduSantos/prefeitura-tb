@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsBoolean, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsBoolean,
+  IsOptional,
+  ValidateIf,
+} from 'class-validator';
 
 export class CreatePageDto {
   @IsString()
@@ -9,8 +15,9 @@ export class CreatePageDto {
   @IsNotEmpty()
   slug!: string;
 
-  @IsString()
   @IsOptional()
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
   description?: string;
 
   @IsNotEmpty()
@@ -20,13 +27,15 @@ export class CreatePageDto {
   @IsOptional()
   published?: boolean;
 
-  @IsString()
   @IsOptional()
-  spaceId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
+  spaceId?: string | null;
 
-  @IsString()
   @IsOptional()
-  organizationId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
+  organizationId?: string | null;
 
   @IsString()
   @IsOptional()

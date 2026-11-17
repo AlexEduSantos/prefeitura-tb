@@ -1,6 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
+import { SessionGuard } from '../auth/session.guard';
+import { PoliciesGuard } from '../casl/policies.guard';
 
+@UseGuards(SessionGuard, PoliciesGuard)
 @Controller('analytics')
 export class AnalyticsController {
   constructor(private analyticsService: AnalyticsService) {}

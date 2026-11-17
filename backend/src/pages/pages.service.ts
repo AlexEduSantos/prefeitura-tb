@@ -15,9 +15,28 @@ export class PagesService {
         'Usuário autenticado não encontrado para criar a página.',
       );
     }
+
+    const {
+      title,
+      slug,
+      description,
+      content,
+      published,
+      spaceId,
+      organizationId,
+    } = createPageDto;
+
     return this.prisma.page.create({
       data: {
-        ...createPageDto,
+        title,
+        slug,
+        ...(description !== undefined && { description }),
+        content,
+        ...(published !== undefined && { published }),
+        ...(spaceId !== undefined && { spaceId: spaceId || null }),
+        ...(organizationId !== undefined && {
+          organizationId: organizationId || null,
+        }),
         userId: finalUserId,
       },
     });
@@ -98,16 +117,37 @@ export class PagesService {
         space: true,
         organization: true,
         user: {
-          select: { name: true, username: true, avatar: true, email: true },
+          select: { name: true, avatar: true },
         },
       },
     });
   }
 
   async update(id: string, updatePageDto: UpdatePageDto): Promise<Page> {
+    const {
+      title,
+      slug,
+      description,
+      content,
+      published,
+      spaceId,
+      organizationId,
+    } = updatePageDto;
+
+    const data: Record<string, any> = {};
+    if (title !== undefined) data.title = title;
+    if (slug !== undefined) data.slug = slug;
+    if (description !== undefined) data.description = description;
+    if (content !== undefined) data.content = content;
+    if (published !== undefined) data.published = published;
+    if (spaceId !== undefined) data.spaceId = spaceId || null;
+    if (organizationId !== undefined) {
+      data.organizationId = organizationId || null;
+    }
+
     return this.prisma.page.update({
       where: { id },
-      data: updatePageDto,
+      data,
     });
   }
 

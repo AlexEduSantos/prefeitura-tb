@@ -33,13 +33,20 @@ async function bootstrap() {
     connectionString: process.env.DATABASE_URL,
   });
 
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (!sessionSecret || sessionSecret.length < 64) {
+    throw new Error(
+      'Configuração inválida: SESSION_SECRET deve estar definida no ambiente e possuir no mínimo 64 caracteres.',
+    );
+  }
+
   app.use(
     session({
       store: new pgSession({
         pool: pgPool,
         tableName: 'session',
       }),
-      secret: process.env.SESSION_SECRET || 'super-secret-key',
+      secret: sessionSecret,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -52,7 +59,13 @@ async function bootstrap() {
   app.use(passport.session());
   app.useGlobalFilters(new PrismaClientExceptionFilter());
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('API Portal da Prefeitura')

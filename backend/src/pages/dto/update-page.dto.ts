@@ -1,4 +1,9 @@
-import { IsString, IsOptional, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  ValidateIf,
+} from 'class-validator';
 
 export class UpdatePageDto {
   @IsString()
@@ -10,17 +15,24 @@ export class UpdatePageDto {
   slug?: string;
 
   @IsOptional()
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
+  description?: string;
+
+  @IsOptional()
   content?: any;
 
   @IsBoolean()
   @IsOptional()
   published?: boolean;
 
-  @IsString()
   @IsOptional()
-  spaceId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
+  spaceId?: string | null;
 
-  @IsString()
   @IsOptional()
-  organizationId?: string;
+  @ValidateIf((_, val) => val !== null)
+  @IsString()
+  organizationId?: string | null;
 }
