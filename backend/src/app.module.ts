@@ -31,11 +31,16 @@ import { AuditInterceptor } from './audit/audit.interceptor';
 import { OfficialGazetteModule } from './official-gazette/official-gazette.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { RedisCacheModule } from './common/cache/redis-cache.module';
+import { BullBoardModule } from '@bull-board/nestjs';
+import { ExpressAdapter } from '@bull-board/express';
+import { TelemetryModule } from './common/telemetry/telemetry.module';
+import { BackupModule } from './backup/backup.module';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
     RedisCacheModule,
+    TelemetryModule,
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       connection: {
@@ -43,6 +48,10 @@ import { RedisCacheModule } from './common/cache/redis-cache.module';
         port: parseInt(process.env.REDIS_PORT || '6379', 10),
         password: process.env.REDIS_PASSWORD || undefined,
       },
+    }),
+    BullBoardModule.forRoot({
+      route: '/admin/queues',
+      adapter: ExpressAdapter,
     }),
     EventEmitterModule.forRoot(),
     AuthModule,
@@ -71,6 +80,7 @@ import { RedisCacheModule } from './common/cache/redis-cache.module';
     AnalyticsModule,
     AuditModule,
     OfficialGazetteModule,
+    BackupModule,
   ],
   controllers: [AppController],
   providers: [

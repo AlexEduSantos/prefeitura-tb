@@ -12,6 +12,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { validateEnv } from './common/config/env.validation';
+import { TelemetryService } from './common/telemetry/telemetry.service';
 
 async function bootstrap() {
   const env = validateEnv(process.env);
@@ -58,7 +59,8 @@ async function bootstrap() {
 
   app.use(passport.initialize());
   app.use(passport.session());
-  app.useGlobalFilters(new PrismaClientExceptionFilter());
+  const telemetryService = app.get(TelemetryService, { strict: false });
+  app.useGlobalFilters(new PrismaClientExceptionFilter(telemetryService));
 
   app.useGlobalPipes(
     new ValidationPipe({

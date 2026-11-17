@@ -3,13 +3,21 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Optional,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '../../generated/prisma/client';
+import { TelemetryService } from '../telemetry/telemetry.service';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaClientExceptionFilter implements ExceptionFilter {
+  constructor(@Optional() private readonly telemetryService?: TelemetryService) {}
+
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    this.telemetryService?.captureException(exception, {
+      filter: 'PrismaClientExceptionFilter',
+      code: exception.code,
+    });
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 

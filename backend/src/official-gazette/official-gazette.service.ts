@@ -89,6 +89,35 @@ export class OfficialGazetteService {
     });
   }
 
+  async searchByFullText(term: string): Promise<string[]> {
+    const cleanTerm = term.trim();
+    if (!cleanTerm || typeof (this.prisma as any).$queryRaw !== 'function') {
+      return [];
+    }
+
+    try {
+      const rows = await this.prisma.$queryRaw<Array<{ id: string }>>`
+        SELECT id
+        FROM "official_gazette"
+        WHERE to_tsvector(
+          'portuguese',
+          coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '')
+        ) @@ plainto_tsquery('portuguese', ${cleanTerm})
+        ORDER BY ts_rank(
+          to_tsvector(
+            'portuguese',
+            coalesce(title, '') || ' ' || coalesce(description, '') || ' ' || coalesce(edition, '')
+          ),
+          plainto_tsquery('portuguese', ${cleanTerm})
+        ) DESC
+        LIMIT 100
+      `;
+      return Array.isArray(rows) ? rows.map((r) => r.id) : [];
+    } catch {
+      return [];
+    }
+  }
+
   /**
    * Endpoint de Leitura Pública:
    * Retorna os boletins oficiais para o portal da transparência / site público,
@@ -99,7 +128,10 @@ export class OfficialGazetteService {
     const limit = Math.min(100, Math.max(1, Number(query.limit) || 15));
     const skip = (page - 1) * limit;
 
-    const where = this.buildWhereClause(query);
+    const ftsIds = query.search?.trim()
+      ? await this.searchByFullText(query.search.trim())
+      : [];
+    const where = this.buildWhereClause(query, ftsIds);
 
     const [total, data] = await Promise.all([
       this.prisma.officialGazette.count({ where }),
@@ -140,7 +172,10 @@ export class OfficialGazetteService {
     const limit = Math.min(100, Math.max(1, Number(query.limit) || 15));
     const skip = (page - 1) * limit;
 
-    const where = this.buildWhereClause(query);
+    const ftsIds = query.search?.trim()
+      ? await this.searchByFullText(query.search.trim())
+      : [];
+    const where = this.buildWhereClause(query, ftsIds);
 
     const [total, data] = await Promise.all([
       this.prisma.officialGazette.count({ where }),
@@ -228,16 +263,20 @@ export class OfficialGazetteService {
     return exists;
   }
 
-  private buildWhereClause(query: QueryOfficialGazetteDto) {
+  private buildWhereClause(
+    query: QueryOfficialGazetteDto,
+    ftsIds: string[] = [],
+  ) {
     const where: any = {};
 
-    // Busca por termo no título, descrição ou edição
+    // Busca por termo no título, descrição ou edição (inclui Full-Text Search tsvector)
     if (query.search?.trim()) {
       const term = query.search.trim();
       where.OR = [
         { title: { contains: term, mode: 'insensitive' } },
         { description: { contains: term, mode: 'insensitive' } },
         { edition: { contains: term, mode: 'insensitive' } },
+        ...(ftsIds.length > 0 ? [{ id: { in: ftsIds } }] : []),
       ];
     }
 

@@ -214,3 +214,35 @@
 @utility gradient-primary {
   background-image: linear-gradient(to top, #38308d, #565ba8);
 }
+
+/* Modo Alto Contraste (eMAG / WCAG 2.1 AA) */
+html.high-contrast,
+html.high-contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast header,
+html.high-contrast nav,
+html.high-contrast footer,
+html.high-contrast section,
+html.high-contrast article,
+html.high-contrast main,
+html.high-contrast div[class*="bg-"] {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffff00 !important;
+}
+
+html.high-contrast a,
+html.high-contrast button {
+  color: #ffff00 !important;
+}
+
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #ffff00 !important;
+}

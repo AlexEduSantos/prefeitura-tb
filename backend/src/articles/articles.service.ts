@@ -66,6 +66,38 @@ export class ArticlesService {
   }
 
   /**
+   * Busca Full-Text Search (tsvector em português) sobre título, subtítulo e corpo do artigo.
+   */
+  async searchByFullText(term: string): Promise<string[]> {
+    const cleanTerm = term.trim();
+    if (!cleanTerm || typeof (this.prisma as any).$queryRaw !== 'function') {
+      return [];
+    }
+
+    try {
+      const rows = await this.prisma.$queryRaw<Array<{ id: string }>>`
+        SELECT id
+        FROM "article"
+        WHERE to_tsvector(
+          'portuguese',
+          coalesce(title, '') || ' ' || coalesce(headline, '') || ' ' || coalesce(body::text, '')
+        ) @@ plainto_tsquery('portuguese', ${cleanTerm})
+        ORDER BY ts_rank(
+          to_tsvector(
+            'portuguese',
+            coalesce(title, '') || ' ' || coalesce(headline, '') || ' ' || coalesce(body::text, '')
+          ),
+          plainto_tsquery('portuguese', ${cleanTerm})
+        ) DESC
+        LIMIT 100
+      `;
+      return Array.isArray(rows) ? rows.map((r) => r.id) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  /**
    * Listagem PÚBLICA:
    * Retorna APENAS artigos com status 'publicado',
    * cuja data de publicação já foi atingida e que ainda não expiraram.
@@ -103,6 +135,11 @@ export class ArticlesService {
       }
     }
 
+    const trimmedSearch = search?.trim();
+    const ftsIds = trimmedSearch
+      ? await this.searchByFullText(trimmedSearch)
+      : [];
+
     let orderByClause: any = { createdAt: 'desc' };
     if (sortBy === 'title') {
       orderByClause = { title: sortOrder };
@@ -111,11 +148,11 @@ export class ArticlesService {
         { publicationDate: sortOrder },
         { createdAt: sortOrder },
       ];
-    } else if (search) {
+    } else if (trimmedSearch) {
       orderByClause = {
         _relevance: {
           fields: ['title'],
-          search: search,
+          search: trimmedSearch,
           sort: 'desc',
         },
       };
@@ -165,15 +202,28 @@ export class ArticlesService {
                 },
               ]
             : []),
+          ...(trimmedSearch
+            ? [
+                {
+                  OR: [
+                    {
+                      title: {
+                        contains: trimmedSearch,
+                        mode: 'insensitive' as const,
+                      },
+                    },
+                    {
+                      headline: {
+                        contains: trimmedSearch,
+                        mode: 'insensitive' as const,
+                      },
+                    },
+                    ...(ftsIds.length > 0 ? [{ id: { in: ftsIds } }] : []),
+                  ],
+                },
+              ]
+            : []),
         ],
-        ...(search
-          ? {
-              title: {
-                contains: search,
-                mode: 'insensitive',
-              },
-            }
-          : {}),
         ...(categorySlug
           ? {
               categories: {
@@ -209,6 +259,10 @@ export class ArticlesService {
       ? status
       : { not: 'excluido' };
     const { skip, take } = resolvePagination(pagination);
+    const trimmedSearch = search?.trim();
+    const ftsIds = trimmedSearch
+      ? await this.searchByFullText(trimmedSearch)
+      : [];
 
     const articles = await this.prisma.article.findMany({
       include: {
@@ -230,12 +284,23 @@ export class ArticlesService {
       },
       where: {
         status: statusWhere,
-        ...(search
+        ...(trimmedSearch
           ? {
-              title: {
-                contains: search,
-                mode: 'insensitive',
-              },
+              OR: [
+                {
+                  title: {
+                    contains: trimmedSearch,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  headline: {
+                    contains: trimmedSearch,
+                    mode: 'insensitive',
+                  },
+                },
+                ...(ftsIds.length > 0 ? [{ id: { in: ftsIds } }] : []),
+              ],
             }
           : {}),
         ...(categorySlug
@@ -251,11 +316,11 @@ export class ArticlesService {
       },
       skip,
       take,
-      orderBy: search
+      orderBy: trimmedSearch
         ? {
             _relevance: {
               fields: ['title'],
-              search: search,
+              search: trimmedSearch,
               sort: 'desc',
             },
           }

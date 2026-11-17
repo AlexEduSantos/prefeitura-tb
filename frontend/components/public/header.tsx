@@ -186,7 +186,11 @@ function DesktopHeader() {
             </Link>
           )}
 
-          <div className="w-1/2 sm:flex hidden gap-4 items-center justify-end text-primary font-semibold relative">
+          <div
+            id="main-nav"
+            tabIndex={-1}
+            className="w-1/2 sm:flex hidden gap-4 items-center justify-end text-primary font-semibold relative outline-none"
+          >
             {isLoadingMenu && (
               <div className="flex gap-4">
                 <Skeleton className="h-8 w-24" />
@@ -215,6 +219,7 @@ function DesktopHeader() {
             )}
 
             <Button
+              id="main-search"
               variant="ghost"
               size="icon"
               className="text-primary hover:bg-transparent"

@@ -59,19 +59,19 @@ Melhorias para garantir que o sistema não fique lento conforme a prefeitura pub
 
 Ferramentas para melhorar a operação e a experiência do cidadão.
 
-[ ] Monitoramento e Operação:
-[ ] Instalar e configurar o Bull Board no NestJS para monitorar as filas de mídia visualmente.
-[ ] Configurar o Sentry (ou OpenTelemetry) para rastreamento de erros no backend e frontend.
-[ ] Criar rotina de backup automatizado (dump do PostgreSQL + sincronização do MinIO).
-[ ] Acessibilidade e Qualidade (eMAG/WCAG):
-[ ] Integrar o widget VLibras no portal público.
-[ ] Criar barra de acessibilidade (alto contraste, controle de fonte).
-[ ] Implementar atalhos de teclado (Alt+1, Alt+2, etc).
-[ ] Adicionar Playwright para testes E2E no frontend.
-[ ] Melhorias de Busca:
-[ ] Implementar o Full-Text Search (tsvector) no PostgreSQL para as notícias e Diário Oficial (para buscar dentro do texto).
-[ ] CDN / Proxy Reverso:
-[ ] Configurar Cloudflare (ou Nginx/Traefik) para cache de borda e WAF na frente do frontend.
+- [x] Monitoramento e Operação:
+- [x] Instalar e configurar o Bull Board no NestJS para monitorar as filas de mídia visualmente.
+- [x] Configurar o Sentry (ou OpenTelemetry) para rastreamento de erros no backend e frontend.
+- [x] Criar rotina de backup automatizado (dump do PostgreSQL + sincronização do MinIO).
+- [x] Acessibilidade e Qualidade (eMAG/WCAG):
+- [x] Integrar o widget VLibras no portal público.
+- [x] Criar barra de acessibilidade (alto contraste, controle de fonte).
+- [x] Implementar atalhos de teclado (Alt+1, Alt+2, etc).
+- [x] Adicionar Playwright para testes E2E no frontend.
+- [x] Melhorias de Busca:
+- [x] Implementar o Full-Text Search (tsvector) no PostgreSQL para as notícias e Diário Oficial (para buscar dentro do texto).
+- [x] CDN / Proxy Reverso:
+- [x] Configurar Cloudflare (ou Nginx/Traefik) para cache de borda e WAF na frente do frontend.
 
 # Orientações Para refatoração
 

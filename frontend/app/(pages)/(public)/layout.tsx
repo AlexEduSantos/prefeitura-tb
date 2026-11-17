@@ -1,5 +1,7 @@
+import { AccessibilityBar } from "@/components/public/accessibility-bar";
 import { Footer } from "@/components/public/footer";
 import Header from "@/components/public/header";
+import { VLibrasWidget } from "@/components/public/vlibras-widget";
 import { Toaster } from "sonner";
 
 export default function PublicLayout({
@@ -8,13 +10,15 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="flex flex-col h-screen">
-      <main className="relative h-screen">
-        <Header />
+    <div className="flex flex-col min-h-screen">
+      <AccessibilityBar />
+      <Header />
+      <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
         {children}
-        <Footer />
       </main>
+      <Footer />
+      <VLibrasWidget />
       <Toaster />
-    </main>
+    </div>
   );
 }

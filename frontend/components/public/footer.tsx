@@ -13,7 +13,11 @@ export function Footer() {
   const { menu, isLoadingMenu, isErrorMenu } = useMenuOnly(menuId);
 
   return (
-    <footer className="w-full bg-linear-to-t from-primary to-secondary py-8 space-y-8">
+    <footer
+      id="main-footer"
+      tabIndex={-1}
+      className="w-full bg-linear-to-t from-primary to-secondary py-8 space-y-8 outline-none"
+    >
       <div className="w-full max-w-7xl mx-auto px-4 flex flex-col gap-2 items-center text-center text-primary-foreground">
         <div className="grid grid-cols-1 md:grid-cols-5 items-start gap-8 font-light text-sm pb-8 border-b border-border/30">
           {menu?.items.map((item) => (
