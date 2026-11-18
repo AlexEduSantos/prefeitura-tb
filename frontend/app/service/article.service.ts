@@ -212,11 +212,12 @@ export class ArticleService {
     return response.json();
   }
 
-  static async rejectArticle(id: string): Promise<IArticle> {
+  static async rejectArticle(id: string, reason?: string): Promise<IArticle> {
     const response = await csrfFetch(`${API_URL}/articles/${id}/reject`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
+      body: JSON.stringify({ reason }),
     });
     if (!response.ok) {
       throw new Error("Erro ao rejeitar notícia");

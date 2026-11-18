@@ -29,9 +29,6 @@ export type ServicesMinAggregateOutputType = {
   link: string | null
   altText: string | null
   active: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -48,9 +45,6 @@ export type ServicesMaxAggregateOutputType = {
   link: string | null
   altText: string | null
   active: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -67,10 +61,6 @@ export type ServicesCountAggregateOutputType = {
   link: number
   altText: number
   active: number
-  workflowStatus: number
-  pendingAction: number
-  approvedById: number
-  approvedAt: number
   deletedAt: number
   createdAt: number
   updatedAt: number
@@ -89,9 +79,6 @@ export type ServicesMinAggregateInputType = {
   link?: true
   altText?: true
   active?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -108,9 +95,6 @@ export type ServicesMaxAggregateInputType = {
   link?: true
   altText?: true
   active?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -127,10 +111,6 @@ export type ServicesCountAggregateInputType = {
   link?: true
   altText?: true
   active?: true
-  workflowStatus?: true
-  pendingAction?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -220,10 +200,6 @@ export type ServicesGroupByOutputType = {
   link: string
   altText: string | null
   active: boolean
-  workflowStatus: string
-  pendingAction: runtime.JsonValue | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -261,10 +237,6 @@ export type ServicesWhereInput = {
   link?: Prisma.StringFilter<"Services"> | string
   altText?: Prisma.StringNullableFilter<"Services"> | string | null
   active?: Prisma.BoolFilter<"Services"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Services"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Services">
-  approvedById?: Prisma.UuidNullableFilter<"Services"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Services"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Services"> | Date | string
@@ -284,10 +256,6 @@ export type ServicesOrderByWithRelationInput = {
   link?: Prisma.SortOrder
   altText?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -311,10 +279,6 @@ export type ServicesWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Services"> | string
   altText?: Prisma.StringNullableFilter<"Services"> | string | null
   active?: Prisma.BoolFilter<"Services"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Services"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Services">
-  approvedById?: Prisma.UuidNullableFilter<"Services"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Services"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Services"> | Date | string
@@ -334,10 +298,6 @@ export type ServicesOrderByWithAggregationInput = {
   link?: Prisma.SortOrder
   altText?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -360,10 +320,6 @@ export type ServicesScalarWhereWithAggregatesInput = {
   link?: Prisma.StringWithAggregatesFilter<"Services"> | string
   altText?: Prisma.StringNullableWithAggregatesFilter<"Services"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"Services"> | boolean
-  workflowStatus?: Prisma.StringWithAggregatesFilter<"Services"> | string
-  pendingAction?: Prisma.JsonNullableWithAggregatesFilter<"Services">
-  approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Services"> | string | null
-  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Services"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Services"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Services"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Services"> | Date | string
@@ -380,10 +336,6 @@ export type ServicesCreateInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -400,10 +352,6 @@ export type ServicesUncheckedCreateInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -420,10 +368,6 @@ export type ServicesUpdateInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -440,10 +384,6 @@ export type ServicesUncheckedUpdateInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -460,10 +400,6 @@ export type ServicesCreateManyInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -480,10 +416,6 @@ export type ServicesUpdateManyMutationInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -497,10 +429,6 @@ export type ServicesUncheckedUpdateManyInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -533,10 +461,6 @@ export type ServicesCountOrderByAggregateInput = {
   link?: Prisma.SortOrder
   altText?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -553,9 +477,6 @@ export type ServicesMaxOrderByAggregateInput = {
   link?: Prisma.SortOrder
   altText?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -572,9 +493,6 @@ export type ServicesMinOrderByAggregateInput = {
   link?: Prisma.SortOrder
   altText?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -717,10 +635,6 @@ export type ServicesCreateWithoutOrganizationInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -736,10 +650,6 @@ export type ServicesUncheckedCreateWithoutOrganizationInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,10 +694,6 @@ export type ServicesScalarWhereInput = {
   link?: Prisma.StringFilter<"Services"> | string
   altText?: Prisma.StringNullableFilter<"Services"> | string | null
   active?: Prisma.BoolFilter<"Services"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Services"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Services">
-  approvedById?: Prisma.UuidNullableFilter<"Services"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Services"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Services"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Services"> | Date | string
@@ -804,10 +710,6 @@ export type ServicesCreateWithoutUserInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -823,10 +725,6 @@ export type ServicesUncheckedCreateWithoutUserInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -868,10 +766,6 @@ export type ServicesCreateWithoutImageInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -887,10 +781,6 @@ export type ServicesUncheckedCreateWithoutImageInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -932,10 +822,6 @@ export type ServicesCreateManyOrganizationInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -951,10 +837,6 @@ export type ServicesUpdateWithoutOrganizationInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -970,10 +852,6 @@ export type ServicesUncheckedUpdateWithoutOrganizationInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -989,10 +867,6 @@ export type ServicesUncheckedUpdateManyWithoutOrganizationInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1008,10 +882,6 @@ export type ServicesCreateManyUserInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1027,10 +897,6 @@ export type ServicesUpdateWithoutUserInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1046,10 +912,6 @@ export type ServicesUncheckedUpdateWithoutUserInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1065,10 +927,6 @@ export type ServicesUncheckedUpdateManyWithoutUserInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1084,10 +942,6 @@ export type ServicesCreateManyImageInput = {
   link: string
   altText?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1103,10 +957,6 @@ export type ServicesUpdateWithoutImageInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1122,10 +972,6 @@ export type ServicesUncheckedUpdateWithoutImageInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1141,10 +987,6 @@ export type ServicesUncheckedUpdateManyWithoutImageInput = {
   link?: Prisma.StringFieldUpdateOperationsInput | string
   altText?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1162,10 +1004,6 @@ export type ServicesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   link?: boolean
   altText?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1185,10 +1023,6 @@ export type ServicesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   link?: boolean
   altText?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1208,10 +1042,6 @@ export type ServicesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   link?: boolean
   altText?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1231,10 +1061,6 @@ export type ServicesSelectScalar = {
   link?: boolean
   altText?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1245,7 +1071,7 @@ export type ServicesSelectScalar = {
   userId?: boolean
 }
 
-export type ServicesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "altText" | "active" | "workflowStatus" | "pendingAction" | "approvedById" | "approvedAt" | "deletedAt" | "createdAt" | "updatedAt" | "featured" | "description" | "organizationId" | "imageId" | "userId", ExtArgs["result"]["services"]>
+export type ServicesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "altText" | "active" | "deletedAt" | "createdAt" | "updatedAt" | "featured" | "description" | "organizationId" | "imageId" | "userId", ExtArgs["result"]["services"]>
 export type ServicesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   organization?: boolean | Prisma.Services$organizationArgs<ExtArgs>
   image?: boolean | Prisma.MediaDefaultArgs<ExtArgs>
@@ -1275,10 +1101,6 @@ export type $ServicesPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     link: string
     altText: string | null
     active: boolean
-    workflowStatus: string
-    pendingAction: runtime.JsonValue | null
-    approvedById: string | null
-    approvedAt: Date | null
     deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1718,10 +1540,6 @@ export interface ServicesFieldRefs {
   readonly link: Prisma.FieldRef<"Services", 'String'>
   readonly altText: Prisma.FieldRef<"Services", 'String'>
   readonly active: Prisma.FieldRef<"Services", 'Boolean'>
-  readonly workflowStatus: Prisma.FieldRef<"Services", 'String'>
-  readonly pendingAction: Prisma.FieldRef<"Services", 'Json'>
-  readonly approvedById: Prisma.FieldRef<"Services", 'String'>
-  readonly approvedAt: Prisma.FieldRef<"Services", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Services", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Services", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Services", 'DateTime'>

@@ -161,11 +161,12 @@ Melhorias de produto e auditoria para o futuro.
 [x] Sanitizar `page`/`limit` em `MediaController.listFiles` (`GET /media/list/*prefix`).
 [x] Atualizar os services e viewmodels do frontend (`popups.service.ts`, `gallery.service.ts`, `organization.service.ts`, `stories.service.ts`, `gallery.viewmodal.tsx`) para consumir as rotas `/admin` no painel e corrigir `/story/item/:id` → `/story/items/:id`.
 
-## NÍVEL 3: Role MANAGER, Fluxo de Aprovação (USER → MANAGER) e Soft Delete
+## NÍVEL 3: Role MANAGER, Fluxo de Aprovação (ContentChangeRequest) e Soft Delete
 
-[x] Adicionar `Action.Approve` e `Action.SoftDelete` e implementar as regras de `UserRole.MANAGER` e `UserRole.USER` no `CaslAbilityFactory` (proibindo `Action.Delete` físico e gestão de `User`/`Admin` ao `MANAGER`, e protegendo `AuthController.register` com `'Admin'`).
-[x] Adicionar campos de workflow e soft delete (`workflowStatus`, `pendingAction`, `approvedById`, `approvedAt`, `deletedAt`, e `active` em `Services`) no `schema.prisma` com migration oficial.
-[x] Implementar submissão sujeita a aprovação (`USER`), aprovação/rejeição (`MANAGER`/`ADMIN` via `PATCH /:id/approve` e `PATCH /:id/reject`) e exclusão apenas via Soft Delete para `MANAGER` em `Pages`, `Articles`, `Popups`, `Galleries` e `Services`.
+[x] Adicionar `Action.Approve` e `Action.SoftDelete` e implementar as regras de `UserRole.MANAGER` e `UserRole.USER` no `CaslAbilityFactory` (incluindo `'ContentChangeRequest'`, proibindo `Action.Delete` físico e gestão de `User`/`Admin` ao `MANAGER`, e protegendo `AuthController.register` com `'Admin'`).
+[x] Substituir colunas JSON inline por tabela dedicada `ContentChangeRequest` (`content_change_request` com enums `RequestStatus`/`RequestType`, histórico de rejeições com `rejectionReason`, `proposedData`, `appliedData`, `requestedBy`/`reviewedBy`) via migration oficial, mantendo `deletedAt` nos modelos de conteúdo.
+[x] Implementar `ApprovalService`/`ApprovalController` (`/approvals`), integrando `Pages`, `Articles`, `Popups`, `Galleries` e `Services`, além de alinhamento `Action.SoftDelete` para `MANAGER` em `Menus`, `MenuItem`, `Organizations` e `Story`.
+[x] Implantar fila centralizada `/administrator/aprovacoes`, hook `useApprovalQueue`, comparação side-by-side (`currentEntity` vs `proposedData`), edição antes da aprovação ("Editar e Aprovar"), rejeição com motivo e preservação de rascunho para reenvio.
 
 ## Orientações Para refatoração
 

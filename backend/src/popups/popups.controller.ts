@@ -70,17 +70,29 @@ export class PopupsController {
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/approve')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Popups'))
-  async approve(@Param('id') id: string, @Request() req: any) {
+  async approve(
+    @Param('id') id: string,
+    @Body() body: { proposedData?: Record<string, any> },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.popupsService.approve(id, approverId);
+    return this.popupsService.approve(id, approverId, body?.proposedData);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/reject')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Popups'))
-  async reject(@Param('id') id: string, @Request() req: any) {
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string; rejectionReason?: string },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.popupsService.reject(id, approverId);
+    return this.popupsService.reject(
+      id,
+      approverId,
+      body?.reason ?? body?.rejectionReason,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -98,8 +110,8 @@ export class PopupsController {
         'Você não possui permissão para editar este popup.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.popupsService.update(id, updatePopupDto, userRole);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.popupsService.update(id, updatePopupDto, userRole, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -128,7 +140,7 @@ export class PopupsController {
         'Você não possui permissão para remover este popup.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.popupsService.remove(id, userRole, wantHardDelete);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.popupsService.remove(id, userRole, wantHardDelete, userId);
   }
 }

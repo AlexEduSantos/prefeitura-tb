@@ -38,11 +38,13 @@ import { BackupModule } from './backup/backup.module';
 import { SearchModule } from './search/search.module';
 import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.middleware';
 import { MailModule } from './common/mail/mail.module';
+import { ApprovalModule } from './approval/approval.module';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
     MailModule,
+    ApprovalModule,
     RedisCacheModule,
     TelemetryModule,
     ScheduleModule.forRoot(),

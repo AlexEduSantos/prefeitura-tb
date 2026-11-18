@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   ExternalLink,
   BookOpen,
+  ClipboardCheck,
   ScrollText,
   Newspaper,
 } from "lucide-react";
@@ -54,6 +55,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   NavigationIcon,
   GraphHubIcon,
   BookOpen,
+  ClipboardCheck,
   ScrollText,
   Newspaper,
 };
@@ -199,6 +201,53 @@ export function PainelSidebar() {
 
       <SidebarFooter className="flex flex-col gap-4">
         <SidebarMenu className="gap-2">
+          {/* Fila de Aprovações */}
+          <SidebarMenuItem key="aprovacoes">
+            <SidebarMenuButton
+              asChild
+              tooltip="Fila de Aprovações"
+              isActive={pathname === "/administrator/aprovacoes"}
+              className={cn(
+                "h-12 transition-all duration-200 group",
+                state === "expanded" ? "px-4" : "justify-center p-0",
+                pathname === "/administrator/aprovacoes"
+                  ? "bg-card! border-primary border text-primary-foreground hover:bg-card/90 shadow-md"
+                  : "text-zinc-600 hover:bg-zinc-100",
+              )}
+            >
+              <Link
+                href="/administrator/aprovacoes"
+                className={cn(
+                  "flex items-center",
+                  state === "expanded"
+                    ? "w-full gap-3"
+                    : "justify-center gap-0",
+                )}
+              >
+                <ClipboardCheck
+                  className={cn(
+                    "w-5 h-5 shrink-0",
+                    pathname === "/administrator/aprovacoes"
+                      ? "text-primary"
+                      : "text-zinc-500 group-hover:text-zinc-900",
+                  )}
+                />
+                {state === "expanded" && (
+                  <span
+                    className={cn(
+                      "font-medium",
+                      pathname === "/administrator/aprovacoes"
+                        ? "text-primary font-semibold"
+                        : "text-zinc-500 group-hover:text-zinc-900",
+                    )}
+                  >
+                    Fila de Aprovações
+                  </span>
+                )}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
           {/* Logs de Auditoria */}
           <SidebarMenuItem key="audit-logs">
             <SidebarMenuButton

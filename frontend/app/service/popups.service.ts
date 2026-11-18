@@ -131,13 +131,14 @@ export class PopupsService {
     return response.json();
   }
 
-  static async rejectPopup(id: string): Promise<IPopups> {
+  static async rejectPopup(id: string, reason?: string): Promise<IPopups> {
     const response = await csrfFetch(`${API_URL}/popups/${id}/reject`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
+      body: JSON.stringify({ reason }),
     });
     if (!response.ok) {
       throw new Error("Erro ao rejeitar popup");

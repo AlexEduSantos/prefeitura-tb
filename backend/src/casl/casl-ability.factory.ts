@@ -8,6 +8,7 @@ import { Action } from './action.enum';
 import {
   Article,
   Category,
+  ContentChangeRequest,
   Galleries,
   GalleryMedia,
   Media,
@@ -30,6 +31,7 @@ export type Subjects =
   | 'all'
   | 'Admin'
   | 'AuditLog'
+  | 'ContentChangeRequest'
   | 'Article'
   | 'Page'
   | 'Media'
@@ -47,6 +49,7 @@ export type Subjects =
   | 'StoryItem'
   | 'SiteSettings'
   | 'OfficialGazette'
+  | ContentChangeRequest
   | Article
   | Page
   | Media
@@ -67,6 +70,7 @@ export type Subjects =
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 
 const CONTENT_SUBJECTS = [
+  'ContentChangeRequest',
   'Article',
   'Page',
   'Media',
@@ -176,6 +180,7 @@ export class CaslAbilityFactory {
     // ==========================================
     else if (user.role === UserRole.USER) {
       can(Action.Read, [
+        'ContentChangeRequest',
         'Page',
         'Article',
         'Media',
@@ -186,6 +191,8 @@ export class CaslAbilityFactory {
         'Organization',
         'Space',
       ]);
+
+      can([Action.Create, Action.Update], 'ContentChangeRequest');
 
       if (user.organizationId) {
         for (const subj of COLLABORATOR_SUBJECTS) {

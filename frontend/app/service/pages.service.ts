@@ -192,11 +192,12 @@ export class PagesService {
     return response.json();
   }
 
-  static async rejectPage(id: string): Promise<IPage> {
+  static async rejectPage(id: string, reason?: string): Promise<IPage> {
     const response = await csrfFetch(`${API_URL}/pages/${id}/reject`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
+      body: JSON.stringify({ reason }),
     });
     if (!response.ok) {
       throw new Error("Erro ao rejeitar página");

@@ -1,32 +1,64 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateServiceDto } from './dto/create-services.dto';
 import { UpdateServiceDto } from './dto/update-serviecs.dto';
-import { Prisma, Services } from '../generated/prisma/client';
 import { UserRole } from '../generated/prisma/enums';
+import { ApprovalService } from '../approval/approval.service';
 
 @Injectable()
 export class ServicesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private approvalService?: ApprovalService,
+  ) {}
 
-  create(
+  private get approval(): ApprovalService {
+    if (!this.approvalService) {
+      this.approvalService = new ApprovalService(this.prisma);
+    }
+    return this.approvalService;
+  }
+
+  async create(
     createServiceDto: CreateServiceDto,
     userId: string,
     userRole?: UserRole,
-  ) {
-    const isCollaborator = userRole === UserRole.USER;
+  ): Promise<any> {
+    if (userRole === UserRole.USER) {
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Service',
+        entityId: null,
+        requestType: 'create',
+        proposedData: {
+          ...createServiceDto,
+          active: true,
+          userId,
+        },
+        requestedById: userId,
+      });
+
+      return {
+        id: req.id,
+        ...createServiceDto,
+        active: false,
+        userId,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
+    }
+
     return this.prisma.services.create({
       data: {
         ...createServiceDto,
-        active: isCollaborator ? false : true,
-        workflowStatus: isCollaborator ? 'pendente_aprovacao' : 'aprovado',
+        active: true,
         userId,
       },
     });
   }
 
-  findAll(): Promise<Services[]> {
-    return this.prisma.services.findMany({
+  async findAll(): Promise<any[]> {
+    const services = await this.prisma.services.findMany({
       where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       include: {
@@ -35,6 +67,7 @@ export class ServicesService {
         user: { select: { name: true, avatar: true } },
       },
     });
+    return this.approval.attachWorkflowMeta('Service', services);
   }
 
   async findAllPublic(page?: string, limit?: string, title?: string) {
@@ -84,55 +117,35 @@ export class ServicesService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<any> {
     const service = await this.prisma.services.findUnique({ where: { id } });
     if (!service) {
       throw new NotFoundException(`Serviço com ID ${id} não encontrado.`);
     }
-    return service;
+    return this.approval.attachWorkflowMetaOne('Service', service);
   }
 
   async update(
     id: string,
     updateServiceDto: UpdateServiceDto,
-    _userId?: string,
+    userId?: string,
     userRole?: UserRole,
-  ) {
+  ): Promise<any> {
     if (userRole === UserRole.USER) {
       const current = await this.findOne(id);
-      if (current.active) {
-        return this.prisma.services.update({
-          where: { id },
-          data: {
-            workflowStatus: 'pendente_aprovacao',
-            pendingAction: {
-              type: 'update',
-              data: { ...updateServiceDto },
-              requestedAt: new Date().toISOString(),
-            },
-          },
-        });
-      }
-
-      return this.prisma.services.update({
-        where: { id },
-        data: {
-          ...updateServiceDto,
-          active: false,
-          workflowStatus: 'pendente_aprovacao',
-        },
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Service',
+        entityId: id,
+        requestType: 'update',
+        proposedData: { ...updateServiceDto },
+        requestedById: userId || current.userId,
       });
-    }
-
-    if (userRole === UserRole.ADMIN || userRole === UserRole.MANAGER) {
-      return this.prisma.services.update({
-        where: { id },
-        data: {
-          ...updateServiceDto,
-          workflowStatus: 'aprovado',
-          pendingAction: Prisma.DbNull,
-        },
-      });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     return this.prisma.services.update({
@@ -141,19 +154,27 @@ export class ServicesService {
     });
   }
 
-  async remove(id: string, userRole?: UserRole, hardDelete = false) {
+  async remove(
+    id: string,
+    userRole?: UserRole,
+    hardDelete = false,
+    userId?: string,
+  ): Promise<any> {
     if (userRole === UserRole.USER) {
-      await this.findOne(id);
-      return this.prisma.services.update({
-        where: { id },
-        data: {
-          workflowStatus: 'pendente_aprovacao',
-          pendingAction: {
-            type: 'delete',
-            requestedAt: new Date().toISOString(),
-          },
-        },
+      const current = await this.findOne(id);
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Service',
+        entityId: id,
+        requestType: 'delete',
+        proposedData: { title: current.title, link: current.link },
+        requestedById: userId || current.userId,
       });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     if (userRole === UserRole.ADMIN && hardDelete) {
@@ -165,71 +186,29 @@ export class ServicesService {
       data: {
         active: false,
         deletedAt: new Date(),
-        workflowStatus: 'excluido',
-        pendingAction: Prisma.DbNull,
       },
     });
   }
 
-  async approve(id: string, approverId?: string) {
-    const current = await this.findOne(id);
-    const pending = current.pendingAction as {
-      type?: string;
-      data?: Record<string, any>;
-    } | null;
-
-    if (pending?.type === 'delete') {
-      return this.prisma.services.update({
-        where: { id },
-        data: {
-          active: false,
-          deletedAt: new Date(),
-          workflowStatus: 'excluido',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    }
-
-    if (pending?.type === 'update' && pending.data) {
-      return this.prisma.services.update({
-        where: { id },
-        data: {
-          ...pending.data,
-          active: true,
-          deletedAt: null,
-          workflowStatus: 'aprovado',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    }
-
-    return this.prisma.services.update({
-      where: { id },
-      data: {
-        active: true,
-        deletedAt: null,
-        workflowStatus: 'aprovado',
-        pendingAction: Prisma.DbNull,
-        approvedById: approverId ?? null,
-        approvedAt: new Date(),
-      },
-    });
+  async approve(
+    id: string,
+    approverId?: string,
+    proposedData?: Record<string, any>,
+  ): Promise<any> {
+    return this.approval.approveByEntityOrRequestId(
+      'Service',
+      id,
+      approverId,
+      proposedData,
+    );
   }
 
-  async reject(id: string, approverId?: string) {
-    await this.findOne(id);
-    return this.prisma.services.update({
-      where: { id },
-      data: {
-        workflowStatus: 'rejeitado',
-        pendingAction: Prisma.DbNull,
-        approvedById: approverId ?? null,
-        approvedAt: new Date(),
-      },
-    });
+  async reject(id: string, approverId?: string, reason?: string): Promise<any> {
+    return this.approval.rejectByEntityOrRequestId(
+      'Service',
+      id,
+      approverId,
+      reason,
+    );
   }
 }

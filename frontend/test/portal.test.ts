@@ -19,6 +19,7 @@ import { StoriesService } from "@/app/service/stories.service";
 import { PopupsService } from "@/app/service/popups.service";
 import { GalleryService } from "@/app/service/gallery.service";
 import { OrganizationService } from "@/app/service/organization.service";
+import { ApprovalService } from "@/app/service/approval.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -214,5 +215,46 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
 
     await OrganizationService.getTree();
     expect(fetchMock.mock.calls[5][0]).toMatch(/\/organizations\/tree$/);
+  });
+
+  it("ApprovalService deve listar fila, aprovar com edição, rejeitar com motivo e reenviar rascunho", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ items: [], summary: { pendente: 0 } }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-approval-test",
+    });
+
+    await ApprovalService.getRequests({
+      status: "pendente",
+      entityType: "Page",
+    });
+    expect(fetchMock.mock.calls[0][0]).toContain(
+      "/approvals?status=pendente&entityType=Page",
+    );
+
+    await ApprovalService.approveRequest("req-1", { title: "Editado" });
+    expect(fetchMock.mock.calls[1][0]).toContain("/approvals/req-1/approve");
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({ proposedData: { title: "Editado" } }),
+    });
+
+    await ApprovalService.rejectRequest("req-2", "Falta anexo");
+    expect(fetchMock.mock.calls[2][0]).toContain("/approvals/req-2/reject");
+    expect(fetchMock.mock.calls[2][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({ reason: "Falta anexo" }),
+    });
+
+    await ApprovalService.resubmitRequest("req-2", { title: "Corrigido" });
+    expect(fetchMock.mock.calls[3][0]).toContain("/approvals/req-2/resubmit");
+    expect(fetchMock.mock.calls[3][1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ proposedData: { title: "Corrigido" } }),
+    });
   });
 });

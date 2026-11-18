@@ -415,7 +415,8 @@ export const ModelName = {
   MenuItem: 'MenuItem',
   SiteSettings: 'SiteSettings',
   AuditLog: 'AuditLog',
-  OfficialGazette: 'OfficialGazette'
+  OfficialGazette: 'OfficialGazette',
+  ContentChangeRequest: 'ContentChangeRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "organization" | "space" | "category" | "user" | "session" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem" | "menu" | "menuItem" | "siteSettings" | "auditLog" | "officialGazette"
+    modelProps: "organization" | "space" | "category" | "user" | "session" | "page" | "article" | "media" | "folder" | "galleries" | "galleryMedia" | "popups" | "services" | "stories" | "storiesItem" | "menu" | "menuItem" | "siteSettings" | "auditLog" | "officialGazette" | "contentChangeRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1915,6 +1916,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ContentChangeRequest: {
+      payload: Prisma.$ContentChangeRequestPayload<ExtArgs>
+      fields: Prisma.ContentChangeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ContentChangeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ContentChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.ContentChangeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ContentChangeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.ContentChangeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.ContentChangeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.ContentChangeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ContentChangeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.ContentChangeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        update: {
+          args: Prisma.ContentChangeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.ContentChangeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ContentChangeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ContentChangeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.ContentChangeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ContentChangeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.ContentChangeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateContentChangeRequest>
+        }
+        groupBy: {
+          args: Prisma.ContentChangeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContentChangeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ContentChangeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ContentChangeRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2033,10 +2108,6 @@ export const PageScalarFieldEnum = {
   content: 'content',
   description: 'description',
   published: 'published',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
@@ -2067,10 +2138,6 @@ export const ArticleScalarFieldEnum = {
   allowComments: 'allowComments',
   tags: 'tags',
   visibility: 'visibility',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   galleryId: 'galleryId',
   socialPreviewTitle: 'socialPreviewTitle',
@@ -2124,10 +2191,6 @@ export const GalleriesScalarFieldEnum = {
   id: 'id',
   title: 'title',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -2162,10 +2225,6 @@ export const PopupsScalarFieldEnum = {
   title: 'title',
   link: 'link',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   displayTime: 'displayTime',
   status: 'status',
@@ -2192,10 +2251,6 @@ export const ServicesScalarFieldEnum = {
   link: 'link',
   altText: 'altText',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -2334,6 +2389,25 @@ export const OfficialGazetteScalarFieldEnum = {
 export type OfficialGazetteScalarFieldEnum = (typeof OfficialGazetteScalarFieldEnum)[keyof typeof OfficialGazetteScalarFieldEnum]
 
 
+export const ContentChangeRequestScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  requestType: 'requestType',
+  proposedData: 'proposedData',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  appliedData: 'appliedData'
+} as const
+
+export type ContentChangeRequestScalarFieldEnum = (typeof ContentChangeRequestScalarFieldEnum)[keyof typeof ContentChangeRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2441,8 +2515,6 @@ export const PageOrderByRelevanceFieldEnum = {
   title: 'title',
   slug: 'slug',
   description: 'description',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
   userId: 'userId'
@@ -2462,8 +2534,6 @@ export const ArticleOrderByRelevanceFieldEnum = {
   seoKeywords: 'seoKeywords',
   tags: 'tags',
   visibility: 'visibility',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   galleryId: 'galleryId',
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
@@ -2507,8 +2577,6 @@ export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFiel
 export const GalleriesOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
   userId: 'userId'
@@ -2532,8 +2600,6 @@ export const PopupsOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   link: 'link',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   position: 'position',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
@@ -2549,8 +2615,6 @@ export const ServicesOrderByRelevanceFieldEnum = {
   title: 'title',
   link: 'link',
   altText: 'altText',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   description: 'description',
   organizationId: 'organizationId',
   imageId: 'imageId',
@@ -2656,6 +2720,18 @@ export const OfficialGazetteOrderByRelevanceFieldEnum = {
 } as const
 
 export type OfficialGazetteOrderByRelevanceFieldEnum = (typeof OfficialGazetteOrderByRelevanceFieldEnum)[keyof typeof OfficialGazetteOrderByRelevanceFieldEnum]
+
+
+export const ContentChangeRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  rejectionReason: 'rejectionReason',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById'
+} as const
+
+export type ContentChangeRequestOrderByRelevanceFieldEnum = (typeof ContentChangeRequestOrderByRelevanceFieldEnum)[keyof typeof ContentChangeRequestOrderByRelevanceFieldEnum]
 
 
 
@@ -2836,6 +2912,34 @@ export type EnumMenuLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'MenuLocation[]'
  */
 export type ListEnumMenuLocationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MenuLocation[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RequestType'
+ */
+export type EnumRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestType'>
+    
+
+
+/**
+ * Reference to a field of type 'RequestType[]'
+ */
+export type ListEnumRequestTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RequestStatus'
+ */
+export type EnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'RequestStatus[]'
+ */
+export type ListEnumRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RequestStatus[]'>
     
 
 
@@ -3023,6 +3127,7 @@ export type GlobalOmitConfig = {
   siteSettings?: Prisma.SiteSettingsOmit
   auditLog?: Prisma.AuditLogOmit
   officialGazette?: Prisma.OfficialGazetteOmit
+  contentChangeRequest?: Prisma.ContentChangeRequestOmit
 }
 
 /* Types for Logging */

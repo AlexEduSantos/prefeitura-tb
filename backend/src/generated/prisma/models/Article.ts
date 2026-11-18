@@ -40,9 +40,6 @@ export type ArticleMinAggregateOutputType = {
   seoKeywords: string | null
   allowComments: boolean | null
   visibility: string | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   galleryId: string | null
   socialPreviewTitle: string | null
@@ -71,9 +68,6 @@ export type ArticleMaxAggregateOutputType = {
   seoKeywords: string | null
   allowComments: boolean | null
   visibility: string | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   galleryId: string | null
   socialPreviewTitle: string | null
@@ -104,10 +98,6 @@ export type ArticleCountAggregateOutputType = {
   allowComments: number
   tags: number
   visibility: number
-  workflowStatus: number
-  pendingAction: number
-  approvedById: number
-  approvedAt: number
   deletedAt: number
   galleryId: number
   socialPreviewTitle: number
@@ -138,9 +128,6 @@ export type ArticleMinAggregateInputType = {
   seoKeywords?: true
   allowComments?: true
   visibility?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   galleryId?: true
   socialPreviewTitle?: true
@@ -169,9 +156,6 @@ export type ArticleMaxAggregateInputType = {
   seoKeywords?: true
   allowComments?: true
   visibility?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   galleryId?: true
   socialPreviewTitle?: true
@@ -202,10 +186,6 @@ export type ArticleCountAggregateInputType = {
   allowComments?: true
   tags?: true
   visibility?: true
-  workflowStatus?: true
-  pendingAction?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   galleryId?: true
   socialPreviewTitle?: true
@@ -309,10 +289,6 @@ export type ArticleGroupByOutputType = {
   allowComments: boolean
   tags: string[]
   visibility: string
-  workflowStatus: string
-  pendingAction: runtime.JsonValue | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   galleryId: string | null
   socialPreviewTitle: string | null
@@ -364,10 +340,6 @@ export type ArticleWhereInput = {
   allowComments?: Prisma.BoolFilter<"Article"> | boolean
   tags?: Prisma.StringNullableListFilter<"Article">
   visibility?: Prisma.StringFilter<"Article"> | string
-  workflowStatus?: Prisma.StringFilter<"Article"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Article">
-  approvedById?: Prisma.UuidNullableFilter<"Article"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   galleryId?: Prisma.UuidNullableFilter<"Article"> | string | null
   socialPreviewTitle?: Prisma.StringNullableFilter<"Article"> | string | null
@@ -404,10 +376,6 @@ export type ArticleOrderByWithRelationInput = {
   allowComments?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   galleryId?: Prisma.SortOrderInput | Prisma.SortOrder
   socialPreviewTitle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -448,10 +416,6 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<{
   allowComments?: Prisma.BoolFilter<"Article"> | boolean
   tags?: Prisma.StringNullableListFilter<"Article">
   visibility?: Prisma.StringFilter<"Article"> | string
-  workflowStatus?: Prisma.StringFilter<"Article"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Article">
-  approvedById?: Prisma.UuidNullableFilter<"Article"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   galleryId?: Prisma.UuidNullableFilter<"Article"> | string | null
   socialPreviewTitle?: Prisma.StringNullableFilter<"Article"> | string | null
@@ -488,10 +452,6 @@ export type ArticleOrderByWithAggregationInput = {
   allowComments?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   galleryId?: Prisma.SortOrderInput | Prisma.SortOrder
   socialPreviewTitle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -528,10 +488,6 @@ export type ArticleScalarWhereWithAggregatesInput = {
   allowComments?: Prisma.BoolWithAggregatesFilter<"Article"> | boolean
   tags?: Prisma.StringNullableListFilter<"Article">
   visibility?: Prisma.StringWithAggregatesFilter<"Article"> | string
-  workflowStatus?: Prisma.StringWithAggregatesFilter<"Article"> | string
-  pendingAction?: Prisma.JsonNullableWithAggregatesFilter<"Article">
-  approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Article"> | string | null
-  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Article"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Article"> | Date | string | null
   galleryId?: Prisma.UuidNullableWithAggregatesFilter<"Article"> | string | null
   socialPreviewTitle?: Prisma.StringNullableWithAggregatesFilter<"Article"> | string | null
@@ -562,10 +518,6 @@ export type ArticleCreateInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -597,10 +549,6 @@ export type ArticleUncheckedCreateInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -632,10 +580,6 @@ export type ArticleUpdateInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -667,10 +611,6 @@ export type ArticleUncheckedUpdateInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -702,10 +642,6 @@ export type ArticleCreateManyInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -736,10 +672,6 @@ export type ArticleUpdateManyMutationInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -765,10 +697,6 @@ export type ArticleUncheckedUpdateManyInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -823,10 +751,6 @@ export type ArticleCountOrderByAggregateInput = {
   allowComments?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   galleryId?: Prisma.SortOrder
   socialPreviewTitle?: Prisma.SortOrder
@@ -855,9 +779,6 @@ export type ArticleMaxOrderByAggregateInput = {
   seoKeywords?: Prisma.SortOrder
   allowComments?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   galleryId?: Prisma.SortOrder
   socialPreviewTitle?: Prisma.SortOrder
@@ -886,9 +807,6 @@ export type ArticleMinOrderByAggregateInput = {
   seoKeywords?: Prisma.SortOrder
   allowComments?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   galleryId?: Prisma.SortOrder
   socialPreviewTitle?: Prisma.SortOrder
@@ -1180,10 +1098,6 @@ export type ArticleCreateWithoutOrganizationInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1214,10 +1128,6 @@ export type ArticleUncheckedCreateWithoutOrganizationInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1277,10 +1187,6 @@ export type ArticleScalarWhereInput = {
   allowComments?: Prisma.BoolFilter<"Article"> | boolean
   tags?: Prisma.StringNullableListFilter<"Article">
   visibility?: Prisma.StringFilter<"Article"> | string
-  workflowStatus?: Prisma.StringFilter<"Article"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Article">
-  approvedById?: Prisma.UuidNullableFilter<"Article"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Article"> | Date | string | null
   galleryId?: Prisma.UuidNullableFilter<"Article"> | string | null
   socialPreviewTitle?: Prisma.StringNullableFilter<"Article"> | string | null
@@ -1311,10 +1217,6 @@ export type ArticleCreateWithoutCategoriesInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1345,10 +1247,6 @@ export type ArticleUncheckedCreateWithoutCategoriesInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1400,10 +1298,6 @@ export type ArticleCreateWithoutAuthorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1434,10 +1328,6 @@ export type ArticleUncheckedCreateWithoutAuthorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1478,10 +1368,6 @@ export type ArticleCreateWithoutEditorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1512,10 +1398,6 @@ export type ArticleUncheckedCreateWithoutEditorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1588,10 +1470,6 @@ export type ArticleCreateWithoutCoverInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1622,10 +1500,6 @@ export type ArticleUncheckedCreateWithoutCoverInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1682,10 +1556,6 @@ export type ArticleCreateWithoutGalleryInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1716,10 +1586,6 @@ export type ArticleUncheckedCreateWithoutGalleryInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -1776,10 +1642,6 @@ export type ArticleCreateManyOrganizationInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -1809,10 +1671,6 @@ export type ArticleUpdateWithoutOrganizationInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1843,10 +1701,6 @@ export type ArticleUncheckedUpdateWithoutOrganizationInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1877,10 +1731,6 @@ export type ArticleUncheckedUpdateManyWithoutOrganizationInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1910,10 +1760,6 @@ export type ArticleUpdateWithoutCategoriesInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1944,10 +1790,6 @@ export type ArticleUncheckedUpdateWithoutCategoriesInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1978,10 +1820,6 @@ export type ArticleUncheckedUpdateManyWithoutCategoriesInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2012,10 +1850,6 @@ export type ArticleCreateManyAuthorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -2045,10 +1879,6 @@ export type ArticleCreateManyEditorInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -2078,10 +1908,6 @@ export type ArticleUpdateWithoutAuthorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2112,10 +1938,6 @@ export type ArticleUncheckedUpdateWithoutAuthorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2146,10 +1968,6 @@ export type ArticleUncheckedUpdateManyWithoutAuthorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2179,10 +1997,6 @@ export type ArticleUpdateWithoutEditorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2213,10 +2027,6 @@ export type ArticleUncheckedUpdateWithoutEditorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2247,10 +2057,6 @@ export type ArticleUncheckedUpdateManyWithoutEditorInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2280,10 +2086,6 @@ export type ArticleCreateManyCoverInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   galleryId?: string | null
   socialPreviewTitle?: string | null
@@ -2313,10 +2115,6 @@ export type ArticleUpdateWithoutCoverInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2347,10 +2145,6 @@ export type ArticleUncheckedUpdateWithoutCoverInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2381,10 +2175,6 @@ export type ArticleUncheckedUpdateManyWithoutCoverInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   galleryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2414,10 +2204,6 @@ export type ArticleCreateManyGalleryInput = {
   allowComments?: boolean
   tags?: Prisma.ArticleCreatetagsInput | string[]
   visibility?: string
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   socialPreviewTitle?: string | null
   socialPreviewImage?: string | null
@@ -2447,10 +2233,6 @@ export type ArticleUpdateWithoutGalleryInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2481,10 +2263,6 @@ export type ArticleUncheckedUpdateWithoutGalleryInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2515,10 +2293,6 @@ export type ArticleUncheckedUpdateManyWithoutGalleryInput = {
   allowComments?: Prisma.BoolFieldUpdateOperationsInput | boolean
   tags?: Prisma.ArticleUpdatetagsInput | string[]
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   socialPreviewTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   socialPreviewImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2579,10 +2353,6 @@ export type ArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   allowComments?: boolean
   tags?: boolean
   visibility?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   galleryId?: boolean
   socialPreviewTitle?: boolean
@@ -2620,10 +2390,6 @@ export type ArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   allowComments?: boolean
   tags?: boolean
   visibility?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   galleryId?: boolean
   socialPreviewTitle?: boolean
@@ -2659,10 +2425,6 @@ export type ArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   allowComments?: boolean
   tags?: boolean
   visibility?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   galleryId?: boolean
   socialPreviewTitle?: boolean
@@ -2698,10 +2460,6 @@ export type ArticleSelectScalar = {
   allowComments?: boolean
   tags?: boolean
   visibility?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   galleryId?: boolean
   socialPreviewTitle?: boolean
@@ -2713,7 +2471,7 @@ export type ArticleSelectScalar = {
   coverId?: boolean
 }
 
-export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "headline" | "body" | "slug" | "type" | "status" | "publicationDate" | "expirationDate" | "featured" | "createdAt" | "updatedAt" | "seoTitle" | "seoDescription" | "seoKeywords" | "allowComments" | "tags" | "visibility" | "workflowStatus" | "pendingAction" | "approvedById" | "approvedAt" | "deletedAt" | "galleryId" | "socialPreviewTitle" | "socialPreviewImage" | "socialPreviewDescription" | "organizationId" | "authorId" | "editorId" | "coverId", ExtArgs["result"]["article"]>
+export type ArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "headline" | "body" | "slug" | "type" | "status" | "publicationDate" | "expirationDate" | "featured" | "createdAt" | "updatedAt" | "seoTitle" | "seoDescription" | "seoKeywords" | "allowComments" | "tags" | "visibility" | "deletedAt" | "galleryId" | "socialPreviewTitle" | "socialPreviewImage" | "socialPreviewDescription" | "organizationId" | "authorId" | "editorId" | "coverId", ExtArgs["result"]["article"]>
 export type ArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gallery?: boolean | Prisma.Article$galleryArgs<ExtArgs>
   organization?: boolean | Prisma.Article$organizationArgs<ExtArgs>
@@ -2767,10 +2525,6 @@ export type $ArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     allowComments: boolean
     tags: string[]
     visibility: string
-    workflowStatus: string
-    pendingAction: runtime.JsonValue | null
-    approvedById: string | null
-    approvedAt: Date | null
     deletedAt: Date | null
     galleryId: string | null
     socialPreviewTitle: string | null
@@ -3227,10 +2981,6 @@ export interface ArticleFieldRefs {
   readonly allowComments: Prisma.FieldRef<"Article", 'Boolean'>
   readonly tags: Prisma.FieldRef<"Article", 'String[]'>
   readonly visibility: Prisma.FieldRef<"Article", 'String'>
-  readonly workflowStatus: Prisma.FieldRef<"Article", 'String'>
-  readonly pendingAction: Prisma.FieldRef<"Article", 'Json'>
-  readonly approvedById: Prisma.FieldRef<"Article", 'String'>
-  readonly approvedAt: Prisma.FieldRef<"Article", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Article", 'DateTime'>
   readonly galleryId: Prisma.FieldRef<"Article", 'String'>
   readonly socialPreviewTitle: Prisma.FieldRef<"Article", 'String'>

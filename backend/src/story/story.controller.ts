@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
   DefaultValuePipe,
   ParseIntPipe,
   ParseEnumPipe,
@@ -23,6 +24,7 @@ import { CheckPolicies } from '../casl/check-policies.decorator';
 import { Action } from '../casl/action.enum';
 import { CreateStoryItemDto } from './dto/create-story-item.dto';
 import { UpdateStoryItemDto } from './dto/update-story-item.dto';
+import { extractRequestUser } from '../common/utils/workflow.util';
 
 @Controller('story')
 export class StoryController {
@@ -123,9 +125,18 @@ export class StoryController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Stories'))
-  async remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.storyService.remove(id);
+  @CheckPolicies(
+    (ability) =>
+      ability.can(Action.Delete, 'Stories') ||
+      ability.can(Action.SoftDelete, 'Stories'),
+  )
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
+    const { role: userRole } = extractRequestUser(req);
+    return this.storyService.remove(id, userRole, hard === 'true');
   }
 
   // ----- Story Item -----
@@ -166,8 +177,17 @@ export class StoryController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete('items/:id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'StoryItem'))
-  async removeStoryItem(@Param('id', ParseUUIDPipe) id: string) {
-    return this.storyService.removeStoryItem(id);
+  @CheckPolicies(
+    (ability) =>
+      ability.can(Action.Delete, 'StoryItem') ||
+      ability.can(Action.SoftDelete, 'StoryItem'),
+  )
+  async removeStoryItem(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
+    const { role: userRole } = extractRequestUser(req);
+    return this.storyService.removeStoryItem(id, userRole, hard === 'true');
   }
 }

@@ -1,17 +1,23 @@
 import { IMedia } from "./media";
+import { IContentChangeRequest, WorkflowStatus } from "./approval";
+import { IOrganization, ISpace } from "./organization";
 
 export interface IGallery {
   id: string;
   title: string;
   active: boolean;
   organizationId?: string;
-  organization?: any;
+  organization?: IOrganization | null;
   spaceId?: string | null;
-  space?: any;
+  space?: ISpace | null;
   userId: string;
   slides: IGalleryImage[];
   createdAt: string;
   updatedAt: string;
+  workflowStatus?: WorkflowStatus;
+  pendingRequest?: IContentChangeRequest | null;
+  lastRejectedRequest?: IContentChangeRequest | null;
+  changeRequestId?: string;
 }
 
 export interface IGalleryImage {

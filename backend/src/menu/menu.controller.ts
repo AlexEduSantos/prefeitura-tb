@@ -7,6 +7,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { ALLOWED_MENU_FILTER_FIELDS, MenusService } from './menu.service';
@@ -15,6 +17,7 @@ import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 import { Action } from '../casl/action.enum';
 import { CreateMenuDto } from './dto/create-menu.dto';
+import { extractRequestUser } from '../common/utils/workflow.util';
 
 @Controller('menus')
 export class MenusController {
@@ -65,8 +68,17 @@ export class MenusController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Menu'))
-  remove(@Param('id') id: string) {
-    return this.menusService.remove(id);
+  @CheckPolicies(
+    (ability) =>
+      ability.can(Action.Delete, 'Menu') ||
+      ability.can(Action.SoftDelete, 'Menu'),
+  )
+  remove(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
+    const { role: userRole } = extractRequestUser(req);
+    return this.menusService.remove(id, userRole, hard === 'true');
   }
 }

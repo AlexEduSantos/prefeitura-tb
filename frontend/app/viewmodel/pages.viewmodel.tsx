@@ -1,6 +1,11 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseMutationResult,
+} from "@tanstack/react-query";
 import { PagesService } from "../service/pages.service";
 import { IPage } from "../type/pages";
 import { toast } from "sonner";
@@ -16,17 +21,40 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   ArrowUpDown,
+  Check,
   CheckCircle,
   EyeIcon,
   Pencil,
   Trash,
+  X,
   XCircleIcon,
 } from "lucide-react";
+import { useProfileViewModel } from "./user.viewmodel";
+
+interface PageTableMeta {
+  changePublished: UseMutationResult<
+    IPage,
+    Error,
+    { id: string; published: boolean }
+  >;
+  deletePage: UseMutationResult<IPage, Error, string>;
+  approvePage: UseMutationResult<IPage, Error, string>;
+  rejectPage: UseMutationResult<IPage, Error, { id: string; reason?: string }>;
+  isReviewer: boolean;
+  handleOpenEdit: (pageId: string) => void;
+  handleOpenView: (pageId: string) => void;
+}
 
 export function usePagesViewModel() {
+  const queryClient = useQueryClient();
+  const { profile } = useProfileViewModel();
+  const isReviewer =
+    profile?.role === "MANAGER" || profile?.role === "ADMIN";
+
   // ── UI State ────────────────────────────────────────────────────────────────
   const [isOpenNewPageModal, setIsOpenNewPageModal] = useState(false);
   const [isOpenViewModal, setIsOpenViewModal] = useState(false);
@@ -40,6 +68,7 @@ export function usePagesViewModel() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
     published: true,
+    workflow: true,
     title: true,
     slug: true,
     Ações: true,
@@ -52,55 +81,109 @@ export function usePagesViewModel() {
     queryFn: () => PagesService.getPagesList(),
   });
 
-  const getPageByIdQuery = useQuery({
+  const getPageByIdQuery = useQuery<IPage>({
     queryKey: ["page", id],
     queryFn: () => PagesService.getPage(id),
     enabled: !!id,
   });
 
+  const refreshApprovalState = () => {
+    getPagesListQuery.refetch();
+    queryClient.invalidateQueries({ queryKey: ["approvals"] });
+  };
+
   // ── Mutations ────────────────────────────────────────────────────────────────
   const savePageMutation = useMutation({
-    mutationFn: (data: any) => PagesService.savePage(data),
-    onSuccess: () => {
-      getPagesListQuery.refetch();
-      toast.success("Página salva com sucesso!");
+    mutationFn: (data: Record<string, unknown>) => PagesService.savePage(data),
+    onSuccess: (result: IPage) => {
+      refreshApprovalState();
+      if (result?.changeRequestId || result?.workflowStatus === "pendente") {
+        toast.success("Página enviada para aprovação do gestor!");
+      } else {
+        toast.success("Página salva com sucesso!");
+      }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message);
     },
   });
 
   const updatePageMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) =>
-      PagesService.updatePage(id, data),
-    onSuccess: () => {
-      getPagesListQuery.refetch();
-      toast.success("Página atualizada com sucesso!");
+    mutationFn: ({
+      id: pageId,
+      data,
+    }: {
+      id: string;
+      data: Record<string, unknown>;
+    }) => PagesService.updatePage(pageId, data),
+    onSuccess: (result: IPage) => {
+      refreshApprovalState();
+      if (result?.changeRequestId || result?.workflowStatus === "pendente") {
+        toast.success("Alteração enviada para análise na fila de aprovação!");
+      } else {
+        toast.success("Página atualizada com sucesso!");
+      }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message);
     },
   });
 
   const deletePageMutation = useMutation({
-    mutationFn: (id: string) => PagesService.deletePage(id),
-    onSuccess: () => {
-      getPagesListQuery.refetch();
-      toast.success("Página deletada com sucesso!");
+    mutationFn: (pageId: string) => PagesService.deletePage(pageId),
+    onSuccess: (result: IPage) => {
+      refreshApprovalState();
+      if (result?.changeRequestId || result?.workflowStatus === "pendente") {
+        toast.success("Solicitação de exclusão enviada para aprovação!");
+      } else {
+        toast.success("Página removida com sucesso!");
+      }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message);
     },
   });
 
   const changePublishedPageMutation = useMutation({
-    mutationFn: ({ id, published }: { id: string; published: boolean }) =>
-      PagesService.changePublishedPage(id, published),
-    onSuccess: () => {
-      getPagesListQuery.refetch();
-      toast.success("Estado da página alterado com sucesso!");
+    mutationFn: ({
+      id: pageId,
+      published,
+    }: {
+      id: string;
+      published: boolean;
+    }) => PagesService.changePublishedPage(pageId, published),
+    onSuccess: (result: IPage) => {
+      refreshApprovalState();
+      if (result?.changeRequestId || result?.workflowStatus === "pendente") {
+        toast.success("Alteração de publicação enviada para aprovação!");
+      } else {
+        toast.success("Estado da página alterado com sucesso!");
+      }
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const approvePageMutation = useMutation({
+    mutationFn: (pageId: string) => PagesService.approvePage(pageId),
+    onSuccess: () => {
+      refreshApprovalState();
+      toast.success("Solicitação da página aprovada!");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const rejectPageMutation = useMutation({
+    mutationFn: ({ id: pageId, reason }: { id: string; reason?: string }) =>
+      PagesService.rejectPage(pageId, reason),
+    onSuccess: () => {
+      refreshApprovalState();
+      toast.success("Solicitação rejeitada com rascunho preservado.");
+    },
+    onError: (error: Error) => {
       toast.error(error.message);
     },
   });
@@ -111,12 +194,12 @@ export function usePagesViewModel() {
   const handleSubmitPage = (data: {
     title: string;
     slug: string;
-    content: any;
+    content: Record<string, unknown>;
     organizationId: string;
     spaceId?: string | null;
   }) => {
     if (modalMode === "create") {
-      savePageMutation.mutate(data as any, {
+      savePageMutation.mutate(data as unknown as Record<string, unknown>, {
         onSuccess: () => {
           setIsOpenNewPageModal(false);
           setTitle("");
@@ -131,7 +214,7 @@ export function usePagesViewModel() {
       }
 
       updatePageMutation.mutate(
-        { id, data: data as any },
+        { id, data: data as unknown as Record<string, unknown> },
         {
           onSuccess: () => {
             setIsOpenNewPageModal(false);
@@ -176,7 +259,7 @@ export function usePagesViewModel() {
       header: "Estado",
       cell: ({ row, table }) => {
         const published = row.original.published;
-        const meta = table.options.meta as any;
+        const meta = table.options.meta as PageTableMeta;
 
         const handlePublishedChange = () => {
           meta?.changePublished?.mutate({
@@ -202,6 +285,61 @@ export function usePagesViewModel() {
               )}
             </Button>
           </div>
+        );
+      },
+    },
+    {
+      id: "workflow",
+      header: "Revisão",
+      cell: ({ row }) => {
+        const { pendingRequest, lastRejectedRequest, workflowStatus } =
+          row.original;
+
+        if (pendingRequest || workflowStatus === "pendente") {
+          const actionLabel =
+            pendingRequest?.requestType === "delete"
+              ? "Exclusão"
+              : pendingRequest?.requestType === "create"
+                ? "Criação"
+                : "Alteração";
+          return (
+            <Badge
+              variant="outline"
+              className="bg-amber-500/15 text-amber-700 border-amber-500/30"
+            >
+              {actionLabel} Pendente
+            </Badge>
+          );
+        }
+
+        if (lastRejectedRequest || workflowStatus === "rejeitado") {
+          return (
+            <div className="flex flex-col gap-0.5 max-w-44">
+              <Badge
+                variant="outline"
+                className="w-fit bg-rose-500/15 text-rose-700 border-rose-500/30"
+              >
+                Rejeitado
+              </Badge>
+              {lastRejectedRequest?.rejectionReason && (
+                <span
+                  className="text-[11px] text-rose-600 truncate"
+                  title={lastRejectedRequest.rejectionReason}
+                >
+                  {lastRejectedRequest.rejectionReason}
+                </span>
+              )}
+            </div>
+          );
+        }
+
+        return (
+          <Badge
+            variant="outline"
+            className="bg-emerald-500/10 text-emerald-700 border-emerald-500/30"
+          >
+            Aprovado
+          </Badge>
         );
       },
     },
@@ -235,8 +373,8 @@ export function usePagesViewModel() {
       accessorKey: "organization",
       header: "Secretaria / Órgão",
       cell: ({ row }) => {
-        const page = row.original as any;
-        const orgName = page.organization?.name;
+        const page = row.original;
+        const orgName = page.organization?.title || page.organization?.acronym;
         const spaceSlug = page.space?.slug ? `/${page.space.slug}` : "/";
 
         return (
@@ -255,10 +393,44 @@ export function usePagesViewModel() {
       id: "Ações",
       header: "Ações",
       cell: ({ row, table }) => {
-        const meta = table.options.meta as any;
+        const meta = table.options.meta as PageTableMeta;
+        const hasPending = Boolean(row.original.pendingRequest);
 
         return (
-          <div className="flex items-center gap-2 w-10">
+          <div className="flex items-center gap-1">
+            {meta?.isReviewer && hasPending && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer text-emerald-600"
+                  title="Aprovar solicitação pendente"
+                  onClick={() => meta?.approvePage?.mutate(row.original.id)}
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 cursor-pointer text-rose-600"
+                  title="Rejeitar solicitação pendente"
+                  onClick={() => {
+                    const reason = window.prompt(
+                      "Informe o motivo da rejeição (opcional):",
+                      "",
+                    );
+                    if (reason !== null) {
+                      meta?.rejectPage?.mutate({
+                        id: row.original.id,
+                        reason,
+                      });
+                    }
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -317,9 +489,12 @@ export function usePagesViewModel() {
     meta: {
       changePublished: changePublishedPageMutation,
       deletePage: deletePageMutation,
+      approvePage: approvePageMutation,
+      rejectPage: rejectPageMutation,
+      isReviewer,
       handleOpenEdit,
       handleOpenView,
-    },
+    } satisfies PageTableMeta,
   });
 
   // ── Return ───────────────────────────────────────────────────────────────────
@@ -342,6 +517,8 @@ export function usePagesViewModel() {
     updatePage: updatePageMutation,
     deletePage: deletePageMutation,
     changePublished: changePublishedPageMutation,
+    approvePage: approvePageMutation,
+    rejectPage: rejectPageMutation,
 
     // UI State
     isOpenNewPageModal,

@@ -156,10 +156,16 @@ export class OrganizationsService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, userRole?: string, hardDelete = false) {
     await this.findOneAdmin(id);
-    return this.prisma.organization.delete({
+    if (userRole === 'ADMIN' && hardDelete) {
+      return this.prisma.organization.delete({
+        where: { id },
+      });
+    }
+    return this.prisma.organization.update({
       where: { id },
+      data: { active: false },
     });
   }
 

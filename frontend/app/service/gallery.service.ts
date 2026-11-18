@@ -99,13 +99,14 @@ export class GalleryService {
     return response.json();
   }
 
-  static async rejectGallery(id: string): Promise<IGallery> {
+  static async rejectGallery(id: string, reason?: string): Promise<IGallery> {
     const response = await csrfFetch(`${API_URL}/galleries/${id}/reject`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
+      body: JSON.stringify({ reason }),
     });
 
     if (!response.ok) {

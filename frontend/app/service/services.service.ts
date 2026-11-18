@@ -94,11 +94,12 @@ export class ServicesService {
     return response.json();
   }
 
-  static async rejectService(id: string) {
+  static async rejectService(id: string, reason?: string) {
     const response = await csrfFetch(`${API_URL}/${id}/reject`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
+      body: JSON.stringify({ reason }),
     });
     if (!response.ok) throw new Error("Erro ao rejeitar serviço");
     return response.json();

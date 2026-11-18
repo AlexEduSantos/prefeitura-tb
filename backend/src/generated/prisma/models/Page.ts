@@ -29,9 +29,6 @@ export type PageMinAggregateOutputType = {
   slug: string | null
   description: string | null
   published: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   spaceId: string | null
   organizationId: string | null
@@ -46,9 +43,6 @@ export type PageMaxAggregateOutputType = {
   slug: string | null
   description: string | null
   published: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   spaceId: string | null
   organizationId: string | null
@@ -64,10 +58,6 @@ export type PageCountAggregateOutputType = {
   content: number
   description: number
   published: number
-  workflowStatus: number
-  pendingAction: number
-  approvedById: number
-  approvedAt: number
   deletedAt: number
   spaceId: number
   organizationId: number
@@ -84,9 +74,6 @@ export type PageMinAggregateInputType = {
   slug?: true
   description?: true
   published?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   spaceId?: true
   organizationId?: true
@@ -101,9 +88,6 @@ export type PageMaxAggregateInputType = {
   slug?: true
   description?: true
   published?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   spaceId?: true
   organizationId?: true
@@ -119,10 +103,6 @@ export type PageCountAggregateInputType = {
   content?: true
   description?: true
   published?: true
-  workflowStatus?: true
-  pendingAction?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   spaceId?: true
   organizationId?: true
@@ -211,10 +191,6 @@ export type PageGroupByOutputType = {
   content: runtime.JsonValue
   description: string | null
   published: boolean
-  workflowStatus: string
-  pendingAction: runtime.JsonValue | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   spaceId: string | null
   organizationId: string | null
@@ -251,10 +227,6 @@ export type PageWhereInput = {
   content?: Prisma.JsonFilter<"Page">
   description?: Prisma.StringNullableFilter<"Page"> | string | null
   published?: Prisma.BoolFilter<"Page"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Page"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Page">
-  approvedById?: Prisma.UuidNullableFilter<"Page"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
   organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
@@ -274,10 +246,6 @@ export type PageOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -302,10 +270,6 @@ export type PageWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.JsonFilter<"Page">
   description?: Prisma.StringNullableFilter<"Page"> | string | null
   published?: Prisma.BoolFilter<"Page"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Page"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Page">
-  approvedById?: Prisma.UuidNullableFilter<"Page"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
   organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
@@ -325,10 +289,6 @@ export type PageOrderByWithAggregationInput = {
   content?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   published?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   spaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   organizationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -350,10 +310,6 @@ export type PageScalarWhereWithAggregatesInput = {
   content?: Prisma.JsonWithAggregatesFilter<"Page">
   description?: Prisma.StringNullableWithAggregatesFilter<"Page"> | string | null
   published?: Prisma.BoolWithAggregatesFilter<"Page"> | boolean
-  workflowStatus?: Prisma.StringWithAggregatesFilter<"Page"> | string
-  pendingAction?: Prisma.JsonNullableWithAggregatesFilter<"Page">
-  approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Page"> | string | null
-  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Page"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Page"> | Date | string | null
   spaceId?: Prisma.UuidNullableWithAggregatesFilter<"Page"> | string | null
   organizationId?: Prisma.UuidNullableWithAggregatesFilter<"Page"> | string | null
@@ -369,10 +325,6 @@ export type PageCreateInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -389,10 +341,6 @@ export type PageUncheckedCreateInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   organizationId?: string | null
@@ -409,10 +357,6 @@ export type PageUpdateInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -429,10 +373,6 @@ export type PageUncheckedUpdateInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -449,10 +389,6 @@ export type PageCreateManyInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   organizationId?: string | null
@@ -468,10 +404,6 @@ export type PageUpdateManyMutationInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -484,10 +416,6 @@ export type PageUncheckedUpdateManyInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -524,10 +452,6 @@ export type PageCountOrderByAggregateInput = {
   content?: Prisma.SortOrder
   description?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   spaceId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -542,9 +466,6 @@ export type PageMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   spaceId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -559,9 +480,6 @@ export type PageMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   description?: Prisma.SortOrder
   published?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   spaceId?: Prisma.SortOrder
   organizationId?: Prisma.SortOrder
@@ -724,10 +642,6 @@ export type PageCreateWithoutOrganizationInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -743,10 +657,6 @@ export type PageUncheckedCreateWithoutOrganizationInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   createdAt?: Date | string
@@ -791,10 +701,6 @@ export type PageScalarWhereInput = {
   content?: Prisma.JsonFilter<"Page">
   description?: Prisma.StringNullableFilter<"Page"> | string | null
   published?: Prisma.BoolFilter<"Page"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Page"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Page">
-  approvedById?: Prisma.UuidNullableFilter<"Page"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Page"> | Date | string | null
   spaceId?: Prisma.UuidNullableFilter<"Page"> | string | null
   organizationId?: Prisma.UuidNullableFilter<"Page"> | string | null
@@ -810,10 +716,6 @@ export type PageCreateWithoutSpaceInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -829,10 +731,6 @@ export type PageUncheckedCreateWithoutSpaceInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   organizationId?: string | null
   createdAt?: Date | string
@@ -874,10 +772,6 @@ export type PageCreateWithoutUserInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -893,10 +787,6 @@ export type PageUncheckedCreateWithoutUserInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   organizationId?: string | null
@@ -938,10 +828,6 @@ export type PageCreateWithoutMenuItemsInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -957,10 +843,6 @@ export type PageUncheckedCreateWithoutMenuItemsInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   organizationId?: string | null
@@ -992,10 +874,6 @@ export type PageUpdateWithoutMenuItemsInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1011,10 +889,6 @@ export type PageUncheckedUpdateWithoutMenuItemsInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1030,10 +904,6 @@ export type PageCreateManyOrganizationInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   createdAt?: Date | string
@@ -1048,10 +918,6 @@ export type PageUpdateWithoutOrganizationInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1067,10 +933,6 @@ export type PageUncheckedUpdateWithoutOrganizationInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1086,10 +948,6 @@ export type PageUncheckedUpdateManyWithoutOrganizationInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1104,10 +962,6 @@ export type PageCreateManySpaceInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   organizationId?: string | null
   createdAt?: Date | string
@@ -1122,10 +976,6 @@ export type PageUpdateWithoutSpaceInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1141,10 +991,6 @@ export type PageUncheckedUpdateWithoutSpaceInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1160,10 +1006,6 @@ export type PageUncheckedUpdateManyWithoutSpaceInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1178,10 +1020,6 @@ export type PageCreateManyUserInput = {
   content: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: string | null
   published?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   spaceId?: string | null
   organizationId?: string | null
@@ -1196,10 +1034,6 @@ export type PageUpdateWithoutUserInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1215,10 +1049,6 @@ export type PageUncheckedUpdateWithoutUserInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1234,10 +1064,6 @@ export type PageUncheckedUpdateManyWithoutUserInput = {
   content?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   published?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   spaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   organizationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1283,10 +1109,6 @@ export type PageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   content?: boolean
   description?: boolean
   published?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   spaceId?: boolean
   organizationId?: boolean
@@ -1307,10 +1129,6 @@ export type PageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   description?: boolean
   published?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   spaceId?: boolean
   organizationId?: boolean
@@ -1329,10 +1147,6 @@ export type PageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   content?: boolean
   description?: boolean
   published?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   spaceId?: boolean
   organizationId?: boolean
@@ -1351,10 +1165,6 @@ export type PageSelectScalar = {
   content?: boolean
   description?: boolean
   published?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   spaceId?: boolean
   organizationId?: boolean
@@ -1363,7 +1173,7 @@ export type PageSelectScalar = {
   userId?: boolean
 }
 
-export type PageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "description" | "published" | "workflowStatus" | "pendingAction" | "approvedById" | "approvedAt" | "deletedAt" | "spaceId" | "organizationId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["page"]>
+export type PageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "content" | "description" | "published" | "deletedAt" | "spaceId" | "organizationId" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["page"]>
 export type PageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   space?: boolean | Prisma.Page$spaceArgs<ExtArgs>
   organization?: boolean | Prisma.Page$organizationArgs<ExtArgs>
@@ -1397,10 +1207,6 @@ export type $PagePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     content: runtime.JsonValue
     description: string | null
     published: boolean
-    workflowStatus: string
-    pendingAction: runtime.JsonValue | null
-    approvedById: string | null
-    approvedAt: Date | null
     deletedAt: Date | null
     spaceId: string | null
     organizationId: string | null
@@ -1840,10 +1646,6 @@ export interface PageFieldRefs {
   readonly content: Prisma.FieldRef<"Page", 'Json'>
   readonly description: Prisma.FieldRef<"Page", 'String'>
   readonly published: Prisma.FieldRef<"Page", 'Boolean'>
-  readonly workflowStatus: Prisma.FieldRef<"Page", 'String'>
-  readonly pendingAction: Prisma.FieldRef<"Page", 'Json'>
-  readonly approvedById: Prisma.FieldRef<"Page", 'String'>
-  readonly approvedAt: Prisma.FieldRef<"Page", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Page", 'DateTime'>
   readonly spaceId: Prisma.FieldRef<"Page", 'String'>
   readonly organizationId: Prisma.FieldRef<"Page", 'String'>

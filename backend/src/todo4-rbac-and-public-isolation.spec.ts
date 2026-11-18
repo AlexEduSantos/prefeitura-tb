@@ -3,6 +3,7 @@ import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { GUARDS_METADATA } from '@nestjs/common/constants';
 import { lastValueFrom, of } from 'rxjs';
 import { describe, it, expect, vi } from 'vitest';
+import { ConflictException } from '@nestjs/common';
 import { Action } from './casl/action.enum';
 import { CaslAbilityFactory } from './casl/casl-ability.factory';
 import { CHECK_POLICIES_KEY } from './casl/check-policies.decorator';
@@ -10,6 +11,7 @@ import { PoliciesGuard } from './casl/policies.guard';
 import { SessionGuard } from './auth/session.guard';
 import { UserRole } from './generated/prisma/enums';
 import { ExcludePasswordInterceptor } from './common/interceptors/exclude-password.interceptor';
+import { ApprovalService } from './approval/approval.service';
 import { OfficialGazetteService } from './official-gazette/official-gazette.service';
 import { OfficialGazetteController } from './official-gazette/official-gazette.controller';
 import { PopupsService } from './popups/popups.service';
@@ -271,46 +273,109 @@ describe('TO-DO 4.0 — Varredura LGPD, Separação Admin vs Public e Fluxo MANA
       expect(userAbility.can(Action.Create, 'Page')).toBe(true);
     });
 
-    it('Fluxo USER -> MANAGER em PagesService e ArticlesService: criação pendente, edição pendente sem alterar publicado, aprovação e soft delete', async () => {
-      // 1. PagesService
-      let storedPage: any = {
-        id: 'page-1',
-        title: 'Publicado Original',
-        slug: 'orig',
-        content: {},
-        published: false,
-        workflowStatus: 'pendente_aprovacao',
-        pendingAction: null,
-        organizationId: 'org-saude',
-      };
+    it('Fluxo ContentChangeRequest: criação pendente sem poluir Page, edição com ConflictException, editar e aprovar, rejeição com histórico preservado, reenvio e soft delete', async () => {
+      const changeRequests: any[] = [];
+      const pagesStore: any[] = [
+        {
+          id: 'page-pub',
+          title: 'Publicado Original',
+          slug: 'orig',
+          content: {},
+          published: true,
+          deletedAt: null,
+          organizationId: 'org-saude',
+          userId: 'usr-1',
+        },
+      ];
 
-      const pagesService = new PagesService({
-        page: {
-          create: vi.fn().mockImplementation(async ({ data }) => {
-            storedPage = { ...storedPage, ...data };
-            return storedPage;
+      const prismaMock: any = {
+        contentChangeRequest: {
+          findFirst: vi.fn().mockImplementation(async ({ where }: any) => {
+            return (
+              changeRequests.find((r) => {
+                if (where.status && r.status !== where.status) return false;
+                if (where.OR) {
+                  return where.OR.some(
+                    (cond: any) =>
+                      (cond.id && r.id === cond.id) ||
+                      (cond.entityType &&
+                        r.entityType === cond.entityType &&
+                        r.entityId === cond.entityId),
+                  );
+                }
+                if (where.entityType && r.entityType !== where.entityType)
+                  return false;
+                if (where.entityId && r.entityId !== where.entityId)
+                  return false;
+                return true;
+              }) ?? null
+            );
           }),
-          findUnique: vi
-            .fn()
-            .mockImplementation(async () => ({ ...storedPage })),
-          update: vi.fn().mockImplementation(async ({ data }) => {
-            const { Prisma } = await import('./generated/prisma/client.js');
-            storedPage = {
-              ...storedPage,
+          findMany: vi.fn().mockImplementation(async ({ where }: any) => {
+            return changeRequests
+              .filter(
+                (r) =>
+                  (!where?.entityType || r.entityType === where.entityType) &&
+                  (!where?.entityId?.in ||
+                    where.entityId.in.includes(r.entityId)),
+              )
+              .slice()
+              .reverse();
+          }),
+          findUnique: vi.fn().mockImplementation(async ({ where }: any) => {
+            return changeRequests.find((r) => r.id === where.id) ?? null;
+          }),
+          create: vi.fn().mockImplementation(async ({ data }: any) => {
+            const created = {
+              id: `req-${changeRequests.length + 1}`,
               ...data,
-              pendingAction:
-                data.pendingAction === Prisma.DbNull
-                  ? null
-                  : data.pendingAction,
+              createdAt: new Date(),
+              updatedAt: new Date(),
             };
-            return storedPage;
+            changeRequests.push(created);
+            return created;
+          }),
+          update: vi.fn().mockImplementation(async ({ where, data }: any) => {
+            const idx = changeRequests.findIndex((r) => r.id === where.id);
+            changeRequests[idx] = {
+              ...changeRequests[idx],
+              ...data,
+              updatedAt: new Date(),
+            };
+            return changeRequests[idx];
+          }),
+        },
+        page: {
+          create: vi.fn().mockImplementation(async ({ data }: any) => {
+            const created = {
+              id: `page-${pagesStore.length + 1}`,
+              ...data,
+              deletedAt: null,
+            };
+            pagesStore.push(created);
+            return created;
+          }),
+          findUnique: vi.fn().mockImplementation(async ({ where }: any) => {
+            return pagesStore.find((p) => p.id === where.id) ?? null;
+          }),
+          update: vi.fn().mockImplementation(async ({ where, data }: any) => {
+            const idx = pagesStore.findIndex((p) => p.id === where.id);
+            pagesStore[idx] = { ...pagesStore[idx], ...data };
+            return pagesStore[idx];
           }),
           delete: vi.fn(),
         },
-      } as any);
+      };
 
-      // USER tenta criar já publicada -> força published: false + pendente_aprovacao
-      const createdByUser = await pagesService.create(
+      const approvalService = new ApprovalService(prismaMock);
+      const pagesService = new PagesService(
+        prismaMock,
+        undefined,
+        approvalService,
+      );
+
+      // 1. USER cria Página -> gera ContentChangeRequest sem inserir em Page
+      const draftResult = await pagesService.create(
         {
           title: 'Rascunho Saúde',
           slug: 'saude',
@@ -321,63 +386,82 @@ describe('TO-DO 4.0 — Varredura LGPD, Separação Admin vs Public e Fluxo MANA
         'usr-1',
         UserRole.USER,
       );
-      expect(createdByUser.published).toBe(false);
-      expect(createdByUser.workflowStatus).toBe('pendente_aprovacao');
+      expect(draftResult.published).toBe(false);
+      expect(draftResult.workflowStatus).toBe('pendente');
+      expect(prismaMock.page.create).not.toHaveBeenCalled();
+      expect(changeRequests).toHaveLength(1);
+      expect(changeRequests[0].requestType).toBe('create');
+      expect(changeRequests[0].entityId).toBeNull();
 
-      // MANAGER aprova -> passa a published: true e aprovado
-      const approved = await pagesService.approve('page-1', 'mgr-1');
-      expect(approved.published).toBe(true);
-      expect(approved.workflowStatus).toBe('aprovado');
-      expect(approved.approvedById).toBe('mgr-1');
+      // 2. MANAGER aprova o pedido de criação -> cria Page real e grava appliedData
+      const approvedCreate = await pagesService.approve('req-1', 'mgr-1');
+      expect(approvedCreate.title).toBe('Rascunho Saúde');
+      expect(approvedCreate.published).toBe(true);
+      expect(prismaMock.page.create).toHaveBeenCalledTimes(1);
+      expect(changeRequests[0].status).toBe('aprovado');
+      expect(changeRequests[0].reviewedById).toBe('mgr-1');
+      expect(changeRequests[0].appliedData).toMatchObject({
+        title: 'Rascunho Saúde',
+      });
 
-      // USER edita página já publicada -> conteúdo publicado preservado, alteração vai para pendingAction
+      // 3. USER edita página publicada -> mantém original intacto, bloqueia segunda edição simultânea
       const pendingEdit = await pagesService.update(
-        'page-1',
+        'page-pub',
         { title: 'Título Alterado pelo USER' },
         UserRole.USER,
+        'usr-1',
       );
-      expect(pendingEdit.title).toBe('Rascunho Saúde');
-      expect(pendingEdit.published).toBe(true);
-      expect(pendingEdit.workflowStatus).toBe('pendente_aprovacao');
-      expect((pendingEdit.pendingAction as any).type).toBe('update');
+      expect(pendingEdit.title).toBe('Publicado Original');
+      expect(pendingEdit.workflowStatus).toBe('pendente');
 
-      // MANAGER aprova alteração pendente -> aplica título alterado
-      const approvedEdit = await pagesService.approve('page-1', 'mgr-1');
-      expect(approvedEdit.title).toBe('Título Alterado pelo USER');
-      expect(approvedEdit.pendingAction).toBeNull();
+      await expect(
+        pagesService.update(
+          'page-pub',
+          { title: 'Outro Título Concorrente' },
+          UserRole.USER,
+          'usr-1',
+        ),
+      ).rejects.toBeInstanceOf(ConflictException);
 
-      // MANAGER remove -> executa apenas Soft Delete (published: false, deletedAt != null)
-      const softDeleted = await pagesService.remove('page-1', UserRole.MANAGER);
+      // 4. MANAGER rejeita com motivo -> proposedData é preservado
+      const rejectedRes = await approvalService.rejectRequest(
+        pendingEdit.changeRequestId,
+        'mgr-1',
+        'Falta revisar o subtítulo',
+      );
+      expect(rejectedRes.status).toBe('rejeitado');
+      expect(rejectedRes.rejectionReason).toBe('Falta revisar o subtítulo');
+      expect(rejectedRes.proposedData).toMatchObject({
+        title: 'Título Alterado pelo USER',
+      });
+
+      // 5. USER corrige rascunho preservado e reenvia -> gera novo registro mantendo histórico da rejeição
+      const resubmitted = await approvalService.resubmitRequest(
+        rejectedRes.id,
+        { title: 'Título Corrigido para Revisão' },
+        { id: 'usr-1', role: UserRole.USER },
+      );
+      expect(resubmitted.status).toBe('pendente');
+      expect(changeRequests[1].status).toBe('rejeitado');
+
+      // 6. MANAGER edita proposedData antes de aprovar ("Editar e Aprovar") -> aplica versão editada na Page
+      const editedApproval = await approvalService.approveRequest(
+        resubmitted.id,
+        'mgr-1',
+        { title: 'Título Ajustado pelo Manager' },
+      );
+      expect(editedApproval.entity.title).toBe('Título Ajustado pelo Manager');
+      expect(pagesStore[0].title).toBe('Título Ajustado pelo Manager');
+
+      // 7. USER solicita exclusão -> gera RequestType.delete e MANAGER aprova aplicando Soft Delete
+      await pagesService.remove('page-pub', UserRole.USER, false, 'usr-1');
+      const softDeleted = await pagesService.approve('page-pub', 'mgr-1');
       expect(softDeleted.published).toBe(false);
-      expect(softDeleted.workflowStatus).toBe('excluido');
       expect(softDeleted.deletedAt).toBeInstanceOf(Date);
 
-      // 2. ArticlesService
-      let storedArticle: any = {
-        id: 'art-1',
-        title: 'Notícia',
-        status: 'rascunho',
-        workflowStatus: 'pendente_aprovacao',
-        pendingAction: null,
-        publicationDate: null,
-      };
-      const articlesService = new ArticlesService({
-        article: {
-          create: vi.fn().mockImplementation(async ({ data }) => {
-            storedArticle = { ...storedArticle, ...data };
-            return storedArticle;
-          }),
-          findUnique: vi
-            .fn()
-            .mockImplementation(async () => ({ ...storedArticle })),
-          update: vi.fn().mockImplementation(async ({ data }) => {
-            storedArticle = { ...storedArticle, ...data };
-            return storedArticle;
-          }),
-        },
-      } as any);
-
-      const artByUser = await articlesService.create(
+      // 8. ArticlesService cria ContentChangeRequest para USER
+      const articlesService = new ArticlesService(prismaMock, approvalService);
+      const artDraft = await articlesService.create(
         {
           title: 'Vacinação',
           slug: 'vacinacao',
@@ -387,13 +471,58 @@ describe('TO-DO 4.0 — Varredura LGPD, Separação Admin vs Public e Fluxo MANA
           body: {},
         },
         UserRole.USER,
+        'usr-1',
       );
-      expect(artByUser.status).toBe('rascunho');
-      expect(artByUser.workflowStatus).toBe('pendente_aprovacao');
+      expect(artDraft.workflowStatus).toBe('pendente');
+      expect(changeRequests[changeRequests.length - 1].entityType).toBe(
+        'Article',
+      );
+    });
 
-      const artApproved = await articlesService.approve('art-1', 'mgr-1');
-      expect(artApproved.status).toBe('publicado');
-      expect(artApproved.workflowStatus).toBe('aprovado');
+    it('Alinhamento Soft Delete para MANAGER em MenusService, MenuItemService, OrganizationsService e StoryService', async () => {
+      const menuUpdate = vi.fn().mockResolvedValue({ id: 'm1', active: false });
+      const menuItemUpdate = vi
+        .fn()
+        .mockResolvedValue({ id: 'mi1', visible: false });
+      const orgUpdate = vi.fn().mockResolvedValue({ id: 'o1', active: false });
+      const storyItemsExpire = vi.fn().mockResolvedValue({ count: 2 });
+
+      const menusService = new MenusService({
+        menu: { update: menuUpdate, delete: vi.fn() },
+      } as any);
+      await menusService.remove('m1', UserRole.MANAGER, true);
+      expect(menuUpdate).toHaveBeenCalledWith({
+        where: { id: 'm1' },
+        data: { active: false },
+      });
+
+      const orgService = new OrganizationsService({
+        organization: {
+          findUnique: vi.fn().mockResolvedValue({ id: 'o1' }),
+          update: orgUpdate,
+          delete: vi.fn(),
+        },
+      } as any);
+      await orgService.remove('o1', UserRole.MANAGER, true);
+      expect(orgUpdate).toHaveBeenCalledWith({
+        where: { id: 'o1' },
+        data: { active: false },
+      });
+
+      const storyService = new StoryService({
+        stories: {
+          findUnique: vi.fn().mockResolvedValue({ id: 'st1', items: [] }),
+          delete: vi.fn(),
+        },
+        storiesItem: {
+          updateMany: storyItemsExpire,
+          findUnique: vi.fn().mockResolvedValue({ id: 'si1' }),
+          update: menuItemUpdate,
+          delete: vi.fn(),
+        },
+      } as any);
+      await storyService.remove('st1', UserRole.MANAGER, true);
+      expect(storyItemsExpire).toHaveBeenCalledTimes(1);
     });
   });
 });

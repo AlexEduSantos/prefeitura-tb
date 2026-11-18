@@ -1,19 +1,30 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { CreatePopupDto } from './dto/create-popup.dto';
 import { UpdatePopupDto } from './dto/update-popup.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Popups, Prisma } from '../generated/prisma/client';
+import { Popups } from '../generated/prisma/client';
 import { UserRole } from '../generated/prisma/enums';
+import { ApprovalService } from '../approval/approval.service';
 
 @Injectable()
 export class PopupsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Optional() private approvalService?: ApprovalService,
+  ) {}
+
+  private get approval(): ApprovalService {
+    if (!this.approvalService) {
+      this.approvalService = new ApprovalService(this.prisma);
+    }
+    return this.approvalService;
+  }
 
   async create(
     createPopupDto: CreatePopupDto,
     userId: string,
     userRole?: UserRole,
-  ): Promise<Popups> {
+  ): Promise<any> {
     const {
       title,
       imageId,
@@ -31,22 +42,39 @@ export class PopupsService {
       spaceId,
     } = createPopupDto;
 
-    const isCollaborator = userRole === UserRole.USER;
-    const resolvedActive = isCollaborator ? false : (active ?? true);
-    const resolvedStatus = isCollaborator ? 'rascunho' : (status ?? 'rascunho');
-    const workflowStatus = isCollaborator
-      ? 'pendente_aprovacao'
-      : resolvedActive && resolvedStatus === 'publicado'
-        ? 'aprovado'
-        : 'rascunho';
+    if (userRole === UserRole.USER) {
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Popup',
+        entityId: null,
+        requestType: 'create',
+        proposedData: {
+          ...createPopupDto,
+          active: active ?? true,
+          status: status ?? 'publicado',
+          userId,
+        },
+        requestedById: userId,
+      });
+
+      return {
+        id: req.id,
+        title,
+        imageId,
+        userId,
+        active: false,
+        status: 'rascunho',
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
+    }
 
     const data: any = {
       title,
       imageId,
       userId,
-      active: resolvedActive,
-      status: resolvedStatus,
-      workflowStatus,
+      active: active ?? true,
+      status: status ?? 'rascunho',
       ...(link !== undefined && { link }),
       ...(displayTime !== undefined && { displayTime }),
       ...(type !== undefined && { type }),
@@ -101,8 +129,8 @@ export class PopupsService {
   /**
    * Listagem ADMINISTRATIVA: retorna todos os popups não removidos fisicamente.
    */
-  async findAllAdmin(): Promise<Popups[]> {
-    return this.prisma.popups.findMany({
+  async findAllAdmin(): Promise<any[]> {
+    const popups = await this.prisma.popups.findMany({
       where: { deletedAt: null },
       orderBy: { createdAt: 'desc' },
       include: {
@@ -112,6 +140,7 @@ export class PopupsService {
         user: { select: { name: true, avatar: true } },
       },
     });
+    return this.approval.attachWorkflowMeta('Popup', popups);
   }
 
   /**
@@ -148,7 +177,7 @@ export class PopupsService {
   /**
    * Detalhe ADMINISTRATIVO: busca por ID independente de status.
    */
-  async findOneAdmin(id: string): Promise<Popups> {
+  async findOneAdmin(id: string): Promise<any> {
     const popup = await this.prisma.popups.findUnique({
       where: { id },
       include: {
@@ -161,14 +190,15 @@ export class PopupsService {
     if (!popup) {
       throw new NotFoundException(`Popup com ID ${id} não encontrado.`);
     }
-    return popup;
+    return this.approval.attachWorkflowMetaOne('Popup', popup);
   }
 
   async update(
     id: string,
     updatePopupDto: UpdatePopupDto,
     userRole?: UserRole,
-  ): Promise<Popups> {
+    userId?: string,
+  ): Promise<any> {
     const {
       title,
       link,
@@ -208,28 +238,19 @@ export class PopupsService {
 
     if (userRole === UserRole.USER) {
       const current = await this.findOneAdmin(id);
-      if (current.active && current.status === 'publicado') {
-        return this.prisma.popups.update({
-          where: { id },
-          data: {
-            workflowStatus: 'pendente_aprovacao',
-            pendingAction: {
-              type: 'update',
-              data,
-              requestedAt: new Date().toISOString(),
-            },
-          },
-        });
-      }
-
-      data.active = false;
-      data.status = 'rascunho';
-      data.workflowStatus = 'pendente_aprovacao';
-    } else {
-      data.pendingAction = Prisma.DbNull;
-      if (status === 'publicado' || active === true) {
-        data.workflowStatus = 'aprovado';
-      }
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Popup',
+        entityId: id,
+        requestType: 'update',
+        proposedData: data,
+        requestedById: userId || current.userId,
+      });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     return this.prisma.popups.update({
@@ -242,19 +263,23 @@ export class PopupsService {
     id: string,
     userRole?: UserRole,
     hardDelete = false,
-  ): Promise<Popups> {
+    userId?: string,
+  ): Promise<any> {
     if (userRole === UserRole.USER) {
-      await this.findOneAdmin(id);
-      return this.prisma.popups.update({
-        where: { id },
-        data: {
-          workflowStatus: 'pendente_aprovacao',
-          pendingAction: {
-            type: 'delete',
-            requestedAt: new Date().toISOString(),
-          },
-        },
+      const current = await this.findOneAdmin(id);
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Popup',
+        entityId: id,
+        requestType: 'delete',
+        proposedData: { title: current.title },
+        requestedById: userId || current.userId,
       });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     if (userRole === UserRole.ADMIN && hardDelete) {
@@ -269,77 +294,29 @@ export class PopupsService {
         active: false,
         status: 'excluido',
         deletedAt: new Date(),
-        workflowStatus: 'excluido',
-        pendingAction: Prisma.DbNull,
       },
     });
   }
 
-  async approve(id: string, approverId?: string): Promise<Popups> {
-    const current = await this.findOneAdmin(id);
-    const pending = current.pendingAction as {
-      type?: string;
-      data?: Record<string, any>;
-    } | null;
-
-    if (pending?.type === 'delete') {
-      return this.prisma.popups.update({
-        where: { id },
-        data: {
-          active: false,
-          status: 'excluido',
-          deletedAt: new Date(),
-          workflowStatus: 'excluido',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    }
-
-    if (pending?.type === 'update' && pending.data) {
-      return this.prisma.popups.update({
-        where: { id },
-        data: {
-          ...pending.data,
-          active:
-            pending.data.active !== undefined
-              ? Boolean(pending.data.active)
-              : true,
-          status: pending.data.status || 'publicado',
-          deletedAt: null,
-          workflowStatus: 'aprovado',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    }
-
-    return this.prisma.popups.update({
-      where: { id },
-      data: {
-        active: true,
-        status: 'publicado',
-        deletedAt: null,
-        workflowStatus: 'aprovado',
-        pendingAction: Prisma.DbNull,
-        approvedById: approverId ?? null,
-        approvedAt: new Date(),
-      },
-    });
+  async approve(
+    id: string,
+    approverId?: string,
+    proposedData?: Record<string, any>,
+  ): Promise<any> {
+    return this.approval.approveByEntityOrRequestId(
+      'Popup',
+      id,
+      approverId,
+      proposedData,
+    );
   }
 
-  async reject(id: string, approverId?: string): Promise<Popups> {
-    await this.findOneAdmin(id);
-    return this.prisma.popups.update({
-      where: { id },
-      data: {
-        workflowStatus: 'rejeitado',
-        pendingAction: Prisma.DbNull,
-        approvedById: approverId ?? null,
-        approvedAt: new Date(),
-      },
-    });
+  async reject(id: string, approverId?: string, reason?: string): Promise<any> {
+    return this.approval.rejectByEntityOrRequestId(
+      'Popup',
+      id,
+      approverId,
+      reason,
+    );
   }
 }

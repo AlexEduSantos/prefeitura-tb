@@ -101,7 +101,7 @@ export class ArticlesController {
     @Body() createArticleDto: CreateArticleDto,
     @Request() req: any,
   ) {
-    const { role: userRole } = extractRequestUser(req);
+    const { id: userId, role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
     if (
       !ability.can(Action.Create, subject('Article', createArticleDto as any))
@@ -110,23 +110,35 @@ export class ArticlesController {
         'Você não tem permissão para criar notícias para esta secretaria.',
       );
     }
-    return this.articlesService.create(createArticleDto, userRole);
+    return this.articlesService.create(createArticleDto, userRole, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/approve')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Article'))
-  async approve(@Param('id') id: string, @Request() req: any) {
+  async approve(
+    @Param('id') id: string,
+    @Body() body: { proposedData?: Record<string, any> },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.articlesService.approve(id, approverId);
+    return this.articlesService.approve(id, approverId, body?.proposedData);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/reject')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Article'))
-  async reject(@Param('id') id: string, @Request() req: any) {
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string; rejectionReason?: string },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.articlesService.reject(id, approverId);
+    return this.articlesService.reject(
+      id,
+      approverId,
+      body?.reason ?? body?.rejectionReason,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -144,8 +156,8 @@ export class ArticlesController {
         'Você não possui permissão para editar esta notícia.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.articlesService.update(id, updateArticleDto, userRole);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.articlesService.update(id, updateArticleDto, userRole, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -175,7 +187,7 @@ export class ArticlesController {
       );
     }
 
-    const { role: userRole } = extractRequestUser(req);
-    return this.articlesService.remove(id, userRole, wantHardDelete);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.articlesService.remove(id, userRole, wantHardDelete, userId);
   }
 }

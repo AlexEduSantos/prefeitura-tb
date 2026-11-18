@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Optional } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { RedisCacheService } from '../common/cache/redis-cache.service';
+import { UserRole } from '../generated/prisma/enums';
 
 interface MenuTreeItemInput {
   id: string;
@@ -191,10 +192,14 @@ export class MenusService {
     return updated;
   }
 
-  async remove(id: string) {
-    const deleted = await this.prisma.menu.delete({
-      where: { id },
-    });
+  async remove(id: string, userRole?: UserRole, hardDelete = false) {
+    const deleted =
+      userRole === UserRole.ADMIN && hardDelete
+        ? await this.prisma.menu.delete({ where: { id } })
+        : await this.prisma.menu.update({
+            where: { id },
+            data: { active: false },
+          });
     await this.cacheService?.invalidateByPrefix('cache:menus');
     return deleted;
   }

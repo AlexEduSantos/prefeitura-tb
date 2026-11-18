@@ -107,17 +107,29 @@ export class PagesController {
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/approve')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Page'))
-  async approve(@Param('id') id: string, @Request() req: any) {
+  async approve(
+    @Param('id') id: string,
+    @Body() body: { proposedData?: Record<string, any> },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.pagesService.approve(id, approverId);
+    return this.pagesService.approve(id, approverId, body?.proposedData);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/reject')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Page'))
-  async reject(@Param('id') id: string, @Request() req: any) {
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string; rejectionReason?: string },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.pagesService.reject(id, approverId);
+    return this.pagesService.reject(
+      id,
+      approverId,
+      body?.reason ?? body?.rejectionReason,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -128,7 +140,7 @@ export class PagesController {
     @Request() req: any,
   ) {
     const page = await this.pagesService.findOne(id);
-    const { role: userRole } = extractRequestUser(req);
+    const { id: userId, role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
     if (!ability.can(Action.Update, subject('Page', page))) {
@@ -137,7 +149,7 @@ export class PagesController {
       );
     }
 
-    return this.pagesService.update(id, updatePageDto, userRole);
+    return this.pagesService.update(id, updatePageDto, userRole, userId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -148,7 +160,7 @@ export class PagesController {
     @Query('hard') hard?: string,
   ) {
     const page = await this.pagesService.findOne(id);
-    const { role: userRole } = extractRequestUser(req);
+    const { id: userId, role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
     const wantHardDelete = hard === 'true';
 
@@ -163,6 +175,6 @@ export class PagesController {
       );
     }
 
-    return this.pagesService.remove(id, userRole, wantHardDelete);
+    return this.pagesService.remove(id, userRole, wantHardDelete, userId);
   }
 }

@@ -4,6 +4,7 @@ import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ReorderMenuItemsDto } from './dto/reorder-menu-item.dto';
 import { RedisCacheService } from '../common/cache/redis-cache.service';
+import { UserRole } from '../generated/prisma/enums';
 
 @Injectable()
 export class MenuItemService {
@@ -64,10 +65,14 @@ export class MenuItemService {
     return updated;
   }
 
-  async remove(id: string) {
-    const deleted = await this.prisma.menuItem.delete({
-      where: { id },
-    });
+  async remove(id: string, userRole?: UserRole, hardDelete = false) {
+    const deleted =
+      userRole === UserRole.ADMIN && hardDelete
+        ? await this.prisma.menuItem.delete({ where: { id } })
+        : await this.prisma.menuItem.update({
+            where: { id },
+            data: { visible: false },
+          });
     await this.cacheService?.invalidateByPrefix('cache:menus');
     return deleted;
   }

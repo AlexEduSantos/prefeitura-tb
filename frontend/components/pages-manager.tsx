@@ -259,13 +259,25 @@ export function PageManager() {
         onSubmit={handleSubmitPage}
         initialData={
           page
-            ? {
-                content: page.content,
-                organizationId: page.organizationId || "",
-                spaceId: page.spaceId || "",
-                title: page.title,
-                slug: page.slug,
-              }
+            ? (() => {
+                const draft =
+                  page.pendingRequest?.proposedData ??
+                  page.lastRejectedRequest?.proposedData;
+                return {
+                  content: draft?.content ?? page.content,
+                  organizationId:
+                    (draft?.organizationId as string | undefined) ||
+                    page.organizationId ||
+                    "",
+                  spaceId:
+                    (draft?.spaceId as string | undefined) ||
+                    page.spaceId ||
+                    "",
+                  title:
+                    (draft?.title as string | undefined) || page.title,
+                  slug: (draft?.slug as string | undefined) || page.slug,
+                };
+              })()
             : undefined
         }
       />

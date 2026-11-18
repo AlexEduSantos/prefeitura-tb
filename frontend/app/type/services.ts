@@ -1,5 +1,7 @@
 import { IMedia } from "./media";
 import { IUser } from "./user";
+import { IContentChangeRequest, WorkflowStatus } from "./approval";
+import { IOrganization } from "./organization";
 
 export interface IServices {
   id: string;
@@ -12,13 +14,17 @@ export interface IServices {
   description: string;
 
   organizationId?: string;
-  organization?: any;
+  organization?: IOrganization | null;
 
   imageId: string;
   image: IMedia;
 
   userId: string;
   user: IUser;
+  workflowStatus?: WorkflowStatus;
+  pendingRequest?: IContentChangeRequest | null;
+  lastRejectedRequest?: IContentChangeRequest | null;
+  changeRequestId?: string;
 }
 
 export interface IMetaService {

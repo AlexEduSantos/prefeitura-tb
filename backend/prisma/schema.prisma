@@ -59,6 +59,19 @@ enum OrganizationTypes {
   projeto
 }
 
+enum RequestStatus {
+  pendente
+  aprovado
+  rejeitado
+  cancelado
+}
+
+enum RequestType {
+  create
+  update
+  delete
+}
+
 // ========== MODELS ==========
 model Organization {
   id      String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -159,8 +172,10 @@ model User {
   articleAuthor           Article[]         @relation("articleAuthor")
   articleEditor           Article[]         @relation("articleEditor")
   auditLogs               AuditLog[]
-  officialGazettesCreator OfficialGazette[] @relation("GazetteCreator") // usuário criador
-  officialGazettesEditor  OfficialGazette[] @relation("GazetteUpdater") // usuário editor
+  officialGazettesCreator OfficialGazette[]      @relation("GazetteCreator") // usuário criador
+  officialGazettesEditor  OfficialGazette[]      @relation("GazetteUpdater") // usuário editor
+  changeRequestsCreated   ContentChangeRequest[] @relation("ChangeRequester")
+  changeRequestsReviewed  ContentChangeRequest[] @relation("ChangeReviewer")
 
   @@map("user")
 }
@@ -181,10 +196,6 @@ model Page {
   content        Json
   description    String?
   published      Boolean   @default(false)
-  workflowStatus String    @default("aprovado")
-  pendingAction  Json?
-  approvedById   String?   @db.Uuid
-  approvedAt     DateTime? @db.Timestamp
   deletedAt      DateTime? @db.Timestamp
 
   // Roteamento: /[spaceSlug]/[slug] ou /[slug] se spaceId for null
@@ -225,10 +236,6 @@ model Article {
   allowComments            Boolean       @default(true)
   tags                     String[]
   visibility               String        @default("public")
-  workflowStatus           String        @default("aprovado")
-  pendingAction            Json?
-  approvedById             String?       @db.Uuid
-  approvedAt               DateTime?     @db.Timestamp
   deletedAt                DateTime?     @db.Timestamp
   galleryId                String?       @db.Uuid
   gallery                  Galleries?    @relation(fields: [galleryId], references: [id], onDelete: SetNull)
@@ -317,10 +324,6 @@ model Galleries {
   id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                 String
   active                Boolean     @default(true)
-  workflowStatus        String      @default("aprovado")
-  pendingAction         Json?
-  approvedById          String?     @db.Uuid
-  approvedAt            DateTime?   @db.Timestamp
   deletedAt             DateTime?   @db.Timestamp
   createdAt             DateTime    @default(now()) @db.Timestamp
   updatedAt             DateTime    @updatedAt @db.Timestamp
@@ -374,10 +377,6 @@ model Popups {
   title           String
   link            String?
   active          Boolean     @default(true)
-  workflowStatus  String      @default("aprovado")
-  pendingAction   Json?
-  approvedById    String?     @db.Uuid
-  approvedAt      DateTime?   @db.Timestamp
   deletedAt       DateTime?   @db.Timestamp
   displayTime     Int         @default(5)
   status          PopupStatus @default(rascunho)
@@ -415,10 +414,6 @@ model Services {
   link           String    @unique
   altText        String?
   active         Boolean   @default(true)
-  workflowStatus String    @default("aprovado")
-  pendingAction  Json?
-  approvedById   String?   @db.Uuid
-  approvedAt     DateTime? @db.Timestamp
   deletedAt      DateTime? @db.Timestamp
   createdAt   DateTime @default(now()) @db.Timestamp
   updatedAt   DateTime @updatedAt @db.Timestamp
@@ -623,4 +618,27 @@ model OfficialGazette {
   @@index([publicationDate(sort: Desc)])
   @@index([title])
   @@map("official_gazette")
+}
+
+model ContentChangeRequest {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entityType      String
+  entityId        String?       @db.Uuid
+  requestType     RequestType   @default(update)
+  proposedData    Json?
+  status          RequestStatus @default(pendente)
+  rejectionReason String?
+  requestedById   String        @db.Uuid
+  requestedBy     User          @relation("ChangeRequester", fields: [requestedById], references: [id], onDelete: Cascade)
+  reviewedById    String?       @db.Uuid
+  reviewedBy      User?         @relation("ChangeReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt      DateTime?     @db.Timestamp
+  createdAt       DateTime      @default(now()) @db.Timestamp
+  updatedAt       DateTime      @updatedAt @db.Timestamp
+  appliedData     Json?
+
+  @@index([entityType, entityId])
+  @@index([status, createdAt])
+  @@index([requestedById])
+  @@map("content_change_request")
 }

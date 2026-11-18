@@ -1,5 +1,7 @@
 import { IMedia } from "./media";
 import { IUser } from "./user";
+import { IContentChangeRequest, WorkflowStatus } from "./approval";
+import { IOrganization, ISpace } from "./organization";
 
 export interface IPopups {
   id: string;
@@ -21,10 +23,14 @@ export interface IPopups {
   image: IMedia;
 
   organizationId?: string;
-  organization?: any;
+  organization?: IOrganization | null;
   spaceId?: string | null;
-  space?: any;
+  space?: ISpace | null;
 
   userId: string;
   user: IUser;
+  workflowStatus?: WorkflowStatus;
+  pendingRequest?: IContentChangeRequest | null;
+  lastRejectedRequest?: IContentChangeRequest | null;
+  changeRequestId?: string;
 }

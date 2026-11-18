@@ -69,7 +69,8 @@ export const ModelName = {
   MenuItem: 'MenuItem',
   SiteSettings: 'SiteSettings',
   AuditLog: 'AuditLog',
-  OfficialGazette: 'OfficialGazette'
+  OfficialGazette: 'OfficialGazette',
+  ContentChangeRequest: 'ContentChangeRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -167,10 +168,6 @@ export const PageScalarFieldEnum = {
   content: 'content',
   description: 'description',
   published: 'published',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
@@ -201,10 +198,6 @@ export const ArticleScalarFieldEnum = {
   allowComments: 'allowComments',
   tags: 'tags',
   visibility: 'visibility',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   galleryId: 'galleryId',
   socialPreviewTitle: 'socialPreviewTitle',
@@ -258,10 +251,6 @@ export const GalleriesScalarFieldEnum = {
   id: 'id',
   title: 'title',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -296,10 +285,6 @@ export const PopupsScalarFieldEnum = {
   title: 'title',
   link: 'link',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   displayTime: 'displayTime',
   status: 'status',
@@ -326,10 +311,6 @@ export const ServicesScalarFieldEnum = {
   link: 'link',
   altText: 'altText',
   active: 'active',
-  workflowStatus: 'workflowStatus',
-  pendingAction: 'pendingAction',
-  approvedById: 'approvedById',
-  approvedAt: 'approvedAt',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -468,6 +449,25 @@ export const OfficialGazetteScalarFieldEnum = {
 export type OfficialGazetteScalarFieldEnum = (typeof OfficialGazetteScalarFieldEnum)[keyof typeof OfficialGazetteScalarFieldEnum]
 
 
+export const ContentChangeRequestScalarFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  requestType: 'requestType',
+  proposedData: 'proposedData',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  appliedData: 'appliedData'
+} as const
+
+export type ContentChangeRequestScalarFieldEnum = (typeof ContentChangeRequestScalarFieldEnum)[keyof typeof ContentChangeRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -575,8 +575,6 @@ export const PageOrderByRelevanceFieldEnum = {
   title: 'title',
   slug: 'slug',
   description: 'description',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
   userId: 'userId'
@@ -596,8 +594,6 @@ export const ArticleOrderByRelevanceFieldEnum = {
   seoKeywords: 'seoKeywords',
   tags: 'tags',
   visibility: 'visibility',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   galleryId: 'galleryId',
   socialPreviewTitle: 'socialPreviewTitle',
   socialPreviewImage: 'socialPreviewImage',
@@ -641,8 +637,6 @@ export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFiel
 export const GalleriesOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
   userId: 'userId'
@@ -666,8 +660,6 @@ export const PopupsOrderByRelevanceFieldEnum = {
   id: 'id',
   title: 'title',
   link: 'link',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   position: 'position',
   spaceId: 'spaceId',
   organizationId: 'organizationId',
@@ -683,8 +675,6 @@ export const ServicesOrderByRelevanceFieldEnum = {
   title: 'title',
   link: 'link',
   altText: 'altText',
-  workflowStatus: 'workflowStatus',
-  approvedById: 'approvedById',
   description: 'description',
   organizationId: 'organizationId',
   imageId: 'imageId',
@@ -790,4 +780,16 @@ export const OfficialGazetteOrderByRelevanceFieldEnum = {
 } as const
 
 export type OfficialGazetteOrderByRelevanceFieldEnum = (typeof OfficialGazetteOrderByRelevanceFieldEnum)[keyof typeof OfficialGazetteOrderByRelevanceFieldEnum]
+
+
+export const ContentChangeRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  rejectionReason: 'rejectionReason',
+  requestedById: 'requestedById',
+  reviewedById: 'reviewedById'
+} as const
+
+export type ContentChangeRequestOrderByRelevanceFieldEnum = (typeof ContentChangeRequestOrderByRelevanceFieldEnum)[keyof typeof ContentChangeRequestOrderByRelevanceFieldEnum]
 

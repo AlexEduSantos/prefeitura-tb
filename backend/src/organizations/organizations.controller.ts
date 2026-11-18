@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
@@ -16,6 +17,7 @@ import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
 import { Action } from '../casl/action.enum';
+import { extractRequestUser } from '../common/utils/workflow.util';
 
 @Controller('organizations')
 export class OrganizationsController {
@@ -74,9 +76,18 @@ export class OrganizationsController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Organization'))
-  async remove(@Param('id') id: string) {
-    return this.organizationsService.remove(id);
+  @CheckPolicies(
+    (ability) =>
+      ability.can(Action.Delete, 'Organization') ||
+      ability.can(Action.SoftDelete, 'Organization'),
+  )
+  async remove(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
+    const { role: userRole } = extractRequestUser(req);
+    return this.organizationsService.remove(id, userRole, hard === 'true');
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)

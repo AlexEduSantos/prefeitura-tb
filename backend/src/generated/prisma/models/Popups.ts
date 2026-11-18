@@ -40,9 +40,6 @@ export type PopupsMinAggregateOutputType = {
   title: string | null
   link: string | null
   active: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   displayTime: number | null
   status: $Enums.PopupStatus | null
@@ -65,9 +62,6 @@ export type PopupsMaxAggregateOutputType = {
   title: string | null
   link: string | null
   active: boolean | null
-  workflowStatus: string | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   displayTime: number | null
   status: $Enums.PopupStatus | null
@@ -90,10 +84,6 @@ export type PopupsCountAggregateOutputType = {
   title: number
   link: number
   active: number
-  workflowStatus: number
-  pendingAction: number
-  approvedById: number
-  approvedAt: number
   deletedAt: number
   displayTime: number
   status: number
@@ -128,9 +118,6 @@ export type PopupsMinAggregateInputType = {
   title?: true
   link?: true
   active?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   displayTime?: true
   status?: true
@@ -153,9 +140,6 @@ export type PopupsMaxAggregateInputType = {
   title?: true
   link?: true
   active?: true
-  workflowStatus?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   displayTime?: true
   status?: true
@@ -178,10 +162,6 @@ export type PopupsCountAggregateInputType = {
   title?: true
   link?: true
   active?: true
-  workflowStatus?: true
-  pendingAction?: true
-  approvedById?: true
-  approvedAt?: true
   deletedAt?: true
   displayTime?: true
   status?: true
@@ -291,10 +271,6 @@ export type PopupsGroupByOutputType = {
   title: string
   link: string | null
   active: boolean
-  workflowStatus: string
-  pendingAction: runtime.JsonValue | null
-  approvedById: string | null
-  approvedAt: Date | null
   deletedAt: Date | null
   displayTime: number
   status: $Enums.PopupStatus
@@ -340,10 +316,6 @@ export type PopupsWhereInput = {
   title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Popups"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Popups">
-  approvedById?: Prisma.UuidNullableFilter<"Popups"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   displayTime?: Prisma.IntFilter<"Popups"> | number
   status?: Prisma.EnumPopupStatusFilter<"Popups"> | $Enums.PopupStatus
@@ -370,10 +342,6 @@ export type PopupsOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   displayTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -404,10 +372,6 @@ export type PopupsWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Popups"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Popups">
-  approvedById?: Prisma.UuidNullableFilter<"Popups"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   displayTime?: Prisma.IntFilter<"Popups"> | number
   status?: Prisma.EnumPopupStatusFilter<"Popups"> | $Enums.PopupStatus
@@ -434,10 +398,6 @@ export type PopupsOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
-  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   displayTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -468,10 +428,6 @@ export type PopupsScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Popups"> | string
   link?: Prisma.StringNullableWithAggregatesFilter<"Popups"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"Popups"> | boolean
-  workflowStatus?: Prisma.StringWithAggregatesFilter<"Popups"> | string
-  pendingAction?: Prisma.JsonNullableWithAggregatesFilter<"Popups">
-  approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Popups"> | string | null
-  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Popups"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Popups"> | Date | string | null
   displayTime?: Prisma.IntWithAggregatesFilter<"Popups"> | number
   status?: Prisma.EnumPopupStatusWithAggregatesFilter<"Popups"> | $Enums.PopupStatus
@@ -494,10 +450,6 @@ export type PopupsCreateInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -520,10 +472,6 @@ export type PopupsUncheckedCreateInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -546,10 +494,6 @@ export type PopupsUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -572,10 +516,6 @@ export type PopupsUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -598,10 +538,6 @@ export type PopupsCreateManyInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -624,10 +560,6 @@ export type PopupsUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -646,10 +578,6 @@ export type PopupsUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -688,10 +616,6 @@ export type PopupsCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  pendingAction?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -719,9 +643,6 @@ export type PopupsMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -744,9 +665,6 @@ export type PopupsMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   link?: Prisma.SortOrder
   active?: Prisma.SortOrder
-  workflowStatus?: Prisma.SortOrder
-  approvedById?: Prisma.SortOrder
-  approvedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   displayTime?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -950,10 +868,6 @@ export type PopupsCreateWithoutOrganizationInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -975,10 +889,6 @@ export type PopupsUncheckedCreateWithoutOrganizationInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1029,10 +939,6 @@ export type PopupsScalarWhereInput = {
   title?: Prisma.StringFilter<"Popups"> | string
   link?: Prisma.StringNullableFilter<"Popups"> | string | null
   active?: Prisma.BoolFilter<"Popups"> | boolean
-  workflowStatus?: Prisma.StringFilter<"Popups"> | string
-  pendingAction?: Prisma.JsonNullableFilter<"Popups">
-  approvedById?: Prisma.UuidNullableFilter<"Popups"> | string | null
-  approvedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   deletedAt?: Prisma.DateTimeNullableFilter<"Popups"> | Date | string | null
   displayTime?: Prisma.IntFilter<"Popups"> | number
   status?: Prisma.EnumPopupStatusFilter<"Popups"> | $Enums.PopupStatus
@@ -1055,10 +961,6 @@ export type PopupsCreateWithoutSpaceInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1080,10 +982,6 @@ export type PopupsUncheckedCreateWithoutSpaceInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1131,10 +1029,6 @@ export type PopupsCreateWithoutUserInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1156,10 +1050,6 @@ export type PopupsUncheckedCreateWithoutUserInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1207,10 +1097,6 @@ export type PopupsCreateWithoutImageInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1232,10 +1118,6 @@ export type PopupsUncheckedCreateWithoutImageInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1283,10 +1165,6 @@ export type PopupsCreateManyOrganizationInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1308,10 +1186,6 @@ export type PopupsUpdateWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1333,10 +1207,6 @@ export type PopupsUncheckedUpdateWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1358,10 +1228,6 @@ export type PopupsUncheckedUpdateManyWithoutOrganizationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1383,10 +1249,6 @@ export type PopupsCreateManySpaceInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1408,10 +1270,6 @@ export type PopupsUpdateWithoutSpaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1433,10 +1291,6 @@ export type PopupsUncheckedUpdateWithoutSpaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1458,10 +1312,6 @@ export type PopupsUncheckedUpdateManyWithoutSpaceInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1483,10 +1333,6 @@ export type PopupsCreateManyUserInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1508,10 +1354,6 @@ export type PopupsUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1533,10 +1375,6 @@ export type PopupsUncheckedUpdateWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1558,10 +1396,6 @@ export type PopupsUncheckedUpdateManyWithoutUserInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1583,10 +1417,6 @@ export type PopupsCreateManyImageInput = {
   title: string
   link?: string | null
   active?: boolean
-  workflowStatus?: string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: string | null
-  approvedAt?: Date | string | null
   deletedAt?: Date | string | null
   displayTime?: number
   status?: $Enums.PopupStatus
@@ -1608,10 +1438,6 @@ export type PopupsUpdateWithoutImageInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1633,10 +1459,6 @@ export type PopupsUncheckedUpdateWithoutImageInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1658,10 +1480,6 @@ export type PopupsUncheckedUpdateManyWithoutImageInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
-  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   displayTime?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumPopupStatusFieldUpdateOperationsInput | $Enums.PopupStatus
@@ -1685,10 +1503,6 @@ export type PopupsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   title?: boolean
   link?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   displayTime?: boolean
   status?: boolean
@@ -1715,10 +1529,6 @@ export type PopupsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   title?: boolean
   link?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   displayTime?: boolean
   status?: boolean
@@ -1745,10 +1555,6 @@ export type PopupsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   title?: boolean
   link?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   displayTime?: boolean
   status?: boolean
@@ -1775,10 +1581,6 @@ export type PopupsSelectScalar = {
   title?: boolean
   link?: boolean
   active?: boolean
-  workflowStatus?: boolean
-  pendingAction?: boolean
-  approvedById?: boolean
-  approvedAt?: boolean
   deletedAt?: boolean
   displayTime?: boolean
   status?: boolean
@@ -1796,7 +1598,7 @@ export type PopupsSelectScalar = {
   userId?: boolean
 }
 
-export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "active" | "workflowStatus" | "pendingAction" | "approvedById" | "approvedAt" | "deletedAt" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "spaceId" | "organizationId" | "imageId" | "userId", ExtArgs["result"]["popups"]>
+export type PopupsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "link" | "active" | "deletedAt" | "displayTime" | "status" | "type" | "position" | "closeButton" | "priority" | "publicationDate" | "expirationDate" | "createdAt" | "updatedAt" | "spaceId" | "organizationId" | "imageId" | "userId", ExtArgs["result"]["popups"]>
 export type PopupsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   space?: boolean | Prisma.Popups$spaceArgs<ExtArgs>
   organization?: boolean | Prisma.Popups$organizationArgs<ExtArgs>
@@ -1829,10 +1631,6 @@ export type $PopupsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     title: string
     link: string | null
     active: boolean
-    workflowStatus: string
-    pendingAction: runtime.JsonValue | null
-    approvedById: string | null
-    approvedAt: Date | null
     deletedAt: Date | null
     displayTime: number
     status: $Enums.PopupStatus
@@ -2279,10 +2077,6 @@ export interface PopupsFieldRefs {
   readonly title: Prisma.FieldRef<"Popups", 'String'>
   readonly link: Prisma.FieldRef<"Popups", 'String'>
   readonly active: Prisma.FieldRef<"Popups", 'Boolean'>
-  readonly workflowStatus: Prisma.FieldRef<"Popups", 'String'>
-  readonly pendingAction: Prisma.FieldRef<"Popups", 'Json'>
-  readonly approvedById: Prisma.FieldRef<"Popups", 'String'>
-  readonly approvedAt: Prisma.FieldRef<"Popups", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Popups", 'DateTime'>
   readonly displayTime: Prisma.FieldRef<"Popups", 'Int'>
   readonly status: Prisma.FieldRef<"Popups", 'PopupStatus'>

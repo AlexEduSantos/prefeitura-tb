@@ -82,17 +82,29 @@ export class GalleriesController {
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/approve')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Galleries'))
-  async approve(@Param('id') id: string, @Request() req: any) {
+  async approve(
+    @Param('id') id: string,
+    @Body() body: { proposedData?: Record<string, any> },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.galleriesService.approve(id, approverId);
+    return this.galleriesService.approve(id, approverId, body?.proposedData);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id/reject')
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Galleries'))
-  async reject(@Param('id') id: string, @Request() req: any) {
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string; rejectionReason?: string },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.galleriesService.reject(id, approverId);
+    return this.galleriesService.reject(
+      id,
+      approverId,
+      body?.reason ?? body?.rejectionReason,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -110,8 +122,13 @@ export class GalleriesController {
         'Você não possui permissão para editar esta galeria.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.galleriesService.update(id, updateGalleriesDto, userRole);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.galleriesService.update(
+      id,
+      updateGalleriesDto,
+      userRole,
+      userId,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -140,7 +157,7 @@ export class GalleriesController {
         'Você não possui permissão para remover esta galeria.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.galleriesService.remove(id, userRole, wantHardDelete);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.galleriesService.remove(id, userRole, wantHardDelete, userId);
   }
 }

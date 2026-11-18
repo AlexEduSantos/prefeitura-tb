@@ -231,9 +231,16 @@ export class StoryService {
     });
   }
 
-  async remove(id: string) {
-    await this.findOne(id);
-    return this.prisma.stories.delete({ where: { id } });
+  async remove(id: string, userRole?: string, hardDelete = false) {
+    const story = await this.findOneAdmin(id);
+    if (userRole === 'ADMIN' && hardDelete) {
+      return this.prisma.stories.delete({ where: { id } });
+    }
+    await this.prisma.storiesItem.updateMany({
+      where: { storyId: id },
+      data: { expirationDate: new Date() },
+    });
+    return { ...story, deactivated: true };
   }
 
   // ----- Story Item -----
@@ -375,8 +382,17 @@ export class StoryService {
     return this.prisma.$transaction(updatePromises);
   }
 
-  async removeStoryItem(id: string) {
-    await this.findStoryItemById(id);
-    return this.prisma.storiesItem.delete({ where: { id } });
+  async removeStoryItem(id: string, userRole?: string, hardDelete = false) {
+    const existing = await this.prisma.storiesItem.findUnique({
+      where: { id },
+    });
+    if (!existing) throw new NotFoundException('Item do story não encontrado');
+    if (userRole === 'ADMIN' && hardDelete) {
+      return this.prisma.storiesItem.delete({ where: { id } });
+    }
+    return this.prisma.storiesItem.update({
+      where: { id },
+      data: { expirationDate: new Date() },
+    });
   }
 }

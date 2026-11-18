@@ -88,17 +88,29 @@ export class ServiceController {
   @Patch(':id/approve')
   @UseGuards(SessionGuard, PoliciesGuard)
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Services'))
-  async approve(@Param('id') id: string, @Request() req: any) {
+  async approve(
+    @Param('id') id: string,
+    @Body() body: { proposedData?: Record<string, any> },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.serviceService.approve(id, approverId);
+    return this.serviceService.approve(id, approverId, body?.proposedData);
   }
 
   @Patch(':id/reject')
   @UseGuards(SessionGuard, PoliciesGuard)
   @CheckPolicies((ability) => ability.can(Action.Approve, 'Services'))
-  async reject(@Param('id') id: string, @Request() req: any) {
+  async reject(
+    @Param('id') id: string,
+    @Body() body: { reason?: string; rejectionReason?: string },
+    @Request() req: any,
+  ) {
     const { id: approverId } = extractRequestUser(req);
-    return this.serviceService.reject(id, approverId);
+    return this.serviceService.reject(
+      id,
+      approverId,
+      body?.reason ?? body?.rejectionReason,
+    );
   }
 
   @Patch(':id')
@@ -146,7 +158,7 @@ export class ServiceController {
         'Você não possui permissão para remover este serviço.',
       );
     }
-    const { role: userRole } = extractRequestUser(req);
-    return this.serviceService.remove(id, userRole, wantHardDelete);
+    const { id: userId, role: userRole } = extractRequestUser(req);
+    return this.serviceService.remove(id, userRole, wantHardDelete, userId);
   }
 }

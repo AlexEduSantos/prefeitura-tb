@@ -7,23 +7,35 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
-import { Page, Prisma } from '../generated/prisma/client';
+import { Page } from '../generated/prisma/client';
 import { UserRole } from '../generated/prisma/enums';
 import { PaginationInput, resolvePagination } from '../common/utils/pagination';
 import { RedisCacheService } from '../common/cache/redis-cache.service';
+import { ApprovalService } from '../approval/approval.service';
 
 @Injectable()
 export class PagesService {
   constructor(
     private prisma: PrismaService,
     @Optional() private readonly cacheService?: RedisCacheService,
+    @Optional() private approvalService?: ApprovalService,
   ) {}
+
+  private get approval(): ApprovalService {
+    if (!this.approvalService) {
+      this.approvalService = new ApprovalService(
+        this.prisma,
+        this.cacheService,
+      );
+    }
+    return this.approvalService;
+  }
 
   async create(
     createPageDto: CreatePageDto,
     userId?: string,
     userRole?: UserRole,
-  ): Promise<Page> {
+  ): Promise<any> {
     if (!userId) {
       throw new BadRequestException(
         'Usuário autenticado não encontrado para criar a página.',
@@ -40,13 +52,41 @@ export class PagesService {
       organizationId,
     } = createPageDto;
 
-    const isCollaborator = userRole === UserRole.USER;
-    const resolvedPublished = isCollaborator ? false : (published ?? false);
-    const workflowStatus = isCollaborator
-      ? 'pendente_aprovacao'
-      : resolvedPublished
-        ? 'aprovado'
-        : 'rascunho';
+    if (userRole === UserRole.USER) {
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Page',
+        entityId: null,
+        requestType: 'create',
+        proposedData: {
+          title,
+          slug,
+          ...(description !== undefined && { description }),
+          content,
+          published: published ?? true,
+          spaceId: spaceId || null,
+          organizationId: organizationId || null,
+          userId,
+        },
+        requestedById: userId,
+      });
+
+      return {
+        id: req.id,
+        title,
+        slug,
+        description: description ?? null,
+        content,
+        published: false,
+        spaceId: spaceId || null,
+        organizationId: organizationId || null,
+        userId,
+        createdAt: req.createdAt,
+        updatedAt: req.updatedAt,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
+    }
 
     const created = await this.prisma.page.create({
       data: {
@@ -54,8 +94,7 @@ export class PagesService {
         slug,
         ...(description !== undefined && { description }),
         content,
-        published: resolvedPublished,
-        workflowStatus,
+        published: published ?? false,
         ...(spaceId !== undefined && { spaceId: spaceId || null }),
         ...(organizationId !== undefined && {
           organizationId: organizationId || null,
@@ -67,9 +106,9 @@ export class PagesService {
     return created;
   }
 
-  async findAll(pagination?: PaginationInput): Promise<Page[]> {
+  async findAll(pagination?: PaginationInput): Promise<any[]> {
     const { skip, take } = resolvePagination(pagination);
-    return this.prisma.page.findMany({
+    const pages = await this.prisma.page.findMany({
       where: { deletedAt: null },
       skip,
       take,
@@ -82,9 +121,10 @@ export class PagesService {
         },
       },
     });
+    return this.approval.attachWorkflowMeta('Page', pages);
   }
 
-  async findOne(id: string): Promise<Page> {
+  async findOne(id: string): Promise<any> {
     const page = await this.prisma.page.findUnique({
       where: { id },
       include: {
@@ -98,7 +138,7 @@ export class PagesService {
     if (!page) {
       throw new NotFoundException(`Página com ID ${id} não encontrada.`);
     }
-    return page;
+    return this.approval.attachWorkflowMetaOne('Page', page);
   }
 
   async findByRoute(spaceSlug: string | null, pageSlug: string): Promise<Page> {
@@ -176,7 +216,8 @@ export class PagesService {
     id: string,
     updatePageDto: UpdatePageDto,
     userRole?: UserRole,
-  ): Promise<Page> {
+    userId?: string,
+  ): Promise<any> {
     const {
       title,
       slug,
@@ -200,28 +241,19 @@ export class PagesService {
 
     if (userRole === UserRole.USER) {
       const current = await this.findOne(id);
-      if (current.published) {
-        const pendingUpdate = await this.prisma.page.update({
-          where: { id },
-          data: {
-            workflowStatus: 'pendente_aprovacao',
-            pendingAction: {
-              type: 'update',
-              data,
-              requestedAt: new Date().toISOString(),
-            },
-          },
-        });
-        return pendingUpdate;
-      }
-
-      data.published = false;
-      data.workflowStatus = 'pendente_aprovacao';
-    } else {
-      data.pendingAction = Prisma.DbNull;
-      if (published !== undefined) {
-        data.workflowStatus = published ? 'aprovado' : 'rascunho';
-      }
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Page',
+        entityId: id,
+        requestType: 'update',
+        proposedData: data,
+        requestedById: userId || current.userId,
+      });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     const updated = await this.prisma.page.update({
@@ -236,19 +268,23 @@ export class PagesService {
     id: string,
     userRole?: UserRole,
     hardDelete = false,
-  ): Promise<Page> {
+    userId?: string,
+  ): Promise<any> {
     if (userRole === UserRole.USER) {
-      await this.findOne(id);
-      return this.prisma.page.update({
-        where: { id },
-        data: {
-          workflowStatus: 'pendente_aprovacao',
-          pendingAction: {
-            type: 'delete',
-            requestedAt: new Date().toISOString(),
-          },
-        },
+      const current = await this.findOne(id);
+      const req = await this.approval.submitChangeRequest({
+        entityType: 'Page',
+        entityId: id,
+        requestType: 'delete',
+        proposedData: { title: current.title, slug: current.slug },
+        requestedById: userId || current.userId,
       });
+      return {
+        ...current,
+        workflowStatus: 'pendente',
+        changeRequestId: req.id,
+        pendingRequest: req,
+      };
     }
 
     let result: Page;
@@ -260,8 +296,6 @@ export class PagesService {
         data: {
           published: false,
           deletedAt: new Date(),
-          workflowStatus: 'excluido',
-          pendingAction: Prisma.DbNull,
         },
       });
     }
@@ -270,72 +304,25 @@ export class PagesService {
     return result;
   }
 
-  async approve(id: string, approverId?: string): Promise<Page> {
-    const current = await this.findOne(id);
-    const pending = current.pendingAction as {
-      type?: string;
-      data?: Record<string, any>;
-    } | null;
-
-    let result: Page;
-    if (pending?.type === 'delete') {
-      result = await this.prisma.page.update({
-        where: { id },
-        data: {
-          published: false,
-          deletedAt: new Date(),
-          workflowStatus: 'excluido',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    } else if (pending?.type === 'update' && pending.data) {
-      result = await this.prisma.page.update({
-        where: { id },
-        data: {
-          ...pending.data,
-          published:
-            pending.data.published !== undefined
-              ? Boolean(pending.data.published)
-              : true,
-          deletedAt: null,
-          workflowStatus: 'aprovado',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    } else {
-      result = await this.prisma.page.update({
-        where: { id },
-        data: {
-          published: true,
-          deletedAt: null,
-          workflowStatus: 'aprovado',
-          pendingAction: Prisma.DbNull,
-          approvedById: approverId ?? null,
-          approvedAt: new Date(),
-        },
-      });
-    }
-
-    await this.cacheService?.invalidateByPrefix('cache:pages:public');
-    return result;
+  async approve(
+    id: string,
+    approverId?: string,
+    proposedData?: Record<string, any>,
+  ): Promise<any> {
+    return this.approval.approveByEntityOrRequestId(
+      'Page',
+      id,
+      approverId,
+      proposedData,
+    );
   }
 
-  async reject(id: string, approverId?: string): Promise<Page> {
-    await this.findOne(id);
-    const result = await this.prisma.page.update({
-      where: { id },
-      data: {
-        workflowStatus: 'rejeitado',
-        pendingAction: Prisma.DbNull,
-        approvedById: approverId ?? null,
-        approvedAt: new Date(),
-      },
-    });
-    await this.cacheService?.invalidateByPrefix('cache:pages:public');
-    return result;
+  async reject(id: string, approverId?: string, reason?: string): Promise<any> {
+    return this.approval.rejectByEntityOrRequestId(
+      'Page',
+      id,
+      approverId,
+      reason,
+    );
   }
 }
