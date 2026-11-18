@@ -1,4 +1,5 @@
 import { IMenu, IMenuItem } from "../type/menu";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -40,7 +41,7 @@ export class MenuService {
   }
 
   static async createMenu(data: Partial<IMenu>): Promise<IMenu> {
-    const response = await fetch(`${API_URL}/menus`, {
+    const response = await csrfFetch(`${API_URL}/menus`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -51,7 +52,7 @@ export class MenuService {
   }
 
   static async updateMenu(id: string, data: Partial<IMenu>): Promise<IMenu> {
-    const response = await fetch(`${API_URL}/menus/${id}`, {
+    const response = await csrfFetch(`${API_URL}/menus/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -62,7 +63,7 @@ export class MenuService {
   }
 
   static async deleteMenu(id: string): Promise<IMenu> {
-    const response = await fetch(`${API_URL}/menus/${id}`, {
+    const response = await csrfFetch(`${API_URL}/menus/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -94,7 +95,7 @@ export class MenuItemService {
   static async reorderMenuItems(
     data: Partial<IMenuItem>[],
   ): Promise<IMenuItem[]> {
-    const response = await fetch(`${API_URL}/menu-item/reorder`, {
+    const response = await csrfFetch(`${API_URL}/menu-item/reorder`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -108,7 +109,7 @@ export class MenuItemService {
     data: Partial<IMenuItem>,
     menuId: string,
   ): Promise<IMenuItem> {
-    const response = await fetch(`${API_URL}/menu-item/create/${menuId}`, {
+    const response = await csrfFetch(`${API_URL}/menu-item/create/${menuId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -122,7 +123,7 @@ export class MenuItemService {
     id: string,
     data: Partial<IMenuItem>,
   ): Promise<IMenuItem> {
-    const response = await fetch(`${API_URL}/menu-item/${id}`, {
+    const response = await csrfFetch(`${API_URL}/menu-item/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -133,7 +134,7 @@ export class MenuItemService {
   }
 
   static async deleteMenuItem(id: string): Promise<IMenuItem> {
-    const response = await fetch(`${API_URL}/menu-item/${id}`, {
+    const response = await csrfFetch(`${API_URL}/menu-item/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

@@ -3,6 +3,7 @@ import {
   IOfficialGazetteFilterParams,
   IOfficialGazetteResponse,
 } from "../type/official-gazette";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 const API_URL = `${API_BASE}/official-gazette`;
@@ -92,7 +93,7 @@ export class OfficialGazetteService {
   static async createGazette(
     data: Partial<IOfficialGazette>,
   ): Promise<IOfficialGazette> {
-    const res = await fetch(`${API_URL}`, {
+    const res = await csrfFetch(`${API_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -114,7 +115,7 @@ export class OfficialGazetteService {
     id: string,
     data: Partial<IOfficialGazette>,
   ): Promise<IOfficialGazette> {
-    const res = await fetch(`${API_URL}/${id}`, {
+    const res = await csrfFetch(`${API_URL}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -133,7 +134,7 @@ export class OfficialGazetteService {
    * Exclusão permanente de boletim oficial (ADMIN e PUBLISHER)
    */
   static async deleteGazette(id: string): Promise<void> {
-    const res = await fetch(`${API_URL}/${id}`, {
+    const res = await csrfFetch(`${API_URL}/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

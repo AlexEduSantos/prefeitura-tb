@@ -1,12 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { createHash, randomBytes } from 'crypto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { MailService } from '../common/mail/mail.service';
+
+const DEFAULT_ACTIVATION_TTL_HOURS = 24;
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly mailService?: MailService,
+  ) {}
+
+  private generateActivationTokenData() {
+    const rawToken = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+    const ttlHours =
+      Number(process.env.ACTIVATION_TOKEN_TTL_HOURS) ||
+      DEFAULT_ACTIVATION_TTL_HOURS;
+    const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000);
+
+    return {
+      rawToken,
+      tokenHash,
+      expiresAt,
+      maxUses: 1,
+      usedCount: 0,
+    };
+  }
 
   async create(createUserDto: CreateUserDto) {
     const {
@@ -16,14 +40,18 @@ export class UserService {
       password,
       avatar,
       phone,
-      active,
       organizationId,
       role,
     } = createUserDto;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const rawPassword =
+      password && password.trim().length > 0
+        ? password
+        : randomBytes(24).toString('hex');
+    const hashedPassword = await bcrypt.hash(rawPassword, 10);
+    const activation = this.generateActivationTokenData();
 
-    return this.prisma.user.create({
+    const createdUser = await this.prisma.user.create({
       data: {
         name,
         username,
@@ -31,7 +59,12 @@ export class UserService {
         password: hashedPassword,
         ...(avatar !== undefined && { avatar }),
         ...(phone !== undefined && { phone }),
-        ...(active !== undefined && { active }),
+        // Conta criada pelo ADMIN aguarda definição de senha via link de ativação
+        active: false,
+        activationTokenHash: activation.tokenHash,
+        activationTokenExpiresAt: activation.expiresAt,
+        activationTokenMaxUses: activation.maxUses,
+        activationTokenUsedCount: activation.usedCount,
         ...(organizationId !== undefined && {
           organizationId: organizationId || null,
         }),
@@ -49,6 +82,7 @@ export class UserService {
         createdAt: true,
         updatedAt: true,
         password: false,
+        activationTokenHash: false,
         organizationId: true,
         organization: {
           select: {
@@ -57,6 +91,55 @@ export class UserService {
         },
       },
     });
+
+    if (this.mailService) {
+      await this.mailService.sendAccountActivationEmail({
+        to: email,
+        name,
+        token: activation.rawToken,
+        expiresAt: activation.expiresAt,
+      });
+    }
+
+    return createdUser;
+  }
+
+  async resendActivationLink(id: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: { id: true, email: true, name: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado.');
+    }
+
+    const activation = this.generateActivationTokenData();
+
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        active: false,
+        activationTokenHash: activation.tokenHash,
+        activationTokenExpiresAt: activation.expiresAt,
+        activationTokenMaxUses: activation.maxUses,
+        activationTokenUsedCount: activation.usedCount,
+      },
+    });
+
+    if (this.mailService) {
+      await this.mailService.sendAccountActivationEmail({
+        to: user.email,
+        name: user.name,
+        token: activation.rawToken,
+        expiresAt: activation.expiresAt,
+      });
+    }
+
+    return {
+      message: 'Novo link de ativação enviado para o e-mail do usuário.',
+      expiresAt: activation.expiresAt,
+    };
   }
 
   findAll() {

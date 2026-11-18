@@ -2003,6 +2003,10 @@ export const UserScalarFieldEnum = {
   avatar: 'avatar',
   phone: 'phone',
   active: 'active',
+  activationTokenHash: 'activationTokenHash',
+  activationTokenExpiresAt: 'activationTokenExpiresAt',
+  activationTokenMaxUses: 'activationTokenMaxUses',
+  activationTokenUsedCount: 'activationTokenUsedCount',
   role: 'role',
   organizationId: 'organizationId',
   createdAt: 'createdAt',
@@ -2383,6 +2387,7 @@ export const UserOrderByRelevanceFieldEnum = {
   password: 'password',
   avatar: 'avatar',
   phone: 'phone',
+  activationTokenHash: 'activationTokenHash',
   organizationId: 'organizationId'
 } as const
 
@@ -2673,6 +2678,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'UserRole'
  */
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -2711,20 +2730,6 @@ export type EnumArticleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'ArticleStatus[]'
  */
 export type ListEnumArticleStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ArticleStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 

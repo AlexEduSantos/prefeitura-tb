@@ -20,9 +20,11 @@ export class CreateUserDto {
   @IsEmail()
   email!: string;
 
+  @IsOptional()
+  @ValidateIf((_, val) => val !== undefined && val !== null && val !== '')
   @IsString()
   @MinLength(6)
-  password!: string;
+  password?: string;
 
   @IsString()
   @IsOptional()

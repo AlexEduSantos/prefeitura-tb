@@ -1,4 +1,5 @@
 import { IArticle } from "../type/article";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -110,7 +111,7 @@ export class ArticleService {
   }
 
   static async createArticle(data: Partial<IArticle>): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles`, {
+    const response = await csrfFetch(`${API_URL}/articles`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -130,7 +131,7 @@ export class ArticleService {
     id: string,
     data: Partial<IArticle>,
   ): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles/${id}`, {
+    const response = await csrfFetch(`${API_URL}/articles/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -147,7 +148,7 @@ export class ArticleService {
   }
 
   static async changeStatus(id: string, status: string): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles/${id}`, {
+    const response = await csrfFetch(`${API_URL}/articles/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -167,7 +168,7 @@ export class ArticleService {
     id: string,
     featured: boolean,
   ): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles/${id}`, {
+    const response = await csrfFetch(`${API_URL}/articles/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -184,7 +185,7 @@ export class ArticleService {
   }
 
   static async deleteArticle(id: string): Promise<IArticle> {
-    const response = await fetch(`${API_URL}/articles/${id}`, {
+    const response = await csrfFetch(`${API_URL}/articles/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import { IPage } from "../type/pages";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -65,8 +66,8 @@ export class PagesService {
     return response.json();
   }
 
-  static async savePage(data: any) {
-    const response = await fetch(`${API_URL}/pages`, {
+  static async savePage(data: Record<string, unknown> | Partial<IPage>) {
+    const response = await csrfFetch(`${API_URL}/pages`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,12 +83,15 @@ export class PagesService {
     return response.json();
   }
 
-  static async updatePage(id: string, data: any) {
+  static async updatePage(
+    id: string,
+    data: Record<string, unknown> | Partial<IPage>,
+  ) {
     if (!id || id.trim() === "") {
       throw new Error("ID da página é obrigatório para atualização.");
     }
 
-    const response = await fetch(`${API_URL}/pages/${id}`, {
+    const response = await csrfFetch(`${API_URL}/pages/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -104,7 +108,7 @@ export class PagesService {
   }
 
   static async deletePage(id: string) {
-    const response = await fetch(`${API_URL}/pages/${id}`, {
+    const response = await csrfFetch(`${API_URL}/pages/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -123,7 +127,7 @@ export class PagesService {
     id: string,
     published: boolean,
   ): Promise<IPage> {
-    const response = await fetch(`${API_URL}/pages/${id}`, {
+    const response = await csrfFetch(`${API_URL}/pages/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import { IGallery } from "../type/gallery";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -19,7 +20,7 @@ export class GalleryService {
   }
 
   static async createGallery(gallery: Partial<IGallery>): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/galleries`, {
+    const response = await csrfFetch(`${API_URL}/galleries`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export class GalleryService {
   }
 
   static async updateGallery(banner: IGallery): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/galleries/${banner.id}`, {
+    const response = await csrfFetch(`${API_URL}/galleries/${banner.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +54,7 @@ export class GalleryService {
   }
 
   static async deleteGallery(id: string): Promise<IGallery> {
-    const response = await fetch(`${API_URL}/galleries/${id}`, {
+    const response = await csrfFetch(`${API_URL}/galleries/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

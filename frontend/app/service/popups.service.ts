@@ -1,4 +1,5 @@
 import { IPopups } from "../type/popup";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -43,13 +44,13 @@ export class PopupsService {
       organization: _organization,
       space: _space,
       ...allowed
-    } = popup as any;
+    } = popup as Record<string, unknown>;
     return allowed;
   }
 
   static async createPopups(popup: Partial<IPopups>): Promise<IPopups> {
     const payload = this.sanitizePopupPayload(popup);
-    const response = await fetch(`${API_URL}/popups`, {
+    const response = await csrfFetch(`${API_URL}/popups`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -70,7 +71,7 @@ export class PopupsService {
     popup: Partial<IPopups>,
   ): Promise<IPopups> {
     const payload = this.sanitizePopupPayload(popup);
-    const response = await fetch(`${API_URL}/popups/${id}`, {
+    const response = await csrfFetch(`${API_URL}/popups/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +88,7 @@ export class PopupsService {
   }
 
   static async deletePopups(id: string): Promise<IPopups> {
-    const response = await fetch(`${API_URL}/popups/${id}`, {
+    const response = await csrfFetch(`${API_URL}/popups/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

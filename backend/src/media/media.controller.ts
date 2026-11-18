@@ -9,12 +9,12 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Req,
   Res,
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
   BadRequestException,
+  NotFoundException,
   HttpCode,
   Query,
 } from '@nestjs/common';
@@ -102,7 +102,7 @@ export class MediaController {
       } else {
         res.status(404).end();
       }
-    } catch (err) {
+    } catch {
       return res.status(404).json({ message: 'Arquivo não encontrado' });
     }
   }
@@ -113,6 +113,13 @@ export class MediaController {
     const key = decodeURIComponent(rawPath);
     if (!key) {
       throw new BadRequestException('Chave do arquivo não fornecida');
+    }
+    if (key.includes('..') || key.startsWith('/') || key.includes('\\')) {
+      throw new BadRequestException('Chave do arquivo inválida');
+    }
+    const media = await this.mediaService.findByKey(key);
+    if (!media || media.status !== 'ready') {
+      throw new NotFoundException('Arquivo não encontrado ou indisponível');
     }
     const url = await this.mediaService.getPresignedUrl(key);
     return { url };
@@ -274,12 +281,6 @@ export class MediaController {
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mediaService.findOne(id);
-  }
-
-  @UseGuards(SessionGuard, PoliciesGuard)
   @Get('images')
   findImages() {
     return this.mediaService.findImages();
@@ -295,6 +296,12 @@ export class MediaController {
   @Get('videos')
   findVideos() {
     return this.mediaService.findVideos();
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.mediaService.findOne(id);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)

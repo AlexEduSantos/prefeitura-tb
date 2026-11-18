@@ -1,4 +1,5 @@
 import { IServices } from "../type/services";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL + "/services";
 
@@ -53,7 +54,7 @@ export class ServicesService {
   }
 
   static async createService(service: Partial<IServices>) {
-    const response = await fetch(`${API_URL}`, {
+    const response = await csrfFetch(`${API_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -64,7 +65,7 @@ export class ServicesService {
   }
 
   static async updateService(id: string, service: Partial<IServices>) {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await csrfFetch(`${API_URL}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -75,7 +76,7 @@ export class ServicesService {
   }
 
   static async deleteService(id: string) {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await csrfFetch(`${API_URL}/${id}`, {
       method: "DELETE",
       credentials: "include",
     });

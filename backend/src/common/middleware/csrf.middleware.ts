@@ -2,7 +2,6 @@ import type { Request, Response, NextFunction } from 'express';
 import { doubleCsrf } from 'csrf-csrf';
 
 const SAFE_METHODS = new Set(['GET', 'HEAD', 'OPTIONS']);
-const CSRF_BOOTSTRAP_PATHS = new Set(['/auth/login', '/auth/govbr/callback']);
 export const CSRF_COOKIE_NAME = 'XSRF-TOKEN';
 
 function getCookieSecret(): string {
@@ -81,23 +80,6 @@ export function csrfProtectionMiddleware(
     ) {
       generateCsrfToken(req, res);
     }
-    return next();
-  }
-
-  const path = (req.originalUrl || req.url || '').split('?')[0];
-  const hasCsrfCookie = Boolean((req as any).cookies[CSRF_COOKIE_NAME]);
-  const hasCsrfHeader = Boolean(
-    req.headers['x-csrf-token'] || req.headers['x-xsrf-token'],
-  );
-  const isStrict =
-    req.headers['x-csrf-enforce'] === 'true' ||
-    process.env.CSRF_STRICT === 'true';
-
-  if (CSRF_BOOTSTRAP_PATHS.has(path) && !hasCsrfCookie && !isStrict && !hasCsrfHeader) {
-    return next();
-  }
-
-  if (!hasCsrfHeader && !isStrict) {
     return next();
   }
 

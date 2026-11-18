@@ -17,10 +17,13 @@ export class SessionSerializer extends PassportSerializer {
     done: (err: Error | null, payload: any) => void,
   ): Promise<any> {
     const user = await this.prisma.user.findUnique({ where: { id: payload } });
-    if (!user) {
+    if (!user || !user.active) {
       done(null, null);
     } else {
-      done(null, user);
+      const safeUser: Record<string, any> = { ...user };
+      delete safeUser.password;
+      delete safeUser.activationTokenHash;
+      done(null, safeUser);
     }
   }
 }

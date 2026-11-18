@@ -1,9 +1,11 @@
 import 'reflect-metadata';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
+import { createHash } from 'crypto';
+import * as bcrypt from 'bcrypt';
 import {
   detectFileTypeFromBuffer,
   validateFileMagicBytes,
@@ -13,13 +15,18 @@ import {
   csrfProtectionMiddleware,
   generateCsrfToken,
 } from './common/middleware/csrf.middleware';
-import { TotpService } from './auth/totp.service';
-import { GovBrOAuthService } from './auth/govbr-oauth.service';
+import {
+  AuthService,
+  EXPIRED_OR_USED_ACTIVATION_LINK_MSG,
+} from './auth/auth.service';
+import { SessionSerializer } from './auth/session.serializer';
+import { UserService } from './user/user.service';
+import { MailService } from './common/mail/mail.service';
 import { CaslAbilityFactory } from './casl/casl-ability.factory';
 import { UserRole } from './generated/prisma/enums';
 import { Action } from './casl/action.enum';
 
-describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
+describe('TO-DO 2.0 / 3.0 — Hardening, CSRF Estrito e Ativação de Conta', () => {
   describe('1. Validação de Magic Bytes em Uploads (uploadDocument / uploadVideo)', () => {
     it('deve reconhecer assinatura PDF e OOXML (docx/xlsx) e rejeitar payload falso no uploadDocument', async () => {
       const pdfHeader = Buffer.from('%PDF-1.7\n%FakePdf');
@@ -33,7 +40,9 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
       );
       expect(detectedXlsx?.ext).toBe('xlsx');
 
-      const fakeExeAsPdf = Buffer.from('MZ\x90\x00<html><script>alert(1)</script>');
+      const fakeExeAsPdf = Buffer.from(
+        'MZ\x90\x00<html><script>alert(1)</script>',
+      );
       await expect(
         validateFileMagicBytes(
           { buffer: fakeExeAsPdf, mimetype: 'application/pdf' },
@@ -87,8 +96,8 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
     });
   });
 
-  describe('2. Proteção CSRF Double Submit Cookie (csrf-csrf)', () => {
-    it('deve gerar token no GET, aceitar token válido em POST e bloquear token ausente/inválido em modo estrito com 403', () => {
+  describe('2. Proteção CSRF Double Submit Cookie em Modo Estrito (csrf-csrf)', () => {
+    it('deve gerar token no GET, aceitar token válido em POST e bloquear token ausente/inválido sem header x-csrf-enforce', () => {
       const cookies: Record<string, { value: string; options: any }> = {};
       const reqGet: any = {
         method: 'GET',
@@ -115,7 +124,6 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
         headers: {
           cookie: `${CSRF_COOKIE_NAME}=${encodeURIComponent(token)}`,
           'x-csrf-token': token,
-          'x-csrf-enforce': 'true',
         },
       };
       const resPost: any = {
@@ -125,6 +133,27 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
 
       csrfProtectionMiddleware(reqValidPost, resPost, nextValid);
       expect(nextValid).toHaveBeenCalledTimes(1);
+
+      // Mutação sem header X-CSRF-Token deve ser bloqueada imediatamente (sem modo permissivo)
+      const jsonMissing = vi.fn();
+      const statusMissing = vi.fn().mockReturnValue({ json: jsonMissing });
+      const nextMissing = vi.fn();
+      const reqMissingPost: any = {
+        method: 'POST',
+        originalUrl: '/articles',
+        sessionID: 'sess-csrf-1',
+        headers: {
+          cookie: `${CSRF_COOKIE_NAME}=${encodeURIComponent(token)}`,
+        },
+      };
+
+      csrfProtectionMiddleware(
+        reqMissingPost,
+        { status: statusMissing, cookie: vi.fn() } as any,
+        nextMissing,
+      );
+      expect(statusMissing).toHaveBeenCalledWith(403);
+      expect(nextMissing).not.toHaveBeenCalled();
 
       // Mutação com header divergente
       const jsonErr = vi.fn();
@@ -137,7 +166,6 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
         headers: {
           cookie: `${CSRF_COOKIE_NAME}=${encodeURIComponent(token)}`,
           'x-csrf-token': 'forged.token',
-          'x-csrf-enforce': 'true',
         },
       };
 
@@ -151,53 +179,197 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
     });
   });
 
-  describe('3. Autenticação Reforçada: Gov.br OAuth2/OIDC e 2FA/TOTP (otplib)', () => {
-    it('TotpService deve exigir 2FA para ADMIN/PUBLISHER e validar tokens TOTP via otplib', () => {
-      const totp = new TotpService();
-      expect(totp.requiresTwoFactor('ADMIN')).toBe(true);
-      expect(totp.requiresTwoFactor('PUBLISHER')).toBe(true);
-      expect(totp.requiresTwoFactor('USER')).toBe(false);
+  describe('3. Ativação de Conta por Link de E-mail (Expiração, Uso Único e Bloqueio de Inativos)', () => {
+    it('UserService.create deve criar usuário inativo (active: false), gerar token único com expiração e enviar e-mail; resendActivationLink deve gerar novo link', async () => {
+      const create = vi.fn().mockResolvedValue({
+        id: 'u-new-1',
+        email: 'servidor@pmtb.pr.gov.br',
+        name: 'Servidor Novo',
+        active: false,
+      });
+      const findUnique = vi.fn().mockResolvedValue({
+        id: 'u-new-1',
+        email: 'servidor@pmtb.pr.gov.br',
+        name: 'Servidor Novo',
+      });
+      const update = vi.fn().mockResolvedValue({ id: 'u-new-1' });
+      const mailService = new MailService();
+      const sendSpy = vi.spyOn(mailService, 'sendAccountActivationEmail');
 
-      const { secret, otpauthUrl } = totp.generateSecret('admin@pmtb.pr.gov.br');
-      expect(secret.length).toBeGreaterThanOrEqual(16);
-      expect(otpauthUrl).toContain('otpauth://totp/');
+      const userService = new UserService(
+        { user: { create, findUnique, update } } as any,
+        mailService,
+      );
 
-      const validToken = totp.generateToken(secret);
-      expect(validToken).toMatch(/^\d{6}$/);
-      expect(totp.verifyToken(secret, validToken)).toBe(true);
-      expect(totp.verifyToken(secret, '000000')).toBe(false);
+      const created = await userService.create({
+        name: 'Servidor Novo',
+        username: 'servidor.novo',
+        email: 'servidor@pmtb.pr.gov.br',
+        role: UserRole.PUBLISHER,
+      });
+
+      expect(created.active).toBe(false);
+      const createdData = create.mock.calls[0][0].data;
+      expect(createdData.active).toBe(false);
+      expect(createdData.activationTokenHash).toMatch(/^[a-f0-9]{64}$/);
+      expect(createdData.activationTokenMaxUses).toBe(1);
+      expect(createdData.activationTokenUsedCount).toBe(0);
+      expect(createdData.activationTokenExpiresAt.getTime()).toBeGreaterThan(
+        Date.now(),
+      );
+
+      expect(sendSpy).toHaveBeenCalledTimes(1);
+      const firstToken = sendSpy.mock.calls[0][0].token;
+      expect(firstToken.length).toBeGreaterThanOrEqual(32);
+
+      const resendResult = await userService.resendActivationLink('u-new-1');
+      expect(resendResult.message).toContain('Novo link de ativação');
+      expect(sendSpy).toHaveBeenCalledTimes(2);
+      const secondToken = sendSpy.mock.calls[1][0].token;
+      expect(secondToken).not.toBe(firstToken);
     });
 
-    it('GovBrOAuthService deve montar URL OIDC correta e autenticar usuário ativo pelo e-mail', async () => {
-      process.env.GOVBR_CLIENT_ID = 'pmtb-client-id';
+    it('AuthService e SessionSerializer devem bloquear usuário inativo e ativar após uso único do link válido', async () => {
+      const initialPasswordHash = await bcrypt.hash('TempPass123!', 10);
+      const rawToken = 'token-ativacao-servidor-teste-001';
+      const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+
+      const dbUser: any = {
+        id: 'u-act-1',
+        name: 'Ana Paula',
+        email: 'ana@pmtb.pr.gov.br',
+        password: initialPasswordHash,
+        role: UserRole.PUBLISHER,
+        active: false,
+        activationTokenHash: tokenHash,
+        activationTokenExpiresAt: new Date(Date.now() + 60 * 60 * 1000),
+        activationTokenMaxUses: 1,
+        activationTokenUsedCount: 0,
+      };
+
       const prismaMock = {
         user: {
-          findUnique: vi.fn().mockResolvedValue({
-            id: 'govbr-u1',
-            email: 'servidor@pmtb.pr.gov.br',
-            role: UserRole.PUBLISHER,
-            active: true,
-            password: 'hashed-password',
+          findUnique: vi.fn().mockImplementation(async ({ where }) => {
+            if (where.email === dbUser.email || where.id === dbUser.id) {
+              return { ...dbUser };
+            }
+            return null;
+          }),
+          findFirst: vi.fn().mockImplementation(async ({ where }) => {
+            if (where.activationTokenHash === dbUser.activationTokenHash) {
+              return { ...dbUser };
+            }
+            return null;
+          }),
+          updateMany: vi.fn().mockImplementation(async ({ where, data }) => {
+            if (
+              where.id === dbUser.id &&
+              where.activationTokenHash === dbUser.activationTokenHash &&
+              dbUser.activationTokenUsedCount < dbUser.activationTokenMaxUses &&
+              dbUser.activationTokenExpiresAt.getTime() > Date.now()
+            ) {
+              dbUser.password = data.password;
+              dbUser.active = data.active;
+              dbUser.activationTokenUsedCount += 1;
+              dbUser.activationTokenHash = data.activationTokenHash;
+              dbUser.activationTokenExpiresAt = data.activationTokenExpiresAt;
+              return { count: 1 };
+            }
+            return { count: 0 };
           }),
         },
       } as any;
 
-      const govBr = new GovBrOAuthService(prismaMock);
-      const authData = govBr.getAuthorizationUrl('state-123');
-      expect(authData.configured).toBe(true);
-      expect(authData.url).toContain('response_type=code');
-      expect(authData.url).toContain('client_id=pmtb-client-id');
-      expect(authData.url).toContain('state=state-123');
+      const authService = new AuthService(prismaMock);
+      const serializer = new SessionSerializer(prismaMock);
 
-      vi.spyOn(govBr as any, 'fetchProfileFromGovBr').mockResolvedValue({
-        sub: '12345678900',
-        email: 'servidor@pmtb.pr.gov.br',
-        name: 'Servidor Público',
-      });
+      // 1. Usuário inativo é bloqueado no login e na desserialização de sessão
+      await expect(
+        authService.validateUser('ana@pmtb.pr.gov.br', 'TempPass123!'),
+      ).rejects.toThrow(UnauthorizedException);
 
-      const loggedUser = await govBr.authenticateWithCode('auth-code-xyz');
-      expect(loggedUser.email).toBe('servidor@pmtb.pr.gov.br');
-      expect(loggedUser.password).toBeUndefined();
+      const deserializeBefore = vi.fn();
+      await serializer.deserializeUser('u-act-1', deserializeBefore);
+      expect(deserializeBefore).toHaveBeenCalledWith(null, null);
+
+      // 2. Validação do link retorna dados do usuário
+      const validation = await authService.validateActivationToken(rawToken);
+      expect(validation.valid).toBe(true);
+      expect(validation.email).toBe('ana@pmtb.pr.gov.br');
+
+      // 3. Definição da nova senha ativa a conta e consome o token (1 uso)
+      const activation = await authService.activateAccount(
+        rawToken,
+        'MinhaNovaSenhaSegura!2026',
+      );
+      expect(activation.message).toContain('sucesso');
+      expect(dbUser.active).toBe(true);
+      expect(dbUser.activationTokenUsedCount).toBe(1);
+      expect(dbUser.activationTokenHash).toBeNull();
+
+      // 4. Novo login com a nova senha passa a funcionar e sessão hidrata normalmente
+      const logged = await authService.validateUser(
+        'ana@pmtb.pr.gov.br',
+        'MinhaNovaSenhaSegura!2026',
+      );
+      expect(logged.email).toBe('ana@pmtb.pr.gov.br');
+      expect(logged.password).toBeUndefined();
+
+      const deserializeAfter = vi.fn();
+      await serializer.deserializeUser('u-act-1', deserializeAfter);
+      expect(deserializeAfter.mock.calls[0][0]).toBeNull();
+      expect(deserializeAfter.mock.calls[0][1]?.email).toBe(
+        'ana@pmtb.pr.gov.br',
+      );
+
+      // 5. Segunda tentativa de uso do mesmo link é rejeitada com orientação para contatar o Administrador
+      await expect(
+        authService.activateAccount(rawToken, 'OutraSenha123!'),
+      ).rejects.toThrow(EXPIRED_OR_USED_ACTIVATION_LINK_MSG);
+    });
+
+    it('deve rejeitar link expirado com mensagem orientando contato com o Administrador', async () => {
+      const rawToken = 'token-expirado-123';
+      const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+
+      const authService = new AuthService({
+        user: {
+          findFirst: vi.fn().mockResolvedValue({
+            id: 'u-exp-1',
+            name: 'Carlos',
+            email: 'carlos@pmtb.pr.gov.br',
+            activationTokenHash: tokenHash,
+            activationTokenExpiresAt: new Date(Date.now() - 60_000),
+            activationTokenMaxUses: 1,
+            activationTokenUsedCount: 0,
+          }),
+        },
+      } as any);
+
+      await expect(
+        authService.validateActivationToken(rawToken),
+      ).rejects.toThrow(BadRequestException);
+
+      await expect(
+        authService.activateAccount(rawToken, 'NovaSenha123!'),
+      ).rejects.toThrow(EXPIRED_OR_USED_ACTIVATION_LINK_MSG);
+    });
+
+    it('Gov.br e TOTP devem ter sido removidos conforme redefinição de escopo do TO-DO 3.0', () => {
+      expect(
+        existsSync(
+          join(process.cwd(), 'src', 'auth', 'govbr-oauth.service.ts'),
+        ),
+      ).toBe(false);
+      expect(
+        existsSync(join(process.cwd(), 'src', 'auth', 'totp.service.ts')),
+      ).toBe(false);
+      const authCtrlSrc = readFileSync(
+        join(process.cwd(), 'src', 'auth', 'auth.controller.ts'),
+        'utf-8',
+      );
+      expect(authCtrlSrc).not.toContain('govbr');
+      expect(authCtrlSrc).not.toContain('2fa/setup');
     });
   });
 
@@ -222,7 +394,12 @@ describe('TO-DO 2.0 Fase 2 — Hardening e Segurança Contínua', () => {
         join(process.cwd(), 'src', 'categories', 'categories.controller.ts'),
         join(process.cwd(), 'src', 'menu', 'menu.controller.ts'),
         join(process.cwd(), 'src', 'menu-item', 'menu-item.controller.ts'),
-        join(process.cwd(), 'src', 'organizations', 'organizations.controller.ts'),
+        join(
+          process.cwd(),
+          'src',
+          'organizations',
+          'organizations.controller.ts',
+        ),
         join(process.cwd(), 'src', 'spaces', 'spaces.controller.ts'),
       ];
 

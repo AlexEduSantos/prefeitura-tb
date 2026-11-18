@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateGalleryMediaDto } from './dto/create-gallery-media.dto';
 import { UpdateGalleryMediaDto } from './dto/update-gallery-media.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -9,13 +13,22 @@ export class GalleryMediaService {
   constructor(private prisma: PrismaService) {}
 
   async create(
-    CreateGalleryMediaDto: CreateGalleryMediaDto,
+    createGalleryMediaDto: CreateGalleryMediaDto,
   ): Promise<GalleryMedia> {
-    if (!CreateGalleryMediaDto.bannerId) {
-      throw new Error('bannerId is required');
+    const { bannerId, galleryId, mediaId, order, caption, link } =
+      createGalleryMediaDto;
+    const resolvedGalleryId = galleryId || bannerId;
+    if (!resolvedGalleryId) {
+      throw new BadRequestException('galleryId is required');
     }
     return this.prisma.galleryMedia.create({
-      data: CreateGalleryMediaDto as any,
+      data: {
+        galleryId: resolvedGalleryId,
+        mediaId,
+        ...(order !== undefined && { order }),
+        ...(caption !== undefined && { caption }),
+        ...(link !== undefined && { link }),
+      },
     });
   }
 

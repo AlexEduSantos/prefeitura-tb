@@ -8,10 +8,10 @@ export interface IUser {
   avatar: string;
   phone: string;
   active: boolean;
-  organizationId?: string;
+  organizationId?: string | null;
   organization?: IOrganization;
   createdAt: string;
   updatedAt: string;
   lastLogin: string;
-  role?: "admin" | "journalist" | "secretary";
+  role?: "ADMIN" | "PUBLISHER" | "MANAGER" | "USER";
 }

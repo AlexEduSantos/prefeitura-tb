@@ -1,4 +1,5 @@
 import { IOrganization, ISpace, ICategory } from "../type/organization";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -33,7 +34,7 @@ export class OrganizationService {
   static async createOrganization(
     data: Partial<IOrganization>,
   ): Promise<IOrganization> {
-    const response = await fetch(`${API_URL}/organizations`, {
+    const response = await csrfFetch(`${API_URL}/organizations`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -47,7 +48,7 @@ export class OrganizationService {
     id: string,
     data: Partial<IOrganization>,
   ): Promise<IOrganization> {
-    const response = await fetch(`${API_URL}/organizations/${id}`, {
+    const response = await csrfFetch(`${API_URL}/organizations/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -58,7 +59,7 @@ export class OrganizationService {
   }
 
   static async deleteOrganization(id: string): Promise<IOrganization> {
-    const response = await fetch(`${API_URL}/organizations/${id}`, {
+    const response = await csrfFetch(`${API_URL}/organizations/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -71,7 +72,7 @@ export class OrganizationService {
     id: string,
     parentId: string | null,
   ): Promise<IOrganization> {
-    const response = await fetch(`${API_URL}/organizations/${id}/change-parent`, {
+    const response = await csrfFetch(`${API_URL}/organizations/${id}/change-parent`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -102,7 +103,7 @@ export class SpaceService {
   }
 
   static async createSpace(data: Partial<ISpace>): Promise<ISpace> {
-    const response = await fetch(`${API_URL}/spaces`, {
+    const response = await csrfFetch(`${API_URL}/spaces`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -113,7 +114,7 @@ export class SpaceService {
   }
 
   static async deleteSpace(id: string): Promise<ISpace> {
-    const response = await fetch(`${API_URL}/spaces/${id}`, {
+    const response = await csrfFetch(`${API_URL}/spaces/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -123,7 +124,7 @@ export class SpaceService {
   }
 
   static async updateSpace(id: string, data: Partial<ISpace>): Promise<ISpace> {
-    const response = await fetch(`${API_URL}/spaces/${id}`, {
+    const response = await csrfFetch(`${API_URL}/spaces/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -154,7 +155,7 @@ export class CategoryService {
   }
 
   static async createCategory(data: Partial<ICategory>): Promise<ICategory> {
-    const response = await fetch(`${API_URL}/categories`, {
+    const response = await csrfFetch(`${API_URL}/categories`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -168,7 +169,7 @@ export class CategoryService {
     id: string,
     data: Partial<ICategory>,
   ): Promise<ICategory> {
-    const response = await fetch(`${API_URL}/categories/${id}`, {
+    const response = await csrfFetch(`${API_URL}/categories/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -179,7 +180,7 @@ export class CategoryService {
   }
 
   static async deleteCategory(id: string): Promise<ICategory> {
-    const response = await fetch(`${API_URL}/categories/${id}`, {
+    const response = await csrfFetch(`${API_URL}/categories/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",

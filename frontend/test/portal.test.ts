@@ -1,12 +1,20 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
+  CSRF_COOKIE_NAME,
   CSRF_HEADER_NAME,
+  csrfFetch,
   getCsrfTokenFromCookie,
   withCsrfHeaders,
 } from "@/lib/csrf";
+import {
+  sanitizeEmbedHtml,
+  sanitizeHtml,
+  sanitizeSvg,
+} from "@/lib/sanitize-html";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { captureFrontendException } from "@/lib/telemetry";
 import { MenuService } from "@/app/service/menu.service";
+import { AuthService } from "@/app/service/auth.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -28,6 +36,93 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
     );
     expect(headers[CSRF_HEADER_NAME]).toBe("sig123.rand456");
     expect(headers["Content-Type"]).toBe("application/json");
+  });
+
+  it("csrfFetch deve buscar /auth/csrf-token quando cookie estiver ausente e enviar X-CSRF-Token em mutações", async () => {
+    const cookieStore = { value: "" };
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      get cookie() {
+        return cookieStore.value;
+      },
+      set cookie(val: string) {
+        cookieStore.value = val;
+      },
+    });
+
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ csrfToken: "fetched.token.123" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "art-1" }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await csrfFetch("http://localhost:3001/articles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "Teste" }),
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock.mock.calls[0][0]).toContain("/auth/csrf-token");
+    const postInit = fetchMock.mock.calls[1][1] as RequestInit;
+    const sentHeaders = new Headers(postInit.headers);
+    expect(sentHeaders.get(CSRF_HEADER_NAME)).toBe("fetched.token.123");
+    expect(postInit.credentials).toBe("include");
+  });
+
+  it("sanitizeHtml, sanitizeEmbedHtml e sanitizeSvg devem neutralizar vetores de XSS", () => {
+    const dirtyHtml =
+      '<p>Olá</p><img src="x" onerror="alert(1)"><script>alert(2)</script><a href="javascript:alert(3)">Clique</a><iframe src="https://evil.com"></iframe>';
+    const cleanHtml = sanitizeHtml(dirtyHtml);
+    expect(cleanHtml).toContain("<p>Olá</p>");
+    expect(cleanHtml).not.toContain("<script");
+    expect(cleanHtml).not.toContain("onerror=");
+    expect(cleanHtml).not.toContain("javascript:");
+    expect(cleanHtml).not.toContain("<iframe");
+
+    const dirtyEmbed =
+      '<script>steal()</script><iframe src="javascript:alert(1)" onload="x()"></iframe><iframe src="https://www.youtube.com/embed/abc"></iframe>';
+    const cleanEmbed = sanitizeEmbedHtml(dirtyEmbed);
+    expect(cleanEmbed).not.toContain("<script");
+    expect(cleanEmbed).not.toContain("onload=");
+    expect(cleanEmbed).not.toContain("javascript:");
+    expect(cleanEmbed).toContain('src="https://www.youtube.com/embed/abc"');
+    expect(cleanEmbed).toContain("sandbox=");
+
+    const dirtySvg =
+      '<svg class="cls-1" onload="alert(1)"><script>x()</script><foreignObject>bad</foreignObject><path fill="#fff" d="M0 0"/></svg>';
+    const cleanSvg = sanitizeSvg(dirtySvg);
+    expect(cleanSvg).toContain("<svg");
+    expect(cleanSvg).not.toContain("<script");
+    expect(cleanSvg).not.toContain("<foreignObject");
+    expect(cleanSvg).not.toContain("onload=");
+    expect(sanitizeSvg("<html><body>404</body></html>")).toBe("");
+  });
+
+  it("AuthService.validateActivationToken e activateAccount devem consultar os endpoints corretos e propagar erro de expiração", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({
+          message:
+            "O link de ativação expirou ou já foi utilizado. Entre em contato com o Administrador para solicitar o envio de um novo link.",
+        }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      AuthService.validateActivationToken("expired-tok"),
+    ).rejects.toThrow("Entre em contato com o Administrador");
+    expect(fetchMock.mock.calls[0][0]).toContain(
+      "/auth/activate-account/validate?token=expired-tok",
+    );
   });
 
   it("resolveMenuItemHref e isExternalLink devem montar URLs internas e identificar links externos", () => {

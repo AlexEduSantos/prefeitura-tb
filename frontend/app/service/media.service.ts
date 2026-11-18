@@ -1,4 +1,5 @@
 import { IMedia } from "../type/media";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -40,7 +41,7 @@ export class MediaService {
     id: string;
     tags?: string[];
   }) {
-    const response = await fetch(`${API_URL}/media/${metadata.id}`, {
+    const response = await csrfFetch(`${API_URL}/media/${metadata.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +83,7 @@ export class MediaService {
     formData.append("type", endpoint);
     formData.append("file", file);
 
-    const response = await fetch(`${API_URL}/media/${endpoint}`, {
+    const response = await csrfFetch(`${API_URL}/media/${endpoint}`, {
       method: "POST",
       credentials: "include",
       // Não defina Content-Type para FormData, o navegador fará isso automaticamente com o boundary
@@ -97,7 +98,7 @@ export class MediaService {
   }
 
   static async deleteMedia(id: string): Promise<IMedia> {
-    const response = await fetch(`${API_URL}/media/${id}`, {
+    const response = await csrfFetch(`${API_URL}/media/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +114,7 @@ export class MediaService {
   }
 
   static async massDeleteMedia(ids: string[]) {
-    const response = await fetch(`${API_URL}/media`, {
+    const response = await csrfFetch(`${API_URL}/media`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

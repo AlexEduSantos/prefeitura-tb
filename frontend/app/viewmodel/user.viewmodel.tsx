@@ -26,9 +26,11 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
+  MailIcon,
   PencilIcon,
   TrashIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { IOrganization } from "../type/organization";
 import {
@@ -106,6 +108,17 @@ export function useUser() {
     mutationFn: (id: string) => UserService.deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+  });
+
+  const { mutateAsync: resendActivation } = useMutation({
+    mutationFn: (id: string) => UserService.resendActivation(id),
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success(res.message);
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao reenviar link de ativação");
     },
   });
 
@@ -270,6 +283,18 @@ export function useUser() {
         const user = row.original;
         return (
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="h-8 w-8 p-0 hover:bg-primary/20 border-none bg-transparent"
+              title="Reenviar link de ativação / redefinição de senha"
+              aria-label={`Reenviar link de ativação para ${user.name}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                resendActivation(user.id);
+              }}
+            >
+              <MailIcon className="h-4 w-4" />
+            </Button>
             <Button
               variant="outline"
               className="h-8 w-8 p-0 hover:bg-primary/20 border-none bg-transparent"

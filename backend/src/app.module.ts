@@ -37,10 +37,12 @@ import { TelemetryModule } from './common/telemetry/telemetry.module';
 import { BackupModule } from './backup/backup.module';
 import { SearchModule } from './search/search.module';
 import { bullBoardAdminMiddleware } from './common/middleware/bull-board-admin.middleware';
+import { MailModule } from './common/mail/mail.module';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 60 }]),
+    MailModule,
     RedisCacheModule,
     TelemetryModule,
     ScheduleModule.forRoot(),

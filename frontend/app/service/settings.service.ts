@@ -1,3 +1,5 @@
+import { csrfFetch } from "@/lib/csrf";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL + "/settings";
 
 export class SettingsService {
@@ -10,8 +12,8 @@ export class SettingsService {
     return response.json();
   }
 
-  static async updateSettings(settings: any) {
-    const response = await fetch(`${API_URL}`, {
+  static async updateSettings(settings: Record<string, unknown>) {
+    const response = await csrfFetch(`${API_URL}`, {
       method: "PATCH",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

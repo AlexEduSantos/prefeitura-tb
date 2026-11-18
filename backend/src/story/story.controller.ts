@@ -58,13 +58,26 @@ export class StoryController {
       throw new BadRequestException(`Invalid sort field: ${sortBy}`);
     }
 
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.min(100, Math.max(1, limit));
+
     return this.storyService.findAll({
-      page,
-      limit,
+      page: safePage,
+      limit: safeLimit,
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'asc' | 'desc',
       title,
     });
+  }
+
+  @Get('items')
+  async findAllStoryItems() {
+    return this.storyService.findAllStoryItems();
+  }
+
+  @Get('items/:id')
+  async findStoryItemById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.storyService.findStoryItemById(id);
   }
 
   @Get(':id')
@@ -94,7 +107,7 @@ export class StoryController {
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Stories'))
   async remove(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
     const user = req.user;
-    const story = await this.storyService.findOne(id);
+    await this.storyService.findOne(id);
     if (user.role !== UserRole.ADMIN) {
       throw new ForbiddenException(
         'Você não tem permissão para excluir este destaque',
@@ -122,21 +135,11 @@ export class StoryController {
     return this.storyService.createStoryItem(createStoryItemDto, storyId);
   }
 
-  @Get('items')
-  async findAllStoryItems() {
-    return this.storyService.findAllStoryItems();
-  }
-
   @Get(':storyId/items')
   async findAllStoryItemsByStoryId(
     @Param('storyId', ParseUUIDPipe) storyId: string,
   ) {
     return this.storyService.findAllStoryItemsByStoryId(storyId);
-  }
-
-  @Get('items/:id')
-  async findStoryItemById(@Param('id', ParseUUIDPipe) id: string) {
-    return this.storyService.findStoryItemById(id);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)

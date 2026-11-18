@@ -37,7 +37,7 @@ export class GalleriesService {
         organization: true,
         space: true,
         slides: { include: { media: true }, orderBy: { order: 'asc' } },
-        user: { select: { name: true, email: true, avatar: true } },
+        user: { select: { name: true, avatar: true } },
       },
     });
   }
@@ -49,7 +49,7 @@ export class GalleriesService {
         organization: true,
         space: true,
         slides: { include: { media: true }, orderBy: { order: 'asc' } },
-        user: { select: { name: true, email: true, avatar: true } },
+        user: { select: { name: true, avatar: true } },
       },
     });
     if (!galleries) {

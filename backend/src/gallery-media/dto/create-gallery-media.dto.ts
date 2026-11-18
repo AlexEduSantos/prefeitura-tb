@@ -1,6 +1,17 @@
-import { IsString, IsOptional, IsInt, IsUUID } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsInt,
+  IsUUID,
+  ValidateIf,
+} from 'class-validator';
 
 export class CreateGalleryMediaDto {
+  @ValidateIf((o: CreateGalleryMediaDto) => !o.bannerId)
+  @IsUUID()
+  galleryId?: string;
+
+  // Alias legado mantido apenas para compatibilidade de chamadas antigas
   @IsOptional()
   @IsUUID()
   bannerId?: string;

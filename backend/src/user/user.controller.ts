@@ -28,6 +28,13 @@ export class UserController {
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
+  @Post(':id/resend-activation')
+  @CheckPolicies((ability) => ability.can(Action.Update, 'Admin'))
+  resendActivation(@Param('id') id: string) {
+    return this.userService.resendActivationLink(id);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
   @CheckPolicies((ability) => ability.can(Action.Read, 'Admin'))
   findAll() {

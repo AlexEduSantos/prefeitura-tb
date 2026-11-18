@@ -18,6 +18,7 @@ import {
   FORMAT_TEXT_COMMAND,
 } from "lexical";
 import React, { useEffect, useState } from "react";
+import { sanitizeEmbedHtml, sanitizeHtml } from "@/lib/sanitize-html";
 
 // --- Lexical Editor Toolbar ---
 const LexicalToolbar = () => {
@@ -82,7 +83,10 @@ const LexicalRichTextEditor = ({
 }) => {
   const initialText = React.useMemo(() => {
     if (!value) return "";
-    return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    return value
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
   }, []);
 
   const initialConfig = React.useMemo(
@@ -431,10 +435,12 @@ export const config: Config<Props> = {
               ? "text-lg text-foreground"
               : "text-base text-foreground";
 
+        const safeHtml = sanitizeHtml(content);
+
         return (
           <div
             className={`py-2 ${alinhamentoClass} ${tamanhoClass} prose prose-sm max-w-none dark:prose-invert`}
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: safeHtml }}
           />
         );
       },
@@ -1101,7 +1107,7 @@ export const config: Config<Props> = {
       render: ({ code }) => (
         <div
           className="w-full my-4 rounded-lg overflow-hidden flex justify-center"
-          dangerouslySetInnerHTML={{ __html: code }}
+          dangerouslySetInnerHTML={{ __html: sanitizeEmbedHtml(code) }}
         />
       ),
     },

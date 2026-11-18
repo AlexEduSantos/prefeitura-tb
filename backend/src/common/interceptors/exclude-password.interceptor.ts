@@ -38,6 +38,9 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
     if ('password' in newObj) {
       delete newObj.password;
     }
+    if ('activationTokenHash' in newObj) {
+      delete newObj.activationTokenHash;
+    }
 
     for (const key in newObj) {
       if (newObj[key] && typeof newObj[key] === 'object') {

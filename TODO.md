@@ -45,8 +45,8 @@ Medidas para blindar o sistema contra ataques e garantir integridade dos dados.
 
 ## Autenticação Reforçada:
 
-[x] Adicionar suporte a Login Único Gov.br (OAuth2/OIDC).
-[x] Implementar 2FA/TOTP (otplib) obrigatório para ADMIN e PUBLISHER.
+[x] Adicionar suporte a Login Único Gov.br (OAuth2/OIDC) *(Descontinuado no TO-DO 3.0 por decisão de escopo: dashboard exclusivo para servidores).*
+[x] Implementar 2FA/TOTP (otplib) obrigatório para ADMIN e PUBLISHER *(Adiado para pós-lançamento no TO-DO 3.0).*
 
 ## Tipagem CASL:
 
@@ -94,6 +94,56 @@ Melhorias de produto e auditoria para o futuro.
 
 [x] Integrar @axe-core/playwright no E2E para validar contraste e ARIA.
 [x] Criar a suíte de testes unitários Vitest no frontend (./test/\*_/_.test.{ts,tsx}).
+
+---
+
+TO-DO 3.0: Redefinição de Auth, Ativação de Conta, CSRF Estrito e Correções P0/P1
+
+# NÍVEL 1: Remoção de Gov.br/2FA e Sistema de Ativação de Conta por E-mail
+
+## Remoção de Funcionalidades Fora de Escopo / Pós-Lançamento:
+
+[x] Remover Login com Gov.br (`govbr-oauth.service.ts`, rotas `/auth/govbr/*` e provider).
+[x] Remover 2FA/TOTP por ora (`totp.service.ts`, rotas `/auth/2fa/*` e pacote `otplib`), mantendo registrado como função pós-lançamento do site teste.
+
+## Sistema de Ativação de Conta com Definição de Senha:
+
+[x] Adicionar campos de token de ativação no model `User` (`activationTokenHash`, `activationTokenExpiresAt`, `activationTokenMaxUses`, `activationTokenUsedCount`) com migration Prisma.
+[x] Criar `MailService` para disparo do e-mail de ativação com link de definição de senha.
+[x] Na criação de usuário por `ADMIN`, criar conta inativa (`active: false`), gerar link com prazo de expiração e limite de 1 uso e enviar por e-mail; disponibilizar endpoint `POST /user/:id/resend-activation` e ação na tabela de usuários.
+[x] Implementar `GET /auth/activate-account/validate` e `POST /auth/activate-account` garantindo uso único e expiração, exibindo mensagem orientando contato com o Administrador caso expirado/usado, e ativando o usuário após definir a senha.
+[x] Bloquear login e hidratação de sessão de usuários com `active: false` (`AuthService.validateUser` e `SessionSerializer.deserializeUser`).
+[x] Criar página pública `/ativar-conta` no frontend para definição de senha e feedback de link expirado/usado.
+
+# NÍVEL 2: Proteção CSRF Estrita Full-Stack
+
+[x] Implementar `csrfFetch` em `frontend/lib/csrf.ts` garantindo cookie/header `X-CSRF-Token` automático.
+[x] Atualizar todos os serviços de mutação do frontend (`frontend/app/service/*.ts`) para utilizar `csrfFetch`.
+[x] Remover o modo permissivo do `csrfProtectionMiddleware` no backend, exigindo CSRF válido em todas as mutações.
+
+# NÍVEL 3: Correções Críticas P0/P1 da Auditoria Pós-TO-DO 2.0
+
+## Sanitização XSS (Frontend):
+
+[x] Sanitizar HTML em `puck.config.tsx` (blocos `Texto` e `Embed`) e em `dynamic-icon.tsx`.
+
+## Correção de Bugs de Rota e Schema (P0):
+
+[x] Corrigir Route Shadowing em `MediaController` (`@Get('images'|'documents'|'videos')` antes de `@Get(':id')`) e `StoryController` (`@Get('items')` antes de `@Get(':id')`).
+[x] Corrigir divergência `bannerId` → `galleryId` em `CreateGalleryMediaDto` e `GalleryMediaService`.
+
+## Segurança, LGPD e Paginação (P1):
+
+[x] Remover `email: true` de `GalleriesService.findAll` e `findOne`.
+[x] Manter `userId` imutável em `ServicesService.update`.
+[x] Validar path traversal (`..`) e existência/status `ready` em `GET /media/presigned/*path`.
+[x] Aplicar limites seguros (`page >= 1`, `limit <= 100`) em `ServicesService.findAllPublic` e `StoryController.findAllStories`.
+
+# BACKLOG PÓS-LANÇAMENTO (Site Teste)
+
+- Implantar 2FA/TOTP persistido em banco para ADMIN e PUBLISHER;
+- Vincular `Media.extractedText` → `OfficialGazette.contentText` via evento `media.ready`;
+- Aplicar `pnpm.overrides` no `frontend/package.json` e executar Playwright E2E completo contra servidor no CI.
 
 # Orientações Para refatoração
 

@@ -26,7 +26,10 @@ export class ServicesService {
 
   async findAllPublic(page?: string, limit?: string, title?: string) {
     const parsedPage = Math.max(1, parseInt(page as string, 10) || 1);
-    const parsedLimit = Math.max(1, parseInt(limit as string, 10) || 10);
+    const parsedLimit = Math.min(
+      100,
+      Math.max(1, parseInt(limit as string, 10) || 10),
+    );
     const skip = (parsedPage - 1) * parsedLimit;
 
     const where: any = {};
@@ -69,10 +72,10 @@ export class ServicesService {
     return this.prisma.services.findUnique({ where: { id } });
   }
 
-  update(id: string, updateServiceDto: UpdateServiceDto, userId: string) {
+  update(id: string, updateServiceDto: UpdateServiceDto, _userId?: string) {
     return this.prisma.services.update({
       where: { id },
-      data: { ...updateServiceDto, userId },
+      data: { ...updateServiceDto },
     });
   }
 

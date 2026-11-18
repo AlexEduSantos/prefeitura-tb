@@ -60,7 +60,9 @@ describe('Fase 3: Débitos Arquiteturais e Performance', () => {
       expect(uploadToS3Spy).toHaveBeenCalledTimes(1);
       const [uploadedKey, uploadedBuffer, uploadedMime] =
         uploadToS3Spy.mock.calls[0];
-      expect(uploadedKey).toMatch(/^images\/\d{4}\/\d{2}\/foto-praca-central-\d+\.webp$/);
+      expect(uploadedKey).toMatch(
+        /^images\/\d{4}\/\d{2}\/foto-praca-central-\d+\.webp$/,
+      );
       expect(Buffer.isBuffer(uploadedBuffer)).toBe(true);
       expect(uploadedMime).toBe('image/webp');
       expect(result.key).toBe(uploadedKey);
@@ -69,12 +71,17 @@ describe('Fase 3: Débitos Arquiteturais e Performance', () => {
     });
 
     it('MediaController.getPresignedUrl deve retornar URL pré-assinada do S3 para a chave informada', async () => {
+      const findByKey = vi
+        .fn()
+        .mockResolvedValue({ id: 'm1', status: 'ready' });
       const getPresignedUrl = vi
         .fn()
-        .mockResolvedValue('http://minio:9000/prefeitura/images/2026/11/foto.webp?X-Amz-Signature=abc');
+        .mockResolvedValue(
+          'http://minio:9000/prefeitura/images/2026/11/foto.webp?X-Amz-Signature=abc',
+        );
 
       const controller = new MediaController(
-        { getPresignedUrl } as any,
+        { findByKey, getPresignedUrl } as any,
         {} as any,
         {} as any,
       );
@@ -192,15 +199,21 @@ describe('Fase 3: Débitos Arquiteturais e Performance', () => {
       await service.getSettings();
       expect(findUnique).toHaveBeenCalledTimes(1);
 
-      await service.updateSettings({ siteTitle: 'Prefeitura Atualizada' } as any);
+      await service.updateSettings({
+        siteTitle: 'Prefeitura Atualizada',
+      } as any);
       await service.getSettings();
       expect(findUnique).toHaveBeenCalledTimes(2);
     });
 
     it('PagesService deve cachear /pages/public/* e invalidar em create/update/remove', async () => {
       const cache = new RedisCacheService();
-      const findMany = vi.fn().mockResolvedValue([{ id: 'p1', slug: 'historia' }]);
-      const findFirst = vi.fn().mockResolvedValue({ id: 'p1', slug: 'historia' });
+      const findMany = vi
+        .fn()
+        .mockResolvedValue([{ id: 'p1', slug: 'historia' }]);
+      const findFirst = vi
+        .fn()
+        .mockResolvedValue({ id: 'p1', slug: 'historia' });
       const update = vi.fn().mockResolvedValue({ id: 'p1', slug: 'historia' });
 
       const service = new PagesService(

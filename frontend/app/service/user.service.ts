@@ -1,4 +1,5 @@
 import { IUser } from "@/app/type/user";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -41,13 +42,13 @@ export class UserService {
       lastLogin: _lastLogin,
       organization: _organization,
       ...allowed
-    } = data as any;
+    } = data as Record<string, unknown>;
     return allowed;
   }
 
   static async createUser(data: Partial<IUser>): Promise<IUser> {
     const payload = this.sanitizeUserPayload(data);
-    const response = await fetch(`${API_URL}/user`, {
+    const response = await csrfFetch(`${API_URL}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,36 @@ export class UserService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao criar usuário");
+      const errData = await response.json().catch(() => null);
+      const message = Array.isArray(errData?.message)
+        ? errData.message.join(", ")
+        : errData?.message || "Erro ao criar usuário";
+      throw new Error(message);
+    }
+
+    return response.json();
+  }
+
+  static async resendActivation(
+    id: string,
+  ): Promise<{ message: string; expiresAt: string }> {
+    const response = await csrfFetch(
+      `${API_URL}/user/${id}/resend-activation`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      },
+    );
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => null);
+      const message = Array.isArray(errData?.message)
+        ? errData.message.join(", ")
+        : errData?.message || "Erro ao reenviar link de ativação";
+      throw new Error(message);
     }
 
     return response.json();
@@ -65,7 +95,7 @@ export class UserService {
 
   static async updateUser(id: string, data: Partial<IUser>) {
     const payload = this.sanitizeUserPayload(data);
-    const response = await fetch(`${API_URL}/user/${id}`, {
+    const response = await csrfFetch(`${API_URL}/user/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +116,7 @@ export class UserService {
   }
 
   static async deleteUser(id: string): Promise<IUser> {
-    const response = await fetch(`${API_URL}/user/${id}`, {
+    const response = await csrfFetch(`${API_URL}/user/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

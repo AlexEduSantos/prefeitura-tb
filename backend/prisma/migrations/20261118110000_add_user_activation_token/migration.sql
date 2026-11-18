@@ -1,0 +1,6 @@
+ALTER TABLE "user"
+  ALTER COLUMN "active" SET DEFAULT false,
+  ADD COLUMN IF NOT EXISTS "activationTokenHash" TEXT,
+  ADD COLUMN IF NOT EXISTS "activationTokenExpiresAt" TIMESTAMP,
+  ADD COLUMN IF NOT EXISTS "activationTokenMaxUses" INTEGER NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS "activationTokenUsedCount" INTEGER NOT NULL DEFAULT 0;

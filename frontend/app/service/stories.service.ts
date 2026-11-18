@@ -1,4 +1,5 @@
 import { IStories, IStoriesItem } from "../type/stories";
+import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL + "/story";
 
@@ -32,7 +33,7 @@ export class StoriesService {
   }
 
   static async createStories(story: Partial<IStories>) {
-    const response = await fetch(`${API_URL}`, {
+    const response = await csrfFetch(`${API_URL}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -43,7 +44,7 @@ export class StoriesService {
   }
 
   static async updateStories(id: string, story: Partial<IStories>) {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await csrfFetch(`${API_URL}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -54,7 +55,7 @@ export class StoriesService {
   }
 
   static async deleteStories(id: string) {
-    const response = await fetch(`${API_URL}/${id}`, {
+    const response = await csrfFetch(`${API_URL}/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -92,7 +93,7 @@ export class StoriesService {
   }
 
   static async createStoriesItem(storyId: string, item: Partial<IStoriesItem>) {
-    const response = await fetch(`${API_URL}/${storyId}/item`, {
+    const response = await csrfFetch(`${API_URL}/${storyId}/item`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -103,7 +104,7 @@ export class StoriesService {
   }
 
   static async updateStoriesItem(id: string, item: Partial<IStoriesItem>) {
-    const response = await fetch(`${API_URL}/items/${id}`, {
+    const response = await csrfFetch(`${API_URL}/items/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -114,7 +115,7 @@ export class StoriesService {
   }
 
   static async updateOrderStoriesItems(ids: string[]) {
-    const response = await fetch(`${API_URL}/items/order`, {
+    const response = await csrfFetch(`${API_URL}/items/order`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -132,7 +133,7 @@ export class StoriesService {
   }
 
   static async deleteStoriesItem(id: string) {
-    const response = await fetch(`${API_URL}/item/${id}`, {
+    const response = await csrfFetch(`${API_URL}/item/${id}`, {
       method: "DELETE",
       credentials: "include",
     });
