@@ -1,6 +1,14 @@
 "use client";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Contrast, Search, SearchIcon, X, ZoomIn, ZoomOut } from "lucide-react";
+import {
+  Contrast,
+  RotateCcw,
+  Search,
+  SearchIcon,
+  X,
+  ZoomIn,
+  ZoomOut,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -18,12 +26,21 @@ import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { MobileHeader } from "./mobile-header";
 import { useSettings } from "@/app/viewmodel/settings.viewmodel";
 import Image from "next/image";
+import { useAccessibility } from "@/app/viewmodel/accessibility.viewmodel";
 
 function DesktopBarTop() {
   const { menu, isLoadingMenu, isErrorMenu } = useMenuByLocation(
     "header",
     "Barra Superior",
   );
+
+  const {
+    fontScale,
+    highContrast,
+    applyFontScale,
+    applyHighContrast,
+    focusSection,
+  } = useAccessibility();
 
   if (isLoadingMenu) {
     return (
@@ -118,10 +135,51 @@ function DesktopBarTop() {
             className="size-5 text-white hover:scale-110 transition-all duration-300 cursor-pointer"
           />
           <span className="w-px h-4 bg-gray-300" />
-          <ZoomIn size={16} />
-          <ZoomOut size={16} />
-          <Contrast size={16} />
-          <p>Acessibilidade</p>
+          <div className="flex items-center gap-1">
+            <Button
+              type="button"
+              onClick={() => applyFontScale(fontScale - 10)}
+              aria-label="Diminuir fonte"
+              title="Diminuir tamanho da fonte"
+              className="inline-flex items-center h-fit gap-1 px-1! rounded hover:bg-white/15 cursor-pointer"
+            >
+              <ZoomOut className="size-3.5" />
+              <span>A-</span>
+            </Button>
+            <Button
+              type="button"
+              onClick={() => applyFontScale(100)}
+              aria-label="Restaurar tamanho da fonte"
+              title="Fonte padrão"
+              className="inline-flex items-center h-fit gap-1 px-1! rounded hover:bg-white/15 cursor-pointer"
+            >
+              <RotateCcw className="size-3" />
+              <span>A</span>
+            </Button>
+            <Button
+              type="button"
+              onClick={() => applyFontScale(fontScale + 10)}
+              aria-label="Aumentar fonte"
+              title="Aumentar tamanho da fonte"
+              className="inline-flex items-center  h-fit gap-1 px-1!  rounded hover:bg-white/15 cursor-pointer"
+            >
+              <ZoomIn className="size-3.5" />
+              <span>A+</span>
+            </Button>
+
+            <span className="w-px h-3.5 bg-white/25 mx-0.5" />
+
+            <Button
+              type="button"
+              onClick={() => applyHighContrast(!highContrast)}
+              aria-pressed={highContrast}
+              aria-label="Alternar alto contraste"
+              className="inline-flex items-center  h-fit gap-1 px-1! rounded hover:bg-white/15 cursor-pointer font-medium"
+            >
+              <Contrast className="size-3.5" />
+              <span>Alto Contraste</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

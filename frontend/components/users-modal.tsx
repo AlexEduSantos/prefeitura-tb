@@ -198,8 +198,8 @@ function UsersModalForm({
       {/* Status / Ativação por E-mail */}
       {modalMode === "create" ? (
         <div className="rounded-lg border p-3 bg-muted/30 text-xs text-muted-foreground">
-          Um e-mail com link de uso único e prazo de expiração será enviado
-          para o servidor definir sua própria senha e ativar a conta.
+          Um e-mail com link de uso único e prazo de expiração será enviado para
+          o servidor definir sua própria senha e ativar a conta.
         </div>
       ) : (
         <div className="flex items-center justify-between rounded-lg border p-3 bg-muted/30">
@@ -231,7 +231,9 @@ function UsersModalForm({
           </Button>
         </DialogClose>
         <Button type="submit">
-          {modalMode === "create" ? "Criar e Enviar Convite" : "Salvar Alterações"}
+          {modalMode === "create"
+            ? "Criar e Enviar Convite"
+            : "Salvar Alterações"}
         </Button>
       </DialogFooter>
     </form>
