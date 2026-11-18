@@ -28,7 +28,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-export function useGalleryViewModel() {
+export function useGalleryViewModel(modeType: "admin" | "public" = "admin") {
+  const isAdmin = modeType === "admin";
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
@@ -43,8 +44,11 @@ export function useGalleryViewModel() {
   const queryClient = useQueryClient();
 
   const galleryQuery = useQuery({
-    queryKey: ["gallery"],
-    queryFn: () => GalleryService.getGalleryList(),
+    queryKey: ["gallery", modeType],
+    queryFn: () =>
+      isAdmin
+        ? GalleryService.getAdminGalleryList()
+        : GalleryService.getGalleryList(),
   });
 
   // Mutations
@@ -59,6 +63,7 @@ export function useGalleryViewModel() {
   const mediaQuery = useQuery({
     queryKey: ["media"],
     queryFn: () => MediaService.getMediaList(),
+    enabled: isAdmin,
   });
 
   const updateBannerMutation = useMutation({

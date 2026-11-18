@@ -226,9 +226,44 @@ export class OfficialGazetteService {
   }
 
   /**
-   * Busca um boletim por ID com informações completas.
+   * Busca um boletim público por ID sem expor email/role de servidores (LGPD).
    */
   async findOne(id: string) {
+    const gazette = await this.prisma.officialGazette.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        title: true,
+        edition: true,
+        description: true,
+        publicationDate: true,
+        fileUrl: true,
+        fileSize: true,
+        pageCount: true,
+        contentText: true,
+        createdAt: true,
+        updatedAt: true,
+        createdBy: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!gazette) {
+      throw new NotFoundException(
+        `Boletim oficial com ID "${id}" não encontrado.`,
+      );
+    }
+
+    return gazette;
+  }
+
+  /**
+   * Busca administrativa por ID com informações de auditoria.
+   */
+  async findOneAdmin(id: string) {
     const gazette = await this.prisma.officialGazette.findUnique({
       where: { id },
       include: {

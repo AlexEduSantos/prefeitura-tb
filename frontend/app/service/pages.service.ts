@@ -179,4 +179,28 @@ export class PagesService {
 
     return response.json();
   }
+
+  static async approvePage(id: string): Promise<IPage> {
+    const response = await csrfFetch(`${API_URL}/pages/${id}/approve`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao aprovar página");
+    }
+    return response.json();
+  }
+
+  static async rejectPage(id: string): Promise<IPage> {
+    const response = await csrfFetch(`${API_URL}/pages/${id}/reject`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao rejeitar página");
+    }
+    return response.json();
+  }
 }

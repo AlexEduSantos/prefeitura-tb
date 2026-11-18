@@ -37,6 +37,10 @@ export type GalleriesMinAggregateOutputType = {
   id: string | null
   title: string | null
   active: boolean | null
+  workflowStatus: string | null
+  approvedById: string | null
+  approvedAt: Date | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   galleryType: $Enums.GalleryType | null
@@ -52,6 +56,10 @@ export type GalleriesMaxAggregateOutputType = {
   id: string | null
   title: string | null
   active: boolean | null
+  workflowStatus: string | null
+  approvedById: string | null
+  approvedAt: Date | null
+  deletedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
   galleryType: $Enums.GalleryType | null
@@ -67,6 +75,11 @@ export type GalleriesCountAggregateOutputType = {
   id: number
   title: number
   active: number
+  workflowStatus: number
+  pendingAction: number
+  approvedById: number
+  approvedAt: number
+  deletedAt: number
   createdAt: number
   updatedAt: number
   galleryType: number
@@ -92,6 +105,10 @@ export type GalleriesMinAggregateInputType = {
   id?: true
   title?: true
   active?: true
+  workflowStatus?: true
+  approvedById?: true
+  approvedAt?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
   galleryType?: true
@@ -107,6 +124,10 @@ export type GalleriesMaxAggregateInputType = {
   id?: true
   title?: true
   active?: true
+  workflowStatus?: true
+  approvedById?: true
+  approvedAt?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
   galleryType?: true
@@ -122,6 +143,11 @@ export type GalleriesCountAggregateInputType = {
   id?: true
   title?: true
   active?: true
+  workflowStatus?: true
+  pendingAction?: true
+  approvedById?: true
+  approvedAt?: true
+  deletedAt?: true
   createdAt?: true
   updatedAt?: true
   galleryType?: true
@@ -224,6 +250,11 @@ export type GalleriesGroupByOutputType = {
   id: string
   title: string
   active: boolean
+  workflowStatus: string
+  pendingAction: runtime.JsonValue | null
+  approvedById: string | null
+  approvedAt: Date | null
+  deletedAt: Date | null
   createdAt: Date
   updatedAt: Date
   galleryType: $Enums.GalleryType
@@ -262,6 +293,11 @@ export type GalleriesWhereInput = {
   id?: Prisma.UuidFilter<"Galleries"> | string
   title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
+  workflowStatus?: Prisma.StringFilter<"Galleries"> | string
+  pendingAction?: Prisma.JsonNullableFilter<"Galleries">
+  approvedById?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   galleryType?: Prisma.EnumGalleryTypeFilter<"Galleries"> | $Enums.GalleryType
@@ -282,6 +318,11 @@ export type GalleriesOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  workflowStatus?: Prisma.SortOrder
+  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   galleryType?: Prisma.SortOrder
@@ -306,6 +347,11 @@ export type GalleriesWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.GalleriesWhereInput | Prisma.GalleriesWhereInput[]
   title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
+  workflowStatus?: Prisma.StringFilter<"Galleries"> | string
+  pendingAction?: Prisma.JsonNullableFilter<"Galleries">
+  approvedById?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   galleryType?: Prisma.EnumGalleryTypeFilter<"Galleries"> | $Enums.GalleryType
@@ -326,6 +372,11 @@ export type GalleriesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  workflowStatus?: Prisma.SortOrder
+  pendingAction?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   galleryType?: Prisma.SortOrder
@@ -349,6 +400,11 @@ export type GalleriesScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"Galleries"> | string
   title?: Prisma.StringWithAggregatesFilter<"Galleries"> | string
   active?: Prisma.BoolWithAggregatesFilter<"Galleries"> | boolean
+  workflowStatus?: Prisma.StringWithAggregatesFilter<"Galleries"> | string
+  pendingAction?: Prisma.JsonNullableWithAggregatesFilter<"Galleries">
+  approvedById?: Prisma.UuidNullableWithAggregatesFilter<"Galleries"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Galleries"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Galleries"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Galleries"> | Date | string
   galleryType?: Prisma.EnumGalleryTypeWithAggregatesFilter<"Galleries"> | $Enums.GalleryType
@@ -364,6 +420,11 @@ export type GalleriesCreateInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -381,6 +442,11 @@ export type GalleriesUncheckedCreateInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -398,6 +464,11 @@ export type GalleriesUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -415,6 +486,11 @@ export type GalleriesUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -432,6 +508,11 @@ export type GalleriesCreateManyInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -447,6 +528,11 @@ export type GalleriesUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -459,6 +545,11 @@ export type GalleriesUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -495,6 +586,11 @@ export type GalleriesCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  workflowStatus?: Prisma.SortOrder
+  pendingAction?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   galleryType?: Prisma.SortOrder
@@ -514,6 +610,10 @@ export type GalleriesMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  workflowStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   galleryType?: Prisma.SortOrder
@@ -529,6 +629,10 @@ export type GalleriesMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   active?: Prisma.SortOrder
+  workflowStatus?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
+  deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   galleryType?: Prisma.SortOrder
@@ -713,6 +817,11 @@ export type GalleriesCreateWithoutOrganizationInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -729,6 +838,11 @@ export type GalleriesUncheckedCreateWithoutOrganizationInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -774,6 +888,11 @@ export type GalleriesScalarWhereInput = {
   id?: Prisma.UuidFilter<"Galleries"> | string
   title?: Prisma.StringFilter<"Galleries"> | string
   active?: Prisma.BoolFilter<"Galleries"> | boolean
+  workflowStatus?: Prisma.StringFilter<"Galleries"> | string
+  pendingAction?: Prisma.JsonNullableFilter<"Galleries">
+  approvedById?: Prisma.UuidNullableFilter<"Galleries"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
+  deletedAt?: Prisma.DateTimeNullableFilter<"Galleries"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Galleries"> | Date | string
   galleryType?: Prisma.EnumGalleryTypeFilter<"Galleries"> | $Enums.GalleryType
@@ -789,6 +908,11 @@ export type GalleriesCreateWithoutSpaceInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -805,6 +929,11 @@ export type GalleriesUncheckedCreateWithoutSpaceInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -847,6 +976,11 @@ export type GalleriesCreateWithoutUserInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -863,6 +997,11 @@ export type GalleriesUncheckedCreateWithoutUserInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -905,6 +1044,11 @@ export type GalleriesCreateWithoutArticlesInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -921,6 +1065,11 @@ export type GalleriesUncheckedCreateWithoutArticlesInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -953,6 +1102,11 @@ export type GalleriesUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -969,6 +1123,11 @@ export type GalleriesUncheckedUpdateWithoutArticlesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -985,6 +1144,11 @@ export type GalleriesCreateWithoutSlidesInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -1001,6 +1165,11 @@ export type GalleriesUncheckedCreateWithoutSlidesInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -1033,6 +1202,11 @@ export type GalleriesUpdateWithoutSlidesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1049,6 +1223,11 @@ export type GalleriesUncheckedUpdateWithoutSlidesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1065,6 +1244,11 @@ export type GalleriesCreateManyOrganizationInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -1079,6 +1263,11 @@ export type GalleriesUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1095,6 +1284,11 @@ export type GalleriesUncheckedUpdateWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1111,6 +1305,11 @@ export type GalleriesUncheckedUpdateManyWithoutOrganizationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1125,6 +1324,11 @@ export type GalleriesCreateManySpaceInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -1139,6 +1343,11 @@ export type GalleriesUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1155,6 +1364,11 @@ export type GalleriesUncheckedUpdateWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1171,6 +1385,11 @@ export type GalleriesUncheckedUpdateManyWithoutSpaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1185,6 +1404,11 @@ export type GalleriesCreateManyUserInput = {
   id?: string
   title: string
   active?: boolean
+  workflowStatus?: string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   galleryType?: $Enums.GalleryType
@@ -1199,6 +1423,11 @@ export type GalleriesUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1215,6 +1444,11 @@ export type GalleriesUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1231,6 +1465,11 @@ export type GalleriesUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  workflowStatus?: Prisma.StringFieldUpdateOperationsInput | string
+  pendingAction?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   galleryType?: Prisma.EnumGalleryTypeFieldUpdateOperationsInput | $Enums.GalleryType
@@ -1285,6 +1524,11 @@ export type GalleriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   id?: boolean
   title?: boolean
   active?: boolean
+  workflowStatus?: boolean
+  pendingAction?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   galleryType?: boolean
@@ -1306,6 +1550,11 @@ export type GalleriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   active?: boolean
+  workflowStatus?: boolean
+  pendingAction?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   galleryType?: boolean
@@ -1324,6 +1573,11 @@ export type GalleriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   id?: boolean
   title?: boolean
   active?: boolean
+  workflowStatus?: boolean
+  pendingAction?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   galleryType?: boolean
@@ -1342,6 +1596,11 @@ export type GalleriesSelectScalar = {
   id?: boolean
   title?: boolean
   active?: boolean
+  workflowStatus?: boolean
+  pendingAction?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
+  deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   galleryType?: boolean
@@ -1353,7 +1612,7 @@ export type GalleriesSelectScalar = {
   userId?: boolean
 }
 
-export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "active" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "spaceId" | "organizationId" | "userId", ExtArgs["result"]["galleries"]>
+export type GalleriesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "active" | "workflowStatus" | "pendingAction" | "approvedById" | "approvedAt" | "deletedAt" | "createdAt" | "updatedAt" | "galleryType" | "galleryAutoplay" | "galleryInterval" | "galleryShowThumbnails" | "spaceId" | "organizationId" | "userId", ExtArgs["result"]["galleries"]>
 export type GalleriesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   space?: boolean | Prisma.Galleries$spaceArgs<ExtArgs>
   organization?: boolean | Prisma.Galleries$organizationArgs<ExtArgs>
@@ -1386,6 +1645,11 @@ export type $GalleriesPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     id: string
     title: string
     active: boolean
+    workflowStatus: string
+    pendingAction: runtime.JsonValue | null
+    approvedById: string | null
+    approvedAt: Date | null
+    deletedAt: Date | null
     createdAt: Date
     updatedAt: Date
     galleryType: $Enums.GalleryType
@@ -1826,6 +2090,11 @@ export interface GalleriesFieldRefs {
   readonly id: Prisma.FieldRef<"Galleries", 'String'>
   readonly title: Prisma.FieldRef<"Galleries", 'String'>
   readonly active: Prisma.FieldRef<"Galleries", 'Boolean'>
+  readonly workflowStatus: Prisma.FieldRef<"Galleries", 'String'>
+  readonly pendingAction: Prisma.FieldRef<"Galleries", 'Json'>
+  readonly approvedById: Prisma.FieldRef<"Galleries", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"Galleries", 'DateTime'>
+  readonly deletedAt: Prisma.FieldRef<"Galleries", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Galleries", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Galleries", 'DateTime'>
   readonly galleryType: Prisma.FieldRef<"Galleries", 'GalleryType'>

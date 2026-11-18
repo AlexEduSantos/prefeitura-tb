@@ -11,7 +11,7 @@ export default function StoriesBlock() {
   const [viewingStory, setViewingStory] = useState<IStories | null>(null);
   const [openModel, setOpenModel] = useState(false);
 
-  const { storiesQuery: stories, isLoadingStories } = useStories();
+  const { storiesQuery: stories, isLoadingStories } = useStories("public");
 
   const imageLoader = (src: string) => {
     return `${process.env.NEXT_PUBLIC_API_URL}/media/file/${src}`;

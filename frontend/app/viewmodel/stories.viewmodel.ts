@@ -4,7 +4,7 @@ import { StoriesService } from "../service/stories.service";
 import { IStories, IStoriesItem } from "../type/stories";
 import { toast } from "sonner";
 
-export function useStories() {
+export function useStories(modeType: "admin" | "public" = "admin") {
   const queryClient = useQueryClient();
 
   // Estados de paginação e busca
@@ -32,9 +32,11 @@ export function useStories() {
     isError: isErrorStories,
     refetch: refetchStories,
   } = useQuery({
-    queryKey: ["stories", page, limit, search],
+    queryKey: ["stories", modeType, page, limit, search],
     queryFn: () =>
-      StoriesService.getStoriesList({ page, limit, title: search }),
+      modeType === "admin"
+        ? StoriesService.getAdminStoriesList({ page, limit, title: search })
+        : StoriesService.getStoriesList({ page, limit, title: search }),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -48,7 +50,7 @@ export function useStories() {
       toast.success("Destaque criado com sucesso!");
       setCreateStoryModalOpen(false);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao criar destaque");
     },
   });
@@ -61,7 +63,7 @@ export function useStories() {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
       toast.success("Destaque atualizado com sucesso!");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao atualizar destaque");
     },
   });
@@ -74,7 +76,7 @@ export function useStories() {
       toast.success("Destaque removido com sucesso!");
       setStoryToDelete(null);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao remover destaque");
     },
   });
@@ -94,7 +96,7 @@ export function useStories() {
       setMediaPickerOpen(false);
       setCurrentStoryId(null);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao adicionar item");
     },
   });
@@ -112,7 +114,7 @@ export function useStories() {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
       toast.success("Item atualizado com sucesso!");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao atualizar item");
     },
   });
@@ -125,7 +127,7 @@ export function useStories() {
       toast.success("Item removido com sucesso!");
       setItemToDelete(null);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao remover item");
     },
   });
@@ -137,7 +139,7 @@ export function useStories() {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
       toast.success("Ordem atualizada com sucesso!");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || "Erro ao atualizar ordem");
     },
   });
@@ -155,7 +157,7 @@ export function useStories() {
     setCurrentStoryId(null);
   };
 
-  const handleSelectMedia = (media: any) => {
+  const handleSelectMedia = (media: { id: string } | Array<{ id: string }>) => {
     if (!currentStoryId) return;
     const selected = Array.isArray(media) ? media[0] : media;
     createStoryItemMutation.mutate({

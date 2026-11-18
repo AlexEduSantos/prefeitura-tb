@@ -15,9 +15,12 @@ import { PagesService } from './pages.service';
 import { CreatePageDto } from './dto/create-page.dto';
 import { UpdatePageDto } from './dto/update-page.dto';
 import { SessionGuard } from '../auth/session.guard';
+import { PoliciesGuard } from '../casl/policies.guard';
+import { CheckPolicies } from '../casl/check-policies.decorator';
 import { CaslAbilityFactory } from '../casl/casl-ability.factory';
 import { Action } from '../casl/action.enum';
 import { subject } from '@casl/ability';
+import { extractRequestUser } from '../common/utils/workflow.util';
 
 @Controller('pages')
 export class PagesController {
@@ -26,10 +29,23 @@ export class PagesController {
     private readonly caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  // Listagem administrativa de páginas (requer sessão)
-  @UseGuards(SessionGuard)
+  // Listagem administrativa de páginas (requer sessão e permissão Page:Read)
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Page'))
   @Get()
   async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('skip') skip?: string,
+    @Query('take') take?: string,
+  ) {
+    return this.pagesService.findAll({ page, limit, skip, take });
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Page'))
+  @Get('admin')
+  async findAllAdminAlias(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
     @Query('skip') skip?: string,
@@ -41,13 +57,6 @@ export class PagesController {
   @Get('public')
   async findPublic(@Query('search') search: string) {
     return this.pagesService.findPublicPages(search);
-  }
-
-  // Detalhes administrativos de uma página por ID (requer sessão)
-  @UseGuards(SessionGuard)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.pagesService.findOne(id);
   }
 
   // Rota pública para buscar página raiz (sem espaço): ex /historia
@@ -65,26 +74,53 @@ export class PagesController {
     return this.pagesService.findByRoute(spaceSlug, slug);
   }
 
-  // Operações de Mutação exigem autenticação do usuário
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Page'))
+  @Get('admin/:id')
+  async findOneAdmin(@Param('id') id: string) {
+    return this.pagesService.findOne(id);
+  }
+
+  // Detalhes administrativos de uma página por ID (requer sessão e permissão)
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Page'))
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.pagesService.findOne(id);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
   async create(@Body() createPageDto: CreatePageDto, @Request() req: any) {
-    const userId =
-      req.session?.user?.id || req.user?.id || req.session?.passport?.user;
+    const { id: userId, role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
-    // Validação ABAC na Criação:
-    // Garante que o usuário tem permissão para associar a nova página à organização especificada (organizationId)
     if (!ability.can(Action.Create, subject('Page', createPageDto as any))) {
       throw new ForbiddenException(
         'Você não tem permissão para criar páginas para esta secretaria.',
       );
     }
 
-    return this.pagesService.create(createPageDto, userId);
+    return this.pagesService.create(createPageDto, userId, userRole);
   }
 
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/approve')
+  @CheckPolicies((ability) => ability.can(Action.Approve, 'Page'))
+  async approve(@Param('id') id: string, @Request() req: any) {
+    const { id: approverId } = extractRequestUser(req);
+    return this.pagesService.approve(id, approverId);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/reject')
+  @CheckPolicies((ability) => ability.can(Action.Approve, 'Page'))
+  async reject(@Param('id') id: string, @Request() req: any) {
+    const { id: approverId } = extractRequestUser(req);
+    return this.pagesService.reject(id, approverId);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -92,34 +128,41 @@ export class PagesController {
     @Request() req: any,
   ) {
     const page = await this.pagesService.findOne(id);
+    const { role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
 
-    // Validação ABAC na Atualização:
-    // Garante que o usuário só consiga atualizar se pertencer à mesma organização (Page.organizationId == User.organizationId),
-    // a menos que seja um Administrador com permissões completas
     if (!ability.can(Action.Update, subject('Page', page))) {
       throw new ForbiddenException(
         'Você não possui permissão para editar esta página.',
       );
     }
 
-    return this.pagesService.update(id, updatePageDto);
+    return this.pagesService.update(id, updatePageDto, userRole);
   }
 
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string, @Request() req: any) {
+  async remove(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
     const page = await this.pagesService.findOne(id);
+    const { role: userRole } = extractRequestUser(req);
     const ability = this.caslAbilityFactory.createForUser(req.user);
+    const wantHardDelete = hard === 'true';
 
-    // Validação ABAC na Deleção:
-    // Garante que o usuário só consiga deletar a página de sua própria secretaria
-    if (!ability.can(Action.Delete, subject('Page', page))) {
+    const hasPermission = wantHardDelete
+      ? ability.can(Action.Delete, subject('Page', page))
+      : ability.can(Action.Delete, subject('Page', page)) ||
+        ability.can(Action.SoftDelete, subject('Page', page));
+
+    if (!hasPermission) {
       throw new ForbiddenException(
-        'Você não possui permissão para deletar esta página.',
+        'Você não possui permissão para remover esta página.',
       );
     }
 
-    return this.pagesService.remove(id);
+    return this.pagesService.remove(id, userRole, wantHardDelete);
   }
 }

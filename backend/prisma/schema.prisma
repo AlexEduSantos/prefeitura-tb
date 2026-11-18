@@ -175,12 +175,17 @@ model Session {
 }
 
 model Page {
-  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  slug        String
-  content     Json
-  description String?
-  published   Boolean @default(false)
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  slug           String
+  content        Json
+  description    String?
+  published      Boolean   @default(false)
+  workflowStatus String    @default("aprovado")
+  pendingAction  Json?
+  approvedById   String?   @db.Uuid
+  approvedAt     DateTime? @db.Timestamp
+  deletedAt      DateTime? @db.Timestamp
 
   // Roteamento: /[spaceSlug]/[slug] ou /[slug] se spaceId for null
   spaceId String? @db.Uuid
@@ -220,6 +225,11 @@ model Article {
   allowComments            Boolean       @default(true)
   tags                     String[]
   visibility               String        @default("public")
+  workflowStatus           String        @default("aprovado")
+  pendingAction            Json?
+  approvedById             String?       @db.Uuid
+  approvedAt               DateTime?     @db.Timestamp
+  deletedAt                DateTime?     @db.Timestamp
   galleryId                String?       @db.Uuid
   gallery                  Galleries?    @relation(fields: [galleryId], references: [id], onDelete: SetNull)
   socialPreviewTitle       String?
@@ -307,6 +317,11 @@ model Galleries {
   id                    String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title                 String
   active                Boolean     @default(true)
+  workflowStatus        String      @default("aprovado")
+  pendingAction         Json?
+  approvedById          String?     @db.Uuid
+  approvedAt            DateTime?   @db.Timestamp
+  deletedAt             DateTime?   @db.Timestamp
   createdAt             DateTime    @default(now()) @db.Timestamp
   updatedAt             DateTime    @updatedAt @db.Timestamp
   galleryType           GalleryType @default(slider)
@@ -359,6 +374,11 @@ model Popups {
   title           String
   link            String?
   active          Boolean     @default(true)
+  workflowStatus  String      @default("aprovado")
+  pendingAction   Json?
+  approvedById    String?     @db.Uuid
+  approvedAt      DateTime?   @db.Timestamp
+  deletedAt       DateTime?   @db.Timestamp
   displayTime     Int         @default(5)
   status          PopupStatus @default(rascunho)
   type            PopupType   @default(modal)
@@ -390,10 +410,16 @@ model Popups {
 }
 
 model Services {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String
-  link        String   @unique
-  altText     String?
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title          String
+  link           String    @unique
+  altText        String?
+  active         Boolean   @default(true)
+  workflowStatus String    @default("aprovado")
+  pendingAction  Json?
+  approvedById   String?   @db.Uuid
+  approvedAt     DateTime? @db.Timestamp
+  deletedAt      DateTime? @db.Timestamp
   createdAt   DateTime @default(now()) @db.Timestamp
   updatedAt   DateTime @updatedAt @db.Timestamp
   featured    Boolean  @default(false)

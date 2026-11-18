@@ -8,7 +8,10 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
+  ForbiddenException,
 } from '@nestjs/common';
+import { subject } from '@casl/ability';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
@@ -16,10 +19,15 @@ import { Action } from '../casl/action.enum';
 import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
 import { CheckPolicies } from '../casl/check-policies.decorator';
+import { CaslAbilityFactory } from '../casl/casl-ability.factory';
+import { extractRequestUser } from '../common/utils/workflow.util';
 
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly articlesService: ArticlesService) {}
+  constructor(
+    private readonly articlesService: ArticlesService,
+    private readonly caslAbilityFactory: CaslAbilityFactory,
+  ) {}
 
   // Listagem ADMINISTRATIVA (Dashboard) - Traz todos os artigos menos os excluídos por padrão
   // DEVE ser declarada ANTES de @Get(':slug') para evitar captura de rota!
@@ -89,8 +97,36 @@ export class ArticlesController {
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post()
   @CheckPolicies((ability) => ability.can(Action.Create, 'Article'))
-  async create(@Body() createArticleDto: CreateArticleDto) {
-    return this.articlesService.create(createArticleDto);
+  async create(
+    @Body() createArticleDto: CreateArticleDto,
+    @Request() req: any,
+  ) {
+    const { role: userRole } = extractRequestUser(req);
+    const ability = this.caslAbilityFactory.createForUser(req.user);
+    if (
+      !ability.can(Action.Create, subject('Article', createArticleDto as any))
+    ) {
+      throw new ForbiddenException(
+        'Você não tem permissão para criar notícias para esta secretaria.',
+      );
+    }
+    return this.articlesService.create(createArticleDto, userRole);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/approve')
+  @CheckPolicies((ability) => ability.can(Action.Approve, 'Article'))
+  async approve(@Param('id') id: string, @Request() req: any) {
+    const { id: approverId } = extractRequestUser(req);
+    return this.articlesService.approve(id, approverId);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Patch(':id/reject')
+  @CheckPolicies((ability) => ability.can(Action.Approve, 'Article'))
+  async reject(@Param('id') id: string, @Request() req: any) {
+    const { id: approverId } = extractRequestUser(req);
+    return this.articlesService.reject(id, approverId);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -99,14 +135,47 @@ export class ArticlesController {
   async update(
     @Param('id') id: string,
     @Body() updateArticleDto: UpdateArticleDto,
+    @Request() req: any,
   ) {
-    return this.articlesService.update(id, updateArticleDto);
+    const article = await this.articlesService.findOneById(id);
+    const ability = this.caslAbilityFactory.createForUser(req.user);
+    if (!ability.can(Action.Update, subject('Article', article))) {
+      throw new ForbiddenException(
+        'Você não possui permissão para editar esta notícia.',
+      );
+    }
+    const { role: userRole } = extractRequestUser(req);
+    return this.articlesService.update(id, updateArticleDto, userRole);
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Delete(':id')
-  @CheckPolicies((ability) => ability.can(Action.Delete, 'Article'))
-  async remove(@Param('id') id: string) {
-    return this.articlesService.remove(id);
+  @CheckPolicies(
+    (ability) =>
+      ability.can(Action.Delete, 'Article') ||
+      ability.can(Action.SoftDelete, 'Article'),
+  )
+  async remove(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Query('hard') hard?: string,
+  ) {
+    const article = await this.articlesService.findOneById(id);
+    const ability = this.caslAbilityFactory.createForUser(req.user);
+    const wantHardDelete = hard === 'true';
+
+    const hasPermission = wantHardDelete
+      ? ability.can(Action.Delete, subject('Article', article))
+      : ability.can(Action.Delete, subject('Article', article)) ||
+        ability.can(Action.SoftDelete, subject('Article', article));
+
+    if (!hasPermission) {
+      throw new ForbiddenException(
+        'Você não possui permissão para excluir esta notícia.',
+      );
+    }
+
+    const { role: userRole } = extractRequestUser(req);
+    return this.articlesService.remove(id, userRole, wantHardDelete);
   }
 }

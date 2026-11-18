@@ -83,4 +83,24 @@ export class ServicesService {
     if (!response.ok) throw new Error("Erro ao deletar serviço");
     return response.json();
   }
+
+  static async approveService(id: string) {
+    const response = await csrfFetch(`${API_URL}/${id}/approve`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Erro ao aprovar serviço");
+    return response.json();
+  }
+
+  static async rejectService(id: string) {
+    const response = await csrfFetch(`${API_URL}/${id}/reject`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Erro ao rejeitar serviço");
+    return response.json();
+  }
 }

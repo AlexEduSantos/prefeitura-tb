@@ -28,7 +28,8 @@ export function MainCarousel() {
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const { galleryList: galleries, isLoadingGallery } = useGalleryViewModel();
+  const { galleryList: galleries, isLoadingGallery } =
+    useGalleryViewModel("public");
 
   const mainGallery = galleries?.find((g) => g.title === "Banner Principal");
   const slides = mainGallery?.slides ?? [];
@@ -58,15 +59,11 @@ export function MainCarousel() {
     return () => clearInterval(timer);
   }, [isPaused, totalSlides, currentIndex]);
 
-  // Reset do índice se a galeria mudar
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [mainGallery?.id]);
-
   if (isLoadingGallery) return <Skeleton className="w-full h-72 md:h-96" />;
   if (!mainGallery || totalSlides === 0) return null;
 
-  const currentSlide = slides[currentIndex];
+  const safeIndex = currentIndex >= totalSlides ? 0 : currentIndex;
+  const currentSlide = slides[safeIndex];
 
   return (
     <section className="w-full max-w-7xl mx-auto px-2 xl:px-0">

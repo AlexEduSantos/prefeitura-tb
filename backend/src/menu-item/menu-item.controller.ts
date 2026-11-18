@@ -38,12 +38,16 @@ export class MenuItemController {
     return this.menuItemService.reorder(reorderMenuItemsDto);
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
+  @CheckPolicies((ability) => ability.can(Action.Read, 'MenuItem'))
   findAll() {
     return this.menuItemService.findAll();
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
   @Get(':id')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'MenuItem'))
   findOne(@Param('id') id: string) {
     return this.menuItemService.findOne(id);
   }

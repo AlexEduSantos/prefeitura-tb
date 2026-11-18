@@ -15,6 +15,10 @@ import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { captureFrontendException } from "@/lib/telemetry";
 import { MenuService } from "@/app/service/menu.service";
 import { AuthService } from "@/app/service/auth.service";
+import { StoriesService } from "@/app/service/stories.service";
+import { PopupsService } from "@/app/service/popups.service";
+import { GalleryService } from "@/app/service/gallery.service";
+import { OrganizationService } from "@/app/service/organization.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -178,5 +182,37 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
       expect.stringContaining("/menus/by/location/header"),
       expect.objectContaining({ credentials: "include" }),
     );
+  });
+
+  it("Services administrativos e públicos devem consultar as rotas corretas (/popups/admin, /galleries/admin, /story/items/:id e /organizations/admin/tree)", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => [],
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-unit-test",
+    });
+
+    await StoriesService.getStoriesItemById("item-42");
+    expect(fetchMock.mock.calls[0][0]).toContain("/story/items/item-42");
+
+    await StoriesService.deleteStoriesItem("item-42");
+    expect(fetchMock.mock.calls[1][0]).toContain("/story/items/item-42");
+
+    await PopupsService.getPopupsList();
+    expect(fetchMock.mock.calls[2][0]).toContain("/popups/admin");
+
+    await GalleryService.getAdminGalleryList();
+    expect(fetchMock.mock.calls[3][0]).toContain("/galleries/admin");
+
+    await OrganizationService.getTree("all");
+    expect(fetchMock.mock.calls[4][0]).toContain(
+      "/organizations/admin/tree?includeInactive=all",
+    );
+
+    await OrganizationService.getTree();
+    expect(fetchMock.mock.calls[5][0]).toMatch(/\/organizations\/tree$/);
   });
 });

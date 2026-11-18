@@ -2,11 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Article } from '../generated/prisma/client';
-import {
-  PaginationInput,
-  resolvePagination,
-} from '../common/utils/pagination';
+import { Article, Prisma } from '../generated/prisma/client';
+import { UserRole } from '../generated/prisma/enums';
+import { PaginationInput, resolvePagination } from '../common/utils/pagination';
 
 @Injectable()
 export class ArticlesService {
@@ -34,7 +32,10 @@ export class ArticlesService {
     return status || 'rascunho';
   }
 
-  async create(createArticleDto: CreateArticleDto): Promise<Article> {
+  async create(
+    createArticleDto: CreateArticleDto,
+    userRole?: UserRole,
+  ): Promise<Article> {
     const { categoryIds, ...rest } = createArticleDto;
 
     const pubDate = createArticleDto.publicationDate
@@ -44,15 +45,21 @@ export class ArticlesService {
       ? new Date(createArticleDto.expirationDate)
       : null;
 
-    const resolvedStatus = this.resolveArticleStatus(
-      createArticleDto.status,
-      pubDate,
-    );
+    const isCollaborator = userRole === UserRole.USER;
+    const resolvedStatus = isCollaborator
+      ? 'rascunho'
+      : this.resolveArticleStatus(createArticleDto.status, pubDate);
+    const workflowStatus = isCollaborator
+      ? 'pendente_aprovacao'
+      : resolvedStatus === 'publicado' || resolvedStatus === 'programado'
+        ? 'aprovado'
+        : 'rascunho';
 
     return this.prisma.article.create({
       data: {
         ...rest,
         status: resolvedStatus,
+        workflowStatus,
         publicationDate:
           resolvedStatus === 'publicado' && !pubDate ? new Date() : pubDate,
         expirationDate: expDate,
@@ -182,6 +189,7 @@ export class ArticlesService {
       },
       where: {
         status: 'publicado',
+        deletedAt: null,
         OR: [{ publicationDate: null }, { publicationDate: { lte: now } }],
         AND: [
           {
@@ -255,9 +263,7 @@ export class ArticlesService {
     organizationId?: string,
     pagination?: PaginationInput,
   ) {
-    const statusWhere: any = status
-      ? status
-      : { not: 'excluido' };
+    const statusWhere: any = status ? status : { not: 'excluido' };
     const { skip, take } = resolvePagination(pagination);
     const trimmedSearch = search?.trim();
     const ftsIds = trimmedSearch
@@ -341,16 +347,11 @@ export class ArticlesService {
       where: {
         slug,
         status: 'publicado',
-        OR: [
-          { publicationDate: null },
-          { publicationDate: { lte: now } },
-        ],
+        deletedAt: null,
+        OR: [{ publicationDate: null }, { publicationDate: { lte: now } }],
         AND: [
           {
-            OR: [
-              { expirationDate: null },
-              { expirationDate: { gt: now } },
-            ],
+            OR: [{ expirationDate: null }, { expirationDate: { gt: now } }],
           },
         ],
       },
@@ -422,6 +423,7 @@ export class ArticlesService {
   async update(
     id: string,
     updateArticleDto: UpdateArticleDto,
+    userRole?: UserRole,
   ): Promise<Article> {
     const {
       categoryIds,
@@ -433,9 +435,12 @@ export class ArticlesService {
 
     const currentArticle = await this.findOneById(id);
 
-    const pubDate = updateArticleDto.publicationDate !== undefined
-      ? (updateArticleDto.publicationDate ? new Date(updateArticleDto.publicationDate) : null)
-      : currentArticle.publicationDate;
+    const pubDate =
+      updateArticleDto.publicationDate !== undefined
+        ? updateArticleDto.publicationDate
+          ? new Date(updateArticleDto.publicationDate)
+          : null
+        : currentArticle.publicationDate;
 
     if (updateArticleDto.publicationDate !== undefined) {
       formattedData.publicationDate = pubDate;
@@ -468,6 +473,41 @@ export class ArticlesService {
       }
     }
 
+    if (userRole === UserRole.USER) {
+      if (currentArticle.status === 'publicado') {
+        const pendingData = {
+          ...formattedData,
+          ...(categoryIds ? { categoryIds } : {}),
+        };
+        return this.prisma.article.update({
+          where: { id },
+          data: {
+            workflowStatus: 'pendente_aprovacao',
+            pendingAction: {
+              type: 'update',
+              data: pendingData,
+              requestedAt: new Date().toISOString(),
+            },
+          },
+          include: {
+            organization: true,
+            categories: true,
+          },
+        });
+      }
+
+      formattedData.status = 'rascunho';
+      formattedData.workflowStatus = 'pendente_aprovacao';
+    } else {
+      formattedData.pendingAction = Prisma.DbNull;
+      if (
+        formattedData.status === 'publicado' ||
+        formattedData.status === 'programado'
+      ) {
+        formattedData.workflowStatus = 'aprovado';
+      }
+    }
+
     if (categoryIds) {
       formattedData.categories = {
         set: categoryIds.map((cid) => ({ id: cid })),
@@ -485,18 +525,135 @@ export class ArticlesService {
   }
 
   /**
-   * Soft Delete:
-   * Marca o artigo como 'excluido' e atualiza o 'updatedAt'.
-   * O artigo será removido fisicamente após 90 dias pelo scheduler.
+   * Soft Delete (padrão e obrigatório para MANAGER) ou solicitação de exclusão para USER.
    */
-  async remove(id: string): Promise<Article> {
+  async remove(
+    id: string,
+    userRole?: UserRole,
+    hardDelete = false,
+  ): Promise<Article> {
     await this.findOneById(id);
+
+    if (userRole === UserRole.USER) {
+      return this.prisma.article.update({
+        where: { id },
+        data: {
+          workflowStatus: 'pendente_aprovacao',
+          pendingAction: {
+            type: 'delete',
+            requestedAt: new Date().toISOString(),
+          },
+        },
+      });
+    }
+
+    if (userRole === UserRole.ADMIN && hardDelete) {
+      return this.prisma.article.delete({ where: { id } });
+    }
 
     return this.prisma.article.update({
       where: { id },
       data: {
         status: 'excluido',
+        deletedAt: new Date(),
+        workflowStatus: 'excluido',
+        pendingAction: Prisma.DbNull,
         updatedAt: new Date(),
+      },
+    });
+  }
+
+  async approve(id: string, approverId?: string): Promise<Article> {
+    const current = await this.findOneById(id);
+    const pending = current.pendingAction as {
+      type?: string;
+      data?: Record<string, any>;
+    } | null;
+
+    if (pending?.type === 'delete') {
+      return this.prisma.article.update({
+        where: { id },
+        data: {
+          status: 'excluido',
+          deletedAt: new Date(),
+          workflowStatus: 'excluido',
+          pendingAction: Prisma.DbNull,
+          approvedById: approverId ?? null,
+          approvedAt: new Date(),
+        },
+      });
+    }
+
+    if (pending?.type === 'update' && pending.data) {
+      const { categoryIds, ...restData } = pending.data;
+      const pubDate = restData.publicationDate
+        ? new Date(restData.publicationDate)
+        : current.publicationDate;
+      const resolvedStatus = this.resolveArticleStatus(
+        restData.status || 'publicado',
+        pubDate,
+      );
+
+      return this.prisma.article.update({
+        where: { id },
+        data: {
+          ...restData,
+          status: resolvedStatus,
+          publicationDate:
+            resolvedStatus === 'publicado' && !pubDate ? new Date() : pubDate,
+          deletedAt: null,
+          workflowStatus: 'aprovado',
+          pendingAction: Prisma.DbNull,
+          approvedById: approverId ?? null,
+          approvedAt: new Date(),
+          ...(Array.isArray(categoryIds)
+            ? {
+                categories: {
+                  set: categoryIds.map((cid: string) => ({ id: cid })),
+                },
+              }
+            : {}),
+        },
+        include: {
+          organization: true,
+          categories: true,
+        },
+      });
+    }
+
+    const pubDate = current.publicationDate;
+    const resolvedStatus =
+      current.status === 'programado' && pubDate && pubDate > new Date()
+        ? 'programado'
+        : 'publicado';
+
+    return this.prisma.article.update({
+      where: { id },
+      data: {
+        status: resolvedStatus,
+        publicationDate: pubDate ?? new Date(),
+        deletedAt: null,
+        workflowStatus: 'aprovado',
+        pendingAction: Prisma.DbNull,
+        approvedById: approverId ?? null,
+        approvedAt: new Date(),
+      },
+      include: {
+        organization: true,
+        categories: true,
+      },
+    });
+  }
+
+  async reject(id: string, approverId?: string): Promise<Article> {
+    await this.findOneById(id);
+    return this.prisma.article.update({
+      where: { id },
+      data: {
+        workflowStatus: 'rejeitado',
+        pendingAction: Prisma.DbNull,
+        approvedById: approverId ?? null,
+        approvedAt: new Date(),
       },
     });
   }

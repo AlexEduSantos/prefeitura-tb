@@ -54,9 +54,19 @@ export class OfficialGazetteController {
     return this.officialGazetteService.findAllAdmin(query);
   }
 
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Get('admin/:id')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'OfficialGazette'))
+  @ApiOperation({
+    summary: 'Buscar detalhes administrativos de um boletim oficial por ID',
+  })
+  findOneAdmin(@Param('id') id: string) {
+    return this.officialGazetteService.findOneAdmin(id);
+  }
+
   @Get(':id')
   @ApiOperation({
-    summary: 'Buscar detalhes de um boletim oficial por ID',
+    summary: 'Buscar detalhes públicos de um boletim oficial por ID',
   })
   findOne(@Param('id') id: string) {
     return this.officialGazetteService.findOne(id);
@@ -70,7 +80,8 @@ export class OfficialGazetteController {
   @Post()
   @CheckPolicies((ability) => ability.can(Action.Create, 'OfficialGazette'))
   @ApiOperation({
-    summary: 'Cadastrar nova edição do Diário/Boletim Oficial (ADMIN e PUBLISHER)',
+    summary:
+      'Cadastrar nova edição do Diário/Boletim Oficial (ADMIN e PUBLISHER)',
   })
   @ApiResponse({ status: 201, description: 'Boletim cadastrado com sucesso.' })
   create(
@@ -78,7 +89,10 @@ export class OfficialGazetteController {
     @Req() req: Request,
   ) {
     const user: any = req.user;
-    return this.officialGazetteService.create(createOfficialGazetteDto, user.id);
+    return this.officialGazetteService.create(
+      createOfficialGazetteDto,
+      user.id,
+    );
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
@@ -110,4 +124,3 @@ export class OfficialGazetteController {
     return this.officialGazetteService.remove(id);
   }
 }
-

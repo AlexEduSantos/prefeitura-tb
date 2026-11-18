@@ -141,9 +141,31 @@ Melhorias de produto e auditoria para o futuro.
 
 ## BACKLOG PÓS-LANÇAMENTO (Site Teste)
 
-- Implantar 2FA/TOTP persistido em banco para ADMIN e PUBLISHER;
+- Implantar 2FA/TOTP persistido em banco para ADMIN e PUBLISHER *(fora do TO-DO 4.0)*;
 - Vincular `Media.extractedText` → `OfficialGazette.contentText` via evento `media.ready`;
 - Aplicar `pnpm.overrides` no `frontend/package.json` e executar Playwright E2E completo contra servidor no CI.
+
+---
+
+# TO-DO 4.0: Varredura LGPD, Separação Admin vs Public e Fluxo de Aprovação MANAGER (Sem 2FA/TOTP)
+
+## NÍVEL 1: Varredura Completa de Vazamentos de E-mail e Papel de Servidores (LGPD)
+
+[x] Bloquear exposição de `email`, `role`, `phone`, `username` e `lastLogin` de `user`/`author`/`editor`/`createdBy`/`updatedBy` em todas as consultas públicas e adicionar sanitização contextual para rotas públicas no `ExcludePasswordInterceptor`.
+[x] Corrigir especificamente `GET /official-gazette/:id` para não expor `email` nem `role` de `createdBy`/`updatedBy`, criando `GET /official-gazette/admin/:id` autenticado.
+
+## NÍVEL 2: Separação Completa Admin vs Public em Todos os Módulos
+
+[x] Separar rotas públicas (filtrando `active: true`, `published: true` / `status: 'publicado'`, `deletedAt: null` e janelas de publicação/expiração) e rotas `/admin` (protegidas por `SessionGuard + PoliciesGuard + @CheckPolicies`) em `Popups`, `Galleries`, `GalleryMedia`, `Story`, `Organizations`, `Services`, `Menus`, `MenuItem`, `Pages`, `Media` e `Analytics`.
+[x] Tornar `userId` imutável em `PopupsService.update` e remover fallback `createPageDto.userId` em `PagesService.create`.
+[x] Sanitizar `page`/`limit` em `MediaController.listFiles` (`GET /media/list/*prefix`).
+[x] Atualizar os services e viewmodels do frontend (`popups.service.ts`, `gallery.service.ts`, `organization.service.ts`, `stories.service.ts`, `gallery.viewmodal.tsx`) para consumir as rotas `/admin` no painel e corrigir `/story/item/:id` → `/story/items/:id`.
+
+## NÍVEL 3: Role MANAGER, Fluxo de Aprovação (USER → MANAGER) e Soft Delete
+
+[x] Adicionar `Action.Approve` e `Action.SoftDelete` e implementar as regras de `UserRole.MANAGER` e `UserRole.USER` no `CaslAbilityFactory` (proibindo `Action.Delete` físico e gestão de `User`/`Admin` ao `MANAGER`, e protegendo `AuthController.register` com `'Admin'`).
+[x] Adicionar campos de workflow e soft delete (`workflowStatus`, `pendingAction`, `approvedById`, `approvedAt`, `deletedAt`, e `active` em `Services`) no `schema.prisma` com migration oficial.
+[x] Implementar submissão sujeita a aprovação (`USER`), aprovação/rejeição (`MANAGER`/`ADMIN` via `PATCH /:id/approve` e `PATCH /:id/reject`) e exclusão apenas via Soft Delete para `MANAGER` em `Pages`, `Articles`, `Popups`, `Galleries` e `Services`.
 
 ## Orientações Para refatoração
 

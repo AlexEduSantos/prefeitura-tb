@@ -7,25 +7,27 @@ export class OrganizationService {
   static async getOrganizations(
     includeInactive = false,
   ): Promise<IOrganization[]> {
-    const response = await fetch(
-      `${API_URL}/organizations?includeInactive=${includeInactive}`,
-      {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      },
-    );
+    const endpoint = includeInactive
+      ? `${API_URL}/organizations/admin?includeInactive=true`
+      : `${API_URL}/organizations`;
+    const response = await fetch(endpoint, {
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
     if (!response.ok) throw new Error("Erro ao buscar organizações");
     return response.json();
   }
 
   static async getTree(includeInactive?: string): Promise<IOrganization[]> {
-    const response = await fetch(
-      `${API_URL}/organizations/tree?includeInactive=${includeInactive || "active"}`,
-      {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      },
-    );
+    const isAdminQuery =
+      includeInactive === "all" || includeInactive === "inactive";
+    const endpoint = isAdminQuery
+      ? `${API_URL}/organizations/admin/tree?includeInactive=${includeInactive}`
+      : `${API_URL}/organizations/tree`;
+    const response = await fetch(endpoint, {
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
     if (!response.ok)
       throw new Error("Erro ao buscar organograma de organizações");
     return response.json();

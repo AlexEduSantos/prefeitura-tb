@@ -141,6 +141,7 @@ export class MenusService {
       const menus = await this.prisma.menu.findMany({
         where: {
           [field]: filterValue,
+          active: true,
         },
         include: {
           space: true,
@@ -149,11 +150,18 @@ export class MenusService {
             where: { visible: true },
             orderBy: [{ parentId: 'asc' }, { order: 'asc' }],
             include: {
-              page: { include: { space: { select: { slug: true } } } },
+              page: {
+                select: {
+                  id: true,
+                  title: true,
+                  slug: true,
+                  published: true,
+                  space: { select: { slug: true } },
+                },
+              },
               category: true,
               parent: true,
               children: true,
-              menu: true,
             },
           },
         },

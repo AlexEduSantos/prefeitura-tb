@@ -14,6 +14,21 @@ import { Prisma } from '../generated/prisma/client';
 export class StoryService {
   constructor(private prisma: PrismaService) {}
 
+  private buildActiveItemWindowWhere(
+    now = new Date(),
+  ): Prisma.StoriesItemWhereInput {
+    return {
+      AND: [
+        {
+          OR: [{ publishedDate: null }, { publishedDate: { lte: now } }],
+        },
+        {
+          OR: [{ expirationDate: null }, { expirationDate: { gt: now } }],
+        },
+      ],
+    };
+  }
+
   // ----- Story -----
 
   async create(createStoryDto: CreateStoryDto) {
@@ -72,18 +87,59 @@ export class StoryService {
             },
           },
           items: {
-            where: {
-              OR: [
-                {
-                  publishedDate: { lte: new Date() },
-                  expirationDate: { gte: new Date() },
-                },
-                {
-                  publishedDate: null,
-                  expirationDate: null,
-                },
-              ],
+            where: this.buildActiveItemWindowWhere(),
+            orderBy: { order: 'asc' },
+            include: {
+              media: { select: { key: true, altText: true } },
             },
+          },
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit,
+      }),
+      this.prisma.stories.count({ where }),
+    ]);
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async findAllAdmin(params: {
+    page?: number;
+    limit?: number;
+    sortBy?: string;
+    sortOrder?: 'asc' | 'desc';
+    title?: string;
+  }) {
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'asc',
+      title,
+    } = params;
+    const skip = (page - 1) * limit;
+
+    const where: Prisma.StoriesWhereInput = {};
+    if (title) where.title = { contains: title, mode: 'insensitive' };
+
+    const [data, total] = await this.prisma.$transaction([
+      this.prisma.stories.findMany({
+        where,
+        include: {
+          cover: {
+            select: {
+              key: true,
+              altText: true,
+            },
+          },
+          items: {
             orderBy: { order: 'asc' },
             include: {
               media: { select: { key: true, altText: true } },
@@ -117,10 +173,28 @@ export class StoryService {
           },
         },
         items: {
-          where: {
-            publishedDate: { lte: new Date() },
-            expirationDate: { gte: new Date() },
+          where: this.buildActiveItemWindowWhere(),
+          orderBy: { order: 'asc' },
+        },
+      },
+    });
+
+    if (!story) throw new NotFoundException('Destaque não encontrado');
+
+    return story;
+  }
+
+  async findOneAdmin(id: string) {
+    const story = await this.prisma.stories.findUnique({
+      where: { id },
+      include: {
+        cover: {
+          select: {
+            key: true,
+            altText: true,
           },
+        },
+        items: {
           orderBy: { order: 'asc' },
         },
       },
@@ -203,6 +277,7 @@ export class StoryService {
 
   async findAllStoryItems() {
     return this.prisma.storiesItem.findMany({
+      where: this.buildActiveItemWindowWhere(),
       include: {
         media: { select: { key: true, altText: true } },
         story: true,
@@ -215,8 +290,7 @@ export class StoryService {
     return this.prisma.storiesItem.findMany({
       where: {
         storyId,
-        publishedDate: { lte: new Date() },
-        expirationDate: { gte: new Date() },
+        ...this.buildActiveItemWindowWhere(),
       },
       include: {
         media: { select: { key: true, altText: true } },
@@ -227,8 +301,11 @@ export class StoryService {
   }
 
   async findStoryItemById(id: string) {
-    const storyItem = await this.prisma.storiesItem.findUnique({
-      where: { id },
+    const storyItem = await this.prisma.storiesItem.findFirst({
+      where: {
+        id,
+        ...this.buildActiveItemWindowWhere(),
+      },
       include: {
         media: { select: { key: true, altText: true } },
         story: true,

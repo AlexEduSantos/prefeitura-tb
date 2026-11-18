@@ -21,14 +21,28 @@ import { Action } from '../casl/action.enum';
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Get('admin')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Organization'))
+  async findAllAdmin(@Query('includeInactive') includeInactive?: string) {
+    return this.organizationsService.findAllAdmin(includeInactive === 'true');
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Get('admin/tree')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Organization'))
+  async findTreeAdmin(@Query('includeInactive') includeInactive?: string) {
+    return this.organizationsService.findTreeAdmin(includeInactive || 'all');
+  }
+
   @Get()
-  async findAll(@Query('includeInactive') includeInactive?: string) {
-    return this.organizationsService.findAll(includeInactive === 'true');
+  async findAll() {
+    return this.organizationsService.findAll(false);
   }
 
   @Get('tree')
-  async findTree(@Query('includeInactive') includeInactive?: string) {
-    return this.organizationsService.findTree(includeInactive || 'active');
+  async findTree() {
+    return this.organizationsService.findTree('active');
   }
 
   @Get(':id')

@@ -199,4 +199,28 @@ export class ArticleService {
 
     return response.json();
   }
+
+  static async approveArticle(id: string): Promise<IArticle> {
+    const response = await csrfFetch(`${API_URL}/articles/${id}/approve`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao aprovar notícia");
+    }
+    return response.json();
+  }
+
+  static async rejectArticle(id: string): Promise<IArticle> {
+    const response = await csrfFetch(`${API_URL}/articles/${id}/reject`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao rejeitar notícia");
+    }
+    return response.json();
+  }
 }

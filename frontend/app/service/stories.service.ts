@@ -4,6 +4,25 @@ import { csrfFetch } from "@/lib/csrf";
 const API_URL = process.env.NEXT_PUBLIC_API_URL + "/story";
 
 export class StoriesService {
+  static async getAdminStoriesList(params?: {
+    page?: number;
+    limit?: number;
+    title?: string;
+  }) {
+    const query = new URLSearchParams();
+    if (params?.page) query.append("page", String(params.page));
+    if (params?.limit) query.append("limit", String(params.limit));
+    if (params?.title) query.append("title", params.title);
+    const url = `${API_URL}/admin?${query.toString()}`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!response.ok) throw new Error("Erro ao buscar destaques administrativos");
+    return response.json();
+  }
+
   static async getStoriesList(params?: {
     page?: number;
     limit?: number;
@@ -75,7 +94,7 @@ export class StoriesService {
   }
 
   static async getStoriesItemById(id: string) {
-    const response = await fetch(`${API_URL}/item/${id}`, {
+    const response = await fetch(`${API_URL}/items/${id}`, {
       method: "GET",
       credentials: "include",
     });
@@ -133,7 +152,7 @@ export class StoriesService {
   }
 
   static async deleteStoriesItem(id: string) {
-    const response = await csrfFetch(`${API_URL}/item/${id}`, {
+    const response = await csrfFetch(`${API_URL}/items/${id}`, {
       method: "DELETE",
       credentials: "include",
     });

@@ -72,7 +72,7 @@ export class AuthController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Post('register')
-  @CheckPolicies((ability) => ability.can(Action.Create, 'User'))
+  @CheckPolicies((ability) => ability.can(Action.Create, 'Admin'))
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }

@@ -4,8 +4,22 @@ import { csrfFetch } from "@/lib/csrf";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export class PopupsService {
-  static async getPopupsList(): Promise<IPopups[]> {
+  static async getPublicPopupsList(): Promise<IPopups[]> {
     const response = await fetch(`${API_URL}/popups`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar popups públicos");
+    }
+
+    return response.json();
+  }
+
+  static async getPopupsList(): Promise<IPopups[]> {
+    const response = await fetch(`${API_URL}/popups/admin`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -20,7 +34,7 @@ export class PopupsService {
   }
 
   static async getPopupsById(id: string): Promise<IPopups> {
-    const response = await fetch(`${API_URL}/popups/${id}`, {
+    const response = await fetch(`${API_URL}/popups/admin/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -100,6 +114,34 @@ export class PopupsService {
       throw new Error("Erro ao deletar popup");
     }
 
+    return response.json();
+  }
+
+  static async approvePopup(id: string): Promise<IPopups> {
+    const response = await csrfFetch(`${API_URL}/popups/${id}/approve`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao aprovar popup");
+    }
+    return response.json();
+  }
+
+  static async rejectPopup(id: string): Promise<IPopups> {
+    const response = await csrfFetch(`${API_URL}/popups/${id}/reject`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      throw new Error("Erro ao rejeitar popup");
+    }
     return response.json();
   }
 }

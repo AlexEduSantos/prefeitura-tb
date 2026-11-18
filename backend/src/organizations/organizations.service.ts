@@ -22,6 +22,20 @@ export class OrganizationsService {
   }
 
   async findAll(includeInactive = false) {
+    // Leitura pública sempre força active: true
+    const _ignore = includeInactive;
+    return this.prisma.organization.findMany({
+      where: { active: true },
+      include: {
+        parent: true,
+        children: { where: { active: true } },
+        defaultSpace: true,
+      },
+      orderBy: { title: 'asc' },
+    });
+  }
+
+  async findAllAdmin(includeInactive = false) {
     return this.prisma.organization.findMany({
       where: includeInactive ? undefined : { active: true },
       include: {
@@ -33,7 +47,26 @@ export class OrganizationsService {
     });
   }
 
-  async findTree(includeInactive: string) {
+  async findTree(_includeInactive = 'active') {
+    return this.prisma.organization.findMany({
+      where: { parentId: null, active: true },
+      include: {
+        defaultSpace: true,
+        children: {
+          where: { active: true },
+          include: {
+            defaultSpace: true,
+            children: {
+              where: { active: true },
+            },
+          },
+        },
+      },
+      orderBy: { title: 'asc' },
+    });
+  }
+
+  async findTreeAdmin(includeInactive: string) {
     let onlyVisible: boolean | undefined = undefined;
 
     if (includeInactive === 'all') {
@@ -55,7 +88,6 @@ export class OrganizationsService {
     } else if (includeInactive === 'inactive') {
       onlyVisible = false;
     }
-    // Retorna as organizações de nível raiz com seus filhos recursivos
     return this.prisma.organization.findMany({
       where: { parentId: null, active: onlyVisible },
       include: {
@@ -75,6 +107,21 @@ export class OrganizationsService {
   }
 
   async findOne(id: string) {
+    const org = await this.prisma.organization.findFirst({
+      where: { id, active: true },
+      include: {
+        parent: true,
+        children: { where: { active: true } },
+        defaultSpace: true,
+      },
+    });
+    if (!org) {
+      throw new NotFoundException(`Organização com ID ${id} não encontrada.`);
+    }
+    return org;
+  }
+
+  async findOneAdmin(id: string) {
     const org = await this.prisma.organization.findUnique({
       where: { id },
       include: {
@@ -98,7 +145,7 @@ export class OrganizationsService {
   }
 
   async update(id: string, updateOrganizationDto: UpdateOrganizationDto) {
-    await this.findOne(id);
+    await this.findOneAdmin(id);
     return this.prisma.organization.update({
       where: { id },
       data: updateOrganizationDto,
@@ -110,7 +157,7 @@ export class OrganizationsService {
   }
 
   async remove(id: string) {
-    await this.findOne(id);
+    await this.findOneAdmin(id);
     return this.prisma.organization.delete({
       where: { id },
     });

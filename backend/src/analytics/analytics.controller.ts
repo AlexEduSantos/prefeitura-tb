@@ -2,8 +2,14 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { SessionGuard } from '../auth/session.guard';
 import { PoliciesGuard } from '../casl/policies.guard';
+import { CheckPolicies } from '../casl/check-policies.decorator';
+import { Action } from '../casl/action.enum';
 
 @UseGuards(SessionGuard, PoliciesGuard)
+@CheckPolicies(
+  (ability) =>
+    ability.can(Action.Read, 'Admin') || ability.can(Action.Approve, 'Page'),
+)
 @Controller('analytics')
 export class AnalyticsController {
   constructor(private analyticsService: AnalyticsService) {}

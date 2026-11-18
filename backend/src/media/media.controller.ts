@@ -127,6 +127,7 @@ export class MediaController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get('list/*prefix')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   async listFiles(
     @Param('prefix') prefix: string = '',
     @Query('page') page: string = '1',
@@ -134,8 +135,8 @@ export class MediaController {
     @Query('sort') sort: string = 'desc',
   ) {
     const normalizedPrefix = prefix === 'root' ? '' : prefix;
-    const pageNum = parseInt(page, 10);
-    const limitNum = parseInt(limit, 10);
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
     const sortOrder =
       sort.toLowerCase() === 'asc' ? ('asc' as const) : ('desc' as const);
 
@@ -271,6 +272,7 @@ export class MediaController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get()
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -282,24 +284,28 @@ export class MediaController {
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get('images')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   findImages() {
     return this.mediaService.findImages();
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get('documents')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   findDocuments() {
     return this.mediaService.findDocuments();
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get('videos')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   findVideos() {
     return this.mediaService.findVideos();
   }
 
   @UseGuards(SessionGuard, PoliciesGuard)
   @Get(':id')
+  @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   findOne(@Param('id') id: string) {
     return this.mediaService.findOne(id);
   }

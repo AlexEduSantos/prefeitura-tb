@@ -66,7 +66,7 @@ export class FoldersService implements OnModuleInit {
                 Buffer.from(''),
                 'application/octet-stream',
               );
-            } catch (e) {
+            } catch (_e) {
               // Ignore S3 errors during startup
             }
           }

@@ -7,34 +7,69 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+const PRIVATE_ADMIN_ROUTE_RE =
+  /^\/(user|auth|audit-logs)(\/|$|\?)|(?:^|\/)admin(?:\/|$|\?)/i;
+
+const USER_RELATION_KEYS = new Set([
+  'user',
+  'author',
+  'editor',
+  'createdBy',
+  'updatedBy',
+]);
+
+const PUBLIC_USER_PII_FIELDS = [
+  'email',
+  'role',
+  'phone',
+  'username',
+  'lastLogin',
+] as const;
+
 @Injectable()
 export class ExcludePasswordInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const req = context.switchToHttp?.()?.getRequest?.();
+    const url: string = req?.originalUrl || req?.url || '';
+    const isPrivateAdminRoute = PRIVATE_ADMIN_ROUTE_RE.test(url);
+
     return next
       .handle()
-      .pipe(map((data) => this.removePassword(data, new WeakSet())));
+      .pipe(
+        map((data) =>
+          this.sanitizePayload(data, new WeakSet(), !isPrivateAdminRoute),
+        ),
+      );
   }
 
-  private removePassword(obj: any, visited: WeakSet<object>): any {
-    // 1. Casos base: null, não-objetos, instâncias de Date, ou se já visitamos
+  private sanitizePayload(
+    obj: any,
+    visited: WeakSet<object>,
+    stripUserRelationPii: boolean,
+    isUserRelation = false,
+  ): any {
     if (obj === null || typeof obj !== 'object' || obj instanceof Date) {
       return obj;
     }
 
     if (visited.has(obj)) {
-      return obj; // Já processado, retorna para evitar loop
+      return obj;
     }
 
-    // Marca como visitado
     visited.add(obj);
 
-    // 2. Lida com Arrays
     if (Array.isArray(obj)) {
-      return obj.map((item) => this.removePassword(item, visited));
+      return obj.map((item) =>
+        this.sanitizePayload(
+          item,
+          visited,
+          stripUserRelationPii,
+          isUserRelation,
+        ),
+      );
     }
 
-    // 3. Lida com Objetos
-    const newObj = { ...obj };
+    const newObj: Record<string, any> = { ...obj };
     if ('password' in newObj) {
       delete newObj.password;
     }
@@ -42,9 +77,22 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
       delete newObj.activationTokenHash;
     }
 
-    for (const key in newObj) {
+    if (stripUserRelationPii && isUserRelation) {
+      for (const field of PUBLIC_USER_PII_FIELDS) {
+        if (field in newObj) {
+          delete newObj[field];
+        }
+      }
+    }
+
+    for (const key of Object.keys(newObj)) {
       if (newObj[key] && typeof newObj[key] === 'object') {
-        newObj[key] = this.removePassword(newObj[key], visited);
+        newObj[key] = this.sanitizePayload(
+          newObj[key],
+          visited,
+          stripUserRelationPii,
+          USER_RELATION_KEYS.has(key),
+        );
       }
     }
 

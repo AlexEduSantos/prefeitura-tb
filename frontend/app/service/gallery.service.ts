@@ -9,11 +9,25 @@ export class GalleryService {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
     });
 
     if (!response.ok) {
       throw new Error("Erro ao buscar galeria");
+    }
+
+    return response.json();
+  }
+
+  static async getAdminGalleryList(): Promise<IGallery[]> {
+    const response = await fetch(`${API_URL}/galleries/admin`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao buscar galerias administrativas");
     }
 
     return response.json();
@@ -64,6 +78,38 @@ export class GalleryService {
 
     if (!response.ok) {
       throw new Error("Erro ao deletar galeria");
+    }
+
+    return response.json();
+  }
+
+  static async approveGallery(id: string): Promise<IGallery> {
+    const response = await csrfFetch(`${API_URL}/galleries/${id}/approve`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao aprovar galeria");
+    }
+
+    return response.json();
+  }
+
+  static async rejectGallery(id: string): Promise<IGallery> {
+    const response = await csrfFetch(`${API_URL}/galleries/${id}/reject`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Erro ao rejeitar galeria");
     }
 
     return response.json();

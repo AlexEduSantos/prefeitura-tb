@@ -125,9 +125,9 @@ describe('TO-DO 3.0 Nível 3 — Correções Críticas P0/P1 da Auditoria', () =
   describe('4. LGPD em GalleriesService, Imutabilidade em ServicesService e Limite de Paginação', () => {
     it('GalleriesService.findAll e findOne não devem selecionar email do usuário', async () => {
       const findMany = vi.fn().mockResolvedValue([]);
-      const findUnique = vi.fn().mockResolvedValue({ id: 'g1' });
+      const findFirst = vi.fn().mockResolvedValue({ id: 'g1' });
       const service = new GalleriesService({
-        galleries: { findMany, findUnique },
+        galleries: { findMany, findFirst },
       } as any);
 
       await service.findAll();
@@ -137,7 +137,7 @@ describe('TO-DO 3.0 Nível 3 — Correções Críticas P0/P1 da Auditoria', () =
       });
 
       await service.findOne('g1');
-      expect(findUnique.mock.calls[0][0].include.user.select).toEqual({
+      expect(findFirst.mock.calls[0][0].include.user.select).toEqual({
         name: true,
         avatar: true,
       });

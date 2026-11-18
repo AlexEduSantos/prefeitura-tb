@@ -20,10 +20,7 @@ import { ConfigService } from '@nestjs/config';
 import { Media } from '../generated/prisma/client';
 import { detectFileTypeFromBuffer } from '../common/utils/file-type-detector';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
-import {
-  PaginationInput,
-  resolvePagination,
-} from '../common/utils/pagination';
+import { PaginationInput, resolvePagination } from '../common/utils/pagination';
 
 export function sanitizeFilename(title: string): string {
   return title
@@ -178,7 +175,7 @@ export class MediaService {
 
   async uploadDocument(createMediaDto: CreateMediaDto, file: any) {
     const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
-    const type = await detectFileTypeFromBuffer(file.buffer);
+    const type = detectFileTypeFromBuffer(file.buffer);
     if (!type || !allowedExtensions.includes(type.ext)) {
       throw new BadRequestException(
         'Arquivo não corresponde ao tipo declarado',
@@ -210,7 +207,7 @@ export class MediaService {
 
   async uploadVideo(createMediaDto: CreateMediaDto, file: any): Promise<Media> {
     const allowedExtensions = ['mp4', 'webm', 'ogg', 'mkv'];
-    const type = await detectFileTypeFromBuffer(file.buffer);
+    const type = detectFileTypeFromBuffer(file.buffer);
     if (!type || !allowedExtensions.includes(type.ext)) {
       throw new BadRequestException(
         'Arquivo não corresponde ao tipo declarado',
