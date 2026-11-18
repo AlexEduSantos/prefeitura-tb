@@ -16,11 +16,12 @@ export function useAuthViewModel() {
       const loggedUser = await AuthService.login(email, password);
       setUser(loggedUser);
       router.push("/administrator");
-    } catch (err: any) {
-      setError(err.message || "Ocorreu um erro ao fazer login");
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "Ocorreu um erro ao fazer login",
+      );
     } finally {
       setLoading(false);
-      router.push("/administrator");
     }
   };
 
@@ -31,8 +32,10 @@ export function useAuthViewModel() {
       const newUser = await AuthService.register(name, email, password);
       setUser(newUser);
       router.push("/painel"); // Redireciona para o painel após o registro
-    } catch (err: any) {
-      setError(err.message || "Ocorreu um erro ao registrar");
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "Ocorreu um erro ao registrar",
+      );
     } finally {
       setLoading(false);
     }
@@ -45,8 +48,8 @@ export function useAuthViewModel() {
       await AuthService.logout();
       setUser(null);
       router.push("/login");
-    } catch (err: any) {
-      setError(err.message || "Ocorreu um erro ao sair");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Ocorreu um erro ao sair");
     } finally {
       setLoading(false);
     }

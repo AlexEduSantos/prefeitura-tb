@@ -56,7 +56,7 @@ export class AuthController {
 
           // Atualiza o token CSRF para vinculá-lo ao novo sessionID autenticado
           if (res && typeof res.cookie === 'function') {
-            generateCsrfToken(req, res);
+            generateCsrfToken(req, res, true);
           }
 
           // ✅ Dispara o evento em background e NÃO espera (sem await)
@@ -117,7 +117,7 @@ export class AuthController {
     @Request() req: ExpressRequest,
     @Res({ passthrough: true }) res: ExpressResponse,
   ) {
-    const csrfToken = generateCsrfToken(req, res);
+    const csrfToken = generateCsrfToken(req, res, true);
     return { csrfToken };
   }
 

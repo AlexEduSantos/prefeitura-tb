@@ -177,6 +177,46 @@ describe('TO-DO 2.0 / 3.0 — Hardening, CSRF Estrito e Ativação de Conta', ()
       expect(statusErr).toHaveBeenCalledWith(403);
       expect(nextBlocked).not.toHaveBeenCalled();
     });
+
+    it('deve aceitar login pré-autenticação mesmo quando express-session (saveUninitialized: false) gera sessionIDs efêmeros distintos', () => {
+      const cookies: Record<string, string> = {};
+      const reqGetToken: any = {
+        method: 'GET',
+        url: '/auth/csrf-token',
+        headers: {},
+        sessionID: 'ephemeral-sid-1',
+        session: {},
+      };
+      const resGetToken: any = {
+        cookie: vi.fn((name: string, val: string) => {
+          cookies[name] = val;
+        }),
+      };
+
+      const token = generateCsrfToken(reqGetToken, resGetToken, true);
+      expect(cookies[CSRF_COOKIE_NAME]).toBe(token);
+
+      const nextLogin = vi.fn();
+      const statusLogin = vi.fn().mockReturnValue({ json: vi.fn() });
+      const reqPostLogin: any = {
+        method: 'POST',
+        originalUrl: '/auth/login',
+        sessionID: 'ephemeral-sid-2',
+        session: {},
+        headers: {
+          cookie: `${CSRF_COOKIE_NAME}=${encodeURIComponent(token)}`,
+          'x-csrf-token': token,
+        },
+      };
+
+      csrfProtectionMiddleware(
+        reqPostLogin,
+        { status: statusLogin, cookie: vi.fn() } as any,
+        nextLogin,
+      );
+      expect(nextLogin).toHaveBeenCalledTimes(1);
+      expect(statusLogin).not.toHaveBeenCalled();
+    });
   });
 
   describe('3. Ativação de Conta por Link de E-mail (Expiração, Uso Único e Bloqueio de Inativos)', () => {

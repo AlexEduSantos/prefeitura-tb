@@ -67,7 +67,14 @@ export async function ensureCsrfToken(forceRefresh = false): Promise<string | nu
       return getCsrfTokenFromCookie();
     }
     const data = await response.json().catch(() => null);
-    return (typeof data?.csrfToken === 'string' && data.csrfToken) || getCsrfTokenFromCookie();
+    const refreshed =
+      typeof data?.csrfToken === 'string' && data.csrfToken
+        ? data.csrfToken
+        : null;
+    if (refreshed && typeof document !== 'undefined') {
+      document.cookie = `${CSRF_COOKIE_NAME}=${encodeURIComponent(refreshed)}; path=/; SameSite=Lax`;
+    }
+    return refreshed || getCsrfTokenFromCookie();
   } catch {
     return getCsrfTokenFromCookie();
   }
@@ -91,9 +98,23 @@ export async function csrfFetch(
     }
   }
 
-  return fetch(input, {
+  const response = await fetch(input, {
     ...init,
     headers,
     credentials: init.credentials ?? 'include',
   });
+
+  if (response.status === 403 && MUTATING_METHODS.has(method)) {
+    const refreshedToken = await ensureCsrfToken(true);
+    if (refreshedToken) {
+      headers.set(CSRF_HEADER_NAME, refreshedToken);
+      return fetch(input, {
+        ...init,
+        headers,
+        credentials: init.credentials ?? 'include',
+      });
+    }
+  }
+
+  return response;
 }

@@ -11,10 +11,22 @@ function getCookieSecret(): string {
   );
 }
 
+export function resolveSessionIdentifier(req: Request): string {
+  const anyReq = req as any;
+  if (anyReq.session && typeof anyReq.session === 'object') {
+    const isAuthenticated = Boolean(
+      anyReq.user || anyReq.session?.passport?.user,
+    );
+    if (!isAuthenticated) {
+      return 'anonymous-session';
+    }
+  }
+  return anyReq.sessionID || anyReq.session?.id || 'anonymous-session';
+}
+
 const doubleCsrfUtilities = doubleCsrf({
   getSecret: () => getCookieSecret(),
-  getSessionIdentifier: (req: Request) =>
-    (req as any).sessionID || (req as any).session?.id || 'anonymous-session',
+  getSessionIdentifier: (req: Request) => resolveSessionIdentifier(req),
   cookieName: CSRF_COOKIE_NAME,
   cookieOptions: {
     httpOnly: false,
@@ -61,9 +73,13 @@ export function ensureRequestCookies(req: Request): void {
   anyReq.cookies = parsed;
 }
 
-export function generateCsrfToken(req: Request, res: Response): string {
+export function generateCsrfToken(
+  req: Request,
+  res: Response,
+  overwrite = false,
+): string {
   ensureRequestCookies(req);
-  return doubleCsrfUtilities.generateCsrfToken(req, res);
+  return doubleCsrfUtilities.generateCsrfToken(req, res, { overwrite });
 }
 
 export function csrfProtectionMiddleware(
@@ -74,11 +90,8 @@ export function csrfProtectionMiddleware(
   ensureRequestCookies(req);
 
   if (SAFE_METHODS.has(req.method.toUpperCase())) {
-    if (
-      !(req as any).cookies[CSRF_COOKIE_NAME] &&
-      typeof res.cookie === 'function'
-    ) {
-      generateCsrfToken(req, res);
+    if (typeof res.cookie === 'function') {
+      generateCsrfToken(req, res, false);
     }
     return next();
   }
