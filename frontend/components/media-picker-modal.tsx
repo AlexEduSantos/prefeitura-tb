@@ -39,49 +39,52 @@ export function MediaPickerModal({
   targetPreset,
 }: MediaPickerModalProps) {
   const [selectedItems, setSelectedItems] = useState<IMedia[]>([]);
-  const [dimensionWarning, setDimensionWarning] = useState<string | null>(null);
+  const [warningState, setWarningState] = useState<{
+    key: string;
+    message: string | null;
+  }>({ key: "", message: null });
 
-  // Limpa seleção e aviso ao abrir ou fechar o modal
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedItems([]);
-      setDimensionWarning(null);
-    }
-  }, [isOpen]);
+  const itemToValidate =
+    isOpen && targetPreset && selectedItems.length > 0
+      ? selectedItems[selectedItems.length - 1]
+      : null;
+  const activeKey = itemToValidate?.key ?? "";
 
   // Validação de dimensões da imagem selecionada em relação ao preset do local de uso
   useEffect(() => {
-    if (!targetPreset || selectedItems.length === 0) {
-      setDimensionWarning(null);
+    if (!targetPreset || !activeKey) {
       return;
     }
 
     let isMounted = true;
-    const itemToValidate = selectedItems[selectedItems.length - 1];
-
-    if (itemToValidate && itemToValidate.key) {
-      const src = `${process.env.NEXT_PUBLIC_API_URL}/media/file/${itemToValidate.key}`;
-      checkImageDimensions(src, targetPreset).then((res) => {
-        if (!isMounted) return;
-        if (res && !res.isValid && res.warningMessage) {
-          setDimensionWarning(res.warningMessage);
-        } else {
-          setDimensionWarning(null);
-        }
-      });
-    } else {
-      setDimensionWarning(null);
-    }
+    const src = `${process.env.NEXT_PUBLIC_API_URL}/media/file/${activeKey}`;
+    checkImageDimensions(src, targetPreset).then((res) => {
+      if (!isMounted) return;
+      if (res && !res.isValid && res.warningMessage) {
+        setWarningState({ key: activeKey, message: res.warningMessage });
+      } else {
+        setWarningState({ key: activeKey, message: null });
+      }
+    });
 
     return () => {
       isMounted = false;
     };
-  }, [selectedItems, targetPreset]);
+  }, [activeKey, targetPreset]);
+
+  const dimensionWarning =
+    activeKey && warningState.key === activeKey ? warningState.message : null;
+
+  const handleClose = () => {
+    setSelectedItems([]);
+    setWarningState({ key: "", message: null });
+    onClose();
+  };
 
   const handleSelect = () => {
     if (selectedItems.length > 0) {
       onSelect(multiple ? selectedItems : selectedItems[0]);
-      onClose();
+      handleClose();
     }
   };
 
@@ -89,12 +92,12 @@ export function MediaPickerModal({
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        if (!open) onClose();
+        if (!open) handleClose();
       }}
     >
       <DialogContent
         aria-describedby="media-picker-modal"
-        className="max-w-6xl h-[85vh] flex flex-col justify-between"
+        className="max-w-6xl! w-full h-[85vh] flex flex-col justify-between"
       >
         <DialogHeader>
           <DialogTitle>Selecionar Mídia</DialogTitle>

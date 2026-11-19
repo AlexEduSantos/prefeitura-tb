@@ -41,13 +41,14 @@ export class MediaService {
     id: string;
     tags?: string[];
   }) {
-    const response = await csrfFetch(`${API_URL}/media/${metadata.id}`, {
+    const { id, ...payload } = metadata;
+    const response = await csrfFetch(`${API_URL}/media/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(metadata),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -136,7 +137,12 @@ export class MediaService {
     sort: string,
     limit: number,
   ) {
-    const url = `${API_URL}/media/list/${prefix}?page=${page}&limit=${limit}&sort=${sort}`;
+    const encodedPrefix = prefix
+      .split("/")
+      .filter(Boolean)
+      .map((segment) => encodeURIComponent(segment))
+      .join("/");
+    const url = `${API_URL}/media/list/${encodedPrefix || "root"}?page=${page}&limit=${limit}&sort=${sort}`;
     const response = await fetch(url, {
       headers: {
         "Content-Type": "application/json",

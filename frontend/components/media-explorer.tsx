@@ -53,10 +53,16 @@ import {
   useMediaViewModel,
 } from "@/app/viewmodel/media.viewmodel";
 import { toast } from "sonner";
+import { IMedia } from "@/app/type/media";
+
+interface MediaFolderItem {
+  id: string;
+  name: string;
+}
 
 export interface MediaExplorerProps {
-  selectedItems: any[];
-  onSelectionChange: (items: any[]) => void;
+  selectedItems: IMedia[];
+  onSelectionChange: (items: IMedia[]) => void;
   multiple?: boolean;
   gridClassName?: string;
   showSearch?: boolean;
@@ -69,7 +75,7 @@ export function MediaExplorer({
   selectedItems,
   onSelectionChange,
   multiple = true,
-  gridClassName = "grid sm:grid-cols-4 xl:grid-cols-6 grid-cols-2 gap-4",
+  gridClassName = "grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 grid-cols-2 gap-4",
   showSearch = false,
   extraHeaderActions,
   containerClassName = "flex flex-col gap-4",
@@ -108,40 +114,44 @@ export function MediaExplorer({
 
   const navigateToFolder = (folderName: string) => {
     setPathStack([...pathStack, folderName]);
+    setPagination((prev) => ({ ...prev, page: 1 }));
     onSelectionChange([]);
   };
 
   const navigateUp = () => {
     setPathStack(pathStack.slice(0, -1));
+    setPagination((prev) => ({ ...prev, page: 1 }));
     onSelectionChange([]);
   };
 
   const navigateToRoot = () => {
     setPathStack([]);
+    setPagination((prev) => ({ ...prev, page: 1 }));
     onSelectionChange([]);
   };
 
   const navigateToCrumb = (index: number) => {
     setPathStack(pathStack.slice(0, index + 1));
+    setPagination((prev) => ({ ...prev, page: 1 }));
     onSelectionChange([]);
   };
 
   const handleToggleSelectAll = () => {
     if (!data?.files || data.files.length === 0) return;
-    const allFiles = data.files;
-    const allCurrentSelected = allFiles.every((f: any) =>
+    const allFiles: IMedia[] = data.files;
+    const allCurrentSelected = allFiles.every((f) =>
       selectedItems.some((item) => item.id === f.id),
     );
 
     if (allCurrentSelected) {
       onSelectionChange(
         selectedItems.filter(
-          (item) => !allFiles.some((f: any) => f.id === item.id),
+          (item) => !allFiles.some((f) => f.id === item.id),
         ),
       );
     } else {
       const remaining = allFiles.filter(
-        (f: any) => !selectedItems.some((item) => item.id === f.id),
+        (f) => !selectedItems.some((item) => item.id === f.id),
       );
       onSelectionChange([...selectedItems, ...remaining]);
     }
@@ -166,7 +176,7 @@ export function MediaExplorer({
 
   const isAllCurrentSelected =
     Boolean(data?.files?.length) &&
-    data.files.every((f: any) =>
+    (data.files as IMedia[]).every((f) =>
       selectedItems.some((item) => item.id === f.id),
     );
 
@@ -192,25 +202,27 @@ export function MediaExplorer({
                 <FolderPlusIcon /> Nova Pasta
               </Button>
 
-              {multiple && enableBulkDelete && (data?.files?.length ?? 0) > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={handleToggleSelectAll}
-                  className="gap-1.5"
-                >
-                  {isAllCurrentSelected ? (
-                    <>
-                      <Square className="h-4 w-4" />
-                      Desmarcar Todos
-                    </>
-                  ) : (
-                    <>
-                      <CheckSquare2 className="h-4 w-4" />
-                      Selecionar Todos
-                    </>
-                  )}
-                </Button>
-              )}
+              {multiple &&
+                enableBulkDelete &&
+                (data?.files?.length ?? 0) > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={handleToggleSelectAll}
+                    className="gap-1.5"
+                  >
+                    {isAllCurrentSelected ? (
+                      <>
+                        <Square className="h-4 w-4" />
+                        Desmarcar Todos
+                      </>
+                    ) : (
+                      <>
+                        <CheckSquare2 className="h-4 w-4" />
+                        Selecionar Todos
+                      </>
+                    )}
+                  </Button>
+                )}
 
               {extraHeaderActions}
             </div>
@@ -282,25 +294,27 @@ export function MediaExplorer({
               >
                 <FolderPlusIcon /> Nova Pasta
               </Button>
-              {multiple && enableBulkDelete && (data?.files?.length ?? 0) > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={handleToggleSelectAll}
-                  className="gap-1.5"
-                >
-                  {isAllCurrentSelected ? (
-                    <>
-                      <Square className="h-4 w-4" />
-                      Desmarcar Todos
-                    </>
-                  ) : (
-                    <>
-                      <CheckSquare2 className="h-4 w-4" />
-                      Selecionar Todos
-                    </>
-                  )}
-                </Button>
-              )}
+              {multiple &&
+                enableBulkDelete &&
+                (data?.files?.length ?? 0) > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={handleToggleSelectAll}
+                    className="gap-1.5"
+                  >
+                    {isAllCurrentSelected ? (
+                      <>
+                        <Square className="h-4 w-4" />
+                        Desmarcar Todos
+                      </>
+                    ) : (
+                      <>
+                        <CheckSquare2 className="h-4 w-4" />
+                        Selecionar Todos
+                      </>
+                    )}
+                  </Button>
+                )}
             </div>
             <div className="w-full flex gap-2">
               <Button variant="outline" className="bg-card font-normal flex-1">
@@ -420,16 +434,16 @@ export function MediaExplorer({
             <p className="text-sm font-medium">Voltar</p>
           </Card>
         )}
-        {data?.folders?.map((folder: any) => (
+        {(data?.folders as MediaFolderItem[] | undefined)?.map((folder) => (
           <FolderCard
             key={folder.id}
             name={folder.name}
             onClick={() => navigateToFolder(folder.name)}
             onRename={() => handleRenameFolder(folder.id, folder.name)}
-            onDelete={() => handleDeleteFolder(folder.id, folder.name)}
+            onDelete={() => handleDeleteFolder(folder.id)}
           />
         ))}
-        {data?.files?.map((file: any) => (
+        {(data?.files as IMedia[] | undefined)?.map((file) => (
           <FileItem
             key={file.id}
             file={file}
@@ -496,7 +510,9 @@ export function MediaExplorer({
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Excluir arquivos selecionados?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Excluir arquivos selecionados?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
                   Você está prestes a excluir permanentemente{" "}
                   <strong>

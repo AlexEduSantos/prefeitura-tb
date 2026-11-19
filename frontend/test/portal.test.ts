@@ -20,6 +20,7 @@ import { PopupsService } from "@/app/service/popups.service";
 import { GalleryService } from "@/app/service/gallery.service";
 import { OrganizationService } from "@/app/service/organization.service";
 import { ApprovalService } from "@/app/service/approval.service";
+import { MediaService } from "@/app/service/media.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -255,6 +256,34 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
     expect(fetchMock.mock.calls[3][1]).toMatchObject({
       method: "POST",
       body: JSON.stringify({ proposedData: { title: "Corrigido" } }),
+    });
+  });
+
+  it("MediaService deve codificar segmentos de pasta com espaço/acento e omitir id no body de updateMedia", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ folders: [], files: [] }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-media-test",
+    });
+
+    await MediaService.listMediaByPrefix("Imagens/Banner Principal", 1, "asc", 10);
+    expect(fetchMock.mock.calls[0][0]).toContain(
+      "/media/list/Imagens/Banner%20Principal?page=1&limit=10&sort=asc",
+    );
+
+    await MediaService.updateMedia({
+      id: "media-1",
+      title: "Banner Atualizado",
+      altText: "Alt",
+    });
+    expect(fetchMock.mock.calls[1][0]).toContain("/media/media-1");
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({ title: "Banner Atualizado", altText: "Alt" }),
     });
   });
 });

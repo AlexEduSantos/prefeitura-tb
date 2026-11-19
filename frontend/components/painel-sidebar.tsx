@@ -83,7 +83,10 @@ export function PainelSidebar() {
     : "/favicon.png";
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-zinc-200">
+    <Sidebar
+      collapsible="icon"
+      className="border-r border-zinc-200 overflow-hidden"
+    >
       <SidebarHeader className={` ${state === "collapsed" ? "p-2" : "p-4"}`}>
         <Link
           href="/administrator"
@@ -111,7 +114,8 @@ export function PainelSidebar() {
                 (item.url !== "/administrator" &&
                   pathname.startsWith(item.url)));
 
-            const Icon = (item.icon && ICON_MAP[item.icon]) ? ICON_MAP[item.icon] : FileText;
+            const Icon =
+              item.icon && ICON_MAP[item.icon] ? ICON_MAP[item.icon] : FileText;
 
             return (
               <SidebarMenuItem key={item.id}>
@@ -199,7 +203,7 @@ export function PainelSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="flex flex-col gap-4">
+      <SidebarFooter className="flex flex-col gap-4 ring-1 ring-t ring-ring/20 bg-card">
         <SidebarMenu className="gap-2">
           {/* Fila de Aprovações */}
           <SidebarMenuItem key="aprovacoes">
@@ -245,92 +249,6 @@ export function PainelSidebar() {
                   </span>
                 )}
               </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          {/* Logs de Auditoria */}
-          <SidebarMenuItem key="audit-logs">
-            <SidebarMenuButton
-              asChild
-              tooltip="Auditoria e Logs"
-              isActive={pathname === "/administrator/logs"}
-              className={cn(
-                "h-12 transition-all duration-200 group",
-                state === "expanded" ? "px-4" : "justify-center p-0",
-                pathname === "/administrator/logs"
-                  ? "bg-card! border-primary border text-primary-foreground hover:bg-card/90 shadow-md"
-                  : "text-zinc-600 hover:bg-zinc-100",
-              )}
-            >
-              <Link
-                href="/administrator/logs"
-                className={cn(
-                  "flex items-center",
-                  state === "expanded"
-                    ? "w-full gap-3"
-                    : "justify-center gap-0",
-                )}
-              >
-                <ShieldCheck
-                  className={cn(
-                    "w-5 h-5 shrink-0",
-                    pathname === "/administrator/logs"
-                      ? "text-primary"
-                      : "text-zinc-500 group-hover:text-zinc-900",
-                  )}
-                />
-                {state === "expanded" && (
-                  <span
-                    className={cn(
-                      "font-medium",
-                      pathname === "/administrator/logs"
-                        ? "text-primary font-semibold"
-                        : "text-zinc-500 group-hover:text-zinc-900",
-                    )}
-                  >
-                    Auditoria e Logs
-                  </span>
-                )}
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          {/* Documentação da API (Abre direto em nova aba) */}
-          <SidebarMenuItem key="api-docs">
-            <SidebarMenuButton
-              asChild
-              tooltip="Documentação da API (abre em nova aba)"
-              className={cn(
-                "h-12 transition-all duration-200 group text-zinc-600 hover:bg-zinc-100",
-                state === "expanded" ? "px-4" : "justify-center p-0",
-              )}
-            >
-              <a
-                href={swaggerDocsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "flex items-center justify-between",
-                  state === "expanded" ? "w-full gap-3" : "justify-center gap-0",
-                )}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <Code2
-                    className={cn(
-                      "w-5 h-5 shrink-0",
-                      "text-zinc-500 group-hover:text-zinc-900",
-                    )}
-                  />
-                  {state === "expanded" && (
-                    <span className="font-medium text-zinc-500 group-hover:text-zinc-900 truncate">
-                      Docs da API
-                    </span>
-                  )}
-                </div>
-                {state === "expanded" && (
-                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 shrink-0" />
-                )}
-              </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
 

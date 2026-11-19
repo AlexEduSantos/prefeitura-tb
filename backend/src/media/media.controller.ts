@@ -129,12 +129,21 @@ export class MediaController {
   @Get('list/*prefix')
   @CheckPolicies((ability) => ability.can(Action.Read, 'Media'))
   async listFiles(
-    @Param('prefix') prefix: string = '',
+    @Param('prefix') prefix: string | string[] = '',
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '20',
     @Query('sort') sort: string = 'desc',
   ) {
-    const normalizedPrefix = prefix === 'root' ? '' : prefix;
+    const rawPrefix = Array.isArray(prefix)
+      ? prefix.join('/')
+      : String(prefix || '');
+    let decodedPrefix = rawPrefix;
+    try {
+      decodedPrefix = decodeURIComponent(rawPrefix);
+    } catch {
+      decodedPrefix = rawPrefix;
+    }
+    const normalizedPrefix = decodedPrefix === 'root' ? '' : decodedPrefix;
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
     const sortOrder =
@@ -355,5 +364,12 @@ export class MediaController {
   @CheckPolicies((ability) => ability.can(Action.Delete, 'Media'))
   removeFolder(@Param('id') id: string) {
     return this.foldersService.remove(id);
+  }
+
+  @UseGuards(SessionGuard, PoliciesGuard)
+  @Delete(':id')
+  @CheckPolicies((ability) => ability.can(Action.Delete, 'Media'))
+  removeOne(@Param('id') id: string) {
+    return this.mediaService.removeMany([id]);
   }
 }

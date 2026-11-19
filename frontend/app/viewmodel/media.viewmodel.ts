@@ -15,7 +15,8 @@ export function useMediaViewModel() {
       if (
         Array.isArray(list) &&
         list.some(
-          (m: any) => m.status === "pending" || m.status === "processing",
+          (m: { status?: string }) =>
+            m.status === "pending" || m.status === "processing",
         )
       ) {
         return 2000;
@@ -60,11 +61,10 @@ export function useMediaViewModel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
     },
-    onError: (error: any) => {
-      const message =
-        error.response?.data?.message ||
-        "Não foi possível excluir a mídia selecionada.";
-      toast.error(message);
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "Não foi possível excluir a mídia selecionada.",
+      );
     },
   });
 
@@ -73,11 +73,10 @@ export function useMediaViewModel() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["media"] });
     },
-    onError: (error: any) => {
-      const message =
-        error.response?.data?.message ||
-        "Não foi possível excluir as mídias selecionadas.";
-      toast.error(message);
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "Não foi possível excluir as mídias selecionadas.",
+      );
     },
   });
 
@@ -109,13 +108,11 @@ export const useMediaList = (
   limit: number,
 ) => {
   return useQuery({
-    // A queryKey garante que, se prefix, page ou sort mudarem,
-    // o React Query buscará novos dados automaticamente.
-    queryKey: ["media", prefix, page, sort],
+    queryKey: ["media", prefix, page, sort, limit],
 
     queryFn: () => MediaService.listMediaByPrefix(prefix, page, sort, limit),
 
-    placeholderData: (previousData) => previousData, // Mantém dados anteriores enquanto carrega (evita flickering)
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -124,7 +121,7 @@ export const useMediaById = () => {
     queryKey: ["media", "7261dad1-7ab0-42c9-b535-c4c95c452a29"],
     queryFn: () =>
       MediaService.getMediaById("7261dad1-7ab0-42c9-b535-c4c95c452a29"),
-    placeholderData: (previousData) => previousData, // Mantém dados anteriores enquanto carrega (evita flickering)
+    placeholderData: (previousData) => previousData,
   });
 
   return { media, isLoadingMedia };

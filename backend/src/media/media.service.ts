@@ -331,9 +331,17 @@ export class MediaService {
     limit: number = 20,
     sort: 'asc' | 'desc' = 'desc',
   ) {
-    const flatPrefix = Array.isArray(prefix) ? prefix.join('/') : prefix;
+    const rawPrefix = Array.isArray(prefix) ? prefix.join('/') : prefix;
+    let decodedPrefix = rawPrefix || '';
+    try {
+      decodedPrefix = decodeURIComponent(decodedPrefix);
+    } catch {
+      // mantém valor original se contiver sequência inválida
+    }
     const normalizedPrefix =
-      flatPrefix && flatPrefix !== 'root' ? flatPrefix.replace(/\/$/, '') : '';
+      decodedPrefix && decodedPrefix !== 'root'
+        ? decodedPrefix.replace(/\/$/, '')
+        : '';
 
     let parentFolderId: string | null = null;
     if (normalizedPrefix) {
