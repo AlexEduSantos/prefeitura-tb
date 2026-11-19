@@ -32,7 +32,10 @@ export function useAuditViewModel() {
     setFilters((prev) => ({ ...prev, page }));
   };
 
-  const setFilterField = (field: keyof IAuditFilterParams, value: any) => {
+  const setFilterField = <K extends keyof IAuditFilterParams>(
+    field: K,
+    value: IAuditFilterParams[K],
+  ) => {
     setFilters((prev) => ({
       ...prev,
       [field]: value,

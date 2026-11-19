@@ -11,11 +11,14 @@ export class AuditService {
     if (params.action && params.action !== "all") searchParams.append("action", params.action);
     if (params.entity && params.entity !== "all") searchParams.append("entity", params.entity);
     if (params.userId) searchParams.append("userId", params.userId);
-    if (params.search) searchParams.append("search", params.search);
+    if (params.search?.trim()) searchParams.append("search", params.search.trim());
     if (params.startDate) searchParams.append("startDate", params.startDate);
     if (params.endDate) searchParams.append("endDate", params.endDate);
 
-    const url = `${API_URL}/audit-logs?${searchParams.toString()}`;
+    const queryString = searchParams.toString();
+    const url = queryString
+      ? `${API_URL}/audit-logs?${queryString}`
+      : `${API_URL}/audit-logs`;
 
     const res = await fetch(url, {
       method: "GET",
@@ -26,7 +29,11 @@ export class AuditService {
     });
 
     if (!res.ok) {
-      throw new Error("Erro ao carregar logs de auditoria");
+      const errBody = await res.json().catch(() => null);
+      const msg = Array.isArray(errBody?.message)
+        ? errBody.message.join(", ")
+        : errBody?.message;
+      throw new Error(msg || "Erro ao carregar logs de auditoria");
     }
 
     return res.json();

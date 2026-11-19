@@ -21,6 +21,7 @@ import { GalleryService } from "@/app/service/gallery.service";
 import { OrganizationService } from "@/app/service/organization.service";
 import { ApprovalService } from "@/app/service/approval.service";
 import { MediaService } from "@/app/service/media.service";
+import { AuditService } from "@/app/service/audit.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -285,5 +286,46 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
       method: "PATCH",
       body: JSON.stringify({ title: "Banner Atualizado", altText: "Alt" }),
     });
+  });
+
+  it("AuditService.getAuditLogs deve montar query params limpos e propagar erro do backend", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: [{ id: "log-1", action: "CREATE", entity: "Page" }],
+          total: 1,
+          page: 1,
+          limit: 20,
+          totalPages: 1,
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ message: ["page must be an integer number"] }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const res = await AuditService.getAuditLogs({
+      page: 1,
+      limit: 20,
+      action: "all",
+      entity: "Page",
+      search: "  admin  ",
+    });
+
+    expect(res.total).toBe(1);
+    expect(fetchMock.mock.calls[0][0]).toContain(
+      "/audit-logs?page=1&limit=20&entity=Page&search=admin",
+    );
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "GET",
+      credentials: "include",
+    });
+
+    await expect(AuditService.getAuditLogs({ page: 1 })).rejects.toThrow(
+      "page must be an integer number",
+    );
   });
 });

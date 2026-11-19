@@ -110,14 +110,22 @@ export class AuditService {
     }
 
     if (params.startDate || params.endDate) {
-      where.createdAt = {};
+      const createdAt: { gte?: Date; lte?: Date } = {};
       if (params.startDate) {
-        where.createdAt.gte = new Date(params.startDate);
+        const start = new Date(params.startDate);
+        if (!Number.isNaN(start.getTime())) {
+          createdAt.gte = start;
+        }
       }
       if (params.endDate) {
         const end = new Date(params.endDate);
-        end.setHours(23, 59, 59, 999);
-        where.createdAt.lte = end;
+        if (!Number.isNaN(end.getTime())) {
+          end.setHours(23, 59, 59, 999);
+          createdAt.lte = end;
+        }
+      }
+      if (Object.keys(createdAt).length > 0) {
+        where.createdAt = createdAt;
       }
     }
 
@@ -168,4 +176,3 @@ export class AuditService {
     });
   }
 }
-

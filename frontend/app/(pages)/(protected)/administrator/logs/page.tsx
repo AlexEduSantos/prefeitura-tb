@@ -84,6 +84,7 @@ export default function AuditLogsPage() {
     totalPages,
     isLoading,
     isFetching,
+    isError,
     refetch,
     filters,
     setFilterField,
@@ -220,6 +221,24 @@ export default function AuditLogsPage() {
                   >
                     <RefreshCwIcon className="h-5 w-5 animate-spin mx-auto mb-2 text-primary" />
                     Carregando registros de auditoria...
+                  </TableCell>
+                </TableRow>
+              ) : isError ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    className="h-32 text-center text-destructive"
+                  >
+                    <p className="mb-2">
+                      Erro ao carregar os registros de auditoria.
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
+                    >
+                      Tentar novamente
+                    </Button>
                   </TableCell>
                 </TableRow>
               ) : logs.length === 0 ? (
