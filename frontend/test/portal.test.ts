@@ -25,6 +25,7 @@ import {
 import { ApprovalService } from "@/app/service/approval.service";
 import { MediaService } from "@/app/service/media.service";
 import { AuditService } from "@/app/service/audit.service";
+import { SettingsService } from "@/app/service/settings.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -487,6 +488,45 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
             parentId: null,
           },
         ],
+      }),
+    });
+  });
+
+  it("SettingsService.updateSettings deve omitir id, visits, updatedAt e campos nulos mantendo cores do tema", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "singleton", siteName: "Prefeitura" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-settings-test",
+    });
+
+    await SettingsService.updateSettings({
+      id: "singleton",
+      visits: 42,
+      updatedAt: "2026-11-19T00:00:00Z",
+      siteName: "Prefeitura de Telêmaco Borba",
+      primaryColor: "#1e3a8a",
+      primaryForegroundColor: "#ffffff",
+      secondaryColor: "#f59e0b",
+      secondaryForegroundColor: "#000000",
+      addressStreet: null,
+      themeColors: null,
+      socialLinks: { instagram: "https://instagram.com/pmtb" },
+    });
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/settings");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        siteName: "Prefeitura de Telêmaco Borba",
+        primaryColor: "#1e3a8a",
+        primaryForegroundColor: "#ffffff",
+        secondaryColor: "#f59e0b",
+        secondaryForegroundColor: "#000000",
+        socialLinks: { instagram: "https://instagram.com/pmtb" },
       }),
     });
   });

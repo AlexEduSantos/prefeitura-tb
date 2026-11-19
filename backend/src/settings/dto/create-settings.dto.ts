@@ -6,62 +6,70 @@ export class CreateSettingsDto {
   siteName!: string;
 
   @IsString()
-  @IsNotEmpty()
-  siteDescription!: string;
+  @IsOptional()
+  siteDescription?: string;
 
   @IsString()
-  @IsNotEmpty()
-  logoUrl!: string;
+  @IsOptional()
+  logoUrl?: string;
 
   @IsString()
-  @IsNotEmpty()
-  faviconUrl!: string;
+  @IsOptional()
+  faviconUrl?: string;
 
   @IsString()
-  @IsNotEmpty()
-  primaryColor!: string;
+  @IsOptional()
+  primaryColor?: string;
 
   @IsString()
-  @IsNotEmpty()
-  secondaryForegroundColor!: string;
+  @IsOptional()
+  primaryForegroundColor?: string;
+
+  @IsString()
+  @IsOptional()
+  secondaryColor?: string;
+
+  @IsString()
+  @IsOptional()
+  secondaryForegroundColor?: string;
 
   @IsObject()
-  @IsNotEmpty()
-  themeColors!: Record<string, string>;
+  @IsOptional()
+  themeColors?: Record<string, string>;
 
   @IsString()
-  @IsNotEmpty()
-  addressStreet!: string;
+  @IsOptional()
+  addressStreet?: string;
 
   @IsString()
-  @IsNotEmpty()
-  addressNumber!: string;
+  @IsOptional()
+  addressNumber?: string;
 
   @IsString()
-  @IsNotEmpty()
-  addressCity!: string;
+  @IsOptional()
+  addressCity?: string;
 
   @IsString()
-  @IsNotEmpty()
-  addressState!: string;
+  @IsOptional()
+  addressState?: string;
 
   @IsString()
-  @IsNotEmpty()
-  addressZip!: string;
+  @IsOptional()
+  addressZip?: string;
 
   @IsString()
-  @IsNotEmpty()
-  phone!: string;
+  @IsOptional()
+  phone?: string;
 
   @IsString()
-  @IsNotEmpty()
-  email!: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
-  @IsNotEmpty()
-  workingHours!: string;
+  @IsOptional()
+  workingHours?: string;
 
   @IsObject()
-  @IsNotEmpty()
-  socialLinks!: Record<string, string>;
+  @IsOptional()
+  socialLinks?: Record<string, string>;
 }
