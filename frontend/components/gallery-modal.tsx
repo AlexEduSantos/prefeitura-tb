@@ -1,5 +1,5 @@
 "use client";
-import { IGallery, IGalleryImage } from "@/app/type/gallery";
+import { IGallery } from "@/app/type/gallery";
 import { IMedia } from "@/app/type/media";
 import { Button } from "./ui/button";
 import {
@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Switch } from "./ui/switch";
@@ -29,13 +29,57 @@ import {
 import { ScrollArea } from "./ui/scroll-area";
 import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 
+interface GallerySlideDraft {
+  mediaId: string;
+  order: number;
+  caption: string;
+  link: string;
+  media?: IMedia;
+}
+
+interface GalleryFormState {
+  id?: string;
+  title: string;
+  active: boolean;
+  organizationId: string;
+  slides: GallerySlideDraft[];
+}
+
 interface GalleryModalProps {
   gallery?: IGallery | null;
   mode: "view" | "create" | "edit";
   isOpen: boolean;
   onClose: () => void;
-  onSave?: (item: any) => void;
+  onSave?: (item: Partial<IGallery>) => void;
   mediaList?: IMedia[];
+}
+
+function buildInitialFormData(
+  mode: "view" | "create" | "edit",
+  gallery?: IGallery | null,
+): GalleryFormState {
+  if (mode !== "create" && gallery) {
+    return {
+      id: gallery.id,
+      title: gallery.title,
+      active: gallery.active,
+      organizationId: gallery.organizationId || "",
+      slides:
+        gallery.slides?.map((s) => ({
+          mediaId: s.mediaId,
+          order: s.order,
+          caption: s.caption || "",
+          link: s.link || "",
+          media: s.media,
+        })) || [],
+    };
+  }
+  return {
+    title: "",
+    active: false,
+    organizationId: "",
+    slides: [],
+  };
 }
 
 export function GalleryModal({
@@ -44,55 +88,40 @@ export function GalleryModal({
   isOpen,
   onClose,
   onSave,
-  mediaList = [],
 }: GalleryModalProps) {
-  const [formData, setFormData] = useState<any>({
-    title: "",
-    active: false,
-    organizationId: "",
-    slides: [],
-  });
+  const syncKey = `${isOpen ? "open" : "closed"}-${mode}-${gallery?.id ?? "new"}`;
+  const [lastSyncKey, setLastSyncKey] = useState(syncKey);
+  const [formData, setFormData] = useState<GalleryFormState>(() =>
+    buildInitialFormData(mode, gallery),
+  );
   const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
+
+  if (syncKey !== lastSyncKey) {
+    setLastSyncKey(syncKey);
+    if (isOpen) {
+      setFormData(buildInitialFormData(mode, gallery));
+    }
+  }
 
   const { organizations } = useOrganizationViewModel();
 
-  useEffect(() => {
-    if (isOpen) {
-      if (mode !== "create" && gallery) {
-        setFormData({
-          id: gallery.id,
-          title: gallery.title,
-          active: gallery.active,
-          organizationId: gallery.organizationId || "",
-          slides:
-            gallery.slides?.map((s) => ({
-              mediaId: s.mediaId,
-              order: s.order,
-              caption: s.caption || "",
-              link: s.link || "",
-              media: s.media,
-            })) || [],
-        });
-      } else {
-        setFormData({
-          title: "",
-          active: false,
-          slides: [],
-        });
-      }
-    }
-  }, [gallery, mode, isOpen]);
-
-  const handleChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({
+  const handleChange = <K extends keyof GalleryFormState>(
+    field: K,
+    value: GalleryFormState[K],
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
-  const handleSlideChange = (index: number, field: string, value: string) => {
-    setFormData((prev: any) => {
-      const newSlides = [...(prev.slides || [])];
+  const handleSlideChange = (
+    index: number,
+    field: "caption" | "link",
+    value: string,
+  ) => {
+    setFormData((prev) => {
+      const newSlides = [...prev.slides];
       newSlides[index] = { ...newSlides[index], [field]: value };
       return { ...prev, slides: newSlides };
     });
@@ -102,13 +131,13 @@ export function GalleryModal({
     const mediaArray = Array.isArray(selectedMedia)
       ? selectedMedia
       : [selectedMedia];
-    setFormData((prev: any) => ({
+    setFormData((prev) => ({
       ...prev,
       slides: [
-        ...(prev.slides || []),
+        ...prev.slides,
         ...mediaArray.map((media, idx) => ({
           mediaId: media.id,
-          order: (prev.slides?.length || 0) + idx + 1,
+          order: prev.slides.length + idx + 1,
           caption: "",
           link: "",
           media,
@@ -118,8 +147,8 @@ export function GalleryModal({
   };
 
   const removeSlide = (index: number) => {
-    setFormData((prev: any) => {
-      const newSlides = [...(prev.slides || [])];
+    setFormData((prev) => {
+      const newSlides = [...prev.slides];
       newSlides.splice(index, 1);
       // Reorder
       newSlides.forEach((s, i) => (s.order = i + 1));
@@ -130,7 +159,7 @@ export function GalleryModal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSave) {
-      onSave(formData);
+      onSave(formData as unknown as Partial<IGallery>);
     }
   };
 
@@ -205,10 +234,9 @@ export function GalleryModal({
                 <Select
                   value={formData.organizationId}
                   onValueChange={(val) => handleChange("organizationId", val)}
-                  required
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Selecione uma secretaria/órgão" />
+                    <SelectValue placeholder="Selecione uma secretaria/órgão (opcional)" />
                   </SelectTrigger>
                   <SelectContent>
                     {organizations.map((org) => (
@@ -238,7 +266,7 @@ export function GalleryModal({
 
                 {/* Imagens Selecionadas */}
                 <div className="space-y-2">
-                  {(formData.slides || []).map((slide: any, index: number) => (
+                  {formData.slides.map((slide, index) => (
                     <div
                       key={index}
                       className="flex gap-4 p-3 border rounded-lg bg-muted/20"
@@ -247,7 +275,7 @@ export function GalleryModal({
                         {slide.media && (
                           <Image
                             loader={() =>
-                              `${process.env.NEXT_PUBLIC_API_URL}/media/file/${slide.media.key}`
+                              `${process.env.NEXT_PUBLIC_API_URL}/media/file/${slide.media!.key}`
                             }
                             src={slide.media.key}
                             alt="Preview"
@@ -282,7 +310,7 @@ export function GalleryModal({
                       </Button>
                     </div>
                   ))}
-                  {(!formData.slides || formData.slides.length === 0) && (
+                  {formData.slides.length === 0 && (
                     <div className="text-sm text-muted-foreground text-center p-4 border border-dashed rounded-lg">
                       Nenhuma imagem selecionada.
                     </div>

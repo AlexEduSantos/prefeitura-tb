@@ -372,4 +372,66 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
       }),
     ).rejects.toThrow("Já existe uma categoria com este apelido (slug).");
   });
+
+  it("GalleryService.updateGallery deve sanitizar id, organizationId vazio e objeto media nos slides", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "gal-1", title: "Galeria 1", active: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ message: ["slides.0.mediaId must be a UUID"] }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-gal-test",
+    });
+
+    await GalleryService.updateGallery({
+      id: "gal-1",
+      title: "Galeria Editada",
+      active: true,
+      organizationId: "",
+      slides: [
+        {
+          id: "slide-1",
+          galleryId: "gal-1",
+          mediaId: "11111111-1111-4111-8111-111111111111",
+          order: 1,
+          caption: "Legenda",
+          link: "",
+          media: { id: "11111111-1111-4111-8111-111111111111", key: "a.jpg" },
+        } as never,
+      ],
+    } as never);
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/galleries/gal-1");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        title: "Galeria Editada",
+        active: true,
+        slides: [
+          {
+            mediaId: "11111111-1111-4111-8111-111111111111",
+            order: 1,
+            caption: "Legenda",
+            link: "",
+          },
+        ],
+      }),
+    });
+
+    await expect(
+      GalleryService.updateGallery({
+        id: "gal-1",
+        title: "Galeria",
+        active: true,
+        slides: [],
+      } as never),
+    ).rejects.toThrow("slides.0.mediaId must be a UUID");
+  });
 });

@@ -27,6 +27,7 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export function useGalleryViewModel(modeType: "admin" | "public" = "admin") {
   const isAdmin = modeType === "admin";
@@ -57,6 +58,10 @@ export function useGalleryViewModel(modeType: "admin" | "public" = "admin") {
       GalleryService.createGallery(banner),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      toast.success("Galeria criada com sucesso!");
+    },
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao criar galeria");
     },
   });
 
@@ -70,6 +75,10 @@ export function useGalleryViewModel(modeType: "admin" | "public" = "admin") {
     mutationFn: (banner: IGallery) => GalleryService.updateGallery(banner),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      toast.success("Galeria atualizada com sucesso!");
+    },
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao atualizar galeria");
     },
   });
 
@@ -77,6 +86,10 @@ export function useGalleryViewModel(modeType: "admin" | "public" = "admin") {
     mutationFn: (id: string) => GalleryService.deleteGallery(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gallery"] });
+      toast.success("Galeria excluída com sucesso!");
+    },
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao excluir galeria");
     },
   });
 

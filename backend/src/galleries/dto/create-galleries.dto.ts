@@ -2,11 +2,28 @@ import {
   IsString,
   IsOptional,
   IsBoolean,
+  IsInt,
   IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateGalleryMediaDto } from '../../gallery-media/dto/create-gallery-media.dto';
+
+export class CreateGallerySlideDto {
+  @IsUUID()
+  mediaId!: string;
+
+  @IsOptional()
+  @IsInt()
+  order?: number;
+
+  @IsOptional()
+  @IsString()
+  caption?: string;
+
+  @IsOptional()
+  @IsString()
+  link?: string;
+}
 
 export class CreateGalleriesDto {
   @IsString()
@@ -26,6 +43,6 @@ export class CreateGalleriesDto {
 
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => CreateGalleryMediaDto)
-  slides?: CreateGalleryMediaDto[];
+  @Type(() => CreateGallerySlideDto)
+  slides?: CreateGallerySlideDto[];
 }
