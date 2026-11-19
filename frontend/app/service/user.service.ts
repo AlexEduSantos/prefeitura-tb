@@ -3,6 +3,18 @@ import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+async function parseErrorMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  const errData = await response.json().catch(() => null);
+  if (Array.isArray(errData?.message)) return errData.message.join(", ");
+  if (typeof errData?.message === "string" && errData.message.trim()) {
+    return errData.message;
+  }
+  return fallback;
+}
+
 export class UserService {
   static async getUsers(): Promise<IUser[]> {
     const response = await fetch(`${API_URL}/user`, {
@@ -13,7 +25,9 @@ export class UserService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao buscar usuários");
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar usuários"),
+      );
     }
 
     return response.json();
@@ -28,22 +42,34 @@ export class UserService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao buscar usuário");
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar usuário"),
+      );
     }
 
     return response.json();
   }
 
   private static sanitizeUserPayload(data: Partial<IUser>) {
-    const {
-      id: _id,
-      createdAt: _createdAt,
-      updatedAt: _updatedAt,
-      lastLogin: _lastLogin,
-      organization: _organization,
-      ...allowed
-    } = data as Record<string, unknown>;
-    return allowed;
+    const raw = data as Record<string, unknown>;
+    const payload: Record<string, unknown> = {};
+
+    if (typeof raw.name === "string") payload.name = raw.name;
+    if (typeof raw.username === "string") payload.username = raw.username;
+    if (typeof raw.email === "string") payload.email = raw.email;
+    if (typeof raw.password === "string" && raw.password.trim() !== "") {
+      payload.password = raw.password;
+    }
+    if (typeof raw.avatar === "string") payload.avatar = raw.avatar;
+    if (raw.phone !== undefined) payload.phone = raw.phone;
+    if (typeof raw.active === "boolean") payload.active = raw.active;
+    if (raw.organizationId !== undefined) {
+      payload.organizationId =
+        raw.organizationId === "" ? null : raw.organizationId;
+    }
+    if (typeof raw.role === "string") payload.role = raw.role;
+
+    return payload;
   }
 
   static async createUser(data: Partial<IUser>): Promise<IUser> {
@@ -58,11 +84,9 @@ export class UserService {
     });
 
     if (!response.ok) {
-      const errData = await response.json().catch(() => null);
-      const message = Array.isArray(errData?.message)
-        ? errData.message.join(", ")
-        : errData?.message || "Erro ao criar usuário";
-      throw new Error(message);
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao criar usuário"),
+      );
     }
 
     return response.json();
@@ -83,11 +107,9 @@ export class UserService {
     );
 
     if (!response.ok) {
-      const errData = await response.json().catch(() => null);
-      const message = Array.isArray(errData?.message)
-        ? errData.message.join(", ")
-        : errData?.message || "Erro ao reenviar link de ativação";
-      throw new Error(message);
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao reenviar link de ativação"),
+      );
     }
 
     return response.json();
@@ -105,11 +127,9 @@ export class UserService {
     });
 
     if (!response.ok) {
-      const errData = await response.json().catch(() => null);
-      const message = Array.isArray(errData?.message)
-        ? errData.message.join(", ")
-        : errData?.message || "Erro ao atualizar usuário";
-      throw new Error(message);
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar usuário"),
+      );
     }
 
     return response.json();
@@ -125,7 +145,9 @@ export class UserService {
     });
 
     if (!response.ok) {
-      throw new Error("Erro ao deletar usuário");
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao deletar usuário"),
+      );
     }
 
     return response.json();

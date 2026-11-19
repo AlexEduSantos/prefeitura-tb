@@ -26,6 +26,7 @@ import { ApprovalService } from "@/app/service/approval.service";
 import { MediaService } from "@/app/service/media.service";
 import { AuditService } from "@/app/service/audit.service";
 import { SettingsService } from "@/app/service/settings.service";
+import { UserService } from "@/app/service/user.service";
 import type { IMenuItem } from "@/app/type/menu";
 
 describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
@@ -529,5 +530,50 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
         socialLinks: { instagram: "https://instagram.com/pmtb" },
       }),
     });
+  });
+
+  it("UserService deve sanitizar payload com whitelist e propagar erro real em create/update/delete", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "u1", name: "Servidor" }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ message: "Não é possível remover o próprio usuário" }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-user-test",
+    });
+
+    await UserService.updateUser("u1", {
+      id: "u1",
+      name: "Servidor",
+      username: "servidor",
+      email: "servidor@pmtb.pr.gov.br",
+      password: "",
+      organizationId: "",
+      role: "USER",
+      createdAt: "2026-01-01",
+    } as never);
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/user/u1");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        name: "Servidor",
+        username: "servidor",
+        email: "servidor@pmtb.pr.gov.br",
+        organizationId: null,
+        role: "USER",
+      }),
+    });
+
+    await expect(UserService.deleteUser("u1")).rejects.toThrow(
+      "Não é possível remover o próprio usuário",
+    );
   });
 });

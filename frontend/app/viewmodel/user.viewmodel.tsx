@@ -13,10 +13,8 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import Image from "next/image";
 import {
   Avatar,
-  AvatarBadge,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
@@ -31,7 +29,6 @@ import {
   TrashIcon,
 } from "lucide-react";
 import { toast } from "sonner";
-import { format } from "date-fns";
 import { IOrganization } from "../type/organization";
 import {
   AlertDialog,
@@ -93,6 +90,12 @@ export function useUser() {
     mutationFn: (data: Partial<IUser>) => UserService.createUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success(
+        "Usuário criado com sucesso! O link de ativação foi enviado por e-mail.",
+      );
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao criar usuário");
     },
   });
 
@@ -101,6 +104,10 @@ export function useUser() {
       UserService.updateUser(data.id!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Usuário atualizado com sucesso!");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao atualizar usuário");
     },
   });
 
@@ -108,6 +115,10 @@ export function useUser() {
     mutationFn: (id: string) => UserService.deleteUser(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      toast.success("Usuário excluído com sucesso!");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao excluir usuário");
     },
   });
 
@@ -145,13 +156,17 @@ export function useUser() {
     setInitialData(null);
   };
 
-  const handleSubmit = (data: IUser) => {
-    if (modalMode === "create") {
-      createUser(data);
-    } else {
-      updateUser(data);
+  const handleSubmit = async (data: IUser) => {
+    try {
+      if (modalMode === "create") {
+        await createUser(data);
+      } else {
+        await updateUser(data);
+      }
+      handleCloseModal();
+    } catch {
+      // O erro já é exibido via toast no onError da mutation
     }
-    handleCloseModal();
   };
 
   const handleDelete = (id: string) => {
@@ -290,7 +305,7 @@ export function useUser() {
               aria-label={`Reenviar link de ativação para ${user.name}`}
               onClick={(e) => {
                 e.stopPropagation();
-                resendActivation(user.id);
+                void resendActivation(user.id).catch(() => {});
               }}
             >
               <MailIcon className="h-4 w-4" />
@@ -330,7 +345,11 @@ export function useUser() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => deleteUser(user.id)}>
+                  <AlertDialogAction
+                    onClick={() => {
+                      void deleteUser(user.id).catch(() => {});
+                    }}
+                  >
                     Excluir
                   </AlertDialogAction>
                 </AlertDialogFooter>
