@@ -16,7 +16,9 @@ lerna-debug.log*
 .DS_Store
 
 # typescript
-.tsbuildinfo
+tsconfig.build.tsbuildinfo
+tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # Tests
 /coverage
