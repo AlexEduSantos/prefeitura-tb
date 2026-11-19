@@ -576,4 +576,50 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
       "Não é possível remover o próprio usuário",
     );
   });
+
+  it("PopupsService deve sanitizar payload por whitelist removendo metadados de workflow/deletedAt e convertendo datas para ISO", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "pop-1", title: "Aviso" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-popup-test",
+    });
+
+    await PopupsService.updatePopups("pop-1", {
+      id: "pop-1",
+      title: "Campanha",
+      imageId: "11111111-1111-4111-8111-111111111111",
+      type: "modal",
+      status: "publicado",
+      active: true,
+      displayTime: 10,
+      priority: 1,
+      publicationDate: new Date("2026-11-19T12:00:00.000Z"),
+      expirationDate: new Date("2026-11-30T12:00:00.000Z"),
+      organizationId: "",
+      deletedAt: null,
+      workflowStatus: "aprovado",
+      pendingRequest: null,
+    } as never);
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/popups/pop-1");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        title: "Campanha",
+        imageId: "11111111-1111-4111-8111-111111111111",
+        active: true,
+        displayTime: 10,
+        status: "publicado",
+        type: "modal",
+        priority: 1,
+        publicationDate: "2026-11-19T12:00:00.000Z",
+        expirationDate: "2026-11-30T12:00:00.000Z",
+        organizationId: null,
+      }),
+    });
+  });
 });

@@ -23,14 +23,13 @@ import { ImageVisualizer } from "@/components/image-visualizer";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  EyeIcon,
-  ImageIcon,
   PencilIcon,
   TrashIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IUser } from "../type/user";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
 
 export function usePopupsViewModel() {
   // STATES
@@ -54,8 +53,8 @@ export function usePopupsViewModel() {
     active: true,
     displayTime: 10,
     status: "rascunho",
-    type: "",
-    position: "",
+    type: "modal",
+    position: "center",
     closeButton: true,
     priority: 0,
     publicationDate: new Date(),
@@ -77,6 +76,10 @@ export function usePopupsViewModel() {
     mutationFn: (popup: Partial<IPopups>) => PopupsService.createPopups(popup),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popups"] });
+      toast.success("Pop-Up criado com sucesso!");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao criar Pop-Up");
     },
   });
 
@@ -84,6 +87,10 @@ export function usePopupsViewModel() {
     mutationFn: (popup: IPopups) => PopupsService.updatePopups(popup.id, popup),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popups"] });
+      toast.success("Pop-Up atualizado com sucesso!");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao atualizar Pop-Up");
     },
   });
 
@@ -91,6 +98,10 @@ export function usePopupsViewModel() {
     mutationFn: (id: string) => PopupsService.deletePopups(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["popups"] });
+      toast.success("Pop-Up excluído com sucesso!");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Erro ao excluir Pop-Up");
     },
   });
 
@@ -147,16 +158,15 @@ export function usePopupsViewModel() {
       accessorKey: "image",
       header: "Imagem",
       cell: ({ row }) => {
-        const image = row.getValue("image") as IMedia;
+        const image = row.getValue("image") as IMedia | null | undefined;
+        if (!image) return <span className="text-xs text-muted-foreground">—</span>;
         return (
-          <>
-            <ImageVisualizer
-              name={"teste"}
-              image={image}
-              alt={image.title}
-              mode="modal"
-            />
-          </>
+          <ImageVisualizer
+            name={image.title || "Imagem"}
+            image={image}
+            alt={image.title || "Imagem"}
+            mode="modal"
+          />
         );
       },
     },
@@ -193,8 +203,10 @@ export function usePopupsViewModel() {
           )}
         </Button>
       ),
-      cell: ({ row }) =>
-        format(new Date(row.getValue("publicationDate")), "dd/MM/yyyy HH:mm"),
+      cell: ({ row }) => {
+        const val = row.getValue("publicationDate") as string | Date | null;
+        return val ? format(new Date(val), "dd/MM/yyyy HH:mm") : "—";
+      },
     },
     {
       accessorKey: "expirationDate",
@@ -212,8 +224,10 @@ export function usePopupsViewModel() {
           )}
         </Button>
       ),
-      cell: ({ row }) =>
-        format(new Date(row.getValue("expirationDate")), "dd/MM/yyyy HH:mm"),
+      cell: ({ row }) => {
+        const val = row.getValue("expirationDate") as string | Date | null;
+        return val ? format(new Date(val), "dd/MM/yyyy HH:mm") : "—";
+      },
     },
     {
       accessorKey: "user",
@@ -296,16 +310,24 @@ export function usePopupsViewModel() {
     },
   });
 
-  const handleSave = () => {
-    if (mode === "create") {
-      createPopupMutation.mutate(formData as IPopups);
-    } else if (mode === "edit" && selectedPopup) {
-      updatePopupMutation.mutate({
-        ...formData,
-        id: selectedPopup.id,
-      } as IPopups);
+  const handleSave = async () => {
+    if (!formData.imageId) {
+      toast.error("Selecione uma imagem para o Pop-Up.");
+      return;
     }
-    setOpenModal(false);
+    try {
+      if (mode === "create") {
+        await createPopupMutation.mutateAsync(formData as IPopups);
+      } else if (mode === "edit" && selectedPopup) {
+        await updatePopupMutation.mutateAsync({
+          ...formData,
+          id: selectedPopup.id,
+        } as IPopups);
+      }
+      setOpenModal(false);
+    } catch {
+      // Toast de erro já exibido no onError da mutation
+    }
   };
 
   return {

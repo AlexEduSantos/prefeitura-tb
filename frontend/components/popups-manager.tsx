@@ -35,7 +35,7 @@ import { Switch } from "./ui/switch";
 import { useOrganizationViewModel } from "@/app/viewmodel/organization.viewmodel";
 import { MediaPickerModal } from "./media-picker-modal";
 import { IMedia } from "@/app/type/media";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ImageVisualizer } from "./image-visualizer";
 import { IPopups } from "@/app/type/popup";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -50,7 +50,7 @@ const initialFormData: Partial<IPopups> = {
   active: true,
   displayTime: 10,
   status: "rascunho",
-  type: "popup",
+  type: "modal",
   position: "center",
   closeButton: true,
   priority: 0,
@@ -81,30 +81,30 @@ export function PopupsManager() {
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
   // Estado para armazenar a imagem selecionada (para exibição)
   const [selectedImage, setSelectedImage] = useState<IMedia | null>(null);
+  const syncKey = `${openModal ? "open" : "closed"}-${mode}-${selectedPopup?.id ?? "new"}`;
+  const [lastSyncKey, setLastSyncKey] = useState(syncKey);
 
   // Quando o popup selecionado mudar (edição), preenche o formulário
-  useEffect(() => {
-    if (selectedPopup) {
-      setFormData({
-        ...selectedPopup,
-        publicationDate: selectedPopup.publicationDate
-          ? new Date(selectedPopup.publicationDate)
-          : new Date(),
-        expirationDate: selectedPopup.expirationDate
-          ? new Date(selectedPopup.expirationDate)
-          : new Date(),
-      });
-      // Se houver imagem, busca os dados para exibir
-      if (selectedPopup.image) {
-        setSelectedImage(selectedPopup.image);
+  if (syncKey !== lastSyncKey) {
+    setLastSyncKey(syncKey);
+    if (openModal) {
+      if (selectedPopup) {
+        setFormData({
+          ...selectedPopup,
+          publicationDate: selectedPopup.publicationDate
+            ? new Date(selectedPopup.publicationDate)
+            : new Date(),
+          expirationDate: selectedPopup.expirationDate
+            ? new Date(selectedPopup.expirationDate)
+            : new Date(),
+        });
+        setSelectedImage(selectedPopup.image ?? null);
       } else {
+        setFormData(initialFormData);
         setSelectedImage(null);
       }
-    } else {
-      setFormData(initialFormData);
-      setSelectedImage(null);
     }
-  }, [selectedPopup, setFormData]);
+  }
 
   // Função para lidar com a seleção de imagem no modal
   const handleMediaSelect = (media: IMedia | IMedia[]) => {
@@ -273,14 +273,13 @@ export function PopupsManager() {
 
                 {/* Organização Responsável */}
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="organizationId">Secretaria / Órgão *</Label>
+                  <Label htmlFor="organizationId">Secretaria / Órgão</Label>
                   <Select
                     name="organizationId"
                     value={formData.organizationId || ""}
                     onValueChange={(value) =>
                       setFormData({ ...formData, organizationId: value })
                     }
-                    required
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Selecione uma secretaria/órgão" />
