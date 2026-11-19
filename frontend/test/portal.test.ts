@@ -13,7 +13,7 @@ import {
 } from "@/lib/sanitize-html";
 import { isExternalLink, resolveMenuItemHref } from "@/lib/menu-utils";
 import { captureFrontendException } from "@/lib/telemetry";
-import { MenuService } from "@/app/service/menu.service";
+import { MenuItemService, MenuService } from "@/app/service/menu.service";
 import { AuthService } from "@/app/service/auth.service";
 import { StoriesService } from "@/app/service/stories.service";
 import { PopupsService } from "@/app/service/popups.service";
@@ -433,5 +433,61 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
         slides: [],
       } as never),
     ).rejects.toThrow("slides.0.mediaId must be a UUID");
+  });
+
+  it("MenuItemService deve omitir menuId no PATCH e enviar { items } no reorder", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "item-1", label: "Início" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-menu-test",
+    });
+
+    await MenuItemService.updateMenuItem("item-1", {
+      id: "item-1",
+      menuId: "11111111-1111-4111-8111-111111111111",
+      label: "Início",
+      visible: true,
+      order: 1,
+      url: "https://pmtb.pr.gov.br",
+      pageId: null,
+      categoryId: null,
+      parentId: null,
+    });
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/menu-item/item-1");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        label: "Início",
+        visible: true,
+        order: 1,
+        url: "https://pmtb.pr.gov.br",
+        pageId: null,
+        categoryId: null,
+        parentId: null,
+      }),
+    });
+
+    await MenuItemService.reorderMenuItems([
+      { id: "11111111-1111-4111-8111-111111111111", order: 0, parentId: null },
+    ]);
+
+    expect(fetchMock.mock.calls[1][0]).toContain("/menu-item/reorder");
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        items: [
+          {
+            id: "11111111-1111-4111-8111-111111111111",
+            order: 0,
+            parentId: null,
+          },
+        ],
+      }),
+    });
   });
 });

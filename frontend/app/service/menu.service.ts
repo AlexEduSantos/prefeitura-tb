@@ -3,6 +3,70 @@ import { csrfFetch } from "@/lib/csrf";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+async function parseErrorMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  const body = await response.json().catch(() => null);
+  if (Array.isArray(body?.message)) return body.message.join(", ");
+  if (typeof body?.message === "string" && body.message.trim()) {
+    return body.message;
+  }
+  return fallback;
+}
+
+function sanitizeMenuPayload(data: Partial<IMenu>) {
+  const payload: Record<string, unknown> = {};
+  if (data.title !== undefined) payload.title = data.title;
+  if (data.location !== undefined) payload.location = data.location;
+  if (data.description !== undefined && data.description !== null) {
+    payload.description = data.description;
+  }
+  if (data.active !== undefined) payload.active = Boolean(data.active);
+  if (typeof data.spaceId === "string" && data.spaceId.trim()) {
+    payload.spaceId = data.spaceId.trim();
+  }
+  if (typeof data.organizationId === "string" && data.organizationId.trim()) {
+    payload.organizationId = data.organizationId.trim();
+  }
+  return payload;
+}
+
+function sanitizeMenuItemPayload(
+  data: Partial<IMenuItem>,
+  options: { includeMenuId?: string } = {},
+) {
+  const payload: Record<string, unknown> = {};
+  if (data.label !== undefined) payload.label = data.label;
+  if (data.description !== undefined && data.description !== null) {
+    payload.description = data.description;
+  }
+  if (data.icon !== undefined && data.icon !== null) {
+    payload.icon = data.icon;
+  }
+  if (data.visible !== undefined) payload.visible = Boolean(data.visible);
+  if (typeof data.order === "number") payload.order = data.order;
+
+  if (data.url !== undefined) {
+    payload.url = data.url === "" ? null : data.url;
+  }
+  if (data.pageId !== undefined) {
+    payload.pageId = data.pageId === "" ? null : data.pageId;
+  }
+  if (data.categoryId !== undefined) {
+    payload.categoryId = data.categoryId === "" ? null : data.categoryId;
+  }
+  if (data.parentId !== undefined) {
+    payload.parentId = data.parentId === "" ? null : data.parentId;
+  }
+
+  if (options.includeMenuId) {
+    payload.menuId = options.includeMenuId;
+  }
+
+  return payload;
+}
+
 export class MenuService {
   static async getMenus(): Promise<IMenu[]> {
     const response = await fetch(`${API_URL}/menus`, {
@@ -45,9 +109,11 @@ export class MenuService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(sanitizeMenuPayload(data)),
     });
-    if (!response.ok) throw new Error("Erro ao criar menu");
+    if (!response.ok) {
+      throw new Error(await parseErrorMessage(response, "Erro ao criar menu"));
+    }
     return response.json();
   }
 
@@ -56,9 +122,13 @@ export class MenuService {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(sanitizeMenuPayload(data)),
     });
-    if (!response.ok) throw new Error("Erro ao atualizar menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar menu"),
+      );
+    }
     return response.json();
   }
 
@@ -68,7 +138,11 @@ export class MenuService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao remover menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao remover menu"),
+      );
+    }
     return response.json();
   }
 }
@@ -95,13 +169,27 @@ export class MenuItemService {
   static async reorderMenuItems(
     data: Partial<IMenuItem>[],
   ): Promise<IMenuItem[]> {
+    const items = data
+      .filter((item): item is Partial<IMenuItem> & { id: string } =>
+        Boolean(item.id),
+      )
+      .map((item, idx) => ({
+        id: item.id,
+        order: typeof item.order === "number" ? item.order : idx,
+        parentId: item.parentId ? item.parentId : null,
+      }));
+
     const response = await csrfFetch(`${API_URL}/menu-item/reorder`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify({ items }),
     });
-    if (!response.ok) throw new Error("Erro ao reordenar itens do menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao reordenar itens do menu"),
+      );
+    }
     return response.json();
   }
 
@@ -113,9 +201,17 @@ export class MenuItemService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(
+        sanitizeMenuItemPayload(data, {
+          includeMenuId: data.menuId || menuId,
+        }),
+      ),
     });
-    if (!response.ok) throw new Error("Erro ao criar item do menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao criar item do menu"),
+      );
+    }
     return response.json();
   }
 
@@ -127,9 +223,13 @@ export class MenuItemService {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(sanitizeMenuItemPayload(data)),
     });
-    if (!response.ok) throw new Error("Erro ao atualizar item do menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar item do menu"),
+      );
+    }
     return response.json();
   }
 
@@ -139,7 +239,11 @@ export class MenuItemService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao remover item do menu");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao remover item do menu"),
+      );
+    }
     return response.json();
   }
 }
