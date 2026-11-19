@@ -135,6 +135,7 @@ export class StoryService {
         include: {
           cover: {
             select: {
+              id: true,
               key: true,
               altText: true,
             },
@@ -142,7 +143,7 @@ export class StoryService {
           items: {
             orderBy: { order: 'asc' },
             include: {
-              media: { select: { key: true, altText: true } },
+              media: { select: { id: true, key: true, altText: true } },
             },
           },
         },
@@ -190,12 +191,16 @@ export class StoryService {
       include: {
         cover: {
           select: {
+            id: true,
             key: true,
             altText: true,
           },
         },
         items: {
           orderBy: { order: 'asc' },
+          include: {
+            media: { select: { id: true, key: true, altText: true } },
+          },
         },
       },
     });
@@ -206,7 +211,7 @@ export class StoryService {
   }
 
   async update(id: string, updateStoryDto: UpdateStoryDto) {
-    await this.findOne(id); // verifica existência
+    await this.findOneAdmin(id); // verifica existência
     const { items, ...storyData } = updateStoryDto;
 
     // Preparar itens para criação (caso sejam enviados novos)
@@ -250,7 +255,7 @@ export class StoryService {
     storyId: string,
   ) {
     // Verifica se o story existe
-    await this.findOne(storyId);
+    await this.findOneAdmin(storyId);
 
     // Calcula a próxima ordem
     const count = await this.prisma.storiesItem.count({
@@ -323,7 +328,10 @@ export class StoryService {
   }
 
   async updateStoryItem(id: string, updateStoryItemDto: UpdateStoryItemDto) {
-    await this.findStoryItemById(id);
+    const existing = await this.prisma.storiesItem.findUnique({
+      where: { id },
+    });
+    if (!existing) throw new NotFoundException('Item do story não encontrado');
 
     // Prepara dados convertendo datas se presentes
     const data: any = {};

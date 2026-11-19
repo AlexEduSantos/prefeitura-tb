@@ -622,4 +622,60 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
       }),
     });
   });
+
+  it("StoriesService deve sanitizar payloads de Story e StoryItem e propagar erro real do backend", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "st-1", title: "Destaque" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "it-1", caption: "Legenda" }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ message: "Destaque não encontrado" }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-story-test",
+    });
+
+    await StoriesService.updateStories("st-1", {
+      id: "st-1",
+      title: "Destaque Atualizado",
+      coverId: "11111111-1111-4111-8111-111111111111",
+      cover: { id: "11111111-1111-4111-8111-111111111111", key: "a.jpg" },
+    } as never);
+
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        title: "Destaque Atualizado",
+        coverId: "11111111-1111-4111-8111-111111111111",
+      }),
+    });
+
+    await StoriesService.updateStoriesItem("it-1", {
+      id: "it-1",
+      caption: "Nova legenda",
+      link: null,
+      media: { key: "x.jpg" },
+    } as never);
+
+    expect(fetchMock.mock.calls[1][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({
+        caption: "Nova legenda",
+        link: null,
+      }),
+    });
+
+    await expect(StoriesService.deleteStories("st-404")).rejects.toThrow(
+      "Destaque não encontrado",
+    );
+  });
 });

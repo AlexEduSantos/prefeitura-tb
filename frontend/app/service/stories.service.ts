@@ -1,7 +1,46 @@
 import { IStories, IStoriesItem } from "../type/stories";
 import { csrfFetch } from "@/lib/csrf";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL + "/story";
+const API_URL =
+  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001") + "/story";
+
+async function parseErrorMessage(
+  response: Response,
+  fallback: string,
+): Promise<string> {
+  const errData = await response.json().catch(() => null);
+  if (Array.isArray(errData?.message)) return errData.message.join(", ");
+  if (typeof errData?.message === "string" && errData.message.trim()) {
+    return errData.message;
+  }
+  return fallback;
+}
+
+function sanitizeStoryPayload(story: Partial<IStories>) {
+  const payload: Record<string, unknown> = {};
+  if (typeof story.title === "string") payload.title = story.title;
+  if (typeof story.description === "string") {
+    payload.description = story.description;
+  }
+  if (typeof story.order === "number") payload.order = story.order;
+  if (typeof story.coverId === "string" && story.coverId.trim()) {
+    payload.coverId = story.coverId.trim();
+  }
+  return payload;
+}
+
+function sanitizeStoryItemPayload(item: Partial<IStoriesItem>) {
+  const payload: Record<string, unknown> = {};
+  if (typeof item.order === "number") payload.order = item.order;
+  if (item.caption !== undefined) payload.caption = item.caption;
+  if (item.link !== undefined) payload.link = item.link;
+  if (typeof item.mediaId === "string" && item.mediaId.trim()) {
+    payload.mediaId = item.mediaId.trim();
+  }
+  if (item.publishedDate) payload.publishedDate = item.publishedDate;
+  if (item.expirationDate) payload.expirationDate = item.expirationDate;
+  return payload;
+}
 
 export class StoriesService {
   static async getAdminStoriesList(params?: {
@@ -19,7 +58,14 @@ export class StoriesService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar destaques administrativos");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(
+          response,
+          "Erro ao buscar destaques administrativos",
+        ),
+      );
+    }
     return response.json();
   }
 
@@ -38,7 +84,11 @@ export class StoriesService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar destaques");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar destaques"),
+      );
+    }
     return response.json();
   }
 
@@ -47,7 +97,11 @@ export class StoriesService {
       method: "GET",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar destaque");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar destaque"),
+      );
+    }
     return response.json();
   }
 
@@ -56,9 +110,13 @@ export class StoriesService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(story),
+      body: JSON.stringify(sanitizeStoryPayload(story)),
     });
-    if (!response.ok) throw new Error("Erro ao criar destaque");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao criar destaque"),
+      );
+    }
     return response.json();
   }
 
@@ -67,9 +125,13 @@ export class StoriesService {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(story),
+      body: JSON.stringify(sanitizeStoryPayload(story)),
     });
-    if (!response.ok) throw new Error("Erro ao atualizar destaque");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar destaque"),
+      );
+    }
     return response.json();
   }
 
@@ -78,7 +140,11 @@ export class StoriesService {
       method: "DELETE",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao deletar destaque");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao deletar destaque"),
+      );
+    }
     return response.json();
   }
 
@@ -89,7 +155,11 @@ export class StoriesService {
       method: "GET",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar itens");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar itens"),
+      );
+    }
     return response.json();
   }
 
@@ -98,7 +168,9 @@ export class StoriesService {
       method: "GET",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar item");
+    if (!response.ok) {
+      throw new Error(await parseErrorMessage(response, "Erro ao buscar item"));
+    }
     return response.json();
   }
 
@@ -107,7 +179,11 @@ export class StoriesService {
       method: "GET",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao buscar itens do destaque");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao buscar itens do destaque"),
+      );
+    }
     return response.json();
   }
 
@@ -116,9 +192,11 @@ export class StoriesService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(item),
+      body: JSON.stringify(sanitizeStoryItemPayload(item)),
     });
-    if (!response.ok) throw new Error("Erro ao criar item");
+    if (!response.ok) {
+      throw new Error(await parseErrorMessage(response, "Erro ao criar item"));
+    }
     return response.json();
   }
 
@@ -127,9 +205,13 @@ export class StoriesService {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(item),
+      body: JSON.stringify(sanitizeStoryItemPayload(item)),
     });
-    if (!response.ok) throw new Error("Erro ao atualizar item");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar item"),
+      );
+    }
     return response.json();
   }
 
@@ -141,12 +223,9 @@ export class StoriesService {
       body: JSON.stringify({ ids }),
     });
     if (!response.ok) {
-      let message = "Erro ao atualizar ordem";
-      try {
-        const errData = await response.json();
-        message = errData.message || message;
-      } catch {}
-      throw new Error(message);
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao atualizar ordem"),
+      );
     }
     return response.json();
   }
@@ -156,7 +235,11 @@ export class StoriesService {
       method: "DELETE",
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao deletar item");
+    if (!response.ok) {
+      throw new Error(
+        await parseErrorMessage(response, "Erro ao deletar item"),
+      );
+    }
     return response.json();
   }
 }
