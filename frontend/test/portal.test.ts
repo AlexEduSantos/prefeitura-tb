@@ -18,7 +18,10 @@ import { AuthService } from "@/app/service/auth.service";
 import { StoriesService } from "@/app/service/stories.service";
 import { PopupsService } from "@/app/service/popups.service";
 import { GalleryService } from "@/app/service/gallery.service";
-import { OrganizationService } from "@/app/service/organization.service";
+import {
+  CategoryService,
+  OrganizationService,
+} from "@/app/service/organization.service";
 import { ApprovalService } from "@/app/service/approval.service";
 import { MediaService } from "@/app/service/media.service";
 import { AuditService } from "@/app/service/audit.service";
@@ -327,5 +330,46 @@ describe("Portal Prefeitura — Suíte Unitária Frontend", () => {
     await expect(AuditService.getAuditLogs({ page: 1 })).rejects.toThrow(
       "page must be an integer number",
     );
+  });
+
+  it("CategoryService.updateCategory deve omitir id, parentId vazio e metadados do body PATCH", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ id: "cat-1", title: "Notícias", slug: "noticias" }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({
+          message: "Já existe uma categoria com este apelido (slug).",
+        }),
+      });
+    vi.stubGlobal("fetch", fetchMock);
+    vi.stubGlobal("window", {});
+    vi.stubGlobal("document", {
+      cookie: "XSRF-TOKEN=tok-cat-test",
+    });
+
+    await CategoryService.updateCategory("cat-1", {
+      id: "cat-1",
+      title: "Notícias",
+      slug: "noticias",
+      parentId: "",
+      createdAt: "2026-01-01T00:00:00Z",
+    });
+
+    expect(fetchMock.mock.calls[0][0]).toContain("/categories/cat-1");
+    expect(fetchMock.mock.calls[0][1]).toMatchObject({
+      method: "PATCH",
+      body: JSON.stringify({ title: "Notícias", slug: "noticias" }),
+    });
+
+    await expect(
+      CategoryService.updateCategory("cat-1", {
+        title: "Notícias",
+        slug: "duplicado",
+      }),
+    ).rejects.toThrow("Já existe uma categoria com este apelido (slug).");
   });
 });

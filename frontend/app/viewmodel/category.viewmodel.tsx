@@ -1,7 +1,7 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CategoryService } from "../service/organization.service";
-import { ICategory, IOrganization } from "../type/organization";
+import { ICategory } from "../type/organization";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,7 +17,6 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
   ArrowDownIcon,
-  ArrowUpDown,
   ArrowUpIcon,
   PenIcon,
   TrashIcon,
@@ -41,20 +40,22 @@ export default function UseCategory() {
       queryClient.invalidateQueries({ queryKey: ["category"] });
       toast.success("Categoria criada com sucesso");
     },
-    onError: (error) => {
-      toast.error("Erro ao criar categoria");
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao criar categoria");
     },
   });
 
   const updateCategoryMutation = useMutation({
-    mutationFn: (data: Partial<ICategory>) =>
-      CategoryService.updateCategory(data.id!, data),
+    mutationFn: (data: Partial<ICategory>) => {
+      const { id, ...payload } = data;
+      return CategoryService.updateCategory(id!, payload);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["category"] });
       toast.success("Categoria atualizada com sucesso");
     },
-    onError: (error) => {
-      toast.error("Erro ao atualizar categoria");
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao atualizar categoria");
     },
   });
 
@@ -64,8 +65,8 @@ export default function UseCategory() {
       queryClient.invalidateQueries({ queryKey: ["category"] });
       toast.success("Categoria deletada com sucesso");
     },
-    onError: (error) => {
-      toast.error("Erro ao deletar categoria");
+    onError: (error: Error) => {
+      toast.error(error?.message || "Erro ao deletar categoria");
     },
   });
 

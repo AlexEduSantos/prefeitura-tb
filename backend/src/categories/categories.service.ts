@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -8,12 +13,21 @@ export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    return this.prisma.category.create({
-      data: createCategoryDto,
-      include: {
-        parent: true,
-      },
-    });
+    try {
+      return await this.prisma.category.create({
+        data: createCategoryDto,
+        include: {
+          parent: true,
+        },
+      });
+    } catch (error: unknown) {
+      if ((error as { code?: string })?.code === 'P2002') {
+        throw new ConflictException(
+          'Já existe uma categoria com este apelido (slug).',
+        );
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -87,10 +101,24 @@ export class CategoriesService {
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     await this.findOne(id);
-    return this.prisma.category.update({
-      where: { id },
-      data: updateCategoryDto,
-    });
+    if (updateCategoryDto.parentId && updateCategoryDto.parentId === id) {
+      throw new BadRequestException(
+        'Uma categoria não pode ser pai de si mesma.',
+      );
+    }
+    try {
+      return await this.prisma.category.update({
+        where: { id },
+        data: updateCategoryDto,
+      });
+    } catch (error: unknown) {
+      if ((error as { code?: string })?.code === 'P2002') {
+        throw new ConflictException(
+          'Já existe uma categoria com este apelido (slug).',
+        );
+      }
+      throw error;
+    }
   }
 
   async remove(id: string) {

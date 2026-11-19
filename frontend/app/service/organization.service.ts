@@ -138,6 +138,31 @@ export class SpaceService {
 }
 
 export class CategoryService {
+  private static sanitizePayload(data: Partial<ICategory>) {
+    const payload: Record<string, unknown> = {};
+    if (data.title !== undefined) payload.title = data.title;
+    if (data.slug !== undefined) payload.slug = data.slug;
+    if (data.description !== undefined && data.description !== null) {
+      payload.description = data.description;
+    }
+    if (data.parentId !== undefined && data.parentId !== "") {
+      payload.parentId = data.parentId;
+    }
+    return payload;
+  }
+
+  private static async parseErrorMessage(
+    response: Response,
+    fallback: string,
+  ): Promise<string> {
+    const body = await response.json().catch(() => null);
+    if (Array.isArray(body?.message)) return body.message.join(", ");
+    if (typeof body?.message === "string" && body.message.trim()) {
+      return body.message;
+    }
+    return fallback;
+  }
+
   static async getCategories(): Promise<ICategory[]> {
     const response = await fetch(`${API_URL}/categories`, {
       headers: { "Content-Type": "application/json" },
@@ -161,9 +186,13 @@ export class CategoryService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(this.sanitizePayload(data)),
     });
-    if (!response.ok) throw new Error("Erro ao criar categoria");
+    if (!response.ok) {
+      throw new Error(
+        await this.parseErrorMessage(response, "Erro ao criar categoria"),
+      );
+    }
     return response.json();
   }
 
@@ -175,9 +204,13 @@ export class CategoryService {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(data),
+      body: JSON.stringify(this.sanitizePayload(data)),
     });
-    if (!response.ok) throw new Error("Erro ao atualizar categoria");
+    if (!response.ok) {
+      throw new Error(
+        await this.parseErrorMessage(response, "Erro ao atualizar categoria"),
+      );
+    }
     return response.json();
   }
 
@@ -187,7 +220,11 @@ export class CategoryService {
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
-    if (!response.ok) throw new Error("Erro ao remover categoria");
+    if (!response.ok) {
+      throw new Error(
+        await this.parseErrorMessage(response, "Erro ao remover categoria"),
+      );
+    }
     return response.json();
   }
 }
