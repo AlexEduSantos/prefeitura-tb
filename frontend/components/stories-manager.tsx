@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, type CSSProperties } from "react";
 import { useStories } from "../app/viewmodel/stories.viewmodel";
 import { IStories, IStoriesItem } from "@/app/type/stories";
+import { IMedia } from "@/app/type/media";
 import Image from "next/image";
 import { format } from "date-fns";
 import {
@@ -13,6 +14,7 @@ import {
   EyeIcon,
   Link as LinkIcon,
   MessageSquare,
+  ImageUpIcon,
 } from "lucide-react";
 import { Input } from "./ui/input";
 import {
@@ -191,12 +193,15 @@ function StoryRender({
   onEditStory: () => void;
 }) {
   const [selectedStory, setSelectedStory] = useState<IStories | null>(null);
-  const [items, setItems] = useState<IStoriesItem[]>(story.items);
+  const [optimisticItems, setOptimisticItems] = useState<{
+    source: IStoriesItem[];
+    list: IStoriesItem[];
+  } | null>(null);
 
-  // Sincroniza itens locais caso mudem externamente (query refetch ou adicionar/remover)
-  useEffect(() => {
-    setItems(story.items);
-  }, [story.items]);
+  const items =
+    optimisticItems?.source === story.items
+      ? optimisticItems.list
+      : story.items;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -216,7 +221,7 @@ function StoryRender({
       const newIndex = items.findIndex((item) => item.id === over.id);
       if (oldIndex !== -1 && newIndex !== -1) {
         const reordered = arrayMove(items, oldIndex, newIndex);
-        setItems(reordered);
+        setOptimisticItems({ source: story.items, list: reordered });
         const newOrder = reordered.map((item) => item.id);
         onReorder(newOrder);
       }
@@ -437,6 +442,93 @@ function Toolbar({
   );
 }
 
+// --- Story Item Media Preview ---
+const STORY_PREVIEW_MAX_HEIGHT = 500;
+const STORY_ASPECT_RATIO = 9 / 16;
+
+function isStoryAspectRatio(width?: number, height?: number) {
+  if (!width || !height) return true;
+  return Math.abs(width / height - STORY_ASPECT_RATIO) <= 0.02;
+}
+
+function getPreviewContainerStyle(
+  width?: number,
+  height?: number,
+): CSSProperties {
+  const safeWidth = width && width > 0 ? width : 9;
+  const safeHeight = height && height > 0 ? height : 16;
+  const calculatedWidth = Math.round(
+    STORY_PREVIEW_MAX_HEIGHT * (safeWidth / safeHeight),
+  );
+
+  return {
+    aspectRatio: `${safeWidth} / ${safeHeight}`,
+    width: `min(100%, ${calculatedWidth}px)`,
+  };
+}
+
+function StoryItemMediaPreview({
+  media,
+  required = false,
+  onSelectClick,
+}: {
+  media: IMedia | null;
+  required?: boolean;
+  onSelectClick: () => void;
+}) {
+  const hasInvalidRatio =
+    !!media && !isStoryAspectRatio(media.width, media.height);
+
+  return (
+    <div>
+      <label className="text-sm font-medium">
+        Mídia{required ? " *" : ""}
+      </label>
+      <div
+        className={`flex items-center gap-2 mt-1.5 relative group ${media ? "justify-center" : "justify-start"}`}
+      >
+        {media ? (
+          <div
+            className="relative min-w-16 rounded-lg overflow-hidden border border-border shrink-0"
+            style={getPreviewContainerStyle(media.width, media.height)}
+          >
+            <Image
+              loader={() =>
+                `${process.env.NEXT_PUBLIC_API_URL}/media/file/${media.key}`
+              }
+              src={`${process.env.NEXT_PUBLIC_API_URL}/media/file/${media.key}`}
+              alt={media.altText || media.title || "Preview"}
+              fill
+              sizes="(max-width: 512px) 100vw, 500px"
+              className="object-cover"
+            />
+          </div>
+        ) : null}
+        <Button
+          type="button"
+          variant={media ? "secondary" : "outline"}
+          className={
+            media
+              ? "absolute right-1/2 translate-x-1/2 bottom-1/2 translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
+              : "cursor-pointer"
+          }
+          onClick={onSelectClick}
+          title={
+            media ? "Trocar mídia da galeria" : "Selecionar mídia da galeria"
+          }
+        >
+          {media ? <ImageUpIcon /> : "Selecionar mídia da galeria"}
+        </Button>
+      </div>
+      {hasInvalidRatio && (
+        <small className="text-muted-foreground">
+          A imagem não está no formato 9:16, pode não ficar boa no visualizador.
+        </small>
+      )}
+    </div>
+  );
+}
+
 // --- Main Component ---
 export function StoriesManager() {
   const {
@@ -478,16 +570,19 @@ export function StoriesManager() {
 
   // Estados para criação de item do story
   const [createItemModalOpen, setCreateItemModalOpen] = useState(false);
-  const [createItemStoryId, setCreateItemStoryId] = useState<string | null>(null);
-  const [createItemMedia, setCreateItemMedia] = useState<any | null>(null);
+  const [createItemStoryId, setCreateItemStoryId] = useState<string | null>(
+    null,
+  );
+  const [createItemMedia, setCreateItemMedia] = useState<IMedia | null>(null);
   const [createItemCaption, setCreateItemCaption] = useState("");
   const [createItemLink, setCreateItemLink] = useState("");
-  const [createItemMediaPickerOpen, setCreateItemMediaPickerOpen] = useState(false);
+  const [createItemMediaPickerOpen, setCreateItemMediaPickerOpen] =
+    useState(false);
 
   // Estados para edição de item do story
   const [editItemModalOpen, setEditItemModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<IStoriesItem | null>(null);
-  const [editItemMedia, setEditItemMedia] = useState<any | null>(null);
+  const [editItemMedia, setEditItemMedia] = useState<IMedia | null>(null);
   const [editItemCaption, setEditItemCaption] = useState("");
   const [editItemLink, setEditItemLink] = useState("");
   const [editItemMediaPickerOpen, setEditItemMediaPickerOpen] = useState(false);
@@ -509,8 +604,9 @@ export function StoriesManager() {
     setNewStoryCoverId("");
   };
 
-  const handleCoverSelect = (media: any) => {
+  const handleCoverSelect = (media: IMedia | IMedia[]) => {
     const selected = Array.isArray(media) ? media[0] : media;
+    if (!selected) return;
     setNewStoryCoverId(selected.id);
     setCoverPickerOpen(false);
   };
@@ -519,7 +615,7 @@ export function StoriesManager() {
     setEditingStory(story);
     setEditStoryTitle(story.title || "");
     setEditStoryDescription(story.description || "");
-    setEditStoryCoverId(story.coverId || (story.cover as any)?.id || "");
+    setEditStoryCoverId(story.coverId || story.cover?.id || "");
   };
 
   const handleSaveEdit = () => {
@@ -541,12 +637,13 @@ export function StoriesManager() {
         onSuccess: () => {
           setEditingStory(null);
         },
-      }
+      },
     );
   };
 
-  const handleEditCoverSelect = (media: any) => {
+  const handleEditCoverSelect = (media: IMedia | IMedia[]) => {
     const selected = Array.isArray(media) ? media[0] : media;
+    if (!selected) return;
     setEditStoryCoverId(selected.id);
     setEditCoverPickerOpen(false);
   };
@@ -560,8 +657,9 @@ export function StoriesManager() {
     setCreateItemModalOpen(true);
   };
 
-  const handleCreateItemSelectMedia = (media: any) => {
+  const handleCreateItemSelectMedia = (media: IMedia | IMedia[]) => {
     const selected = Array.isArray(media) ? media[0] : media;
+    if (!selected) return;
     setCreateItemMedia(selected);
     setCreateItemMediaPickerOpen(false);
   };
@@ -590,7 +688,7 @@ export function StoriesManager() {
           setCreateItemCaption("");
           setCreateItemLink("");
         },
-      }
+      },
     );
   };
 
@@ -603,8 +701,9 @@ export function StoriesManager() {
     setEditItemModalOpen(true);
   };
 
-  const handleEditItemSelectMedia = (media: any) => {
+  const handleEditItemSelectMedia = (media: IMedia | IMedia[]) => {
     const selected = Array.isArray(media) ? media[0] : media;
+    if (!selected) return;
     setEditItemMedia(selected);
     setEditItemMediaPickerOpen(false);
   };
@@ -626,7 +725,7 @@ export function StoriesManager() {
           setEditItemModalOpen(false);
           setEditingItem(null);
         },
-      }
+      },
     );
   };
 
@@ -825,10 +924,7 @@ export function StoriesManager() {
             </div>
           </div>
           <div className="flex justify-end gap-2 mt-4">
-            <Button
-              variant="outline"
-              onClick={() => setEditingStory(null)}
-            >
+            <Button variant="outline" onClick={() => setEditingStory(null)}>
               Cancelar
             </Button>
             <Button
@@ -848,40 +944,18 @@ export function StoriesManager() {
           if (!open) setCreateItemModalOpen(false);
         }}
       >
-        <DialogContent>
+        <DialogContent
+          className="max-h-[98%] overflow-y-auto scrollbar-none"
+          showCloseButton={false}
+        >
           <DialogHeader>
             <DialogTitle>Adicionar Item ao Destaque</DialogTitle>
             <DialogDescription>
-              Selecione a mídia e adicione legenda ou link de acesso (opcionais).
+              Selecione a mídia e adicione legenda ou link de acesso
+              (opcionais).
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Mídia *</label>
-              <div className="flex items-center gap-3 mt-1.5">
-                {createItemMedia ? (
-                  <div className="relative w-16 aspect-9/16 rounded overflow-hidden border border-border">
-                    <Image
-                      loader={() =>
-                        `${process.env.NEXT_PUBLIC_API_URL}/media/file/${createItemMedia.key}`
-                      }
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/media/file/${createItemMedia.key}`}
-                      alt="Preview"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ) : null}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setCreateItemMediaPickerOpen(true)}
-                >
-                  {createItemMedia ? "Trocar mídia" : "Selecionar mídia da galeria"}
-                </Button>
-              </div>
-            </div>
-
+          <div className="space-y-2">
             <div>
               <label className="text-sm font-medium">Legenda (Caption)</label>
               <Input
@@ -896,7 +970,9 @@ export function StoriesManager() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Link de Redirecionamento</label>
+              <label className="text-sm font-medium">
+                Link de Redirecionamento
+              </label>
               <div className="relative mt-1">
                 <Input
                   value={createItemLink}
@@ -906,12 +982,14 @@ export function StoriesManager() {
                 />
                 <LinkIcon className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                Desktop: aberto via botão com ChevronUp. Mobile: aberto ao arrastar para cima (bottom-to-top).
-              </p>
             </div>
+            <StoryItemMediaPreview
+              media={createItemMedia}
+              required
+              onSelectClick={() => setCreateItemMediaPickerOpen(true)}
+            />
           </div>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2">
             <Button
               variant="outline"
               onClick={() => setCreateItemModalOpen(false)}
@@ -922,7 +1000,9 @@ export function StoriesManager() {
               onClick={handleSaveCreateItem}
               disabled={createStoryItemMutation.isPending || !createItemMedia}
             >
-              {createStoryItemMutation.isPending ? "Adicionando..." : "Adicionar Item"}
+              {createStoryItemMutation.isPending
+                ? "Adicionando..."
+                : "Adicionar Item"}
             </Button>
           </div>
         </DialogContent>
@@ -938,40 +1018,17 @@ export function StoriesManager() {
           }
         }}
       >
-        <DialogContent>
+        <DialogContent
+          className="max-h-[98%] overflow-y-auto scrollbar-none"
+          showCloseButton={false}
+        >
           <DialogHeader>
             <DialogTitle>Editar Item do Destaque</DialogTitle>
             <DialogDescription>
               Altere a legenda, o link de acesso ou a mídia deste item.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Mídia</label>
-              <div className="flex items-center gap-3 mt-1.5">
-                {editItemMedia ? (
-                  <div className="relative w-16 aspect-9/16 rounded overflow-hidden border border-border">
-                    <Image
-                      loader={() =>
-                        `${process.env.NEXT_PUBLIC_API_URL}/media/file/${editItemMedia.key}`
-                      }
-                      src={`${process.env.NEXT_PUBLIC_API_URL}/media/file/${editItemMedia.key}`}
-                      alt="Preview"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ) : null}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setEditItemMediaPickerOpen(true)}
-                >
-                  Trocar mídia da galeria
-                </Button>
-              </div>
-            </div>
-
+          <div className="space-y-2">
             <div>
               <label className="text-sm font-medium">Legenda (Caption)</label>
               <Input
@@ -986,7 +1043,9 @@ export function StoriesManager() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Link de Redirecionamento</label>
+              <label className="text-sm font-medium">
+                Link de Redirecionamento
+              </label>
               <div className="relative mt-1">
                 <Input
                   value={editItemLink}
@@ -997,11 +1056,17 @@ export function StoriesManager() {
                 <LinkIcon className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Desktop: aberto via botão com ChevronUp. Mobile: aberto ao arrastar para cima (bottom-to-top).
+                Desktop: aberto via botão com ChevronUp. Mobile: aberto ao
+                arrastar para cima (bottom-to-top).
               </p>
             </div>
+
+            <StoryItemMediaPreview
+              media={editItemMedia}
+              onSelectClick={() => setEditItemMediaPickerOpen(true)}
+            />
           </div>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2">
             <Button
               variant="outline"
               onClick={() => {
@@ -1015,7 +1080,9 @@ export function StoriesManager() {
               onClick={handleSaveEditItem}
               disabled={updateStoryItemMutation.isPending}
             >
-              {updateStoryItemMutation.isPending ? "Salvando..." : "Salvar Alterações"}
+              {updateStoryItemMutation.isPending
+                ? "Salvando..."
+                : "Salvar Alterações"}
             </Button>
           </div>
         </DialogContent>

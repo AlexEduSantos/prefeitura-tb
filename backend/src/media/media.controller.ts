@@ -197,6 +197,7 @@ export class MediaController {
       createMediaDto,
       'image',
       file.mimetype,
+      file.originalname,
     );
     await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
     return media;
@@ -235,6 +236,7 @@ export class MediaController {
       createMediaDto,
       'document',
       detected.mime,
+      file.originalname,
     );
     await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
     return media;
@@ -274,6 +276,7 @@ export class MediaController {
       createMediaDto,
       'video',
       detected.mime,
+      file.originalname,
     );
     await this.mediaQueue.add('optimize', { mediaId: media.id, tempFilePath });
     return media;

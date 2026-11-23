@@ -32,7 +32,7 @@ export function useMediaViewModel() {
     }: {
       file: File;
       metadata: {
-        title: string;
+        title?: string;
         altText?: string;
         description?: string;
         folderId?: string;
@@ -87,6 +87,7 @@ export function useMediaViewModel() {
     errorMedia: mediaQuery.error,
     refetchMedia: mediaQuery.refetch,
     uploadMedia: uploadMediaMutation.mutate,
+    uploadMediaAsync: uploadMediaMutation.mutateAsync,
     isUploading: uploadMediaMutation.isPending,
     errorUploading: uploadMediaMutation.error,
     updateMedia: updateMediaMutation.mutate,

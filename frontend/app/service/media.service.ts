@@ -61,14 +61,14 @@ export class MediaService {
   static async uploadMedia(
     file: File,
     metadata: {
-      title: string;
+      title?: string;
       altText?: string;
       description?: string;
       folderId?: string;
     },
   ): Promise<IMedia> {
     const formData = new FormData();
-    formData.append("title", metadata.title);
+    if (metadata.title) formData.append("title", metadata.title);
     if (metadata.altText) formData.append("altText", metadata.altText);
     if (metadata.description)
       formData.append("description", metadata.description);

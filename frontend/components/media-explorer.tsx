@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,8 +13,14 @@ import { FileItem } from "./file-item";
 import { Card } from "./ui/card";
 import {
   CheckSquare2,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   FilterIcon,
   FolderPlusIcon,
+  LayoutGrid,
+  List,
   Loader2,
   PlusIcon,
   SearchIcon,
@@ -23,6 +29,15 @@ import {
   Undo2Icon,
   X,
 } from "lucide-react";
+import { Checkbox } from "./ui/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./ui/table";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import {
@@ -89,6 +104,8 @@ export function MediaExplorer({
   });
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [lastSelectedId, setLastSelectedId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const currentPath = pathStack.join("/");
 
   const { data, isLoading } = useMediaList(
@@ -115,25 +132,147 @@ export function MediaExplorer({
   const navigateToFolder = (folderName: string) => {
     setPathStack([...pathStack, folderName]);
     setPagination((prev) => ({ ...prev, page: 1 }));
+    setLastSelectedId(null);
     onSelectionChange([]);
   };
 
   const navigateUp = () => {
     setPathStack(pathStack.slice(0, -1));
     setPagination((prev) => ({ ...prev, page: 1 }));
+    setLastSelectedId(null);
     onSelectionChange([]);
   };
 
   const navigateToRoot = () => {
     setPathStack([]);
     setPagination((prev) => ({ ...prev, page: 1 }));
+    setLastSelectedId(null);
     onSelectionChange([]);
   };
 
   const navigateToCrumb = (index: number) => {
     setPathStack(pathStack.slice(0, index + 1));
     setPagination((prev) => ({ ...prev, page: 1 }));
+    setLastSelectedId(null);
     onSelectionChange([]);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === "Escape" &&
+        selectedItems.length > 0 &&
+        !isUploadModalOpen &&
+        !isFolderModalOpen &&
+        !isDeleteDialogOpen
+      ) {
+        onSelectionChange([]);
+        setLastSelectedId(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    selectedItems.length,
+    isUploadModalOpen,
+    isFolderModalOpen,
+    isDeleteDialogOpen,
+    onSelectionChange,
+  ]);
+
+  const totalFiles = data?.pagination?.total ?? 0;
+  const totalPages = data?.pagination?.totalPages ?? 0;
+  const currentPage =
+    totalPages > 0 ? Math.min(pagination.page, totalPages) : pagination.page;
+
+  const goToPage = (nextPage: number) => {
+    const clamped = Math.max(1, Math.min(nextPage, Math.max(1, totalPages)));
+    if (clamped === pagination.page) return;
+    setPagination((prev) => ({ ...prev, page: clamped }));
+    setLastSelectedId(null);
+  };
+
+  const getVisiblePages = (): (number | "ellipsis")[] => {
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+    const pages: (number | "ellipsis")[] = [1];
+    const start = Math.max(2, currentPage - 1);
+    const end = Math.min(totalPages - 1, currentPage + 1);
+    if (start > 2) pages.push("ellipsis");
+    for (let p = start; p <= end; p++) pages.push(p);
+    if (end < totalPages - 1) pages.push("ellipsis");
+    pages.push(totalPages);
+    return pages;
+  };
+
+  const handleFileSelect = (
+    file: IMedia,
+    index: number,
+    event: MouseEvent<HTMLElement>,
+  ) => {
+    const files: IMedia[] = data?.files ?? [];
+
+    if (!multiple) {
+      onSelectionChange([file]);
+      setLastSelectedId(file.id);
+      return;
+    }
+
+    if (event.shiftKey && lastSelectedId) {
+      const anchorIndex = files.findIndex((f) => f.id === lastSelectedId);
+      if (anchorIndex !== -1) {
+        const start = Math.min(anchorIndex, index);
+        const end = Math.max(anchorIndex, index);
+        const rangeItems = files.slice(start, end + 1);
+
+        if (event.ctrlKey || event.metaKey) {
+          const existingIds = new Set(selectedItems.map((item) => item.id));
+          const merged = [
+            ...selectedItems,
+            ...rangeItems.filter((item) => !existingIds.has(item.id)),
+          ];
+          onSelectionChange(merged);
+        } else {
+          onSelectionChange(rangeItems);
+        }
+        return;
+      }
+    }
+
+    if (event.ctrlKey || event.metaKey) {
+      const alreadySelected = selectedItems.some((item) => item.id === file.id);
+      if (alreadySelected) {
+        onSelectionChange(
+          selectedItems.filter((item) => item.id !== file.id),
+        );
+      } else {
+        onSelectionChange([...selectedItems, file]);
+      }
+      setLastSelectedId(file.id);
+      return;
+    }
+
+    onSelectionChange([file]);
+    setLastSelectedId(file.id);
+  };
+
+  const handleFileCheckboxChange = (file: IMedia, checked: boolean) => {
+    if (checked) {
+      if (multiple) {
+        const alreadySelected = selectedItems.some(
+          (item) => item.id === file.id,
+        );
+        onSelectionChange(
+          alreadySelected ? selectedItems : [...selectedItems, file],
+        );
+      } else {
+        onSelectionChange([file]);
+      }
+      setLastSelectedId(file.id);
+    } else {
+      onSelectionChange(selectedItems.filter((item) => item.id !== file.id));
+    }
   };
 
   const handleToggleSelectAll = () => {
@@ -242,12 +381,14 @@ export function MediaExplorer({
               </Button>
               <Select
                 value={pagination.sort}
-                onValueChange={(value) =>
-                  setPagination({
-                    ...pagination,
+                onValueChange={(value) => {
+                  setPagination((prev) => ({
+                    ...prev,
+                    page: 1,
                     sort: value as "asc" | "desc",
-                  })
-                }
+                  }));
+                  setLastSelectedId(null);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Ordenar" />
@@ -259,12 +400,14 @@ export function MediaExplorer({
               </Select>
               <Select
                 value={pagination.perPage.toString()}
-                onValueChange={(value) =>
-                  setPagination({
-                    ...pagination,
+                onValueChange={(value) => {
+                  setPagination((prev) => ({
+                    ...prev,
+                    page: 1,
                     perPage: parseInt(value),
-                  })
-                }
+                  }));
+                  setLastSelectedId(null);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Por página" />
@@ -275,6 +418,28 @@ export function MediaExplorer({
                   <SelectItem value="50">50</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center rounded-md border bg-card p-0.5 shrink-0">
+                <Button
+                  type="button"
+                  variant={viewMode === "grid" ? "secondary" : "ghost"}
+                  size="icon-sm"
+                  onClick={() => setViewMode("grid")}
+                  title="Visualização em grade"
+                  className="cursor-pointer"
+                >
+                  <LayoutGrid className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  size="icon-sm"
+                  onClick={() => setViewMode("list")}
+                  title="Visualização em lista detalhada"
+                  className="cursor-pointer"
+                >
+                  <List className="size-4" />
+                </Button>
+              </div>
             </div>
           </>
         ) : (
@@ -323,12 +488,14 @@ export function MediaExplorer({
               </Button>
               <Select
                 value={pagination.sort}
-                onValueChange={(value) =>
-                  setPagination({
-                    ...pagination,
+                onValueChange={(value) => {
+                  setPagination((prev) => ({
+                    ...prev,
+                    page: 1,
                     sort: value as "asc" | "desc",
-                  })
-                }
+                  }));
+                  setLastSelectedId(null);
+                }}
               >
                 <SelectTrigger className="flex-1">
                   <SelectValue placeholder="Ordenar" />
@@ -340,12 +507,14 @@ export function MediaExplorer({
               </Select>
               <Select
                 value={pagination.perPage.toString()}
-                onValueChange={(value) =>
-                  setPagination({
-                    ...pagination,
+                onValueChange={(value) => {
+                  setPagination((prev) => ({
+                    ...prev,
+                    page: 1,
                     perPage: parseInt(value),
-                  })
-                }
+                  }));
+                  setLastSelectedId(null);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Por página" />
@@ -356,6 +525,28 @@ export function MediaExplorer({
                   <SelectItem value="50">50</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center rounded-md border bg-card p-0.5 shrink-0">
+                <Button
+                  type="button"
+                  variant={viewMode === "grid" ? "secondary" : "ghost"}
+                  size="icon-sm"
+                  onClick={() => setViewMode("grid")}
+                  title="Visualização em grade"
+                  className="cursor-pointer"
+                >
+                  <LayoutGrid className="size-4" />
+                </Button>
+                <Button
+                  type="button"
+                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  size="icon-sm"
+                  onClick={() => setViewMode("list")}
+                  title="Visualização em lista detalhada"
+                  className="cursor-pointer"
+                >
+                  <List className="size-4" />
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -424,46 +615,222 @@ export function MediaExplorer({
         </BreadcrumbList>
       </Breadcrumb>
 
-      <section className={gridClassName}>
-        {pathStack.length > 0 && (
-          <Card
-            className="p-4 flex flex-col items-center gap-3 cursor-pointer hover:ring hover:ring-primary hover:ring-offset-1 hover:-translate-y-1 shadow-none hover:shadow-lg transition-all aspect-square justify-center"
-            onClick={navigateUp}
-          >
-            <Undo2Icon className="text-primary" />
-            <p className="text-sm font-medium">Voltar</p>
-          </Card>
-        )}
-        {(data?.folders as MediaFolderItem[] | undefined)?.map((folder) => (
-          <FolderCard
-            key={folder.id}
-            name={folder.name}
-            onClick={() => navigateToFolder(folder.name)}
-            onRename={() => handleRenameFolder(folder.id, folder.name)}
-            onDelete={() => handleDeleteFolder(folder.id)}
-          />
-        ))}
-        {(data?.files as IMedia[] | undefined)?.map((file) => (
-          <FileItem
-            key={file.id}
-            file={file}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                if (multiple) {
-                  onSelectionChange([...selectedItems, file]);
-                } else {
-                  onSelectionChange([file]);
-                }
-              } else {
-                onSelectionChange(
-                  selectedItems.filter((item) => item.id !== file.id),
-                );
+      {viewMode === "grid" ? (
+        <section className={gridClassName}>
+          {pathStack.length > 0 && (
+            <Card
+              className="p-4 flex flex-col items-center gap-3 cursor-pointer hover:ring hover:ring-primary hover:ring-offset-1 hover:-translate-y-1 shadow-none hover:shadow-lg transition-all aspect-square justify-center"
+              onClick={navigateUp}
+            >
+              <Undo2Icon className="text-primary" />
+              <p className="text-sm font-medium">Voltar</p>
+            </Card>
+          )}
+          {(data?.folders as MediaFolderItem[] | undefined)?.map((folder) => (
+            <FolderCard
+              key={folder.id}
+              name={folder.name}
+              viewMode="grid"
+              onClick={() => navigateToFolder(folder.name)}
+              onRename={() => handleRenameFolder(folder.id, folder.name)}
+              onDelete={() => handleDeleteFolder(folder.id)}
+            />
+          ))}
+          {(data?.files as IMedia[] | undefined)?.map((file, index) => (
+            <FileItem
+              key={file.id}
+              file={file}
+              viewMode="grid"
+              onSelect={(event) => handleFileSelect(file, index, event)}
+              onCheckedChange={(checked) =>
+                handleFileCheckboxChange(file, checked)
               }
-            }}
-            isSelected={selectedItems.some((item) => item.id === file.id)}
-          />
-        ))}
-      </section>
+              isSelected={selectedItems.some((item) => item.id === file.id)}
+            />
+          ))}
+          {!isLoading &&
+            !(data?.folders?.length ?? 0) &&
+            !(data?.files?.length ?? 0) && (
+              <div className="col-span-full py-12 text-center text-sm text-muted-foreground">
+                Nenhum arquivo ou pasta encontrado.
+              </div>
+            )}
+        </section>
+      ) : (
+        <section className="rounded-lg border bg-card overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-10">
+                  {multiple && (data?.files?.length ?? 0) > 0 && (
+                    <Checkbox
+                      className="size-4"
+                      checked={isAllCurrentSelected}
+                      onCheckedChange={handleToggleSelectAll}
+                      aria-label="Selecionar todos os arquivos da página"
+                    />
+                  )}
+                </TableHead>
+                <TableHead>Arquivo</TableHead>
+                <TableHead className="hidden sm:table-cell">Tipo</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Dimensões
+                </TableHead>
+                <TableHead className="hidden sm:table-cell">Tamanho</TableHead>
+                <TableHead className="hidden lg:table-cell">
+                  Criado em
+                </TableHead>
+                <TableHead className="w-12 text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {pathStack.length > 0 && (
+                <TableRow
+                  className="cursor-pointer select-none hover:bg-muted/50"
+                  onClick={navigateUp}
+                >
+                  <TableCell className="w-10" />
+                  <TableCell colSpan={6}>
+                    <div className="flex items-center gap-3">
+                      <div className="size-10 rounded-md bg-muted flex items-center justify-center shrink-0">
+                        <Undo2Icon className="text-primary size-4" />
+                      </div>
+                      <span className="text-sm font-medium">Voltar</span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+              {(data?.folders as MediaFolderItem[] | undefined)?.map(
+                (folder) => (
+                  <FolderCard
+                    key={folder.id}
+                    name={folder.name}
+                    viewMode="list"
+                    onClick={() => navigateToFolder(folder.name)}
+                    onRename={() => handleRenameFolder(folder.id, folder.name)}
+                    onDelete={() => handleDeleteFolder(folder.id)}
+                  />
+                ),
+              )}
+              {(data?.files as IMedia[] | undefined)?.map((file, index) => (
+                <FileItem
+                  key={file.id}
+                  file={file}
+                  viewMode="list"
+                  onSelect={(event) => handleFileSelect(file, index, event)}
+                  onCheckedChange={(checked) =>
+                    handleFileCheckboxChange(file, checked)
+                  }
+                  isSelected={selectedItems.some((item) => item.id === file.id)}
+                />
+              ))}
+              {!isLoading &&
+                !(data?.folders?.length ?? 0) &&
+                !(data?.files?.length ?? 0) && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="h-24 text-center text-sm text-muted-foreground"
+                    >
+                      Nenhum arquivo ou pasta encontrado.
+                    </TableCell>
+                  </TableRow>
+                )}
+            </TableBody>
+          </Table>
+        </section>
+      )}
+
+      {/* Paginação */}
+      {totalFiles > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t">
+          <p className="text-xs text-muted-foreground">
+            Mostrando{" "}
+            <span className="font-medium text-foreground">
+              {(currentPage - 1) * pagination.perPage + 1}
+            </span>
+            –
+            <span className="font-medium text-foreground">
+              {Math.min(currentPage * pagination.perPage, totalFiles)}
+            </span>{" "}
+            de <span className="font-medium text-foreground">{totalFiles}</span>{" "}
+            {totalFiles === 1 ? "arquivo" : "arquivos"}
+          </p>
+
+          {totalPages > 1 && (
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={currentPage <= 1 || isLoading}
+                onClick={() => goToPage(1)}
+                title="Primeira página"
+                className="cursor-pointer"
+              >
+                <ChevronsLeft className="size-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={currentPage <= 1 || isLoading}
+                onClick={() => goToPage(currentPage - 1)}
+                title="Página anterior"
+                className="cursor-pointer"
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+
+              {getVisiblePages().map((entry, idx) =>
+                entry === "ellipsis" ? (
+                  <span
+                    key={`ellipsis-${idx}`}
+                    className="px-1.5 text-xs text-muted-foreground select-none"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <Button
+                    key={entry}
+                    type="button"
+                    variant={entry === currentPage ? "default" : "outline"}
+                    size="sm"
+                    disabled={isLoading}
+                    onClick={() => goToPage(entry)}
+                    className="h-8 min-w-8 px-2 cursor-pointer"
+                  >
+                    {entry}
+                  </Button>
+                ),
+              )}
+
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={currentPage >= totalPages || isLoading}
+                onClick={() => goToPage(currentPage + 1)}
+                title="Próxima página"
+                className="cursor-pointer"
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={currentPage >= totalPages || isLoading}
+                onClick={() => goToPage(totalPages)}
+                title="Última página"
+                className="cursor-pointer"
+              >
+                <ChevronsRight className="size-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Barra Flutuante de Ações em Massa */}
       {enableBulkDelete && selectedItems.length > 0 && (

@@ -33,6 +33,16 @@ export function sanitizeFilename(title: string): string {
     .replace(/^-|-$/g, ''); // trim leading/trailing hyphens
 }
 
+export function formatFilenameToTitle(filename?: string): string {
+  if (!filename) return 'arquivo';
+  const withoutExtension = filename.replace(/\.[^/.]+$/, '');
+  const formatted = withoutExtension
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return formatted || 'arquivo';
+}
+
 @Injectable()
 export class MediaService {
   private readonly uploadBasePath = join(tmpdir(), 'pmtb-uploads');
@@ -140,7 +150,10 @@ export class MediaService {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
 
-    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'image';
+    const resolvedTitle =
+      createMediaDto.title?.trim() || formatFilenameToTitle(file?.originalname);
+    const resolvedAltText = createMediaDto.altText?.trim() || resolvedTitle;
+    const sanitizedTitle = sanitizeFilename(resolvedTitle) || 'image';
     const fileName = `${sanitizedTitle}-${Date.now()}.webp`;
     const key = `images/${relativeDir}/${fileName}`;
 
@@ -162,6 +175,8 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
+        title: resolvedTitle,
+        altText: resolvedAltText,
         key,
         fileSize: finalBuffer.length,
         type: 'image',
@@ -187,7 +202,10 @@ export class MediaService {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
 
-    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'document';
+    const resolvedTitle =
+      createMediaDto.title?.trim() || formatFilenameToTitle(file?.originalname);
+    const resolvedAltText = createMediaDto.altText?.trim() || resolvedTitle;
+    const sanitizedTitle = sanitizeFilename(resolvedTitle) || 'document';
     const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
     const key = `documents/${relativeDir}/${fileName}`;
 
@@ -196,6 +214,8 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
+        title: resolvedTitle,
+        altText: resolvedAltText,
         key,
         fileSize: file.buffer.length,
         type: 'document',
@@ -219,7 +239,10 @@ export class MediaService {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const relativeDir = `${year}/${month}`;
 
-    const sanitizedTitle = sanitizeFilename(createMediaDto.title) || 'video';
+    const resolvedTitle =
+      createMediaDto.title?.trim() || formatFilenameToTitle(file?.originalname);
+    const resolvedAltText = createMediaDto.altText?.trim() || resolvedTitle;
+    const sanitizedTitle = sanitizeFilename(resolvedTitle) || 'video';
     const fileName = `${sanitizedTitle}-${Date.now()}.${type.ext}`;
     const key = `videos/${relativeDir}/${fileName}`;
 
@@ -228,6 +251,8 @@ export class MediaService {
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
+        title: resolvedTitle,
+        altText: resolvedAltText,
         key,
         fileSize: file.buffer.length,
         type: 'video',
@@ -314,10 +339,17 @@ export class MediaService {
     createMediaDto: CreateMediaDto,
     type: string,
     mimeType: string,
+    originalName?: string,
   ): Promise<Media> {
+    const resolvedTitle =
+      createMediaDto.title?.trim() || formatFilenameToTitle(originalName);
+    const resolvedAltText = createMediaDto.altText?.trim() || resolvedTitle;
+
     return this.prisma.media.create({
       data: {
         ...createMediaDto,
+        title: resolvedTitle,
+        altText: resolvedAltText,
         type,
         mimeType: mimeType,
         status: 'pending',

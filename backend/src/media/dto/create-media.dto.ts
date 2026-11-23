@@ -1,15 +1,9 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsInt,
-  IsArray,
-} from 'class-validator';
+import { IsString, IsOptional, IsInt, IsArray } from 'class-validator';
 
 export class CreateMediaDto {
   @IsString()
-  @IsNotEmpty()
-  title!: string;
+  @IsOptional()
+  title?: string;
 
   @IsString()
   @IsOptional()
